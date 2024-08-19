@@ -1,0 +1,145 @@
+.bank-user-label {
+  color: #4d4946 !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  margin-top: 20px !important;
+}
+
+.bankuser-paper {
+  border-radius: 4px;
+  padding: 16px 13px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+}
+
+.active-cancel-btn-col {
+  display: flex;
+  justify-content: center !important;
+  gap: 5px !important;
+  margin-bottom: 10px;
+}
+
+.Container_bank_user {
+  width: 95% !important;
+  margin: 0 auto !important;
+}
+
+.Active-btn {
+  font-size: 14px;
+  margin-left: 10px;
+  border-radius: 4px !important;
+  padding: 8px 18px !important;
+  border: none;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #0d6efd !important;
+}
+
+.Active-btn:hover {
+  border: none;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.upload-btn {
+  font-size: 14px;
+  width: 200px !important;
+  height: 39px !important;
+  font-weight: 600;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: #6873a9 !important;
+  border-color: #6873a9 !important;
+}
+
+.Cancel-btn-AddBankUser {
+  font-size: 14px;
+  border-radius: 4px !important;
+  padding: 8px 18px !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Cancel-btn-AddBankUser:hover {
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-color: #6873a9 !important;
+}
+
+.icon-check-space {
+  margin-right: 5px !important;
+  font-size: 20px;
+  align-items: center !important;
+}
+
+.labels-add-bank {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-weight: 500;
+}
+.aesterick-color {
+  color: #cf5b5b !important;
+}
+
+.react-select-field {
+  width: 100% !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
+.react-select-field .css-13cymwt-control {
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
+.select-clickable-icon {
+  height: 38px !important;
+  max-height: 38px;
+  width: 40px;
+  font-size: 20px !important;
+  background-color: #e9ecef !important;
+  border: 1px solid #ced4da !important;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+.span-select {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.bankErrorMessage {
+  height: 0px;
+  margin-top: 0px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #f16b6b;
+  visibility: visible !important;
+}
+
+.bankErrorMessage_hidden {
+  visibility: hidden;
+  margin: 0;
+  height: 16px;
+  color: #f16b6b !important;
+}
+
+.CheckboxActive {
+  display: flex !important;
+  gap: 10px !important;
+}

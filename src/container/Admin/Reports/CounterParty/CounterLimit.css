@@ -1,0 +1,142 @@
+.counterLimit-container {
+  align-items: top !important;
+  height: 350px !important;
+  width: 100% !important;
+  left: 260px !important;
+  justify-content: center !important;
+  position: fixed !important;
+}
+
+.SectionContainer {
+  width: 100% !important;
+  margin: 0 50px 0 0 !important;
+}
+
+.counterLimit-label {
+  display: flex;
+  justify-content: start;
+  font-size: 18px;
+  color: #004990;
+  font-weight: 600;
+}
+
+.counterLimit-paper {
+  border-radius: 4px;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding: 3px 10px !important;
+  background-color: #ffffff !important;
+}
+
+.counterLimit-table {
+  max-width: 100vw;
+  max-height: 70vh !important;
+  overflow: auto !important;
+  overflow-y: hidden;
+  border-radius: 0px !important;
+}
+
+.counterLimit-table th.ant-table-cell {
+  color: #ffffff !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10;
+  border-radius: 0% !important;
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+}
+
+.counterLimit-table::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.counterLimit-table::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #ccc;
+  margin-left: -15px;
+}
+
+.Upload-Excel-btn {
+  font-size: 14px;
+  font-weight: 500;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 6px 18px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+}
+
+.Upload-Excel-btn:hover {
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+}
+
+.counterLimit-company-text {
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+.eyeicon-counter {
+  font-size: 17px !important;
+  color: #2230aa !important;
+  cursor: pointer;
+}
+
+.eyeicon-size {
+  font-size: 16px !important;
+  margin-right: 5px;
+}
+
+.counter-Limit-user-spinner {
+  height: 70vh !important;
+  align-items: center !important;
+  display: flex;
+  justify-content: center !important;
+}
+
+.Counter-party-upload-modal {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 7px 30px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+  align-items: center;
+  cursor: pointer;
+  color: white !important;
+}
+
+.Counter-party-upload-modal:hover {
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+}
+
+.Counter-party-download-formater {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 7px 30px !important;
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+  border: none !important;
+  align-items: center;
+  cursor: pointer;
+  color: white !important;
+}
+
+.Counter-party-download-formater:hover {
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.col-upper-button-class {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}

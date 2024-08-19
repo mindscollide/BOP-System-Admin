@@ -1,0 +1,78 @@
+.uploadText {
+  display: none !important;
+}
+
+.uploadButton {
+  border: 1 solid black !important;
+  border-radius: 0 !important;
+  background-color: #025f5c !important;
+  box-shadow: none !important;
+}
+
+.btnMiniSecondary {
+  background-color: #d08b07 !important;
+  padding: 5px 20px !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  border-radius: 0.2rem !important;
+  text-transform: none !important;
+}
+
+.btnSecondarySolid {
+  background: #d08b07 !important;
+  border-color: #d08b07 !important;
+  cursor: pointer !important;
+  border-radius: 0px !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  color: #fff !important;
+  text-transform: none !important;
+  padding: 0px 16px !important;
+}
+.UploadFileButton {
+  cursor: pointer !important;
+}
+.upload-btn {
+  font-size: 14px;
+  width: 200px !important;
+  height: 39px !important;
+  font-weight: 600;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  /* padding: 6px 6px !important; */
+  background-color: #6873a9 !important;
+  border-color: #6873a9 !important;
+}
+
+.Heading {
+  margin-left: 7px !important;
+  font-weight: 700 !important;
+}
+
+.upload-icon-color {
+  color: black !important;
+}
+
+.PlusIcon {
+  font-size: 30px !important;
+  margin-top: -6px !important;
+  display: flex;
+  justify-content: center;
+}
+
+.OuterBodyCustomUpload {
+  min-width: 40px;
+  position: absolute !important;
+  right: 42.8% !important;
+  height: 100% !important;
+  align-items: center !important;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important ;
+}

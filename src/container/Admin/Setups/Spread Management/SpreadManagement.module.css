@@ -1,0 +1,92 @@
+.CategoryManagementLabel {
+  font-size: 24px;
+  color: #4d4946 !important;
+  font-weight: 600;
+}
+
+.SpreadManagementOverAllStyles {
+  width: 95% !important;
+  margin: 0 auto !important;
+}
+
+.SpreadManagmentPaper {
+  border-radius: 4px;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding: 16px 13px !important;
+  background-color: #ffffff !important;
+}
+
+.ParitySpotHeading {
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  color: #4d4946 !important;
+}
+
+.Reset-btn {
+  border-radius: 4px;
+  font-size: 14px;
+  background: #dc3545 !important;
+  font-weight: 500;
+  border: none !important;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  -moz-transition: all 0.3s ease-in;
+  -o-transition: all 0.3s ease-in;
+  -ms-transition: all 0.3s ease-in;
+  cursor: pointer;
+}
+
+.Reset-btn:is(:hover, :active, :focus, :focus-visible) {
+  border-radius: 4px;
+  font-size: 14px;
+  background: #dc3545 !important;
+  border: none !important;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  -moz-transition: all 0.3s ease-in;
+  -o-transition: all 0.3s ease-in;
+  -ms-transition: all 0.3s ease-in;
+  cursor: pointer;
+}
+
+.Search-btn-BankList {
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  -webkit-transition: all 0.3s ease-in;
+  -moz-transition: all 0.3s ease-in;
+  -o-transition: all 0.3s ease-in;
+  -ms-transition: all 0.3s ease-in;
+  position: relative;
+  border: none !important;
+  cursor: pointer;
+}
+
+.Search-btn-BankList:is(:hover, :focus, :active, :focus-visible) {
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none !important;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  -moz-transition: all 0.3s ease-in;
+  background: #096fed !important;
+  -o-transition: all 0.3s ease-in;
+  -ms-transition: all 0.3s ease-in;
+  position: relative;
+  cursor: pointer;
+}
+
+.ForwardLabel {
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  color: #4d4946 !important;
+}
+
+.InputTableSpreadManagement {
+  width: 67px !important;
+}

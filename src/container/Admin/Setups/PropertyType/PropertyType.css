@@ -1,0 +1,119 @@
+.Property-container {
+  height: 350px !important;
+  right: 50px !important;
+  /* justify-content: center !important; */
+  position: relative !important;
+}
+
+.Signup_request_heading {
+  font-size: 18px;
+  color: #004990;
+  font-weight: 600;
+}
+
+.Subheading_signup_pending {
+  color: #45494d;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.paper_sizing {
+  width: 100%;
+  padding: 20px 20px !important;
+  box-shadow: none !important;
+}
+
+.Form_heading {
+  color: #9fa4a9;
+  font-weight: 400;
+}
+.Credentials {
+  color: #45494d;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+:where(.css-dev-only-do-not-override-1e3x2xa).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th {
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+  position: relative;
+  border-radius: none !important;
+  padding: 10px 16px;
+  overflow-wrap: break-word;
+}
+
+:where(.css-dev-only-do-not-override-1e3x2xa).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td {
+  padding: 7px !important;
+  text-align: center;
+}
+
+.Comment_section {
+  position: absolute;
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-weight: 500 !important;
+  top: 90px !important;
+}
+
+.streik {
+  color: #cf5b5b;
+}
+
+.lineheight {
+  line-height: 1px !important;
+}
+
+.Button_approved {
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  width: 180px !important;
+  height: 49px !important;
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+  border-color: #5b67cd;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.Button_approved:is(:hover, ) {
+  border: none !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Button_reject {
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  width: 140px !important;
+  height: 49px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%);
+  border-color: #feac78;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.Button_reject:is(:hover, ) {
+  border: none !important;
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+}
+
+.comment-field {
+  font-size: 13px;
+  font-weight: 500;
+}
+/* @media screen and (max-width: 1300px) {
+  .paper_sizing {
+    width: 92%;
+    padding: 20px 20px !important;
+    box-shadow: none !important;
+  }
+} */

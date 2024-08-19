@@ -1,0 +1,241 @@
+.customer-List-container {
+  align-items: top !important;
+  height: 350px !important;
+  width: 100% !important;
+  left: 260px !important;
+  justify-content: center !important;
+  position: fixed !important;
+}
+
+.customer-List-label {
+  font-size: 24px;
+  color: #4d4946 !important;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.customer-List-paper {
+  border-radius: 4px;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding: 16px 13px !important;
+  background-color: #ffffff !important;
+}
+
+.customer-list-col-fields {
+  display: flex;
+  justify-content: center !important;
+  gap: 5px !important;
+}
+
+.Banklist-Reset-btn {
+  font-size: 14px;
+  height: 100% !important;
+  border-radius: 4px !important;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center;
+  padding: 6px 18px !important;
+  border: none;
+  background: #dc3545 !important;
+}
+
+.Banklist-Reset-btn:hover {
+  border: none;
+  height: 100% !important;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.icon-check-space {
+  margin-right: 5px !important;
+  font-size: 14px;
+  align-items: center !important;
+}
+
+.textfields-customer-list-fontsize {
+  font-size: 13px !important;
+  height: 37px !important;
+}
+
+.select-customer-list-fontsize {
+  font-size: 13px !important;
+  z-index: 20;
+}
+
+.SectionContainer {
+  width: 95% !important;
+  margin: 0 auto !important;
+}
+
+.table-columns-Banklist {
+  font-family: "Montserrat", sans-serif !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.customer-list-user-spinner {
+  height: 40vh !important;
+  align-items: center !important;
+  display: flex;
+  justify-content: center !important;
+}
+
+.LoginHistory-Datepicker {
+  margin-top: -22px;
+  /* width: 450px !important; */
+  /* align-items: center !important; */
+}
+
+.LoginHistory-Datepicker .rmdp-header-values {
+  color: #000 !important;
+  font-weight: 700 !important;
+  margin: auto;
+}
+
+.LoginHistory-Datepicker .rmdp-week-day {
+  color: #000 !important;
+  cursor: default;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.LoginHistory-Datepicker .rmdp-calendar {
+  height: max-content;
+  padding: 0px;
+}
+
+.LoginHistory-Datepicker .rmdp-day-picker {
+  padding: 0px;
+}
+
+.LoginHistory-Datepicker .rmdp-day {
+  cursor: pointer;
+  height: 30px;
+  position: relative;
+  width: 34px;
+}
+
+.LoginHistory-Datepicker .rmdp-day span {
+  border-radius: 0%;
+  bottom: 0px;
+  font-size: 13px;
+  font-weight: 500;
+  left: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.LoginHistory-Datepicker .rmdp-day.rmdp-selected span:not(.highlight) {
+  background-color: #2e3cb2 !important;
+  border-radius: 4px;
+  border-color: #2e3cb2 !important;
+  box-shadow: 0 0 3px #8798ad;
+  color: #fff;
+}
+
+.LoginHistory-Datepicker .rmdp-arrow {
+  border: solid #000000;
+  border-width: 0 1px 1px 0;
+  display: inline-block;
+  height: 3px;
+  margin-top: 5px;
+  padding: 3px;
+  width: 3px;
+}
+
+.Download-button {
+  font-size: 14px;
+  padding: 6px 18px !important;
+  border-color: #019308 !important;
+  background-color: #019308 !important;
+  display: flex !important;
+  gap: 6px !important;
+  height: 100% !important;
+  align-items: center !important;
+}
+
+.Download-button:hover {
+  font-size: 14px;
+  padding: 6px 18px !important;
+  border-color: #019308 !important;
+  background-color: #019308 !important;
+  display: flex !important;
+  gap: 6px !important;
+  height: 100% !important;
+  align-items: center !important;
+}
+
+.Tradecount-Datepicker-left {
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+  border: 1px solid #ced4da;
+  width: 135px !important;
+  height: 37px !important;
+  font-size: 13px !important;
+  font-family: "Montserrat", sans-serif !important;
+  cursor: pointer;
+  padding: 8px;
+}
+.Tradecount-Datepicker-left:is(:focus, :focus-visible) {
+  outline: none !important;
+}
+
+.Tradecount-date-to {
+  display: flex;
+  justify-content: center;
+  min-width: 35px;
+  height: 98% !important;
+  align-items: center !important;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+}
+
+.Tradecount-Datepicker-right {
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  border: 1px solid #ced4da;
+  font-size: 13px !important;
+  width: 135px !important;
+  height: 37px !important;
+  font-family: "Montserrat", sans-serif !important;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.Tradecount-Datepicker-right:is(:focus, :focus-visible) {
+  outline: none !important;
+}
+
+.SearchButton_loginHistory {
+  font-size: 14px;
+  border-radius: 4px !important;
+  padding: 6px 12px !important;
+  height: 100% !important;
+  border: none;
+  background: #096fed !important;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+
+.SearchButton_loginHistory:is(:hover, :focus, :focus-visible) {
+  font-size: 14px;
+  border-radius: 4px !important;
+  padding: 6px 12px !important;
+  height: 100% !important;
+  border: none;
+  background: #096fed !important;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
+}

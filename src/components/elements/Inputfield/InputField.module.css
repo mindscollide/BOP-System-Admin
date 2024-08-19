@@ -1,0 +1,14 @@
+.form-control2 {
+  border-radius: 4px !important;
+  border: 1px solid #e1e1e1 !important;
+  font-size: 13px !important;
+  height: 30px !important;
+}
+
+.form-control2:focus {
+  box-shadow: none !important;
+}
+
+.BranchNameTradeAccessManagement {
+  width: 250px !important;
+}
