@@ -1,0 +1,107 @@
+.modal-Counter-Party .modal-content {
+  position: relative;
+  left: 100px;
+  height: 450px !important;
+  width: 650px !important;
+  background-color: #f2f3f9;
+  border-radius: 8px !important;
+  display: flex !important;
+  /* align-items: center !important; */
+  justify-content: center !important;
+  border: 1px solid #dcdde6;
+  padding: 10px 5px;
+  box-shadow: 10px 10px 40px rgb(0 0 0 / 10%);
+}
+
+.modal-Counter-Party-footer {
+  width: 100% !important;
+  display: contents;
+}
+
+.header-Counter-Party-close-btn {
+  font-size: 11px;
+  border: none !important;
+  right: 0px;
+  font-size: 9px;
+}
+
+.modal-Counter-btn-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.save-Changes {
+  font-size: 14px;
+  font-weight: 500;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 8px 18px;
+  border: none;
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%);
+}
+
+.save-Changes:hover {
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Cancel-btn {
+  font-size: 14px;
+  font-weight: 500;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 8px 18px;
+  border: none;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Cancel-btn:hover {
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+}
+
+.icon-right {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.edit-user-heading {
+  margin-top: -50px !important;
+  font-size: 20px;
+  justify-content: center !important;
+  font-weight: 500;
+  color: #002650 !important;
+}
+
+.labels-modal-Counter {
+  font-size: 12px !important;
+  color: #004990;
+  font-weight: 500;
+}
+
+.Counter-aesterick-color {
+  color: #cf5b5b !important;
+}
+
+.checkbox-col {
+  display: flex;
+  justify-content: start !important;
+  /* padding: 4px 8px !important; */
+  gap: 5px !important;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.percentage-icon {
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 8px;
+  margin-left: 5px;
+}

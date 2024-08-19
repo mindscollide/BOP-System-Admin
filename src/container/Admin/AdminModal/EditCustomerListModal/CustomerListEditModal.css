@@ -1,0 +1,77 @@
+.Edit-Customer-List .modal-content {
+  position: relative;
+  left: 100px;
+  height: 300px !important;
+  width: 600px !important;
+  background-color: #f2f3f9;
+  border-radius: 8px !important;
+  display: flex !important;
+  justify-content: center !important;
+  border: 1px solid #dcdde6;
+  padding: 10px 5px;
+  box-shadow: 10px 10px 40px rgb(0 0 0 / 10%);
+}
+
+.Edit-Customer-List-close-btn {
+  font-size: 11px;
+  border: none !important;
+  right: 0px;
+  font-size: 9px;
+}
+
+.Edit-Customer-List-footer {
+  width: 100% !important;
+  display: contents;
+}
+
+.Customer-User-heading {
+  font-size: 16px !important;
+  color: #002650 !important;
+  font-weight: 600 !important;
+}
+
+.CustomerListdisable-field-Name {
+  height: 39px !important;
+  background-color: #dbdde7 !important;
+  font-size: 13px !important;
+  border-radius: 4px !important;
+}
+
+.Edit-Customer-List-Update-btn {
+  font-size: 14px;
+  margin-left: 10px;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 8px 18px !important;
+  border: none;
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%);
+}
+
+.Edit-Customer-List-Update-btn:hover {
+  border: none;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Edit-Customer-List-Cancel-btn {
+  font-size: 14px;
+  margin-left: 10px;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 8px 18px !important;
+  border: none;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Edit-Customer-List-Cancel-btn:hover {
+  background: linear-gradient(to bottom, #5b67cd 0%, #2a38af 100%) !important;
+  border: none;
+}
+
+.Edit-select-company {
+  font-size: 13px !important;
+  color: #000 !important;
+}

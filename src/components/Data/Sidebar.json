@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Setup",
+    "icon": "icon-settings",
+    "childrens": [
+      {
+        "title": "Property Type"
+      },
+      {
+        "title": "Approval Reason"
+      },
+      {
+        "title": "Rejection Reason"
+      }
+    ]
+  },
+
+  {
+    "title": "Reports",
+    "icon": "icon-user",
+    "childrens": [
+      {
+        "title": "Non-Banking Assets"
+      }
+    ]
+  }
+]
