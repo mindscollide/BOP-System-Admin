@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Tradecount.module.css";
 import { Col, Row, Container } from "react-bootstrap";
 import {
@@ -11,6 +11,198 @@ import Select from "react-select";
 import DatePicker from "react-multi-date-picker";
 
 const TradeCount = () => {
+  //Trade Count States
+  const [tradeCount, setTradeCount] = useState({
+    TxnID: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    clientName: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    side: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    Amount: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    LC: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    AccountNumber: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
+
+  //Trade Count validate handler
+  const tradeCountValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    //TXNID
+    if (name === "transactionID") {
+      // Regex to allow only numbers, alphabets, dash (-), and slash (/)
+      const txnIdRegex = /^[a-zA-Z0-9-/]+$/;
+
+      // Test the input value against the regex
+      if (txnIdRegex.test(value)) {
+        // If valid, allow it to be set
+        setTradeCount({
+          ...tradeCount,
+          TxnID: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      } else {
+        // Prevent setting the invalid value in the state
+        setTradeCount({
+          ...tradeCount,
+          TxnID: {
+            value: "", // Clear the input or keep the last valid input
+            errorMessage:
+              "Only letters, numbers, dash (-), and slash (/) are allowed.",
+            errorStatus: true,
+          },
+        });
+      }
+    }
+
+    //Client Name
+    if (name === "ClientName" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setTradeCount({
+          ...tradeCount,
+          clientName: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "ClientName" && value === "") {
+      setTradeCount({
+        ...tradeCount,
+        clientName: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    // Amount
+    if (name === "Amount") {
+      // Regex to allow only numbers
+      const amountRegex = /^\d*$/;
+
+      // Test the input value against the regex
+      if (amountRegex.test(value)) {
+        // If valid, allow it to be set
+        setTradeCount({
+          ...tradeCount,
+          Amount: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      } else {
+        // Prevent setting the invalid value in the state
+        setTradeCount({
+          ...tradeCount,
+          Amount: {
+            value: "",
+            errorMessage: "Only numbers are allowed.",
+            errorStatus: true,
+          },
+        });
+      }
+    } else if (name === "Amount" && value === "") {
+      setTradeCount({
+        ...tradeCount,
+        Amount: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    // LC number
+    if (name === "LC") {
+      // Regex to allow only numbers
+      const amountRegex = /^\d*$/;
+
+      // Test the input value against the regex
+      if (amountRegex.test(value)) {
+        // If valid, allow it to be set
+        setTradeCount({
+          ...tradeCount,
+          LC: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      } else {
+        // Prevent setting the invalid value in the state
+        setTradeCount({
+          ...tradeCount,
+          LC: {
+            value: "",
+            errorMessage: "Only numbers are allowed.",
+            errorStatus: true,
+          },
+        });
+      }
+    } else if (name === "Amount" && value === "") {
+      setTradeCount({
+        ...tradeCount,
+        LC: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    //Account Number
+
+    if (name === "AccountNumber") {
+      // Regex to allow only numbers
+      const amountRegex = /^\d*$/;
+
+      // Test the input value against the regex
+      if (amountRegex.test(value)) {
+        // If valid, allow it to be set
+        setTradeCount({
+          ...tradeCount,
+          AccountNumber: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      } else {
+        // Prevent setting the invalid value in the state
+        setTradeCount({
+          ...tradeCount,
+          AccountNumber: {
+            value: "",
+            errorMessage: "Only numbers are allowed.",
+            errorStatus: true,
+          },
+        });
+      }
+    } else if (name === "AccountNumber" && value === "") {
+      setTradeCount({
+        ...tradeCount,
+        AccountNumber: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+  };
   // column for LoginHistory
   const tradeColumns = [
     {
@@ -151,14 +343,18 @@ const TradeCount = () => {
                   placeholder="TXN ID"
                   name="transactionID"
                   labelClass="d-none"
+                  value={tradeCount.TxnID.value}
+                  onChange={tradeCountValidateHandler}
                   className="tradeCount-textField-fontsize"
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Client Name"
-                  name="firstName"
+                  name="ClientName"
                   labelClass="d-none"
+                  value={tradeCount.clientName.value}
+                  onChange={tradeCountValidateHandler}
                   className="tradeCount-textField-fontsize"
                 />
               </Col>
@@ -181,6 +377,8 @@ const TradeCount = () => {
                 <TextField
                   placeholder="Amount"
                   name="Amount"
+                  onChange={tradeCountValidateHandler}
+                  value={tradeCount.Amount.value}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
                 />
@@ -189,6 +387,8 @@ const TradeCount = () => {
                 <TextField
                   placeholder="LC #"
                   name="LC"
+                  value={tradeCount.LC.value}
+                  onChange={tradeCountValidateHandler}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
                 />
@@ -198,8 +398,10 @@ const TradeCount = () => {
             <Row className="mt-3">
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder="Security Type"
-                  name="securityType"
+                  placeholder="AccountNumber"
+                  name="AccountNumber"
+                  value={tradeCount.AccountNumber.value}
+                  onChange={tradeCountValidateHandler}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
                 />

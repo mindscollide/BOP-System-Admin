@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./LoginHistory.module.css";
 import DatePicker from "react-multi-date-picker";
 import { Col, Row } from "react-bootstrap";
@@ -10,6 +10,93 @@ import {
 } from "../../../../components/elements";
 
 const LoginHistory = () => {
+  //Login History States
+  const [loginHistory, setLoginHistory] = useState({
+    Name: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    CounterPartyName: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    Email: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
+
+  //Login History validate handler
+  const LoginHistoryValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    //Client Name
+    if (name === "Name" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setLoginHistory({
+          ...loginHistory,
+          Name: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "Name" && value === "") {
+      setLoginHistory({
+        ...loginHistory,
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    //Counter Party Name
+    if (name === "CounterPartyname" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setLoginHistory({
+          ...loginHistory,
+          CounterPartyName: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "CounterPartyname" && value === "") {
+      setLoginHistory({
+        ...loginHistory,
+        CounterPartyName: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    //Email
+    if (name === "email" && value !== "") {
+      if (value !== "") {
+        setLoginHistory({
+          ...loginHistory,
+          Email: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "email" && value === "") {
+      setLoginHistory({
+        ...loginHistory,
+        Email: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
+  };
   //Table columns for customer List
   const columns = [
     {
@@ -85,16 +172,30 @@ const LoginHistory = () => {
           <CustomPaper className={styles["customer-List-paper"]}>
             <Row className="mt-3">
               <Col lg={2} md={2} sm={12}>
-                <TextField placeholder="Name" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Name"
+                  labelClass={"d-none"}
+                  value={loginHistory.Name.value}
+                  onChange={LoginHistoryValidateHandler}
+                />
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Counter Party Name"
                   labelClass={"d-none"}
+                  name={"CounterPartyname"}
+                  value={loginHistory.CounterPartyName.value}
+                  onChange={LoginHistoryValidateHandler}
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
-                <TextField placeholder="Email" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Email"
+                  labelClass={"d-none"}
+                  name={"email"}
+                  value={loginHistory.Email.value}
+                  onChange={LoginHistoryValidateHandler}
+                />
               </Col>
               <Col
                 lg={4}

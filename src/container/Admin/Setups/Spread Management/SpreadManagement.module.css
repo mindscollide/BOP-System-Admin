@@ -35,6 +35,9 @@
   -o-transition: all 0.3s ease-in;
   -ms-transition: all 0.3s ease-in;
   cursor: pointer;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
 }
 
 .Reset-btn:is(:hover, :active, :focus, :focus-visible) {
@@ -49,6 +52,9 @@
   -o-transition: all 0.3s ease-in;
   -ms-transition: all 0.3s ease-in;
   cursor: pointer;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
 }
 
 .Search-btn-BankList {
@@ -64,6 +70,9 @@
   position: relative;
   border: none !important;
   cursor: pointer;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
 }
 
 .Search-btn-BankList:is(:hover, :focus, :active, :focus-visible) {
@@ -79,6 +88,9 @@
   -ms-transition: all 0.3s ease-in;
   position: relative;
   cursor: pointer;
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
 }
 
 .ForwardLabel {

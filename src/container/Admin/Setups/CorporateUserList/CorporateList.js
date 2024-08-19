@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./CorporateList.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -18,9 +18,30 @@ import {
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
 import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
+import BankerList from "../BankerList/BankerList";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
+
+  //States Corporate List
+  const [corporateList, setCorporateList] = useState({
+    Name: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+
+    CorporateName: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    Email: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
 
   //Edit Corporate Use Modal Calling
   const EditCorporateModalGobalState = useSelector(
@@ -37,10 +58,77 @@ const CorporateList = () => {
     (state) => state.BOPSystemAdminModal.userDetailsCorporateModal
   );
 
-  console.log(
-    DeleteCorporateModalGobalState,
-    "DeleteCorporateModalGobalStates"
-  );
+  //Banker List validate handler
+  const CorporateListValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    // Name
+    if (name === "Name" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setCorporateList({
+          ...corporateList,
+          Name: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "Name" && value === "") {
+      setCorporateList({
+        ...corporateList,
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    //Email
+    if (name === "corporateName" && value !== "") {
+      if (value !== "") {
+        setCorporateList({
+          ...corporateList,
+          CorporateName: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "corporateName" && value === "") {
+      setCorporateList({
+        ...corporateList,
+        CorporateName: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
+
+    //Email
+    if (name === "email" && value !== "") {
+      if (value !== "") {
+        setCorporateList({
+          ...corporateList,
+          Email: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "email" && value === "") {
+      setCorporateList({
+        ...corporateList,
+        Email: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
+  };
 
   //handle Edit Corporate
   const handleEditCorporate = () => {
@@ -188,13 +276,31 @@ const CorporateList = () => {
           <CustomPaper className={styles["customer-List-paper"]}>
             <Row className="mt-3">
               <Col lg={2} md={2} sm={12}>
-                <TextField placeholder="Name" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Name"
+                  labelClass={"d-none"}
+                  name={"Name"}
+                  value={corporateList.Name.value}
+                  onChange={CorporateListValidateHandler}
+                />
               </Col>
               <Col lg={2} md={2} sm={12}>
-                <TextField placeholder="Corporate Name" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Corporate Name"
+                  labelClass={"d-none"}
+                  name={"corporateName"}
+                  value={corporateList.CorporateName.value}
+                  onChange={CorporateListValidateHandler}
+                />
               </Col>
               <Col lg={2} md={2} sm={12}>
-                <TextField placeholder="Email" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Email"
+                  labelClass={"d-none"}
+                  name={"email"}
+                  value={corporateList.Email.value}
+                  onChange={CorporateListValidateHandler}
+                />
               </Col>
               <Col lg={3} md={3} sm={12}>
                 <Select
