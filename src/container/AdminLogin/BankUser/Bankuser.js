@@ -263,7 +263,6 @@ const Bankuser = () => {
         },
         BankId: 1,
       };
-      // dispatch(createBank(navigate, newData));
     } else {
       setErrorShow(true);
     }
