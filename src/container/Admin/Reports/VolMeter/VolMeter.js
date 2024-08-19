@@ -207,7 +207,7 @@ const VolMeter = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {systemReducer.Loading ? <Loader /> : null}
+      {/* {systemReducer.Loading ? <Loader /> : null} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

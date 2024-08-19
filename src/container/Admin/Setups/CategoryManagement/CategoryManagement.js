@@ -263,64 +263,64 @@ const CategoryManagement = () => {
 
   // for edit
   // Update Corporate Function with spinnner
-  useEffect(() => {
-    let corporatesData = UpdateCategoryMap.UpdateCategory;
-    if (Object.keys(corporatesData).length > 0) {
-      console.log("authauth12 UpdateCategoryMap", corporatesData);
-      console.log("authauth12 UpdateCategoryMap", categoryupdate);
-      let id = categoryupdate.categoryID.value;
-      const categoryIndex = corporates.findIndex(
-        (store) => store.categoryID === id.toString()
-      );
-      console.log("authauth12 UpdateCategoryMap", categoryIndex);
+  // useEffect(() => {
+  //   let corporatesData = UpdateCategoryMap.UpdateCategory;
+  //   if (Object.keys(corporatesData).length > 0) {
+  //     console.log("authauth12 UpdateCategoryMap", corporatesData);
+  //     console.log("authauth12 UpdateCategoryMap", categoryupdate);
+  //     let id = categoryupdate.categoryID.value;
+  //     const categoryIndex = corporates.findIndex(
+  //       (store) => store.categoryID === id.toString()
+  //     );
+  //     console.log("authauth12 UpdateCategoryMap", categoryIndex);
 
-      const newSourceItems = [...corporates];
-      const newSourceItem = newSourceItems[categoryIndex];
-      console.log("authauth12 UpdateCategoryMap", newSourceItem);
-      console.log("authauth12 UpdateCategoryMapvvvv", categoryupdate);
-      // stringConvertintoNumber(addData.bidSpread.value)
-      let data = {
-        categoryName: categoryupdate.category.value,
-        categoryID: categoryupdate.categoryID.value,
-        offerSpread: parseInt(categoryupdate.offerSpread.value),
-        bidSpread: parseInt(categoryupdate.bidSpread.value),
-        corporates: newSourceItems[categoryIndex].corporates,
-      };
-      if (categoryIndex !== -1) {
-        newSourceItems[categoryIndex] = data;
-        setCorporates(newSourceItems);
-      }
-      setEditCategoryList([]);
-      setCategoryUpdate({
-        category: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-        bidSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-        offerSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-        AssetTypeId: {
-          value: 1,
-          errorMessage: "",
-          errorStatus: false,
-        },
-        categoryID: {
-          value: 0,
-          errorMessage: "",
-          errorStatus: false,
-        },
-        BankID: 1,
-      });
-    }
-  }, [UpdateCategoryMap.UpdateCategory]);
+  //     const newSourceItems = [...corporates];
+  //     const newSourceItem = newSourceItems[categoryIndex];
+  //     console.log("authauth12 UpdateCategoryMap", newSourceItem);
+  //     console.log("authauth12 UpdateCategoryMapvvvv", categoryupdate);
+  //     // stringConvertintoNumber(addData.bidSpread.value)
+  //     let data = {
+  //       categoryName: categoryupdate.category.value,
+  //       categoryID: categoryupdate.categoryID.value,
+  //       offerSpread: parseInt(categoryupdate.offerSpread.value),
+  //       bidSpread: parseInt(categoryupdate.bidSpread.value),
+  //       corporates: newSourceItems[categoryIndex].corporates,
+  //     };
+  //     if (categoryIndex !== -1) {
+  //       newSourceItems[categoryIndex] = data;
+  //       setCorporates(newSourceItems);
+  //     }
+  //     setEditCategoryList([]);
+  //     setCategoryUpdate({
+  //       category: {
+  //         value: "",
+  //         errorMessage: "",
+  //         errorStatus: false,
+  //       },
+  //       bidSpread: {
+  //         value: "",
+  //         errorMessage: "",
+  //         errorStatus: false,
+  //       },
+  //       offerSpread: {
+  //         value: "",
+  //         errorMessage: "",
+  //         errorStatus: false,
+  //       },
+  //       AssetTypeId: {
+  //         value: 1,
+  //         errorMessage: "",
+  //         errorStatus: false,
+  //       },
+  //       categoryID: {
+  //         value: 0,
+  //         errorMessage: "",
+  //         errorStatus: false,
+  //       },
+  //       BankID: 1,
+  //     });
+  //   }
+  // }, [UpdateCategoryMap.UpdateCategory]);
 
   const OpenEditCategory = (recorde, data) => {
     console.log(data, "datadata");
