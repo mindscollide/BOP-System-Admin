@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./BankerList.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
@@ -10,6 +10,68 @@ import {
 } from "../../../../components/elements";
 
 const BankerList = () => {
+  //State BankList
+  const [bankList, setBankList] = useState({
+    Name: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    Email: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
+
+  //Banker List validate handler
+  const BankerListValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    //Client Name
+    if (name === "Name" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setBankList({
+          ...bankList,
+          Name: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "Name" && value === "") {
+      setBankList({
+        ...bankList,
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    //Email
+    if (name === "email" && value !== "") {
+      if (value !== "") {
+        setBankList({
+          ...bankList,
+          Email: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "email" && value === "") {
+      setBankList({
+        ...bankList,
+        Email: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
+  };
   //Table columns for customer List
   const columns = [
     {
@@ -102,10 +164,22 @@ const BankerList = () => {
           <CustomPaper className={styles["customer-List-paper"]}>
             <Row className="mt-3">
               <Col lg={3} md={3} sm={12}>
-                <TextField placeholder="Name" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Name"
+                  labelClass={"d-none"}
+                  name={"Name"}
+                  value={bankList.Name.value}
+                  onChange={BankerListValidateHandler}
+                />
               </Col>
               <Col lg={3} md={3} sm={12}>
-                <TextField placeholder="Email" labelClass={"d-none"} />
+                <TextField
+                  placeholder="Email"
+                  labelClass={"d-none"}
+                  name={"email"}
+                  value={bankList.Email.value}
+                  onChange={BankerListValidateHandler}
+                />
               </Col>
               <Col lg={3} md={3} sm={12}>
                 <Select

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Corporateuser.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -10,8 +10,94 @@ import {
   TextField,
 } from "../../../components/elements";
 import Select from "react-select";
+import { validateEmail } from "../../../commen/functions/emailValidation";
 
 const CorporateUser = () => {
+  //Corporate User State
+  const [corporateUser, setCorporateUser] = useState({
+    Name: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    email: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
+
+  //state for error Message
+  const [errorShow, setErrorShow] = useState(false);
+
+  //add bank user security admin validate handler
+  const addCorporateUserValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    if (name === "firstName" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setCorporateUser({
+          ...corporateUser,
+          firstName: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "firstName" && value === "") {
+      setCorporateUser({
+        ...corporateUser,
+        firstName: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+
+    if (name === "email" && value !== "") {
+      console.log("valuevalueemailvaluevalueemail", value);
+      if (value !== "") {
+        setCorporateUser({
+          ...corporateUser,
+          email: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "email" && value === "") {
+      setCorporateUser({
+        ...corporateUser,
+        email: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
+  };
+
+  //email validation handler
+  const handlerEmail = () => {
+    if (corporateUser.email.value !== "") {
+      if (validateEmail(corporateUser.email.value)) {
+        alert("Email verified");
+      } else {
+        alert("Email Not Verified");
+      }
+    }
+  };
+
+  //handle Active Button
+  const handleActiveButton = () => {
+    if (corporateUser.Name.value !== "" && corporateUser.email.value !== "") {
+      setErrorShow(false);
+    } else {
+      setErrorShow(true);
+    }
+  };
+
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -41,7 +127,30 @@ const CorporateUser = () => {
                         </span>
                       </Col>
                       <Col lg={5} md={5} sm={12}>
-                        <TextField labelClass="d-none" />
+                        <TextField
+                          labelClass="d-none"
+                          name={"firstName"}
+                          value={corporateUser.Name.value}
+                          onChange={addCorporateUserValidateHandler}
+                        />
+                        <Row>
+                          <Col
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            className="d-flex justify-content-start"
+                          >
+                            <p
+                              className={
+                                errorShow && corporateUser.Name.value === ""
+                                  ? styles["bankErrorMessage"]
+                                  : styles["bankErrorMessage_hidden"]
+                              }
+                            >
+                              First Name is required
+                            </p>
+                          </Col>
+                        </Row>
                       </Col>
 
                       <Col lg={4} md={4} sm={4}>
@@ -57,7 +166,30 @@ const CorporateUser = () => {
                         </span>
                       </Col>
                       <Col lg={5} md={5} sm={12}>
-                        <TextField labelClass="d-none" />
+                        <TextField
+                          labelClass="d-none"
+                          name={"email"}
+                          value={corporateUser.email.value}
+                          onChange={addCorporateUserValidateHandler}
+                        />
+                        <Row>
+                          <Col
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            className="d-flex justify-content-start"
+                          >
+                            <p
+                              className={
+                                errorShow && corporateUser.email.value === ""
+                                  ? styles["bankErrorMessage"]
+                                  : styles["bankErrorMessage_hidden"]
+                              }
+                            >
+                              Email is required
+                            </p>
+                          </Col>
+                        </Row>
                       </Col>
 
                       <Col lg={4} md={4} sm={12}></Col>
@@ -182,6 +314,7 @@ const CorporateUser = () => {
                           icon={<i className="icon-check icon-check-space"></i>}
                           text="Activate"
                           className={styles["Active-btn"]}
+                          onClick={handleActiveButton}
                         />
                         <Button
                           icon={<i className="icon-close icon-check-space"></i>}

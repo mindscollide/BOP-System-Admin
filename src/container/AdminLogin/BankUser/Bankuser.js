@@ -263,12 +263,12 @@ const Bankuser = () => {
         },
         BankId: 1,
       };
-      // dispatch(createBank(navigate, newData));
     } else {
       setErrorShow(true);
     }
   };
 
+  //Handle File upload
   const HandleFileUpload = (data) => {
     const UploadFile = data.target.value;
     const uploadedFile = data.target.files[0];

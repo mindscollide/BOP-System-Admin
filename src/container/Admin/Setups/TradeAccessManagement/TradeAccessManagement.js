@@ -13,6 +13,13 @@ const TradeAccessManagement = () => {
   const { Option } = Select;
   //States
   const [value, setValue] = useState("Corporate");
+  const [branchName, setBranchName] = useState({
+    Name: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
 
   const [dropdownvalue, setDropdownvalue] = useState(25);
 
@@ -32,6 +39,32 @@ const TradeAccessManagement = () => {
     { label: "Corporate", value: "Corporate" },
     { label: "Branch", value: "Branch" },
   ];
+
+  //Banker List validate handler
+  const TradeAccessManagementValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    //Client Name
+    if (name === "Name" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setBranchName({
+          ...branchName,
+          Name: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "Name" && value === "") {
+      setBranchName({
+        ...branchName,
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+  };
 
   //Table columns for TradeAccess Management List
   const columns = [
@@ -128,6 +161,9 @@ const TradeAccessManagement = () => {
                 <TextField
                   placeholder="Branch Name"
                   labelClass={"d-none"}
+                  name={"Name"}
+                  value={branchName.Name.value}
+                  onChange={TradeAccessManagementValidateHandler}
                   className={"BranchNameTradeAccessManagement"}
                 />
               </Col>
