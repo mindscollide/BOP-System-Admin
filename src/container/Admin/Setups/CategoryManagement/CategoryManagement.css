@@ -440,7 +440,6 @@ input[type="number"] {
 .modal-body {
   padding-top: 5px;
   max-height: 60vh;
-  overflow: auto;
 }
 .form-control {
   font-size: 11px;

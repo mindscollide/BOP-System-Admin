@@ -22,6 +22,8 @@ import {
 } from "../../../../commen/functions/numberFormatter";
 import DeleteModal from "./DeleRejectModal";
 import { DeleteOutlined } from "@material-ui/icons";
+import AddCategoryModal from "./AddCategoryModal/AddCategoryModal";
+import { AddCategoryModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 
 const CategoryManagement = () => {
   //Accordian
@@ -203,6 +205,11 @@ const CategoryManagement = () => {
 
   const { AddCategory, UpdateCategoryMap } = useSelector((state) => state);
 
+  //Edit Corporate Use Modal Calling
+  const AddCategoryGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.addCategoryModal
+  );
+
   //for Auto focus
   const NameRef = useRef(null);
 
@@ -275,9 +282,13 @@ const CategoryManagement = () => {
   const [deleteRejectModal, setDeleteRejectModal] = useState(false);
 
   //Active key collapser
-
   const handleCollapseChange = (key) => {
     setActiveKey(key);
+  };
+
+  //Add a Category Modal Trigger
+  const handleAddaCategoryModal = () => {
+    dispatch(AddCategoryModalSystemAdmin(true));
   };
 
   // api call for get All category
@@ -1210,7 +1221,11 @@ const CategoryManagement = () => {
           <span className="PageHeading">Category Management</span>
         </Col>
         <Col lg={2} md={2} sm={12} className="d-flex justify-content-center">
-          <Button text={"Add a Category"} className={"AddCategoryButton"} />
+          <Button
+            text={"Add a Category"}
+            className={"AddCategoryButton"}
+            onClick={handleAddaCategoryModal}
+          />
         </Col>
       </Row>
 
@@ -1412,8 +1427,7 @@ const CategoryManagement = () => {
         deleteRejectModal={deleteRejectModal}
         setDeleteRejectModal={setDeleteRejectModal}
       />
-      {auth.Loading ? <Loader /> : null}
-      {/* {AddCategory.Loading ? <Loader /> : null} */}
+      {AddCategoryGobalState && <AddCategoryModal />}
     </Container>
   );
 };
