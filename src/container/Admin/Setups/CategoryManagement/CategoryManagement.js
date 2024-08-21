@@ -28,7 +28,57 @@ const CategoryManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { auth } = useSelector((state) => state);
-  const [corporates, setCorporates] = useState([{}, {}, {}, {}]);
+  const [corporates, setCorporates] = useState([
+    {
+      categoryID: "cat-1",
+      categoryName: "Category 1",
+      bidSpread: "0.1234",
+      offerSpread: "0.5678",
+      corporates: [
+        {
+          corporateID: "corp-1",
+          corporateName: "Corporate 1",
+          corporateUsers: [
+            { email: "user1@corporate1.com" },
+            { email: "user2@corporate1.com" },
+          ],
+        },
+        {
+          corporateID: "corp-2",
+          corporateName: "Corporate 2",
+          corporateUsers: [
+            { email: "user1@corporate2.com" },
+            { email: "user2@corporate2.com" },
+          ],
+        },
+      ],
+    },
+    {
+      categoryID: "cat-2",
+      categoryName: "Category 2",
+      bidSpread: "0.2345",
+      offerSpread: "0.6789",
+      corporates: [
+        {
+          corporateID: "corp-3",
+          corporateName: "Corporate 3",
+          corporateUsers: [
+            { email: "user1@corporate3.com" },
+            { email: "user2@corporate3.com" },
+          ],
+        },
+        {
+          corporateID: "corp-4",
+          corporateName: "Corporate 4",
+          corporateUsers: [
+            { email: "user1@corporate4.com" },
+            { email: "user2@corporate4.com" },
+          ],
+        },
+      ],
+    },
+  ]);
+
   const { AddCategory, UpdateCategoryMap } = useSelector((state) => state);
 
   //for Auto focus
@@ -207,7 +257,8 @@ const CategoryManagement = () => {
                       return (
                         <Draggable
                           key={Clients.corporateID}
-                          draggableId={Clients.corporateID}
+                          // draggableId={Clients.corporateID}
+                          draggableId={"5"}
                           index={index}
                           type="column"
                         >
