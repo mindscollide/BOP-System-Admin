@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
-import { Col, Row, Form } from "react-bootstrap";
+import { Col, Row, Form, Container } from "react-bootstrap";
 import { TextField, Button, Loader } from "../../../../components/elements";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Collapse } from "antd";
@@ -21,6 +21,7 @@ import {
   stringConvertintoNumber,
 } from "../../../../commen/functions/numberFormatter";
 import DeleteModal from "./DeleRejectModal";
+import { DeleteOutlined } from "@material-ui/icons";
 
 const CategoryManagement = () => {
   //Accordian
@@ -37,7 +38,7 @@ const CategoryManagement = () => {
       corporates: [
         {
           corporateID: "corp-1",
-          corporateName: "Corporate 1",
+          corporateName: "Shan",
           corporateUsers: [
             { email: "user1@corporate1.com" },
             { email: "user2@corporate1.com" },
@@ -45,7 +46,7 @@ const CategoryManagement = () => {
         },
         {
           corporateID: "corp-2",
-          corporateName: "Corporate 2",
+          corporateName: "PPL",
           corporateUsers: [
             { email: "user1@corporate2.com" },
             { email: "user2@corporate2.com" },
@@ -61,7 +62,7 @@ const CategoryManagement = () => {
       corporates: [
         {
           corporateID: "corp-3",
-          corporateName: "Corporate 3",
+          corporateName: "Honda",
           corporateUsers: [
             { email: "user1@corporate3.com" },
             { email: "user2@corporate3.com" },
@@ -69,10 +70,130 @@ const CategoryManagement = () => {
         },
         {
           corporateID: "corp-4",
-          corporateName: "Corporate 4",
+          corporateName: "Deewan Sugar",
           corporateUsers: [
             { email: "user1@corporate4.com" },
             { email: "user2@corporate4.com" },
+          ],
+        },
+      ],
+    },
+    {
+      categoryID: "cat-3",
+      categoryName: "Category 3",
+      bidSpread: "0.3456",
+      offerSpread: "0.7890",
+      corporates: [
+        {
+          corporateID: "corp-5",
+          corporateName: "Amreeli Steel",
+          corporateUsers: [
+            { email: "user1@corporate5.com" },
+            { email: "user2@corporate5.com" },
+          ],
+        },
+        {
+          corporateID: "corp-6",
+          corporateName: "Nestle",
+          corporateUsers: [
+            { email: "user1@corporate6.com" },
+            { email: "user2@corporate6.com" },
+          ],
+        },
+      ],
+    },
+    {
+      categoryID: "cat-4",
+      categoryName: "Category 4",
+      bidSpread: "0.4567",
+      offerSpread: "0.8901",
+      corporates: [
+        {
+          corporateID: "corp-7",
+          corporateName: "Nestle Group",
+          corporateUsers: [
+            { email: "user1@corporate7.com" },
+            { email: "user2@corporate7.com" },
+          ],
+        },
+        {
+          corporateID: "corp-8",
+          corporateName: "Corporate 8",
+          corporateUsers: [
+            { email: "user1@corporate8.com" },
+            { email: "user2@corporate8.com" },
+          ],
+        },
+      ],
+    },
+    {
+      categoryID: "cat-5",
+      categoryName: "Category 5",
+      bidSpread: "0.5678",
+      offerSpread: "0.9012",
+      corporates: [
+        {
+          corporateID: "corp-9",
+          corporateName: "Corporate 9",
+          corporateUsers: [
+            { email: "user1@corporate9.com" },
+            { email: "user2@corporate9.com" },
+          ],
+        },
+        {
+          corporateID: "corp-10",
+          corporateName: "Corporate 10",
+          corporateUsers: [
+            { email: "user1@corporate10.com" },
+            { email: "user2@corporate10.com" },
+          ],
+        },
+      ],
+    },
+    {
+      categoryID: "cat-6",
+      categoryName: "Category 6",
+      bidSpread: "0.6789",
+      offerSpread: "1.0123",
+      corporates: [
+        {
+          corporateID: "corp-11",
+          corporateName: "Corporate 11",
+          corporateUsers: [
+            { email: "user1@corporate11.com" },
+            { email: "user2@corporate11.com" },
+          ],
+        },
+        {
+          corporateID: "corp-12",
+          corporateName: "Corporate 12",
+          corporateUsers: [
+            { email: "user1@corporate12.com" },
+            { email: "user2@corporate12.com" },
+          ],
+        },
+      ],
+    },
+    {
+      categoryID: "cat-7",
+      categoryName: "Category 7",
+      bidSpread: "0.7890",
+      offerSpread: "1.1234",
+      corporates: [
+        {
+          corporateID: "corp-13",
+          corporateName: "Corporate 13",
+          corporateUsers: [
+            { email: "user1@corporate13.com" },
+            { email: "user2@corporate13.com" },
+          ],
+        },
+        {
+          corporateID: "corp-14",
+          corporateName: "Corporate 14",
+          corporateUsers: [
+            { email: "user1@corporate14.com" },
+            { email: "user2@corporate14.com" },
           ],
         },
       ],
@@ -246,7 +367,7 @@ const CategoryManagement = () => {
                 lg={12}
                 md={12}
                 sm={12}
-                className="mt-3"
+                className="mt-0"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 style={{}}
@@ -272,23 +393,35 @@ const CategoryManagement = () => {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <Collapse>
-                                {console.log(
-                                  "authauth1234 ClientsClients",
-                                  Clients
-                                )}
-                                <Panel header={Clients.corporateName} key="1">
+                              <Collapse className="custom-collapse">
+                                <Panel
+                                  header={
+                                    <div className="panel-header">
+                                      <span className="company-name">
+                                        {Clients.corporateName}
+                                      </span>
+                                    </div>
+                                  }
+                                  key="1"
+                                  className="custom-panel"
+                                >
                                   {Object.keys(Clients.corporateUsers).length >
                                   0 ? (
                                     <>
                                       {Clients.corporateUsers.map(
                                         (corporaterUser, index) => {
-                                          return <p>{corporaterUser.email}</p>;
+                                          return (
+                                            <p className="user-email">
+                                              {corporaterUser.email}
+                                            </p>
+                                          );
                                         }
                                       )}
                                     </>
                                   ) : (
-                                    <p>This corporate have no user</p>
+                                    <p className="no-user">
+                                      This corporate have no user
+                                    </p>
                                   )}
                                 </Panel>
                               </Collapse>
@@ -1049,17 +1182,22 @@ const CategoryManagement = () => {
   };
 
   return (
-    <section className="Property-container">
-      <Row>
-        <Col lg={11} sm={11} md={11} className="m-0">
+    <Container>
+      <Row className="mt-3">
+        <Col lg={10} sm={10} md={11}>
           <span className="PageHeading">Category Management</span>
         </Col>
-        <Col lg={1} md={1} sm={1}></Col>
+        <Col lg={2} md={2} sm={12} className="d-flex justify-content-center">
+          <Button text={"Add a Category"} className={"AddCategoryButton"} />
+        </Col>
       </Row>
 
       {/* <!--row  Begin--> */}
 
-      <Row className="cat-management-wrapper d-flex" id="catManagementItem">
+      <Row
+        className="cat-management-wrapper d-flex mt-3"
+        id="catManagementItem"
+      >
         <Col lg={12} md={12} sm={12} className="Content_container">
           <Button
             icon={<i className="icon-arrow-left"></i>}
@@ -1079,7 +1217,7 @@ const CategoryManagement = () => {
                   lg={12}
                   md={12}
                   sm={12}
-                  className="Scroller-x-resolution "
+                  className="Scroller-x-resolution"
                   id="Slider"
                   ref={outerProvided.innerRef}
                   {...outerProvided.droppableProps}
@@ -1099,7 +1237,7 @@ const CategoryManagement = () => {
                           >
                             {(outerProvided) => (
                               <Col
-                                className="cat-management-item m-3"
+                                className="cat-management-item m-1"
                                 ref={outerProvided.innerRef}
                                 {...outerProvided.draggableProps}
                                 {...outerProvided.dragHandleProps}
@@ -1138,7 +1276,7 @@ const CategoryManagement = () => {
                                             OpenAddCategory(data.categoryID)
                                           }
                                         >
-                                          <i className="icon-add-circle"></i>
+                                          {/* <i className="icon-add-circle"></i> */}
                                         </span>
                                         <span
                                           className="delete-cat d-inline-block cursor-pointer"
@@ -1195,7 +1333,7 @@ const CategoryManagement = () => {
                                             sm={12}
                                             className="text-center"
                                           >
-                                            <div className="Title_offer">
+                                            <div className="title_bid">
                                               offer
                                             </div>
                                             <div className="rate val-highlight2">
@@ -1254,7 +1392,7 @@ const CategoryManagement = () => {
       />
       {auth.Loading ? <Loader /> : null}
       {/* {AddCategory.Loading ? <Loader /> : null} */}
-    </section>
+    </Container>
   );
 };
 

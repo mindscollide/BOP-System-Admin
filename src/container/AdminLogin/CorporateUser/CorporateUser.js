@@ -126,7 +126,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           labelClass="d-none"
                           name={"firstName"}
@@ -165,7 +165,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           labelClass="d-none"
                           name={"email"}
@@ -202,7 +202,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <Select
                           isSearchable={true}
                           classNamePrefix={"CompanyName"}
@@ -221,7 +221,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <Select
                           isSearchable={true}
                           className={styles["react-select-field"]}
@@ -238,7 +238,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12} className="m-0 p-0">
+                      <Col lg={6} md={6} sm={12} className="m-0 p-0">
                         <Checkbox
                           label2="Active"
                           classNameDiv={styles["CheckboxActive"]}
@@ -255,7 +255,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <Row>
                           <Col lg={6} md={6} sm={12}>
                             <span className={styles["labels-add-bank"]}>
@@ -296,7 +296,7 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField labelClass="d-none" disable={true} />
                       </Col>
 
@@ -305,8 +305,8 @@ const CorporateUser = () => {
 
                     <Row className="mt-3">
                       <Col
-                        lg={9}
-                        md={9}
+                        lg={10}
+                        md={10}
                         sm={12}
                         className="d-flex justify-content-center gap-2"
                       >

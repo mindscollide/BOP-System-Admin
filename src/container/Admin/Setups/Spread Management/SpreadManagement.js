@@ -539,7 +539,7 @@ const SpreadManagement = () => {
   ];
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
-      <Row className="mt-3">
+      <Row className="mt-4">
         <Col lg={6} md={6} sm={12}>
           <span className={style["CategoryManagementLabel"]}>
             Category Spread Management
