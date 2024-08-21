@@ -29,6 +29,7 @@ const CategoryManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { auth } = useSelector((state) => state);
+  const [activeKey, setActiveKey] = useState([]);
   const [corporates, setCorporates] = useState([
     {
       categoryID: "cat-1",
@@ -273,6 +274,12 @@ const CategoryManagement = () => {
   const [delteCateogry, setDeltecategory] = useState(null);
   const [deleteRejectModal, setDeleteRejectModal] = useState(false);
 
+  //Active key collapser
+
+  const handleCollapseChange = (key) => {
+    setActiveKey(key);
+  };
+
   // api call for get All category
   useEffect(() => {
     dispatch(getAllCorporatesCategory(navigate));
@@ -393,14 +400,28 @@ const CategoryManagement = () => {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <Collapse className="custom-collapse">
+                              <Collapse
+                                className="custom-collapse"
+                                activeKey={activeKey}
+                                onChange={handleCollapseChange}
+                              >
                                 <Panel
                                   header={
                                     <div>
                                       <span className="company-name">
                                         {Clients.corporateName}
                                       </span>
-                                      <i class="icon-trash color-red"></i>
+                                      {activeKey.includes("1") && (
+                                        <Button
+                                          icon={
+                                            <i className="icon-trash color-red"></i>
+                                          }
+                                          className={"TrashIconClassRed"}
+                                          iconClass={
+                                            "trashiconClassredCollapse"
+                                          }
+                                        />
+                                      )}
                                     </div>
                                   }
                                   key="1"

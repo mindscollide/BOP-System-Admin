@@ -1,26 +1,15 @@
-import React, { Fragment } from "react";
-import { Col, Row, Container } from "react-bootstrap";
+import React from "react";
+import style from "./VolMeter.module.css";
+import { Col, Row } from "react-bootstrap";
 import {
   CustomPaper,
   TextField,
   Button,
-  Loader,
   Notification,
-  Table,
 } from "../../../../components/elements";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import "./VolMeter.css";
 import { useState } from "react";
-import { useEffect } from "react";
 
 const VolMeter = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { systemReducer } = useSelector((state) => state);
-  console.log(systemReducer, "systemReducersystemReducer");
-  let volBankId = localStorage.getItem("bankID");
-
   const [open, setOpen] = useState({
     open: false,
     message: "",
@@ -51,8 +40,6 @@ const VolMeter = () => {
 
     isVolActive: true,
   });
-
-  console.log(volMeterFields, "volMeterFieldsvolMeterFields");
 
   const onChanngeVolMterValidation = (e) => {
     let name = e.target.name;
@@ -131,31 +118,31 @@ const VolMeter = () => {
   const onUpdateBtnHit = async () => {};
 
   return (
-    <section className="SystemContainer">
-      <Row>
+    <section className={style["VolmeterContainer"]}>
+      <Row className="mt-3">
         <Col lg={12} md={12} sm={12}>
-          <span className="volMeter-label">Volatility Meter</span>
+          <span className={style["volMeter-label"]}>Volatility Meter</span>
         </Col>
       </Row>
 
       <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
-          <CustomPaper className="volMeter-paper">
+          <CustomPaper className={style["volMeter-paper"]}>
             <Row className="mt-4">
               <Col lg={12} md={12} sm={12}>
-                <label className="volMeter-load-heading">
+                <label className={style["volMeter-load-heading"]}>
                   {" "}
                   % load to spread{" "}
-                  <span className="volMeter-aesterick-color">*</span>
+                  <span className={style["volMeter-aesterick-color"]}>*</span>
                 </label>
               </Col>
             </Row>
             <Row className="mt-2">
               <Col lg={3} md={3} sm={12} />
               <Col lg={6} md={6} sm={12}>
-                <Row className="vol-meter-fields">
+                <Row className={style["vol-meter-fields"]}>
                   <Col lg={2} md={2} sm={12}>
-                    <span className="number-on-textfiels">1</span>
+                    <span className={style["number-on-textfiels"]}>1</span>
                     <TextField
                       name="volatilityMeter"
                       type="text"
@@ -165,7 +152,7 @@ const VolMeter = () => {
                     />
                   </Col>
                   <Col lg={2} md={2} sm={12}>
-                    <span className="number-on-textfiels">2</span>
+                    <span className={style["number-on-textfiels"]}>2</span>
                     <TextField
                       name="nameVol"
                       type="text"
@@ -175,7 +162,7 @@ const VolMeter = () => {
                     />
                   </Col>
                   <Col lg={2} md={2} sm={12}>
-                    <span className="number-on-textfiels">3</span>
+                    <span className={style["number-on-textfiels"]}>3</span>
                     <TextField
                       name="volMeter"
                       type="text"
@@ -200,7 +187,7 @@ const VolMeter = () => {
                   text="Update"
                   onClick={onUpdateBtnHit}
                   icon={<i className="icon-refresh icon-update-refresh"></i>}
-                  className="VolMeter-Update-btn"
+                  className={style["VolMeter-Update-btn"]}
                 />
               </Col>
             </Row>

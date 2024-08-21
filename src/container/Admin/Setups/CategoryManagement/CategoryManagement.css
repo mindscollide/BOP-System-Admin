@@ -660,6 +660,11 @@ input[type="number"] {
   vertical-align: middle;
 }
 
+[class^="icon-trash color-red"],
+[class*="icon-trash color-red"] {
+  font-size: 12px;
+}
+
 /*card box style*/
 .card-box {
   background: #ffffff;
@@ -1346,4 +1351,25 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   > .ant-collapse-item
   > .ant-collapse-header {
   padding: 3px 0px;
+}
+
+.TrashIconClassRed {
+  background: none !important;
+  border: none !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  position: absolute !important;
+  left: 120px !important;
+}
+
+.TrashIconClassRed:hover {
+  background: none !important;
+  border: none !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  height: 3px;
+  width: 3px;
+}
+.trashiconClassredCollapse {
+  margin-left: 23px !important;
 }
