@@ -1,0 +1,68 @@
+.HeadingAddCategory {
+  font-size: 1.25rem;
+  color: #f26522 !important;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.CrossButton {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: end !important;
+}
+
+.CrossButton:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: end !important;
+}
+
+.Label {
+  font-size: 12px;
+  color: #004990 !important;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.asteric {
+  color: #cf5b5b !important;
+}
+
+.cancelButton {
+  background: #f26522 !important;
+  border-radius: 4px !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-family: "Poppins", sans-serif;
+}
+
+.cancelButton:hover {
+  background: #096fed !important;
+  border-radius: 4px !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-family: "Poppins", sans-serif;
+}
+
+.AddButton {
+  background: #096fed !important;
+  border-radius: 4px !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-family: "Poppins", sans-serif;
+}
+
+.AddButton:hover {
+  background: #f26522 !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  border: none !important;
+  font-size: 14px !important;
+  font-family: "Poppins", sans-serif;
+}

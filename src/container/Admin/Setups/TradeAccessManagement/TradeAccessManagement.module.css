@@ -10,3 +10,11 @@
   width: 95% !important;
   margin: 0 auto !important;
 }
+
+.custom-radio-group span {
+  font-family: "Roboto", sans-serif !important;
+}
+
+.spanshowClass {
+  font-family: "Roboto", sans-serif !important;
+}

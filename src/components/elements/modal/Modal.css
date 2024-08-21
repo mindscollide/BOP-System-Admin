@@ -20,6 +20,16 @@
   padding: 10px !important;
 }
 
+.UniversalBOPModalStylesAddCategory .modal-content {
+  background: #f3f2f1 !important;
+  border: 1px solid #dbd7d5 !important;
+  max-width: 500px !important;
+  margin-left: 90px !important;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+  padding: 10px !important;
+}
+
 .userDetailsCorporateList .modal-content {
   background: #f3f2f1 !important;
   border: 1px solid #dbd7d5 !important;

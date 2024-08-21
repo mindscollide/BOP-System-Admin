@@ -115,7 +115,9 @@ const TradeAccessManagement = () => {
   const dataSource = [
     {
       key: "1",
-      CounterPartyName: "Atlas Honda",
+      CounterPartyName: (
+        <span className={styles["spanshowClass"]}>Atlas Honda</span>
+      ),
       Edit: (
         <>
           <Row>
@@ -156,10 +158,10 @@ const TradeAccessManagement = () => {
                   value={value}
                   name="customRadio"
                   size="default"
-                  className="custom-radio-group"
+                  className={styles["custom-radio-group"]}
                 />
                 <TextField
-                  placeholder="Branch Name"
+                  placeholder="Corporate Name"
                   labelClass={"d-none"}
                   name={"Name"}
                   value={branchName.Name.value}
@@ -175,7 +177,7 @@ const TradeAccessManagement = () => {
                 sm={12}
                 className="d-flex gap-1 align-items-center"
               >
-                <span>Show</span>
+                <span className={styles["spanshowClass"]}>Show</span>
 
                 <Select
                   defaultValue={dropdownvalue}
@@ -188,7 +190,7 @@ const TradeAccessManagement = () => {
                   <Option value={100}>100</Option>
                 </Select>
 
-                <span>entries</span>
+                <span className={styles["spanshowClass"]}>entries</span>
               </Col>
             </Row>
             <Row className="mt-3">

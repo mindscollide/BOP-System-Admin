@@ -32,9 +32,18 @@ const UserDetailsCorporateModalSystemAdmin = (response, message) => {
   };
 };
 
+const AddCategoryModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.ADD_CATEGORY_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
 export {
   AdduserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
   UserDetailsCorporateModalSystemAdmin,
+  AddCategoryModalSystemAdmin,
 };

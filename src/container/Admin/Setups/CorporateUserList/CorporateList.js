@@ -18,7 +18,6 @@ import {
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
 import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
-import BankerList from "../BankerList/BankerList";
 
 const CorporateList = () => {
   const dispatch = useDispatch();

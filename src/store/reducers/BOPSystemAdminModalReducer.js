@@ -7,6 +7,7 @@ const initialState = {
   editCorporateModal: false,
   deleteCorporateModal: false,
   userDetailsCorporateModal: false,
+  addCategoryModal: false,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -36,6 +37,13 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         userDetailsCorporateModal: action.response,
+      };
+    }
+
+    case actions.ADD_CATEGORY_MODAL: {
+      return {
+        ...state,
+        addCategoryModal: action.response,
       };
     }
 
