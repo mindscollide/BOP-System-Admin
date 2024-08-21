@@ -396,10 +396,11 @@ const CategoryManagement = () => {
                               <Collapse className="custom-collapse">
                                 <Panel
                                   header={
-                                    <div className="panel-header">
+                                    <div>
                                       <span className="company-name">
                                         {Clients.corporateName}
                                       </span>
+                                      <i class="icon-trash color-red"></i>
                                     </div>
                                   }
                                   key="1"
