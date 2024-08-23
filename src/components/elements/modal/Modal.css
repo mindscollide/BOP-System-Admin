@@ -35,6 +35,7 @@
   border: 1px solid #dbd7d5 !important;
   padding: 10px 12px !important;
   width: 100% !important;
+  overflow: auto !important;
 }
 
 .UniversalBOPModalStylesfooter {
