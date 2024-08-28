@@ -105,22 +105,29 @@ const ChangePassword = () => {
                   </Col>
                   <Row>
                     <Col>
-                      <PasswordChecklist
-                        rules={["minLength", "specialChar", "letter", "match"]}
-                        messages={{
-                          minLength: "Password has at least 8 characters",
-                          specialChar: "Password has special characters",
-                          letter: "Password has a letter",
-                          match: "Passwords match",
-                        }}
-                        minLength={8}
-                        className="password-checklist"
-                        invalidColor="#ff0000"
-                        validColor="#6172D6"
-                        iconSize={"11px"}
-                        value={password}
-                        valueAgain={confirmPassword}
-                      />
+                      <div className="password-checklist-container">
+                        <PasswordChecklist
+                          rules={[
+                            "minLength",
+                            "specialChar",
+                            "letter",
+                            "match",
+                          ]}
+                          messages={{
+                            minLength: "Password has at least 8 characters",
+                            specialChar: "Password has special characters",
+                            letter: "Password has a letter",
+                            match: "Passwords match",
+                          }}
+                          minLength={8}
+                          className="password-checklist"
+                          invalidColor="#ff0000"
+                          validColor="#6172D6"
+                          iconSize={"11px"}
+                          value={password}
+                          valueAgain={confirmPassword}
+                        />
+                      </div>
                     </Col>
                   </Row>
                   <Col
