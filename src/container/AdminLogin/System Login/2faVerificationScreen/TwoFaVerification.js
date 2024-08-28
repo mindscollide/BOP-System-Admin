@@ -26,43 +26,8 @@ const TwoFaVerification = () => {
   return (
     <Fragment>
       <section className="ChangePassword-Screen-bg">
-        {/* <Row className="mt-5">
-          <Col sm={12} md={12} lg={12} className="ChangePassword-container">
-            <Row>
-              <Col className="mb-4">
-                <img src={BOPlogo} width="300px" />
-              </Col>
-            </Row>
-            <Row className="mt-2">
-              <Col sm={5} md={5} lg={5} className="BOP-center-div flex-column">
-                <Row>
-                  <Col sm={12} md={12} lg={12}>
-                    <span className="Heading-ChangePaswword-BOP">
-                      2FA Verification
-                    </span>
-                  </Col>
-
-                  <Row>
-                    <Col
-                      sm={12}
-                      md={12}
-                      lg={12}
-                      className="d-flex justify-content-center mt-2"
-                    >
-                      <Button
-                        text="Change Password"
-                        className="ChangePassword-btn"
-                        disableBtn={true}
-                      />
-                    </Col>
-                  </Row>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-        </Row> */}
         <div className="TwoFaVerification-container">
-          <Row>
+          <Row className="mt-5">
             <Col className="mb-4">
               <img src={BOPlogo} width="300px" />
             </Col>
@@ -106,7 +71,8 @@ const TwoFaVerification = () => {
             <Row>
               <Col lg={12} md={12} sm={12} className="column-twoFa-subHeading">
                 <span className="TwoFaVerification-SubHeadings">
-                  Didn't Receive the Code? <span>Resend Code 00:00</span>
+                  Didn't Receive the Code?{" "}
+                  <span className="resendClass">Resend Code 00:00</span>
                 </span>
               </Col>
             </Row>
