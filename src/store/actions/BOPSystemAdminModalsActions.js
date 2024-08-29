@@ -40,10 +40,19 @@ const AddCategoryModalSystemAdmin = (response, message) => {
   };
 };
 
+const corporatePlusIconModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.CORPORATE_PLUS_ICON_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
 export {
   AdduserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
   UserDetailsCorporateModalSystemAdmin,
   AddCategoryModalSystemAdmin,
+  corporatePlusIconModalSystemAdmin,
 };

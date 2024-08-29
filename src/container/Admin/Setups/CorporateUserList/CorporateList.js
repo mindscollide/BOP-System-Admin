@@ -17,7 +17,7 @@ import {
 } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
-import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
+import CorporatePlusIconModal from "../../../AdminLogin/CorporateUser/CorporatePlusIconModal/CorporatePlusIconModal";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
@@ -338,7 +338,7 @@ const CorporateList = () => {
       </Row>
       {EditCorporateModalGobalState && <EditCorporateModal />}
       {DeleteCorporateModalGobalState && <DeleteConfirmationModal />}
-      {UserDetailsCorporateModalGobalState && <CorporateUserDetailsModal />}
+      {UserDetailsCorporateModalGobalState && <CorporatePlusIconModal />}
     </section>
   );
 };
