@@ -512,7 +512,7 @@ const Bankuser = () => {
                       <Col lg={4} md={4} sm={12}></Col>
                     </Row>
 
-                    <Row className="mt-3">
+                    <Row className="mt-3 mb-5">
                       <Col
                         lg={9}
                         md={9}
