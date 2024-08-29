@@ -4,3 +4,13 @@
   font-size: 1.25rem;
   font-family: "Roboto", sans-serif;
 }
+
+.labels-add-bank {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif !important;
+}
+.aesterick-color {
+  color: #cf5b5b !important;
+}
