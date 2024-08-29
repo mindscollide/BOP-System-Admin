@@ -6,7 +6,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  height: 50px;
+  height: 48px;
 }
 
 .navbar {
@@ -30,18 +30,18 @@
 
 .user-name-header2 {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0 10px;
   max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .dropdown_menu-Header2.dropdown-menu {
   border: none !important;
-  margin-top: 15px !important;
+  margin-top: 10px !important;
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {

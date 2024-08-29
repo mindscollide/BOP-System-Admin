@@ -425,7 +425,9 @@ const CategoryManagement = () => {
                                       {activeKey.includes("1") && (
                                         <Button
                                           icon={
-                                            <i className="icon-trash color-red"></i>
+                                            <div className="special-component-category">
+                                              <i className="icon-trash color-red"></i>
+                                            </div>
                                           }
                                           className={"TrashIconClassRed"}
                                           iconClass={

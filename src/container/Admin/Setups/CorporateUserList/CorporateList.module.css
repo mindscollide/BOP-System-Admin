@@ -117,3 +117,11 @@
   padding: 0 !important;
   margin: 0 !important;
 }
+
+.special-component .icon-trash.color-red {
+  font-size: 17px;
+}
+
+.iconClassTrashCorporate {
+  font-size: 17px !important;
+}

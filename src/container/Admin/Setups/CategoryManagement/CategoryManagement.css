@@ -641,7 +641,7 @@ input[type="number"] {
 .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #2936ae;
+  background-color: #0d6efd;
 }
 .dropdown-menu {
   border: 0px;

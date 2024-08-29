@@ -227,6 +227,7 @@ const CorporateList = () => {
                 <Button
                   className={styles["EditButton"]}
                   icon={<i class="icon-trash color-red"></i>}
+                  iconClass={"iconClassTrashCorporate"}
                   onClick={handleDeleteCorporate}
                 />
               </Col>
