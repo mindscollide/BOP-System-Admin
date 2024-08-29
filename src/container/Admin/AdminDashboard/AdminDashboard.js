@@ -13,7 +13,7 @@ const AdminDashboard = () => {
         <Header2 />
 
         <Layout>
-          <Sider width={270}>
+          <Sider width={260}>
             <Sidebar2 />
           </Sider>
           <Content className="w-100 overflow-auto">

@@ -10,9 +10,9 @@ const Header = () => {
         <Navbar>
           <Container fluid>
             <Navbar.Brand>
-              <img src={BOPLogo} width={205} alt="" className="BopLogoClass" />
+              <img src={BOPLogo} width={200} alt="" className="BopLogoClass" />
             </Navbar.Brand>
-            <Dropdown>
+            <Dropdown className="WholeDropDown">
               <Dropdown.Toggle className="dropdown-toggle-header2">
                 <p className="user-name-header2">Owais Wajid</p>
               </Dropdown.Toggle>
