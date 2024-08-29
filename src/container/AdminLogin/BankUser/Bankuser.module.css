@@ -180,3 +180,26 @@
   display: flex;
   justify-content: center;
 }
+
+.EditButton {
+  width: 40px;
+  position: absolute !important;
+  right: 46.4% !important;
+  height: 100% !important;
+  align-items: center !important;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0px !important;
+}
+
+.EditButton:is(:hover, :focus, :focus-visible, :active) {
+  width: 45px;
+  width: 40px;
+  position: absolute !important;
+  right: 46.4% !important;
+  height: 100% !important;
+  align-items: center !important;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0px !important;
+}

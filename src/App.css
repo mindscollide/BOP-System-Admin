@@ -38,7 +38,15 @@ span.CompanyName__indicator-separator.css-1u9des2-indicatorSeparator {
 }
 
 .CompanyName__indicator.CompanyName__dropdown-indicator.css-1xc3v61-indicatorContainer {
-  margin-right: 85px !important;
+  margin-right: 75px !important;
+}
+
+.CompanyNameBankUser__indicator.CompanyNameBankUser__dropdown-indicator.css-1xc3v61-indicatorContainer {
+  margin-right: 75px !important;
+}
+
+span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
+  display: none !important;
 }
 
 .CompanyName__control--is-focused {

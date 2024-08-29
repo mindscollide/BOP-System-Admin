@@ -239,15 +239,13 @@ const CorporateUser = () => {
                       <Col lg={1} md={1} sm={12}>
                         {/* <CorporateCustomUpload /> */}
                         <Button
+                          className={styles["PlusButton"]}
                           icon={<span className={styles["PlusIcon"]}>+</span>}
-                          iconClass={["PlusIcon"]}
                           onClick={handlePlusButton}
-                          className={styles["OuterBodyCustomUpload"]}
                         />
                         <Button
+                          className={styles["EditButton"]}
                           icon={<i class="icon-edit color-blue"></i>}
-                          iconClass={["PlusIcon"]}
-                          className={styles["OuterBodyCustomUploadEdit"]}
                           onClick={handleEditButton}
                         />
                       </Col>

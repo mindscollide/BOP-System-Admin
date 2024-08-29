@@ -304,6 +304,21 @@ const Bankuser = () => {
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
+                          Employee ID
+                          <span className={styles["aesterick-color"]}>*</span>
+                        </span>
+                      </Col>
+                      <Col lg={5} md={5} sm={12}>
+                        <TextField name={"firstName"} labelClass="d-none" />
+                      </Col>
+
+                      <Col lg={4} md={4} sm={4}>
+                        <CustomUpload />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col lg={2} md={2} sm={12}>
+                        <span className={styles["labels-add-bank"]}>
                           Treasury Person Name
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
@@ -333,10 +348,6 @@ const Bankuser = () => {
                             </p>
                           </Col>
                         </Row>
-                      </Col>
-
-                      <Col lg={4} md={4} sm={4}>
-                        <CustomUpload />
                       </Col>
                     </Row>
 
@@ -390,7 +401,7 @@ const Bankuser = () => {
                           <Col lg={5} md={5} sm={12}>
                             <Select
                               isSearchable={true}
-                              classNamePrefix={"CompanyName"}
+                              classNamePrefix={"CompanyNameBankUser"}
                             />
                           </Col>
                           <Col lg={1} md={1} sm={12}>
@@ -402,7 +413,14 @@ const Bankuser = () => {
                               onClick={handleOpenAddBankUserModal}
                             />
                           </Col>
-                          <Col lg={4} md={4} sm={12}></Col>
+                          <Col lg={1} md={1} sm={12}>
+                            <Button
+                              className={styles["EditButton"]}
+                              icon={<i class="icon-edit color-blue"></i>}
+                              onClick={handleOpenAddBankUserModal}
+                            />
+                          </Col>
+                          <Col lg={3} md={3} sm={12}></Col>
                         </Row>
                         <Row className="mt-3">
                           <Col lg={2} md={2} sm={12}>
@@ -414,13 +432,32 @@ const Bankuser = () => {
                             </span>
                           </Col>
                           <Col lg={5} md={5} sm={12}>
-                            <Select isSearchable={true} />
+                            <TextField
+                              name={"Category"}
+                              disable={true}
+                              placeholder={"01 bps"}
+                              labelClass="d-none"
+                            />
                           </Col>
 
                           <Col lg={4} md={4} sm={12}></Col>
                         </Row>
                       </>
                     ) : null}
+
+                    <Row className="mt-3">
+                      <Col lg={2} md={2} sm={12}>
+                        <span className={styles["labels-add-bank"]}>
+                          LDAP ID
+                          <span className={styles["aesterick-color"]}>*</span>
+                        </span>
+                      </Col>
+                      <Col lg={5} md={5} sm={12}>
+                        <TextField name={"email"} labelClass="d-none" />
+                      </Col>
+
+                      <Col lg={4} md={4} sm={12}></Col>
+                    </Row>
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
@@ -433,6 +470,7 @@ const Bankuser = () => {
                         <TextField
                           name={"email"}
                           value={addBankUser.email.value}
+                          disable={true}
                           onChange={addBankUserValidateHandler}
                           labelClass="d-none"
                         />
