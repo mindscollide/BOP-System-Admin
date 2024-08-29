@@ -88,3 +88,7 @@
     width: 100% !important;
   }
 }
+
+.BopLogoClass {
+  cursor: pointer !important;
+}

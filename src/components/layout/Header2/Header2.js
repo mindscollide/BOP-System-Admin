@@ -2,15 +2,27 @@ import "./Header2.css";
 import { Container, Nav, Dropdown } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import BOPLogo from "../../../assets/images/logo-white.png";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  //HandleClick on logo
+  const onClickLogo = () => {
+    navigate("/AdminDashboard/AddBankUser");
+  };
   return (
     <>
       <Container fluid className="container-header-2">
         <Navbar>
           <Container fluid>
             <Navbar.Brand>
-              <img src={BOPLogo} width={200} alt="" className="BopLogoClass" />
+              <img
+                src={BOPLogo}
+                width={200}
+                alt=""
+                className="BopLogoClass"
+                onClick={onClickLogo}
+              />
             </Navbar.Brand>
             <Dropdown className="WholeDropDown">
               <Dropdown.Toggle className="dropdown-toggle-header2">

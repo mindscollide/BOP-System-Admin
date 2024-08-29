@@ -33,7 +33,7 @@ export const router = createHashRouter(
       <Route exact path="ResetPassword" element={<ResetPassword />} />
       <Route exact path="2FAVerfication" element={<TwoFaVerification />} />
       {/* <Route element={<PrivateRoutes />}> */}
-      <Route exact path="/AdminDashboard/" element={<AdminDashboard />}>
+      <Route exact path="/SystemAdmin/" element={<AdminDashboard />}>
         <Route path="" element={<Bankuser />} />
         {/* <Route path="" element={<PropertyType />} /> */}
         {/* <Route path="" element={<AssetsBanking />} /> */}
