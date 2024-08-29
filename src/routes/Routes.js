@@ -4,8 +4,6 @@ import {
   createHashRouter,
 } from "react-router-dom";
 
-import PropertyType from "../container/Admin/Setups/PropertyType/PropertyType";
-import AssetsBanking from "../container/Admin/Reports/Non-Banking-Assets/Assets-Banking";
 import TradeCount from "../container/Admin/Setups/TradeCount/Tradecount";
 import CounterLimit from "../container/Admin/Reports/CounterParty/CounterLimit";
 import VolMeter from "../container/Admin/Reports/VolMeter/VolMeter";

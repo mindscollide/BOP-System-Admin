@@ -9,6 +9,7 @@ const initialState = {
   userDetailsCorporateModal: false,
   addCategoryModal: false,
   corporatePlusIconModal: false,
+  editCompanyModal: false,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -52,6 +53,13 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         corporatePlusIconModal: action.response,
+      };
+    }
+
+    case actions.CORPORATE_EDIT_COMPANY_MODAL: {
+      return {
+        ...state,
+        editCompanyModal: action.response,
       };
     }
 

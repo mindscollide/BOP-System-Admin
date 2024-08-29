@@ -12,17 +12,24 @@ import Select from "react-select";
 import { validateEmail } from "../../../commen/functions/emailValidation";
 import { useSelector } from "react-redux";
 import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
-import { corporatePlusIconModalSystemAdmin } from "../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  corporatePlusIconModalSystemAdmin,
+  editCompanyModalSystemAdmin,
+} from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
+import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
 
 const CorporateUser = () => {
   const dispatch = useDispatch();
-  //Delete Corporate Use Modal Calling
+  //Add Company Use Modal Calling
   const PlusIconCorporateModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.corporatePlusIconModal
   );
 
-  console.log(PlusIconCorporateModalGobalState, "BOPSystemAdminModal");
+  //Edit Company Use Modal Calling
+  const editCompanyModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.editCompanyModal
+  );
 
   //Corporate User State
   const [corporateUser, setCorporateUser] = useState({
@@ -112,6 +119,11 @@ const CorporateUser = () => {
   //handle Plus Button
   const handlePlusButton = () => {
     dispatch(corporatePlusIconModalSystemAdmin(true));
+  };
+
+  //Edit Button
+  const handleEditButton = () => {
+    dispatch(editCompanyModalSystemAdmin(true));
   };
 
   return (
@@ -236,6 +248,7 @@ const CorporateUser = () => {
                           icon={<i class="icon-edit color-blue"></i>}
                           iconClass={["PlusIcon"]}
                           className={styles["OuterBodyCustomUploadEdit"]}
+                          onClick={handleEditButton}
                         />
                       </Col>
                       <Col lg={4} md={4} sm={12}></Col>
@@ -363,6 +376,7 @@ const CorporateUser = () => {
         </Col>
       </Row>
       {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
+      {editCompanyModalGobalState && <EditCompanyModal />}
     </section>
   );
 };

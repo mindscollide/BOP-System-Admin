@@ -221,5 +221,7 @@ export const DELETE_CORPORATE_MODAL = "DELETE_CORPORATE_MODAL";
 export const USER_DETAILS_CORPORATE_MODAL = "USER_DETAILS_CORPORATE_MODAL";
 // Add Category Modal
 export const ADD_CATEGORY_MODAL = "ADD_CATEGORY_MODAL";
-// Corporate PlusIcon Modal
+// Corporate PlusIcon Modal Add Company
 export const CORPORATE_PLUS_ICON_MODAL = "CORPORATE_PLUS_ICON_MODAL";
+// Corporate Edit Company Modal
+export const CORPORATE_EDIT_COMPANY_MODAL = "CORPORATE_EDIT_COMPANY_MODAL";

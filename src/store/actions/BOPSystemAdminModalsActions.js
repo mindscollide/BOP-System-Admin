@@ -48,6 +48,14 @@ const corporatePlusIconModalSystemAdmin = (response, message) => {
   };
 };
 
+const editCompanyModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.CORPORATE_EDIT_COMPANY_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
 export {
   AdduserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
@@ -55,4 +63,5 @@ export {
   UserDetailsCorporateModalSystemAdmin,
   AddCategoryModalSystemAdmin,
   corporatePlusIconModalSystemAdmin,
+  editCompanyModalSystemAdmin,
 };

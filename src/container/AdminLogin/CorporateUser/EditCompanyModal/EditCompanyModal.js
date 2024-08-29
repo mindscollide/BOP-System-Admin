@@ -1,27 +1,27 @@
 import React from "react";
-import styles from "./CorporatePlusIconModal.module.css";
-import { Button, Modal, TextField } from "../../../../components/elements";
+import styles from "./EditCompanyModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import { corporatePlusIconModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { editCompanyModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { Button, Modal, TextField } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
-const CorporatePlusIconModal = () => {
+const EditCompanyModal = () => {
   const dispatch = useDispatch();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const handleCrossIcon = () => {
-    dispatch(corporatePlusIconModalSystemAdmin(false));
+    dispatch(editCompanyModalSystemAdmin(false));
   };
   return (
     <Modal
-      show={BOPSystemAdminModal.corporatePlusIconModal}
-      setShow={(value) => dispatch(corporatePlusIconModalSystemAdmin(value))}
+      show={BOPSystemAdminModal.editCompanyModal}
+      setShow={(value) => dispatch(editCompanyModalSystemAdmin(value))}
       className="UniversalBOPModalStyles"
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
       size="md"
-      onHide={() => dispatch(corporatePlusIconModalSystemAdmin(false))}
+      onHide={() => dispatch(editCompanyModalSystemAdmin(false))}
       ModalBody={
         <>
           <Row>
@@ -48,20 +48,7 @@ const CorporatePlusIconModal = () => {
               <TextField labelClass="d-none" name={"firstName"} />
             </Col>
           </Row>
-          <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
-              <span className={styles["labels-add-bank"]}>
-                Category
-                <span className={styles["aesterick-color"]}>*</span>
-              </span>
-            </Col>
-            <Col lg={8} md={8} sm={12}>
-              <Select
-                classNamePrefix={"selectCateogyCorporateList"}
-                placeholder={"01 bps"}
-              />
-            </Col>
-          </Row>
+
           <Row className="mt-3">
             <Col lg={4} md={4} sm={12}>
               <span className={styles["labels-add-bank"]}>
@@ -140,4 +127,4 @@ const CorporatePlusIconModal = () => {
   );
 };
 
-export default CorporatePlusIconModal;
+export default EditCompanyModal;
