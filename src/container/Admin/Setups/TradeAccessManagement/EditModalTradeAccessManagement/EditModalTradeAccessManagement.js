@@ -22,7 +22,16 @@ const EditModalTradeAccessManagement = () => {
 
   const columns = [
     {
-      title: "Instrument",
+      title: "",
+      children: [
+        {
+          title: "Instrument",
+          dataIndex: "Instrument",
+          key: "Instrument",
+          align: "center",
+          render: () => {},
+        },
+      ],
       key: "Instrument",
       dataIndex: "currentBid",
       align: "center",
@@ -68,27 +77,63 @@ const EditModalTradeAccessManagement = () => {
       ],
     },
     {
-      title: "Forward",
-      key: "Forward",
-      dataIndex: "Forward",
+      title: "",
+      children: [
+        {
+          title: "Forward",
+          dataIndex: "Forward",
+          key: "Forward",
+          align: "center",
+          render: () => {},
+        },
+      ],
+      key: "",
+      dataIndex: "",
       align: "center",
     },
     {
-      title: "Discounting",
-      key: "Discounting",
-      dataIndex: "Discounting",
+      title: "",
+      children: [
+        {
+          title: "Discounting",
+          dataIndex: "Discounting",
+          key: "Discounting",
+          align: "center",
+          render: () => {},
+        },
+      ],
+      key: "",
+      dataIndex: "",
       align: "center",
     },
     {
-      title: "Active",
-      key: "Active",
-      dataIndex: "Active",
+      title: "",
+      children: [
+        {
+          title: "Active",
+          dataIndex: "Active",
+          key: "Active",
+          align: "center",
+          render: () => {},
+        },
+      ],
+      key: "",
+      dataIndex: "",
       align: "center",
     },
     {
-      title: "Hide",
-      key: "Hide",
-      dataIndex: "Hide",
+      title: "",
+      children: [
+        {
+          title: "Hide",
+          dataIndex: "Hide",
+          key: "Hide",
+          align: "center",
+          render: () => {},
+        },
+      ],
+      key: "",
+      dataIndex: "",
       align: "center",
     },
   ];
