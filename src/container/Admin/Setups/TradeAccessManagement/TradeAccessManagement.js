@@ -9,8 +9,17 @@ import {
 } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import { Select } from "antd";
+import { useSelector } from "react-redux";
+import EditModalTradeAccessManagement from "./EditModalTradeAccessManagement/EditModalTradeAccessManagement";
+import { useDispatch } from "react-redux";
+import { editTradeAccessManagementModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 const TradeAccessManagement = () => {
   const { Option } = Select;
+  const dispatch = useDispatch();
+  //Add Bank  Use Modal Calling
+  const EditTradeAccessManagementModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.editModalTradeAccessManagement
+  );
   //States
   const [value, setValue] = useState("Corporate");
   const [branchName, setBranchName] = useState({
@@ -66,15 +75,21 @@ const TradeAccessManagement = () => {
     }
   };
 
+  //Handle Edit Trade Access managment Modal
+
+  const handleEditTradeAccessManagementModal = () => {
+    dispatch(editTradeAccessManagementModalSystemAdmin(true));
+  };
+
   //Table columns for TradeAccess Management List
   const columns = [
     {
       title: <label className="bottom-table-header">Counter Party Name</label>,
       dataIndex: "CounterPartyName",
       key: "CounterPartyName",
-      width: "100px",
+      width: "190px",
       ellipsis: true,
-      align: "center",
+      align: "left",
       render: () => {
         return (
           <>
@@ -122,7 +137,10 @@ const TradeAccessManagement = () => {
         <>
           <Row>
             <Col lg={12} md={12} sm={12} className="color-blue">
-              <i class="icon-edit "></i>
+              <i
+                class="icon-edit "
+                onClick={handleEditTradeAccessManagementModal}
+              ></i>
             </Col>
           </Row>
         </>
@@ -199,13 +217,16 @@ const TradeAccessManagement = () => {
                   column={columns}
                   pagination={true}
                   rows={dataSource}
-                  className={"BankUserList-table"}
+                  className={"TradeAccessManagement"}
                 />
               </Col>
             </Row>
           </CustomPaper>
         </Col>
       </Row>
+      {EditTradeAccessManagementModalGobalState && (
+        <EditModalTradeAccessManagement />
+      )}
     </section>
   );
 };

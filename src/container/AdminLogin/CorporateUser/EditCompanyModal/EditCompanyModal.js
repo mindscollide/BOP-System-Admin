@@ -26,7 +26,7 @@ const EditCompanyModal = () => {
         <>
           <Row>
             <Col lg={11} md={11} sm={12}>
-              <span className={styles["AddCompanyLabel"]}>Add Company</span>
+              <span className={styles["AddCompanyLabel"]}>Edit Company</span>
             </Col>
             <Col lg={1} md={1} sm={12}>
               <Button
@@ -110,8 +110,8 @@ const EditCompanyModal = () => {
               className="d-flex justify-content-center gap-2"
             >
               <Button
-                text={"Add"}
-                icon={<i class="icon-users"></i>}
+                text={"Update"}
+                icon={<i class="icon-refresh"></i>}
                 className={styles["AddButton"]}
               />
               <Button

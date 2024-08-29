@@ -56,6 +56,22 @@ const editCompanyModalSystemAdmin = (response, message) => {
   };
 };
 
+const editBankUserModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.EDIT_BANK_USER_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
+const editTradeAccessManagementModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.EDIT_TRADE_ACCESS_MANAGMENT_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
 export {
   AdduserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
@@ -64,4 +80,6 @@ export {
   AddCategoryModalSystemAdmin,
   corporatePlusIconModalSystemAdmin,
   editCompanyModalSystemAdmin,
+  editBankUserModalSystemAdmin,
+  editTradeAccessManagementModalSystemAdmin,
 };

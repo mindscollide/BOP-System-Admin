@@ -9,6 +9,7 @@ import {
 } from "../../../../components/elements";
 import Select from "react-select";
 import DatePicker from "react-multi-date-picker";
+import ExportShowComponent from "../BankerList/ExportShowComponent";
 
 const TradeCount = () => {
   //Trade Count States
@@ -446,6 +447,12 @@ const TradeCount = () => {
                   className={styles["Banklist-Reset-btn"]}
                   text="Reset"
                 />
+              </Col>
+            </Row>
+
+            <Row className="mt-2">
+              <Col lg={12} md={12} sm={12}>
+                <ExportShowComponent />
               </Col>
             </Row>
 

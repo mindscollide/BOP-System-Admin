@@ -275,7 +275,7 @@ const CorporateList = () => {
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
             <Row className="mt-3">
-              <Col lg={2} md={2} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <TextField
                   placeholder="Name"
                   labelClass={"d-none"}
@@ -284,7 +284,7 @@ const CorporateList = () => {
                   onChange={CorporateListValidateHandler}
                 />
               </Col>
-              <Col lg={2} md={2} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <TextField
                   placeholder="Corporate Name"
                   labelClass={"d-none"}
@@ -293,7 +293,7 @@ const CorporateList = () => {
                   onChange={CorporateListValidateHandler}
                 />
               </Col>
-              <Col lg={2} md={2} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <TextField
                   placeholder="Email"
                   labelClass={"d-none"}
@@ -308,7 +308,15 @@ const CorporateList = () => {
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
-              <Col lg={3} md={3} sm={12} className="d-flex gap-2">
+            </Row>
+
+            <Row className="mt-3">
+              <Col
+                lg={12}
+                md={12}
+                sm={12}
+                className="d-flex justify-content-center gap-1"
+              >
                 <Button
                   icon={<i className="icon-search icon-check-space"></i>}
                   className={styles["CorporateList-btn-Search"]}
@@ -318,6 +326,12 @@ const CorporateList = () => {
                   icon={<i className="icon-refresh icon-check-space"></i>}
                   className={styles["Corporatelist-Reset-btn"]}
                   text="Reset"
+                  iconClass={styles["resetIconClass"]}
+                />
+                <Button
+                  icon={<i class="icon-download"></i>}
+                  className={styles["Export_Button"]}
+                  text="Export"
                   iconClass={styles["resetIconClass"]}
                 />
               </Col>

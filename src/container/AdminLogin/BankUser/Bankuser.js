@@ -11,8 +11,12 @@ import { validateEmail } from "../../../commen/functions/emailValidation";
 import Select from "react-select";
 import { useSelector } from "react-redux";
 import AddBankUserModal from "./AddBankUserModal/AddBankUserModal";
-import { AdduserModalSystemAdmin } from "../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  AdduserModalSystemAdmin,
+  editBankUserModalSystemAdmin,
+} from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
+import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
 
 const Bankuser = () => {
   const dispatch = useDispatch();
@@ -20,6 +24,11 @@ const Bankuser = () => {
   //Add Bank  Use Modal Calling
   const AddBankUserModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addBankUserModal
+  );
+
+  //Edit Bank  Use Modal Calling
+  const EditBankUserModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.editBankUserModal
   );
 
   //state for error Message
@@ -39,6 +48,11 @@ const Bankuser = () => {
   //handle Open AddBankUser Modal
   const handleOpenAddBankUserModal = () => {
     dispatch(AdduserModalSystemAdmin(true));
+  };
+
+  //handle Edit AddBankUser Modal
+  const handleOpenEditBankUserModal = () => {
+    dispatch(editBankUserModalSystemAdmin(true));
   };
 
   //state for Add Bank User
@@ -417,7 +431,7 @@ const Bankuser = () => {
                             <Button
                               className={styles["EditButton"]}
                               icon={<i class="icon-edit color-blue"></i>}
-                              onClick={handleOpenAddBankUserModal}
+                              onClick={handleOpenEditBankUserModal}
                             />
                           </Col>
                           <Col lg={3} md={3} sm={12}></Col>
@@ -541,6 +555,7 @@ const Bankuser = () => {
         </Col>
       </Row>
       {AddBankUserModalGobalState && <AddBankUserModal />}
+      {EditBankUserModalGobalState && <EditBankUserModal />}
     </section>
   );
 };
