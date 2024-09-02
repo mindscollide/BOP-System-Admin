@@ -206,7 +206,7 @@ const EditModalTradeAccessManagement = () => {
                 column={columns}
                 pagination={true}
                 // rows={dataSource}
-                className={"TradeAccessManagement"}
+                className={"TradeAccessManagementEdit"}
               />
             </Col>
           </Row>
