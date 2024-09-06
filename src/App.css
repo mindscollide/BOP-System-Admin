@@ -565,3 +565,40 @@ input.form-control {
   }
 }
 /* Ends */
+
+/* Borders styling Spread Management Tabels */
+
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-content
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th,
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-header
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th,
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-body
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th,
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-summary
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th {
+  border-radius: 0px !important;
+}

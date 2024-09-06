@@ -588,12 +588,12 @@ const SpreadManagement = () => {
               >
                 <Button
                   icon={<i class="icon-refresh"></i>}
-                  className={style["Reset-btn"]}
+                  className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                 />
                 <Button
                   icon={<i class="icon-save"></i>}
-                  className={style["Search-btn-BankList"]}
+                  className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
               </Col>
@@ -625,12 +625,12 @@ const SpreadManagement = () => {
               >
                 <Button
                   icon={<i class="icon-refresh"></i>}
-                  className={style["Reset-btn"]}
+                  className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                 />
                 <Button
                   icon={<i class="icon-save"></i>}
-                  className={style["Search-btn-BankList"]}
+                  className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
               </Col>
@@ -661,12 +661,12 @@ const SpreadManagement = () => {
               >
                 <Button
                   icon={<i class="icon-refresh"></i>}
-                  className={style["Reset-btn"]}
+                  className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                 />
                 <Button
                   icon={<i class="icon-save"></i>}
-                  className={style["Search-btn-BankList"]}
+                  className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
               </Col>
