@@ -274,6 +274,25 @@ const CorporateUserDetailsModal = () => {
               </CustomPaper>
             </Col>
           </Row>
+          <Row className="mt-2">
+            <Col
+              lg={12}
+              md={12}
+              sm={12}
+              className="d-flex justify-content-center gap-3"
+            >
+              <Button
+                text={"Update"}
+                className={styles["UpdateButton"]}
+                icon={<i class="icon-refresh"></i>}
+              />
+              <Button
+                text={"Discard"}
+                icon={<i class="icon-close"></i>}
+                className={styles["DiscardButton"]}
+              />
+            </Col>
+          </Row>
         </>
       }
       ModalFooter={<></>}

@@ -270,3 +270,53 @@
   align-items: center !important;
   border: none !important;
 }
+
+.UpdateButton {
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex !important;
+  gap: 4px !important;
+  border: none !important;
+  align-items: center !important;
+}
+
+.UpdateButton:is(:hover, :focus, :focus-visible, :active) {
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  border: none !important;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex !important;
+  gap: 4px !important;
+  align-items: center !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%);
+}
+
+.DiscardButton {
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  border: none !important;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex !important;
+  gap: 4px !important;
+  align-items: center !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%);
+}
+
+.DiscardButton:is(:hover, :focus, :focus-visible, :active) {
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex !important;
+  gap: 4px !important;
+  border: none !important;
+  align-items: center !important;
+}

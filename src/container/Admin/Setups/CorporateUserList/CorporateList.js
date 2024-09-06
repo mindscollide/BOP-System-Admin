@@ -18,6 +18,7 @@ import {
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
 import CorporatePlusIconModal from "../../../AdminLogin/CorporateUser/CorporatePlusIconModal/CorporatePlusIconModal";
+import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
@@ -245,7 +246,9 @@ const CorporateList = () => {
       key: "1",
       email: (
         <>
-          <span onClick={handleOnClickEmail}>john.doe@example.com</span>
+          <span className="cursor-pointer" onClick={handleOnClickEmail}>
+            john.doe@example.com
+          </span>
         </>
       ),
       Name: "John Doe",
@@ -352,7 +355,8 @@ const CorporateList = () => {
       </Row>
       {EditCorporateModalGobalState && <EditCorporateModal />}
       {DeleteCorporateModalGobalState && <DeleteConfirmationModal />}
-      {UserDetailsCorporateModalGobalState && <CorporatePlusIconModal />}
+      {UserDetailsCorporateModalGobalState && <CorporateUserDetailsModal />}
+      {/* {UserDetailsCorporateModalGobalState && <CorporatePlusIconModal />} */}
     </section>
   );
 };
