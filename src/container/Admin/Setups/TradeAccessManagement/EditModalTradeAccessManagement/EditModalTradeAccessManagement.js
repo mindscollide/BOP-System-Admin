@@ -37,18 +37,18 @@ const EditModalTradeAccessManagement = () => {
       align: "center",
     },
     {
-      title: "CrossRate",
+      title: "Cross Rate",
       key: "CrossRate",
       children: [
         {
-          title: "Bid",
+          title: "Buy",
           dataIndex: "currentBid",
           key: "currentBid",
           align: "center",
           render: () => {},
         },
         {
-          title: "Offer",
+          title: "Sell",
           dataIndex: "currentBid",
           key: "currentBid",
           align: "center",
@@ -61,14 +61,14 @@ const EditModalTradeAccessManagement = () => {
       key: "Parity",
       children: [
         {
-          title: "Bid",
+          title: "Buy",
           dataIndex: "currentBid",
           key: "currentBid",
           align: "center",
           render: () => {},
         },
         {
-          title: "Offer",
+          title: "Sell",
           dataIndex: "currentBid",
           key: "currentBid",
           align: "center",

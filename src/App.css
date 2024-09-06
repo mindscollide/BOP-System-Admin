@@ -475,12 +475,14 @@ input.form-control {
   background: #fff !important;
   border: 1px solid #e1e1e1 !important;
   color: #000 !important;
+  font-weight: bold !important;
 }
 
 .TradeAccessManagementEdit tr:nth-child(1) th.ant-table-cell:nth-child(3) {
   background: #fff !important;
   border: 1px solid #e1e1e1 !important;
   color: #000 !important;
+  font-weight: bold !important;
 }
 
 .TradeAccessManagementEdit::-webkit-scrollbar {

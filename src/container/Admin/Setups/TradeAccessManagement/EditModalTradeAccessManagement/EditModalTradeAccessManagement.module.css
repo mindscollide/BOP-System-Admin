@@ -14,3 +14,54 @@
 .aesterick-color {
   color: #cf5b5b !important;
 }
+
+.AddBranchClass {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.AddBranchClass:is(:hover, :active, :focus, :focus-visible) {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.CancelButton {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.CancelButton:is(:hover, :active, :focus, :focus-visible) {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  background: #0b5ed7 !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
