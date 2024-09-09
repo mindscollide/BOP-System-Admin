@@ -50,3 +50,9 @@
   width: 100% !important;
   display: contents;
 }
+
+.UniversalBOPModalStylesfooterTradeAccessMangement {
+  width: 100% !important;
+  display: Block !important;
+  border: none !important;
+}

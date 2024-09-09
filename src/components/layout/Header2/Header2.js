@@ -8,7 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   //HandleClick on logo
   const onClickLogo = () => {
-    navigate("/AdminDashboard/AddBankUser");
+    navigate("/SystemAdmin/AddBankUser");
   };
   return (
     <>

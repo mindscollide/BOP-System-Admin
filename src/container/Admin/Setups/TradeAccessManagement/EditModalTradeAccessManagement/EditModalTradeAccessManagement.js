@@ -145,7 +145,7 @@ const EditModalTradeAccessManagement = () => {
       }
       className="UniversalBOPModalStylesTradeAccessManagment"
       modalHeaderClassName={"d-none"}
-      modalFooterClassName="UniversalBOPModalStylesfooter"
+      modalFooterClassName="UniversalBOPModalStylesfooterTradeAccessMangement"
       size="xl"
       onHide={() => dispatch(editTradeAccessManagementModalSystemAdmin(false))}
       ModalBody={
@@ -213,29 +213,31 @@ const EditModalTradeAccessManagement = () => {
         </>
       }
       ModalFooter={
-        <Row className="mb-3">
-          <Col
-            lg={12}
-            md={12}
-            sm={12}
-            className="d-flex justify-content-center gap-2"
-          >
-            <Button
-              icon={<i class="icon-refresh"></i>}
-              text={"Save Changes"}
-              className={styles["AddBranchClass"]}
-              iconClass={styles["IconClass"]}
-            />
+        <>
+          <Row className="mt-5">
+            <Col
+              lg={12}
+              md={12}
+              sm={12}
+              className="d-flex justify-content-center gap-2"
+            >
+              <Button
+                icon={<i class="icon-refresh"></i>}
+                text={"Save Changes"}
+                className={styles["AddBranchClass"]}
+                iconClass={styles["IconClass"]}
+              />
 
-            <Button
-              icon={<i class="icon-close"></i>}
-              text={"Cancel"}
-              className={styles["CancelButton"]}
-              iconClass={styles["IconClass"]}
-              onClick={handleNoButton}
-            />
-          </Col>
-        </Row>
+              <Button
+                icon={<i class="icon-close"></i>}
+                text={"Cancel"}
+                className={styles["CancelButton"]}
+                iconClass={styles["IconClass"]}
+                onClick={handleNoButton}
+              />
+            </Col>
+          </Row>
+        </>
       }
     />
   );

@@ -274,7 +274,7 @@ const CorporateUserDetailsModal = () => {
               </CustomPaper>
             </Col>
           </Row>
-          <Row className="mt-2">
+          <Row className="mt-3">
             <Col
               lg={12}
               md={12}
