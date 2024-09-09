@@ -610,7 +610,7 @@ input.form-control {
 
 .groupTable {
   max-height: 45vh !important;
-  max-width: 76vw;
+  max-width: 90vw;
   width: 100%;
   box-sizing: border-box !important;
   overflow-x: auto !important;
