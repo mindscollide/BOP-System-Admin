@@ -11,11 +11,13 @@ export const useStyles = makeStyles((theme) => ({
     background: "rgb(0, 183, 22) !important",
     marginTop: theme.spacing(5),
     position: "relative",
+    fontSize: "15px",
   },
   BackGroundfailed: {
     width: "100%",
     backgroundColor: "#ce0000",
     position: "relative",
     marginTop: theme.spacing(6),
+    fontSize: "15px",
   },
 }));

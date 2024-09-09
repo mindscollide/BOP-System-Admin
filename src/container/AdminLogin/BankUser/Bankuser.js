@@ -262,33 +262,33 @@ const Bankuser = () => {
       open: true,
       message: "HELLO I am testing",
     });
-    // if (
-    //   addBankUser.firstName.value !== "" &&
-    //   addBankUser.lastName.value !== "" &&
-    //   addBankUser.roleID.value !== "" &&
-    //   addBankUser.ldapAccount.value !== "" &&
-    //   addBankUser.email.value !== "" &&
-    //   addBankUser.Contact.value !== ""
-    // ) {
-    //   setErrorShow(false);
-    //   let newData = {
-    //     User: {
-    //       FirstName: addBankUser.firstName.value,
-    //       Lastname: addBankUser.lastName.value,
-    //       Email: addBankUser.email.value,
-    //       ContactNumber: addBankUser.Contact.value,
-    //       LDAPAccount: addBankUser.ldapAccount.value,
-    //       // LDAPAccount: `mindscollide.${addBankUser.Name.value.replace(
-    //       //   " ",
-    //       //   ""
-    //       // )}`,
-    //       UserRoleID: addBankUser.roleID.value,
-    //     },
-    //     BankId: 1,
-    //   };
-    // } else {
-    //   setErrorShow(true);
-    // }
+    if (
+      addBankUser.firstName.value !== "" &&
+      addBankUser.lastName.value !== "" &&
+      addBankUser.roleID.value !== "" &&
+      addBankUser.ldapAccount.value !== "" &&
+      addBankUser.email.value !== "" &&
+      addBankUser.Contact.value !== ""
+    ) {
+      setErrorShow(false);
+      let newData = {
+        User: {
+          FirstName: addBankUser.firstName.value,
+          Lastname: addBankUser.lastName.value,
+          Email: addBankUser.email.value,
+          ContactNumber: addBankUser.Contact.value,
+          LDAPAccount: addBankUser.ldapAccount.value,
+          // LDAPAccount: `mindscollide.${addBankUser.Name.value.replace(
+          //   " ",
+          //   ""
+          // )}`,
+          UserRoleID: addBankUser.roleID.value,
+        },
+        BankId: 1,
+      };
+    } else {
+      setErrorShow(true);
+    }
   };
 
   //Handle File upload
