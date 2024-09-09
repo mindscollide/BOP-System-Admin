@@ -22,7 +22,7 @@
 }
 
 .Container_bank_user {
-  width: 95% !important;
+  width: 97% !important;
   margin: 0 auto !important;
 }
 
@@ -184,7 +184,7 @@
 .EditButton {
   width: 40px;
   position: absolute !important;
-  right: 45.7% !important;
+  right: 45.5% !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -196,7 +196,7 @@
   width: 45px;
   width: 40px;
   position: absolute !important;
-  right: 45.7% !important;
+  right: 45.5% !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
