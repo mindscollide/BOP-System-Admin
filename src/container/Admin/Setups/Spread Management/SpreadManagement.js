@@ -22,6 +22,7 @@ const SpreadManagement = () => {
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
 
     {
@@ -31,6 +32,7 @@ const SpreadManagement = () => {
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
   ];
 
@@ -51,6 +53,7 @@ const SpreadManagement = () => {
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
 
     {
@@ -60,11 +63,36 @@ const SpreadManagement = () => {
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
   ];
 
   // Dummy data for the table
   const data = [
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
     {
       key: "1",
       currency: "EUR",
@@ -612,7 +640,6 @@ const SpreadManagement = () => {
                   bordered
                   pagination={false}
                   prefixCls="groupTable"
-                  style={{ overflowX: "auto" }}
                 />
               </Col>
             </Row>
@@ -648,7 +675,6 @@ const SpreadManagement = () => {
                   bordered
                   pagination={false}
                   prefixCls="groupTable"
-                  style={{ overflowX: "auto" }}
                 />
               </Col>
             </Row>

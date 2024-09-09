@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   CustomUpload,
+  Notification,
 } from "../../../components/elements";
 import { validateEmail } from "../../../commen/functions/emailValidation";
 import Select from "react-select";
@@ -20,6 +21,10 @@ import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
 
 const Bankuser = () => {
   const dispatch = useDispatch();
+
+  //Checking snakbar state
+
+  const [open, setOpen] = useState(false);
 
   //Add Bank  Use Modal Calling
   const AddBankUserModalGobalState = useSelector(
@@ -250,36 +255,40 @@ const Bankuser = () => {
       },
     });
   };
-
+  console.log(open, "openopen");
   // show error message When user hit activate btn
   const activateHandler = () => {
-    if (
-      addBankUser.firstName.value !== "" &&
-      addBankUser.lastName.value !== "" &&
-      addBankUser.roleID.value !== "" &&
-      addBankUser.ldapAccount.value !== "" &&
-      addBankUser.email.value !== "" &&
-      addBankUser.Contact.value !== ""
-    ) {
-      setErrorShow(false);
-      let newData = {
-        User: {
-          FirstName: addBankUser.firstName.value,
-          Lastname: addBankUser.lastName.value,
-          Email: addBankUser.email.value,
-          ContactNumber: addBankUser.Contact.value,
-          LDAPAccount: addBankUser.ldapAccount.value,
-          // LDAPAccount: `mindscollide.${addBankUser.Name.value.replace(
-          //   " ",
-          //   ""
-          // )}`,
-          UserRoleID: addBankUser.roleID.value,
-        },
-        BankId: 1,
-      };
-    } else {
-      setErrorShow(true);
-    }
+    setOpen({
+      open: true,
+      message: "HELLO I am testing",
+    });
+    // if (
+    //   addBankUser.firstName.value !== "" &&
+    //   addBankUser.lastName.value !== "" &&
+    //   addBankUser.roleID.value !== "" &&
+    //   addBankUser.ldapAccount.value !== "" &&
+    //   addBankUser.email.value !== "" &&
+    //   addBankUser.Contact.value !== ""
+    // ) {
+    //   setErrorShow(false);
+    //   let newData = {
+    //     User: {
+    //       FirstName: addBankUser.firstName.value,
+    //       Lastname: addBankUser.lastName.value,
+    //       Email: addBankUser.email.value,
+    //       ContactNumber: addBankUser.Contact.value,
+    //       LDAPAccount: addBankUser.ldapAccount.value,
+    //       // LDAPAccount: `mindscollide.${addBankUser.Name.value.replace(
+    //       //   " ",
+    //       //   ""
+    //       // )}`,
+    //       UserRoleID: addBankUser.roleID.value,
+    //     },
+    //     BankId: 1,
+    //   };
+    // } else {
+    //   setErrorShow(true);
+    // }
   };
 
   //Handle File upload
@@ -556,6 +565,7 @@ const Bankuser = () => {
       </Row>
       {AddBankUserModalGobalState && <AddBankUserModal />}
       {EditBankUserModalGobalState && <EditBankUserModal />}
+      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };

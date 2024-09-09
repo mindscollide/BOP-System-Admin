@@ -8,8 +8,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   BackGroundSucces: {
     width: "100%",
-    background:
-      "linear-gradient(to bottom, #eeb592 0%, #fc6d0f 100%) !important",
+    background: "rgb(0, 183, 22) !important",
     marginTop: theme.spacing(5),
     position: "relative",
   },
