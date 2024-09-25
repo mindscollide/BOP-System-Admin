@@ -1,9 +1,31 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Container, Col, Row, InputGroup, Form } from "react-bootstrap";
-import { Button } from "../../../../components/elements";
+import { Button, Loader, Notification } from "../../../../components/elements";
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
 import "./SystemLogin.css";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginSystemAdminAPI } from "../../../../store/actions/Auth-Actions";
+import { useSelector } from "react-redux";
 const SystemLogin = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { auth } = useSelector((state) => state);
+
+  //Auth States
+  const [open, setOpen] = useState({
+    open: false,
+    message: "",
+  });
+  const handleLoginButton = () => {
+    let data = {
+      UserName: "talha1234",
+      Password: "0",
+      DeviceID: "ABCD1234-5678-90EF-GHIJ-KLMNOPQRSTUV",
+      Device: "iPhone 13 Pro",
+    };
+    dispatch(loginSystemAdminAPI(navigate, data));
+  };
   return (
     <Fragment>
       <Col sm={12} lg={12} md={12} className="sign-in">
@@ -72,7 +94,11 @@ const SystemLogin = () => {
                         lg={12}
                         className="signIn-Signup-btn-col"
                       >
-                        <Button text="Login" className="login-btn" />
+                        <Button
+                          text="Login"
+                          className="login-btn"
+                          onClick={handleLoginButton}
+                        />
                       </Col>
                     </Row>
                   </Form>
@@ -82,6 +108,8 @@ const SystemLogin = () => {
           </Row>
         </Container>
       </Col>
+      {auth.Loading && <Loader />}
+      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </Fragment>
   );
 };

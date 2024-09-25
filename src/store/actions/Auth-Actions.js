@@ -455,6 +455,7 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
+              navigate("/SystemAdmin/AddBankUser");
             }
           } else if (
             response.data.responseResult.responseMessage
