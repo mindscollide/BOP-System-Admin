@@ -5,6 +5,9 @@ import {
   getallCoporatesSystem,
   UpdateCorporateMapping,
   DeleteCategory,
+  LoginSystemAdmin,
+  CorporateUserLogin,
+  SendEmailResetPassword,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -387,10 +390,246 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
   };
 };
 
+//Login API System Admin
+const loginSystemAdmininit = () => {
+  return {
+    type: actions.LOG_IN_INIT,
+  };
+};
+
+const loginSystemAdminSuccess = (response, message) => {
+  return {
+    type: actions.LOG_IN_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const loginSystemAdminFailed = (response, message) => {
+  return {
+    type: actions.LOG_IN_FAIL,
+    message: message,
+  };
+};
+
+const loginSystemAdminAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(loginSystemAdmininit());
+    let form = new FormData();
+    form.append("RequestMethod", LoginSystemAdmin.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(loginSystemAdminAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_Login_01".toLowerCase()
+            ) {
+              dispatch(
+                loginSystemAdminFailed(
+                  response.data.responseResult,
+                  "Device is Empty"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_02".toLowerCase())
+            ) {
+              dispatch(loginSystemAdminFailed("Device ID is Empty"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
+            ) {
+              dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
+            }
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_04".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("LDAP Auth Failed"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_05".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("User is Locked"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_06".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("User is Disabled"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_07".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("User is Closed"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_08".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("User is Dormant"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_09".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("Login Failed"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_12".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("Not A valid role to login"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_10".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("Login Failed"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes("ERM_AuthService_AuthManager_Login_11".toLowerCase())
+          ) {
+            dispatch(loginSystemAdminFailed("Something went wrong"));
+          } else {
+            dispatch(loginSystemAdminFailed("Something went wrong"));
+          }
+        } else {
+          dispatch(loginSystemAdminFailed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(loginSystemAdminFailed("something went wrong"));
+      });
+  };
+};
+
+//Send Email Reset Password
+const SendEmailResetPasswordInit = () => {
+  return {
+    type: actions.SEND_EMAIL_RESET_PASSWORD_INIT,
+  };
+};
+
+const SendEmailResetPasswordSuccess = (response, message) => {
+  return {
+    type: actions.SEND_EMAIL_RESET_PASSWORD_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SendEmailResetPasswordFail = (message) => {
+  return {
+    type: actions.SEND_EMAIL_RESET_PASSWORD_FAIL,
+    message: message,
+  };
+};
+
+const SendEmailResetPasswordAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(SendEmailResetPasswordInit());
+    let form = new FormData();
+    form.append("RequestMethod", SendEmailResetPassword.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(SendEmailResetPasswordAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_SendEmailForResetPasword_01".toLowerCase()
+            ) {
+              dispatch(
+                SendEmailResetPasswordSuccess(
+                  response.data.responseResult,
+                  "Email for Reset Password Sent Successfully"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_SendEmailForResetPasword_02".toLowerCase()
+                )
+            ) {
+              dispatch(
+                SendEmailResetPasswordFail("No Email sent for Reset Password")
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_SendEmailForResetPasword_03".toLowerCase()
+                )
+            ) {
+              dispatch(SendEmailResetPasswordFail("Invalid Corporate UserF"));
+            }
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes(
+                "ERM_AuthService_AuthManager_SendEmailForResetPasword_04".toLowerCase()
+              )
+          ) {
+            dispatch(SendEmailResetPasswordFail("Please Enter A valid Email"));
+          } else if (
+            response.data.responseResult.responseMessage
+              .toLowerCase()
+              .includes(
+                "ERM_AuthService_AuthManager_SendEmailForResetPasword_05".toLowerCase()
+              )
+          ) {
+            dispatch(SendEmailResetPasswordFail("Something went wrong"));
+          } else {
+            dispatch(SendEmailResetPasswordFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SendEmailResetPasswordFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SendEmailResetPasswordFail("something went wrong"));
+      });
+  };
+};
+
 export {
   signOut,
   RefreshToken,
   getAllCorporatesCategory,
   UpdatecorporateMapping,
   DeleteCorporateCategoryAPI,
+  loginSystemAdminAPI,
+  SendEmailResetPasswordAPI,
 };

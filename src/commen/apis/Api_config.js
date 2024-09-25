@@ -30,7 +30,6 @@ const uploadCounterPartyFile = {
 };
 
 //Delete a Category
-
 const DeleteCategory = {
   RequestMethod: "ServiceManager.DeleteCorporateCategory",
 };
@@ -38,6 +37,16 @@ const DeleteCategory = {
 // download counter party file
 const counterPartyDownloadApi = {
   RequestMethod: "DownloadFile",
+};
+
+//login api
+const LoginSystemAdmin = {
+  RequestMethod: "ServiceManager.Login",
+};
+
+//Send Email for Reset Password
+const SendEmailResetPassword = {
+  RequestMethod: "ServiceManager.SendEmailForResetPasword",
 };
 
 export {
@@ -50,4 +59,6 @@ export {
   uploadCounterPartyFile,
   DeleteCategory,
   counterPartyDownloadApi,
+  LoginSystemAdmin,
+  SendEmailResetPassword,
 };

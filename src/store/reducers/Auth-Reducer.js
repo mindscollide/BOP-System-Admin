@@ -23,6 +23,9 @@ const initialState = {
   roles: null,
   Token: "",
   Refresh: "",
+  corporateUserlogin: null,
+  sendEmailResetPassword: null,
+  createCorporatePassword: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -79,12 +82,6 @@ const authReducer = (state = initialState, action) => {
         Token: "",
         Refresh: "",
         SessionExpeireResponseMessage: action.message,
-      };
-
-      return {
-        ...state,
-        Loading: false,
-        ResponseMessage: action.message,
       };
 
     case actions.USER_ROLES_INIT:
@@ -311,53 +308,26 @@ const authReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
-    case actions.SEARCH_GET_COMPANY_USER_LOGIN_INIT:
+    //Send Email Reset Password
+    case actions.SEND_EMAIL_RESET_PASSWORD_INIT:
       return {
         ...state,
         Loading: true,
-        Spinner: true,
       };
 
-    case actions.SEARCH_GET_COMPANY_USER_LOGIN_SUCCESS:
+    case actions.SEND_EMAIL_RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         Loading: false,
-        Spinner: false,
-        corporateGetSearchLoginHistory: action.response,
+        sendEmailResetPassword: action.response,
         ResponseMessage: action.message,
       };
 
-    case actions.SEARCH_GET_COMPANY_USER_LOGIN_FAIL:
+    case actions.SEND_EMAIL_RESET_PASSWORD_FAIL:
       return {
         ...state,
         Loading: false,
-        Spinner: false,
-        corporateGetSearchLoginHistory: [],
-        ResponseMessage: action.message,
-      };
-
-    case actions.SEARCH_GET_BANK_USER_LOGIN_INIT:
-      return {
-        ...state,
-        Loading: true,
-        Spinner: true,
-      };
-
-    case actions.SEARCH_GET_BANK_USER_LOGIN_SUCCESS:
-      return {
-        ...state,
-        Loading: false,
-        Spinner: false,
-        bankGetSearchLoginHistory: action.response,
-        ResponseMessage: action.message,
-      };
-
-    case actions.SEARCH_GET_BANK_USER_LOGIN_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        Spinner: false,
-        bankGetSearchLoginHistory: [],
+        sendEmailResetPassword: null,
         ResponseMessage: action.message,
       };
 
