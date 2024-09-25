@@ -413,7 +413,7 @@ const loginSystemAdminFailed = (response, message) => {
 };
 
 const loginSystemAdminAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
   return (dispatch) => {
     dispatch(loginSystemAdmininit());
     let form = new FormData();
@@ -424,7 +424,7 @@ const loginSystemAdminAPI = (navigate, data) => {
       url: authenticationAPI,
       data: form,
       headers: {
-        _token: token,
+        // _token: token,
       },
     })
       .then(async (response) => {
@@ -455,7 +455,7 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
-              navigate("/SystemAdmin/AddBankUser");
+              // navigate("/SystemAdmin/AddBankUser");
             }
           } else if (
             response.data.responseResult.responseMessage

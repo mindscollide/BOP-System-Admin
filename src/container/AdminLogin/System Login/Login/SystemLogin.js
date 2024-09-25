@@ -17,9 +17,10 @@ const SystemLogin = () => {
     open: false,
     message: "",
   });
-  const handleLoginButton = () => {
+  const handleLoginButton = (e) => {
+    e.preventDefault();
     let data = {
-      UserName: "talha1234",
+      UserName: "mehdi.branchuser",
       Password: "0",
       DeviceID: "ABCD1234-5678-90EF-GHIJ-KLMNOPQRSTUV",
       Device: "iPhone 13 Pro",
