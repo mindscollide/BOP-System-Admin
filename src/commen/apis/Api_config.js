@@ -71,7 +71,36 @@ const UpdateBranch = {
 const GetAllBranches = {
   RequestMethod: "ServiceManager.GetAllBranches",
 };
+//Create Bank User Request
+const CreateBankUserRequest = {
+  RequestMethod: "ServiceManager.CreateBankUserRequest",
+};
+//Create Bulk Bank User Request
+const CreateBulkBankUserRequest = {
+  RequestMethod: "ServiceManager.CreateBulkBankUserRequests",
+};
+//Create Corporate User Reqeust
+const CreateCorporateUserRequest = {
+  RequestMethod: "ServiceManager.CreateCorporateUserRequest",
+};
 
+//Create Bulk Corporate User Request
+const CreateBulkCorporateUserRequest = {
+  RequestMethod: "ServiceManager.CreateBulkCorporateUserRequests",
+};
+
+//Bank Users BankUserList
+const BankUsersBankList = {
+  RequestMethod: "ServiceManager.BankUsersBulkList",
+};
+//Corporate Users Bulk List
+const CorporateUsersBulkList = {
+  RequestMethod: "ServiceManager.CorporateUsersBulkList",
+};
+//Search Corporate Users
+const SearchCorporateUsers = {
+  RequestMethod: "ServiceManager.SearchCorporateUsers",
+};
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -89,4 +118,11 @@ export {
   AddBranch,
   UpdateBranch,
   GetAllBranches,
+  CreateBankUserRequest,
+  CreateBulkBankUserRequest,
+  CreateCorporateUserRequest,
+  CreateBulkCorporateUserRequest,
+  BankUsersBankList,
+  CorporateUsersBulkList,
+  SearchCorporateUsers,
 };

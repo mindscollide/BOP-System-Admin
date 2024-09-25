@@ -9,9 +9,16 @@ const initialState = {
   AddBranchData: null,
   UpdateBranchData: null,
   GetAllBranchesData: null,
+  CreateBankUserRequestData: null,
+  CreateBulkBankUserRequestData: null,
+  CreateCorporateUserRequestData: null,
+  CreateBulkCorporateUserData: null,
+  BankUsersBankList: null,
+  CorporateUsersBulkListData: null,
+  SearchCorporateUsersData: null,
 };
 
-const BOPSystemAdminModal = (state = initialState, action) => {
+const BOPSystemAdminReducer = (state = initialState, action) => {
   switch (action.type) {
     //Create New Corporate
     case actions.CREATE_NEW_CORPORATE_INIT:
@@ -115,6 +122,7 @@ const BOPSystemAdminModal = (state = initialState, action) => {
         GetAllBranches: action.response,
         ResponseMessage: action.response,
       };
+
     case actions.GET_ALL_BRANCHES_FAIL:
       return {
         ...state,
@@ -122,7 +130,151 @@ const BOPSystemAdminModal = (state = initialState, action) => {
         GetAllBranches: null,
         ResponseMessage: action.response,
       };
+    //Create  Bank User Request
+    case actions.CREATE_BANK_USER_REQUEST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.CREATE_BANK_USER_REQUEST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        CreateBankUserRequestData: action.response,
+        ResponseMessage: action.response,
+      };
+    case actions.CREATE_BANK_USER_REQUEST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        CreateBankUserRequestData: null,
+        ResponseMessage: action.response,
+      };
+    //Create Bulk Bank User Request
+    case actions.CREATE_BULK_BANK_USER_REQUEST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.CREATE_BULK_BANK_USER_REQUEST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        CreateBulkBankUserRequestData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.CREATE_BULK_BANK_USER_REQUEST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        CreateBulkBankUserRequestData: null,
+        ResponseMessage: action.message,
+      };
+    //Create CorporateUser Request
+    case actions.CREATE_CORPORATE_USER_REQUEST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.CREATE_CORPORATE_USER_REQUEST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        CreateCorporateUserRequestData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.CREATE_CORPORATE_USER_REQUEST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        CreateCorporateUserRequestData: null,
+        ResponseMessage: action.message,
+      };
+    //Create Bulk Corporate User Request
+    case actions.CREATE_BULK_CORPORATE_USER_REQUEST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.CREATE_BULK_CORPORATE_USER_REQUEST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        CreateBulkCorporateUserData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.CREATE_BULK_CORPORATE_USER_REQUEST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        CreateBulkCorporateUserData: null,
+        ResponseMessage: action.message,
+      };
+    //Bank Users BankUserList
+    case actions.BANK_USERS_BANK_LIST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.BANK_USERS_BANK_LIST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        BankUsersBankList: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.BANK_USERS_BANK_LIST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        BankUsersBankList: null,
+        ResponseMessage: action.message,
+      };
+    //Corporate Users Bulk List
+    case actions.CORPORATE_USERS_BULK_LIST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.CORPORATE_USERS_BULK_LIST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        CorporateUsersBulkListData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.CORPORATE_USERS_BULK_LIST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        CorporateUsersBulkListData: action.response,
+        ResponseMessage: action.message,
+      };
+    //Search Corporate Users
+    case actions.SEARCH_CORPORATE_USERS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.SEARCH_CORPORATE_USERS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        SearchCorporateUsersData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.SEARCH_CORPORATE_USERS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        SearchCorporateUsersData: null,
+        ResponseMessage: action.message,
+      };
     default:
       return { ...state };
   }
 };
+
+export default BOPSystemAdminReducer;
