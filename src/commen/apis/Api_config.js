@@ -7,7 +7,7 @@ const UpdateCorporateMapping = {
 };
 
 const Addcateogry = {
-  RequestMethod: "ServiceManager.AddCorporateCategory",
+  RequestMethod: "ServiceManager.AddCategory",
 };
 
 const getallCoporatesSystem = {
@@ -109,6 +109,15 @@ const SearchBankUsers = {
 const UpdateCorporateUsers = {
   RequestMethod: "ServiceManager.UpdateCorporateUser",
 };
+//Get Bank User by UserID
+const GetBankUserByUserID = {
+  RequestMethod: "ServiceManager.GetBankUserbyUserID",
+};
+//Update Bank User By Bank ID
+const UpdateBankUserByBankID = {
+  RequestMethod: "ServiceManager.UpdateBankUserbyUserID",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -135,4 +144,6 @@ export {
   SearchCorporateUsers,
   SearchBankUsers,
   UpdateCorporateUsers,
+  GetBankUserByUserID,
+  UpdateBankUserByBankID,
 };

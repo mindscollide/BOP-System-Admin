@@ -14,6 +14,8 @@ import {
   SearchCorporateUsers,
   SearchBankUsers,
   UpdateCorporateUsers,
+  GetBankUserByUserID,
+  UpdateBankUserByBankID,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -1016,7 +1018,6 @@ const SearchCorporateUsersAPI = (navigate, data) => {
 };
 
 //Search Bank Users
-
 const SearchBankUsersInit = () => {
   return {
     type: actions.SEARCH_BANK_USERS_INIT,
@@ -1100,7 +1101,6 @@ const SearchBankUsersAPI = (navigate, data) => {
 };
 
 //Update Corporate User
-
 const UpdateCorporateUsersInit = () => {
   return {
     type: actions.UPDATE_CORPORATE_USERS_INIT,
@@ -1183,6 +1183,174 @@ const UpdateCorporateUsersAPI = (navigate, data) => {
   };
 };
 
+//Get Bank User by UserID
+
+const GetBankUserByUserIDInit = () => {
+  return {
+    type: actions.GET_BANK_USER_BY_USERID_INIT,
+  };
+};
+
+const GetBankUserByUserIDSuccess = (response, message) => {
+  return {
+    type: actions.GET_BANK_USER_BY_USERID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetBankUserByUserIDFail = (message) => {
+  return {
+    type: actions.GET_BANK_USER_BY_USERID_FAIL,
+    message: message,
+  };
+};
+
+const GetBankUserByUserIDAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(GetBankUserByUserIDInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetBankUserByUserID.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetBankUserByUserIDAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_01".toLowerCase()
+            ) {
+              dispatch(
+                GetBankUserByUserIDSuccess(
+                  response.data.responseResult,
+                  "Successfull"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetBankUserByUserIDFail("Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetBankUserByUserIDFail("Something went wrong"));
+            }
+          } else {
+            dispatch(GetBankUserByUserIDFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetBankUserByUserIDFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetBankUserByUserIDFail("something went wrong"));
+      });
+  };
+};
+
+//Update Bank User By Bank ID
+
+const UpdateBankUserByUserIdInit = () => {
+  return {
+    type: actions.UPDATE_BANK_USER_BY_USERID_INIT,
+  };
+};
+
+const UpdateBankUserByUserIdSuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_BANK_USER_BY_USERID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateBankUserByUserIdFail = (message) => {
+  return {
+    type: actions.UPDATE_BANK_USER_BY_USERID_FAIL,
+    message: message,
+  };
+};
+
+const UpdateBankUserByUserIdAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(UpdateBankUserByUserIdInit());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateBankUserByBankID.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateBankUserByUserIdAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_01".toLowerCase()
+            ) {
+              dispatch(
+                UpdateBankUserByUserIdSuccess(
+                  response.data.responseResult,
+                  "Successfull"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_02".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateBankUserByUserIdFail("Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_03".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateBankUserByUserIdFail("Something went wrong"));
+            }
+          } else {
+            dispatch(UpdateBankUserByUserIdFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateBankUserByUserIdFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateBankUserByUserIdFail("something went wrong"));
+      });
+  };
+};
+
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -1198,4 +1366,6 @@ export {
   SearchCorporateUsersAPI,
   SearchBankUsersAPI,
   UpdateCorporateUsersAPI,
+  GetBankUserByUserIDAPI,
+  UpdateBankUserByUserIdAPI,
 };

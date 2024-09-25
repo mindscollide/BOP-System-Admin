@@ -18,6 +18,8 @@ const initialState = {
   SearchCorporateUsersData: null,
   SearchBankUsersData: null,
   UpdateCorporateUsersData: null,
+  GetBankUserByUserIDData: null,
+  UpdateBankUserByUserIdData: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -312,6 +314,46 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         UpdateCorporateUsersData: null,
+        ResponseMessage: action.message,
+      };
+    //Get Bank User by UserID
+    case actions.GET_BANK_USER_BY_USERID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_BANK_USER_BY_USERID_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetBankUserByUserIDData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_BANK_USER_BY_USERID_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetBankUserByUserIDData: null,
+        ResponseMessage: action.message,
+      };
+    //Update Bank User By Bank ID
+    case actions.UPDATE_BANK_USER_BY_USERID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.UPDATE_BANK_USER_BY_USERID_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateBankUserByUserIdData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.UPDATE_BANK_USER_BY_USERID_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateBankUserByUserIdData: null,
         ResponseMessage: action.message,
       };
     default:
