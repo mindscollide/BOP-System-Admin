@@ -49,6 +49,29 @@ const SendEmailResetPassword = {
   RequestMethod: "ServiceManager.SendEmailForResetPasword",
 };
 
+//Create New Corporate
+const CreateNewCorporate = {
+  RequestMethod: "ServiceManager.CreateNewCorporate",
+};
+
+//Update Corporate By CorporateID
+const UpdateCorporateByCorporateID = {
+  RequestMethod: "ServiceManager.UpdateCorporateByCorporateID",
+};
+
+//Add Branch
+const AddBranch = {
+  RequestMethod: "ServiceManager.AddBranch",
+};
+//Update Branch
+const UpdateBranch = {
+  RequestMethod: "ServiceManager.UpdateBranch",
+};
+//Get all Branched
+const GetAllBranches = {
+  RequestMethod: "ServiceManager.GetAllBranches",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -61,4 +84,9 @@ export {
   counterPartyDownloadApi,
   LoginSystemAdmin,
   SendEmailResetPassword,
+  CreateNewCorporate,
+  UpdateCorporateByCorporateID,
+  AddBranch,
+  UpdateBranch,
+  GetAllBranches,
 };
