@@ -101,6 +101,14 @@ const CorporateUsersBulkList = {
 const SearchCorporateUsers = {
   RequestMethod: "ServiceManager.SearchCorporateUsers",
 };
+//Search Bank Users
+const SearchBankUsers = {
+  RequestMethod: "ServiceManager.SearchBankUsers",
+};
+//Update Corporate User
+const UpdateCorporateUsers = {
+  RequestMethod: "ServiceManager.UpdateCorporateUser",
+};
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -125,4 +133,6 @@ export {
   BankUsersBankList,
   CorporateUsersBulkList,
   SearchCorporateUsers,
+  SearchBankUsers,
+  UpdateCorporateUsers,
 };

@@ -12,6 +12,8 @@ import {
   UpdateBranch,
   UpdateCorporateByCorporateID,
   SearchCorporateUsers,
+  SearchBankUsers,
+  UpdateCorporateUsers,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -765,7 +767,6 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
 };
 
 //Bank Users BankUserList
-
 const BankUsersBankListInit = () => {
   return {
     type: actions.BANK_USERS_BANK_LIST_INIT,
@@ -849,7 +850,6 @@ const BankUsersBankListAPI = (navigate, data) => {
 };
 
 //Corporate Users Bulk List
-
 const CorporateUsersBulkListInit = () => {
   return {
     type: actions.BANK_USERS_BANK_LIST_INIT,
@@ -933,7 +933,6 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
 };
 
 //Search Corporate Users
-
 const SearchCorporateUsersInit = () => {
   return {
     type: actions.SEARCH_CORPORATE_USERS_INIT,
@@ -1016,6 +1015,174 @@ const SearchCorporateUsersAPI = (navigate, data) => {
   };
 };
 
+//Search Bank Users
+
+const SearchBankUsersInit = () => {
+  return {
+    type: actions.SEARCH_BANK_USERS_INIT,
+  };
+};
+
+const SearchBankUsersSuccess = (response, message) => {
+  return {
+    type: actions.SEARCH_BANK_USERS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SearchBankUsersFail = (message) => {
+  return {
+    type: actions.SEARCH_BANK_USERS_FAIL,
+    message: message,
+  };
+};
+
+const SearchBankUsersAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(SearchBankUsersInit());
+    let form = new FormData();
+    form.append("RequestMethod", SearchBankUsers.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(SearchBankUsersAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_SearchBankUsers_01".toLowerCase()
+            ) {
+              dispatch(
+                SearchBankUsersSuccess(
+                  response.data.responseResult,
+                  "Successfull"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SearchBankUsers_02".toLowerCase()
+                )
+            ) {
+              dispatch(SearchBankUsersFail("Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SearchBankUsers_03".toLowerCase()
+                )
+            ) {
+              dispatch(SearchBankUsersFail("Something went wrong"));
+            }
+          } else {
+            dispatch(SearchBankUsersFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SearchBankUsersFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SearchBankUsersFail("something went wrong"));
+      });
+  };
+};
+
+//Update Corporate User
+
+const UpdateCorporateUsersInit = () => {
+  return {
+    type: actions.UPDATE_CORPORATE_USERS_INIT,
+  };
+};
+
+const UpdateCorporateUsersSuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_CORPORATE_USERS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateCorporateUsersFail = (message) => {
+  return {
+    type: actions.UPDATE_CORPORATE_USERS_FAIL,
+    message: message,
+  };
+};
+
+const UpdateCorporateUsersAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(UpdateCorporateUsersInit());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateCorporateUsers.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateCorporateUsersAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCorporateUser_01".toLowerCase()
+            ) {
+              dispatch(
+                UpdateCorporateUsersSuccess(
+                  response.data.responseResult,
+                  "Successfull"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateUser_02".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCorporateUsersFail("Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateUser_03".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCorporateUsersFail("Something went wrong"));
+            }
+          } else {
+            dispatch(UpdateCorporateUsersFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateCorporateUsersFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateCorporateUsersFail("something went wrong"));
+      });
+  };
+};
+
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -1029,4 +1196,6 @@ export {
   BankUsersBankListAPI,
   CorporateUsersBulkListAPI,
   SearchCorporateUsersAPI,
+  SearchBankUsersAPI,
+  UpdateCorporateUsersAPI,
 };
