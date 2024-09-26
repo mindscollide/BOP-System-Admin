@@ -136,7 +136,6 @@ const authReducer = (state = initialState, action) => {
       };
 
     case actions.GET_BANK_USER_LOGIN_SUCCESS:
-      console.log("logogogog", action.response);
       return {
         ...state,
         Loading: false,
@@ -329,6 +328,12 @@ const authReducer = (state = initialState, action) => {
         Loading: false,
         sendEmailResetPassword: null,
         ResponseMessage: action.message,
+      };
+
+    case actions.CLEARE_MESSAGE:
+      return {
+        ...state,
+        ResponseMessage: "",
       };
 
     default:

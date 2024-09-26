@@ -14,6 +14,12 @@ import {
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
 
+const cleareMessage = (response) => {
+  return {
+    type: actions.CLEARE_MESSAGE,
+  };
+};
+
 const signOut = (navigate, message) => {
   localStorage.clear();
   navigate("/");
@@ -455,7 +461,16 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
-              // navigate("/SystemAdmin/AddBankUser");
+              localStorage.setItem("token", response.data.responseResult.token);
+              localStorage.setItem(
+                "userID",
+                response.data.responseResult.userID
+              );
+              localStorage.setItem(
+                "userName",
+                response.data.responseResult.userName
+              );
+              navigate("/SystemAdmin/AddBankUser");
             }
           } else if (
             response.data.responseResult.responseMessage
@@ -633,4 +648,5 @@ export {
   DeleteCorporateCategoryAPI,
   loginSystemAdminAPI,
   SendEmailResetPasswordAPI,
+  cleareMessage,
 };

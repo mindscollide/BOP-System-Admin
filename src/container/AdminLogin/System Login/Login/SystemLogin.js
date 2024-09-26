@@ -1,11 +1,14 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Container, Col, Row, InputGroup, Form } from "react-bootstrap";
 import { Button, Loader, Notification } from "../../../../components/elements";
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
 import "./SystemLogin.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginSystemAdminAPI } from "../../../../store/actions/Auth-Actions";
+import {
+  cleareMessage,
+  loginSystemAdminAPI,
+} from "../../../../store/actions/Auth-Actions";
 import { useSelector } from "react-redux";
 const SystemLogin = () => {
   const dispatch = useDispatch();
@@ -37,21 +40,23 @@ const SystemLogin = () => {
 
   // credentials for email and password
   const setCredentialHandler = (e) => {
-    if (e.target.name === "Password") {
-      let numChars = e.target.value;
-      let showText = "";
-      for (let i = 0; i < numChars.length; i++) {
-        showText += "•";
+    const { name, value } = e.target;
+
+    if (name === "Password") {
+      let maskedPassword = "";
+      for (let i = 0; i < value.length; i++) {
+        maskedPassword += "•";
       }
+
       setSecurityCredentials({
         ...securityCredentials,
-        [e.target.name]: e.target.value,
-        ["fakePassword"]: showText,
+        [name]: value, // Real password value
+        fakePassword: maskedPassword, // Masked password display
       });
     } else {
       setSecurityCredentials({
         ...securityCredentials,
-        [e.target.name]: e.target.value,
+        [name]: value, // For UserName
       });
     }
   };
@@ -59,30 +64,46 @@ const SystemLogin = () => {
   // handler for submit login
   const loginValidateHandler = (e) => {
     e.preventDefault();
-    // if (
-    //   securityCredentials.UserName !== "" &&
-    //   securityCredentials.Password !== ""
-    // ) {
-    let data = {
-      UserName: "mehdi.branchuser",
-      Password: "0",
-      DeviceID: "ABCD1234-5678-90EF-GHIJ-KLMNOPQRSTUV",
-      Device: "iPhone 13 Pro",
-    };
-    dispatch(loginSystemAdminAPI(navigate, data));
-    // } else {
-    //   setOpen({
-    //     ...open,
-    //     open: true,
-    //     message: "Please Enter All Credentials",
-    //   });
-    // }
+    if (
+      securityCredentials.UserName !== "" &&
+      securityCredentials.Password !== ""
+    ) {
+      let data = {
+        UserName: securityCredentials.UserName,
+        Password: securityCredentials.Password,
+        DeviceID: "ABCD1234-5678-90EF-GHIJ-KLMNOPQRSTUV",
+        Device: "iPhone 13 Pro",
+      };
+      dispatch(loginSystemAdminAPI(navigate, data));
+    } else {
+      setOpen({
+        ...open,
+        open: true,
+        message: "Please Enter All Credentials",
+      });
+    }
   };
 
   // eye on Click on Eye Icon on Password
   const toggleEyeIcon = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    if (auth.ResponseMessage !== "") {
+      setOpen({
+        open: true,
+        message: auth.ResponseMessage,
+      });
+      setTimeout(() => {
+        setOpen({
+          open: false,
+          message: "",
+        });
+      }, 4000);
+      dispatch(cleareMessage());
+    }
+  }, [auth.ResponseMessage]);
 
   return (
     <Fragment>
@@ -132,17 +153,21 @@ const SystemLogin = () => {
                             <i className="icon-lock"></i>
                           </InputGroup.Text>
                           <Form.Control
-                            name="passwordText"
-                            // ref={Password}
+                            name="Password"
                             autoComplete="off"
                             className="form-comtrol-textfield-password"
                             placeholder="Password"
                             aria-label="passwordText"
                             aria-describedby="basic-addon2"
                             type={showPassword ? "text" : "password"}
-                            value={passwordText}
-                            onChange={(e) => setPasswordText(e.target.value)}
+                            value={
+                              showPassword
+                                ? securityCredentials.Password
+                                : securityCredentials.fakePassword
+                            }
+                            onChange={setCredentialHandler}
                           />
+
                           <InputGroup.Text
                             id="basic-addon2"
                             className="eyeIcon-Field-class-BOP-login"
