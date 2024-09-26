@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { Container, Col, Row, InputGroup, Form } from "react-bootstrap";
 import { Button, Loader, Notification } from "../../../../components/elements";
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
@@ -17,8 +17,52 @@ const SystemLogin = () => {
     open: false,
     message: "",
   });
-  const handleLoginButton = (e) => {
+  const UserName = useRef(null);
+  const Password = useRef(null);
+
+  const [passwordText, setPasswordText] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [securityCredentials, setSecurityCredentials] = useState({
+    UserName: "",
+    Password: "",
+    fakePassword: "",
+  });
+
+  // Enter key handler
+  const enterKeyHandler = (event, nextInput) => {
+    if (event.key === "Enter") {
+      nextInput.current.focus();
+    }
+  };
+
+  // credentials for email and password
+  const setCredentialHandler = (e) => {
+    if (e.target.name === "Password") {
+      let numChars = e.target.value;
+      let showText = "";
+      for (let i = 0; i < numChars.length; i++) {
+        showText += "•";
+      }
+      setSecurityCredentials({
+        ...securityCredentials,
+        [e.target.name]: e.target.value,
+        ["fakePassword"]: showText,
+      });
+    } else {
+      setSecurityCredentials({
+        ...securityCredentials,
+        [e.target.name]: e.target.value,
+      });
+    }
+  };
+
+  // handler for submit login
+  const loginValidateHandler = (e) => {
     e.preventDefault();
+    // if (
+    //   securityCredentials.UserName !== "" &&
+    //   securityCredentials.Password !== ""
+    // ) {
     let data = {
       UserName: "mehdi.branchuser",
       Password: "0",
@@ -26,7 +70,20 @@ const SystemLogin = () => {
       Device: "iPhone 13 Pro",
     };
     dispatch(loginSystemAdminAPI(navigate, data));
+    // } else {
+    //   setOpen({
+    //     ...open,
+    //     open: true,
+    //     message: "Please Enter All Credentials",
+    //   });
+    // }
   };
+
+  // eye on Click on Eye Icon on Password
+  const toggleEyeIcon = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <Fragment>
       <Col sm={12} lg={12} md={12} className="sign-in">
@@ -35,12 +92,12 @@ const SystemLogin = () => {
             <Col sm={12} md={12} lg={12} className="login-container">
               <Row>
                 <Col className="mb-4">
-                  <img src={BOPlogo} width="300px" />
+                  <img src={BOPlogo} width="300px" alt="" />
                 </Col>
               </Row>
               <Row>
                 <Col className="center-div flex-column">
-                  <Form>
+                  <Form onSubmit={loginValidateHandler}>
                     <Row>
                       <Col sm={12} md={12} lg={12} className="mt-3">
                         <InputGroup className="mb-3">
@@ -51,8 +108,14 @@ const SystemLogin = () => {
                             <i className="icon-user"></i>
                           </InputGroup.Text>
                           <Form.Control
+                            ref={UserName}
+                            onKeyDown={(event) =>
+                              enterKeyHandler(event, Password)
+                            }
                             name="UserName"
                             autoComplete="off"
+                            value={securityCredentials.UserName}
+                            onChange={setCredentialHandler}
                             className="form-comtrol-textfield"
                             placeholder="Email ID"
                             aria-label="Username"
@@ -76,16 +139,20 @@ const SystemLogin = () => {
                             placeholder="Password"
                             aria-label="passwordText"
                             aria-describedby="basic-addon2"
+                            type={showPassword ? "text" : "password"}
+                            value={passwordText}
+                            onChange={(e) => setPasswordText(e.target.value)}
                           />
                           <InputGroup.Text
                             id="basic-addon2"
                             className="eyeIcon-Field-class-BOP-login"
+                            onClick={toggleEyeIcon}
                           >
-                            {/* {showPassword ? ( */}
-                            {/* <i className="icon-eye-slash"></i> */}
-                            {/* ) : ( */}
-                            <i className="icon-eye"></i>
-                            {/* )} */}
+                            {showPassword ? (
+                              <i className="icon-eye-slash"></i>
+                            ) : (
+                              <i className="icon-eye"></i>
+                            )}
                           </InputGroup.Text>
                         </InputGroup>
                       </Col>
@@ -95,11 +162,7 @@ const SystemLogin = () => {
                         lg={12}
                         className="signIn-Signup-btn-col"
                       >
-                        <Button
-                          text="Login"
-                          className="login-btn"
-                          onClick={handleLoginButton}
-                        />
+                        <Button text="Login" className="login-btn" />
                       </Col>
                     </Row>
                   </Form>
