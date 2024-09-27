@@ -212,7 +212,8 @@ const AddBranchFail = (message) => {
 };
 
 const AddBranchAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
+  console.log(typeof token, token, "tokentoken");
   return (dispatch) => {
     dispatch(AddBranchInit());
     let form = new FormData();
