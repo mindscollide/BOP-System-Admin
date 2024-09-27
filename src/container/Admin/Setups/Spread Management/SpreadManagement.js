@@ -22,6 +22,7 @@ const SpreadManagement = () => {
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
 
     {
@@ -31,6 +32,7 @@ const SpreadManagement = () => {
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
   ];
 
@@ -51,6 +53,7 @@ const SpreadManagement = () => {
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
 
     {
@@ -60,11 +63,36 @@ const SpreadManagement = () => {
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
     },
   ];
 
   // Dummy data for the table
   const data = [
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
+    {
+      key: "1",
+      currency: "EUR",
+      bidSpread: "3.3",
+      askSpread: "3.3",
+    },
     {
       key: "1",
       currency: "EUR",
@@ -588,12 +616,12 @@ const SpreadManagement = () => {
               >
                 <Button
                   icon={<i class="icon-refresh"></i>}
-                  className={style["Reset-btn"]}
+                  className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                 />
                 <Button
                   icon={<i class="icon-save"></i>}
-                  className={style["Search-btn-BankList"]}
+                  className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
               </Col>
@@ -612,7 +640,6 @@ const SpreadManagement = () => {
                   bordered
                   pagination={false}
                   prefixCls="groupTable"
-                  style={{ overflowX: "auto" }}
                 />
               </Col>
             </Row>
@@ -625,12 +652,12 @@ const SpreadManagement = () => {
               >
                 <Button
                   icon={<i class="icon-refresh"></i>}
-                  className={style["Reset-btn"]}
+                  className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                 />
                 <Button
                   icon={<i class="icon-save"></i>}
-                  className={style["Search-btn-BankList"]}
+                  className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
               </Col>
@@ -648,7 +675,6 @@ const SpreadManagement = () => {
                   bordered
                   pagination={false}
                   prefixCls="groupTable"
-                  style={{ overflowX: "auto" }}
                 />
               </Col>
             </Row>
@@ -661,12 +687,12 @@ const SpreadManagement = () => {
               >
                 <Button
                   icon={<i class="icon-refresh"></i>}
-                  className={style["Reset-btn"]}
+                  className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                 />
                 <Button
                   icon={<i class="icon-save"></i>}
-                  className={style["Search-btn-BankList"]}
+                  className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
               </Col>

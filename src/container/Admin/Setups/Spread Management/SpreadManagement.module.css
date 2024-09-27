@@ -6,7 +6,7 @@
 }
 
 .SpreadManagementOverAllStyles {
-  width: 95% !important;
+  width: 99% !important;
   margin: 0 auto !important;
 }
 
@@ -24,17 +24,12 @@
   color: #4d4946 !important;
 }
 
-.Reset-btn {
+.Reset-btn-spreadManagement {
   border-radius: 4px;
   font-size: 14px;
   background: #dc3545 !important;
   font-weight: 500;
   border: none !important;
-  transition: all 0.3s ease-in;
-  -webkit-transition: all 0.3s ease-in;
-  -moz-transition: all 0.3s ease-in;
-  -o-transition: all 0.3s ease-in;
-  -ms-transition: all 0.3s ease-in;
   cursor: pointer;
   font-family: "Poppins", sans-serif;
   display: flex !important;
@@ -42,35 +37,25 @@
   align-items: center !important;
 }
 
-.Reset-btn:is(:hover, :active, :focus, :focus-visible) {
-  border-radius: 4px;
-  font-size: 14px;
+.Reset-btn-spreadManagement:is(:hover, :active, :focus, :focus-visible) {
+  border-radius: 4px !important;
+  font-size: 14px !important;
   background: #dc3545 !important;
-  font-family: "Poppins", sans-serif;
+  font-weight: 500 !important;
   border: none !important;
-  font-weight: 500;
-  transition: all 0.3s ease-in;
-  -webkit-transition: all 0.3s ease-in;
-  -moz-transition: all 0.3s ease-in;
-  -o-transition: all 0.3s ease-in;
-  -ms-transition: all 0.3s ease-in;
-  cursor: pointer;
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
   display: flex !important;
-  gap: 4px !important;
+  gap: 6px !important;
   align-items: center !important;
 }
 
-.Search-btn-BankList {
+.Search-btn-spreadManagement {
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease-in;
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
-  -webkit-transition: all 0.3s ease-in;
-  -moz-transition: all 0.3s ease-in;
-  -o-transition: all 0.3s ease-in;
-  -ms-transition: all 0.3s ease-in;
-  position: relative;
   border: none !important;
   cursor: pointer;
   font-family: "Poppins", sans-serif;
@@ -79,20 +64,14 @@
   align-items: center !important;
 }
 
-.Search-btn-BankList:is(:hover, :focus, :active, :focus-visible) {
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
+.Search-btn-spreadManagement:is(:hover, :focus, :active, :focus-visible) {
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
   border: none !important;
-  transition: all 0.3s ease-in;
-  font-family: "Poppins", sans-serif;
-  -webkit-transition: all 0.3s ease-in;
-  -moz-transition: all 0.3s ease-in;
+  font-family: "Poppins", sans-serif !important;
   background: #096fed !important;
-  -o-transition: all 0.3s ease-in;
-  -ms-transition: all 0.3s ease-in;
-  position: relative;
-  cursor: pointer;
+  cursor: pointer !important;
   display: flex !important;
   gap: 6px !important;
   align-items: center !important;
@@ -106,4 +85,8 @@
 
 .InputTableSpreadManagement {
   width: 67px !important;
+}
+
+.WidthInputParitySpot {
+  width: 30px !important;
 }

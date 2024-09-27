@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./BankerList.module.css";
 import Select from "react-select";
+
 import { Col, Row } from "react-bootstrap";
 import {
   CustomPaper,
@@ -8,6 +9,7 @@ import {
   Button,
   Table,
 } from "../../../../components/elements";
+import ExportShowComponent from "./ExportShowComponent";
 
 const BankerList = () => {
   //State BankList
@@ -164,6 +166,9 @@ const BankerList = () => {
           <CustomPaper className={styles["customer-List-paper"]}>
             <Row className="mt-3">
               <Col lg={3} md={3} sm={12}>
+                <TextField placeholder="Employee ID" labelClass={"d-none"} />
+              </Col>
+              <Col lg={3} md={3} sm={12}>
                 <TextField
                   placeholder="Name"
                   labelClass={"d-none"}
@@ -188,11 +193,19 @@ const BankerList = () => {
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
+            </Row>
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <ExportShowComponent />
+              </Col>
+            </Row>
+
+            <Row className="mt-3">
               <Col
-                lg={3}
-                md={3}
+                lg={12}
+                md={12}
                 sm={12}
-                className={styles["customer-list-col-fields"]}
+                className="d-flex justify-content-center gap-1"
               >
                 <Button
                   icon={<i className="icon-search icon-check-space"></i>}
@@ -203,6 +216,12 @@ const BankerList = () => {
                   icon={<i className="icon-refresh icon-check-space"></i>}
                   className={styles["Banklist-Reset-btn"]}
                   text="Reset"
+                />{" "}
+                <Button
+                  icon={<i class="icon-download"></i>}
+                  className={styles["Export_Button"]}
+                  text="Export"
+                  iconClass={styles["resetIconClass"]}
                 />
               </Col>
             </Row>

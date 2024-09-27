@@ -6,20 +6,34 @@ import {
   TextField,
   Button,
   CustomUpload,
+  Notification,
 } from "../../../components/elements";
 import { validateEmail } from "../../../commen/functions/emailValidation";
 import Select from "react-select";
 import { useSelector } from "react-redux";
 import AddBankUserModal from "./AddBankUserModal/AddBankUserModal";
-import { AdduserModalSystemAdmin } from "../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  AdduserModalSystemAdmin,
+  editBankUserModalSystemAdmin,
+} from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
+import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
 
 const Bankuser = () => {
   const dispatch = useDispatch();
 
+  //Checking snakbar state
+
+  const [open, setOpen] = useState(false);
+
   //Add Bank  Use Modal Calling
   const AddBankUserModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addBankUserModal
+  );
+
+  //Edit Bank  Use Modal Calling
+  const EditBankUserModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.editBankUserModal
   );
 
   //state for error Message
@@ -39,6 +53,11 @@ const Bankuser = () => {
   //handle Open AddBankUser Modal
   const handleOpenAddBankUserModal = () => {
     dispatch(AdduserModalSystemAdmin(true));
+  };
+
+  //handle Edit AddBankUser Modal
+  const handleOpenEditBankUserModal = () => {
+    dispatch(editBankUserModalSystemAdmin(true));
   };
 
   //state for Add Bank User
@@ -236,9 +255,13 @@ const Bankuser = () => {
       },
     });
   };
-
+  console.log(open, "openopen");
   // show error message When user hit activate btn
   const activateHandler = () => {
+    setOpen({
+      open: true,
+      message: "HELLO I am testing",
+    });
     if (
       addBankUser.firstName.value !== "" &&
       addBankUser.lastName.value !== "" &&
@@ -304,6 +327,21 @@ const Bankuser = () => {
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
+                          Employee ID
+                          <span className={styles["aesterick-color"]}>*</span>
+                        </span>
+                      </Col>
+                      <Col lg={5} md={5} sm={12}>
+                        <TextField name={"firstName"} labelClass="d-none" />
+                      </Col>
+
+                      <Col lg={4} md={4} sm={4}>
+                        <CustomUpload />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col lg={2} md={2} sm={12}>
+                        <span className={styles["labels-add-bank"]}>
                           Treasury Person Name
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
@@ -333,10 +371,6 @@ const Bankuser = () => {
                             </p>
                           </Col>
                         </Row>
-                      </Col>
-
-                      <Col lg={4} md={4} sm={4}>
-                        <CustomUpload />
                       </Col>
                     </Row>
 
@@ -390,7 +424,7 @@ const Bankuser = () => {
                           <Col lg={5} md={5} sm={12}>
                             <Select
                               isSearchable={true}
-                              classNamePrefix={"CompanyName"}
+                              classNamePrefix={"CompanyNameBankUser"}
                             />
                           </Col>
                           <Col lg={1} md={1} sm={12}>
@@ -402,7 +436,14 @@ const Bankuser = () => {
                               onClick={handleOpenAddBankUserModal}
                             />
                           </Col>
-                          <Col lg={4} md={4} sm={12}></Col>
+                          <Col lg={1} md={1} sm={12}>
+                            <Button
+                              className={styles["EditButton"]}
+                              icon={<i class="icon-edit color-blue"></i>}
+                              onClick={handleOpenEditBankUserModal}
+                            />
+                          </Col>
+                          <Col lg={3} md={3} sm={12}></Col>
                         </Row>
                         <Row className="mt-3">
                           <Col lg={2} md={2} sm={12}>
@@ -414,13 +455,32 @@ const Bankuser = () => {
                             </span>
                           </Col>
                           <Col lg={5} md={5} sm={12}>
-                            <Select isSearchable={true} />
+                            <TextField
+                              name={"Category"}
+                              disable={true}
+                              placeholder={"01 bps"}
+                              labelClass="d-none"
+                            />
                           </Col>
 
                           <Col lg={4} md={4} sm={12}></Col>
                         </Row>
                       </>
                     ) : null}
+
+                    <Row className="mt-3">
+                      <Col lg={2} md={2} sm={12}>
+                        <span className={styles["labels-add-bank"]}>
+                          LDAP ID
+                          <span className={styles["aesterick-color"]}>*</span>
+                        </span>
+                      </Col>
+                      <Col lg={5} md={5} sm={12}>
+                        <TextField name={"email"} labelClass="d-none" />
+                      </Col>
+
+                      <Col lg={4} md={4} sm={12}></Col>
+                    </Row>
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
@@ -433,6 +493,7 @@ const Bankuser = () => {
                         <TextField
                           name={"email"}
                           value={addBankUser.email.value}
+                          disable={true}
                           onChange={addBankUserValidateHandler}
                           labelClass="d-none"
                         />
@@ -474,7 +535,7 @@ const Bankuser = () => {
                       <Col lg={4} md={4} sm={12}></Col>
                     </Row>
 
-                    <Row className="mt-3">
+                    <Row className="mt-3 mb-5">
                       <Col
                         lg={9}
                         md={9}
@@ -503,6 +564,8 @@ const Bankuser = () => {
         </Col>
       </Row>
       {AddBankUserModalGobalState && <AddBankUserModal />}
+      {EditBankUserModalGobalState && <EditBankUserModal />}
+      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };

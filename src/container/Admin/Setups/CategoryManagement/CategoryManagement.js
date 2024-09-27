@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
 import { Col, Row, Form, Container } from "react-bootstrap";
-import { TextField, Button, Loader } from "../../../../components/elements";
+import { TextField, Button } from "../../../../components/elements";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Collapse } from "antd";
 import { Spin } from "antd";
@@ -425,7 +425,9 @@ const CategoryManagement = () => {
                                       {activeKey.includes("1") && (
                                         <Button
                                           icon={
-                                            <i className="icon-trash color-red"></i>
+                                            <div className="special-component-category">
+                                              <i className="icon-trash color-red"></i>
+                                            </div>
                                           }
                                           className={"TrashIconClassRed"}
                                           iconClass={

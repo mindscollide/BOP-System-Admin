@@ -4,8 +4,6 @@ import {
   createHashRouter,
 } from "react-router-dom";
 
-import PropertyType from "../container/Admin/Setups/PropertyType/PropertyType";
-import AssetsBanking from "../container/Admin/Reports/Non-Banking-Assets/Assets-Banking";
 import TradeCount from "../container/Admin/Setups/TradeCount/Tradecount";
 import CounterLimit from "../container/Admin/Reports/CounterParty/CounterLimit";
 import VolMeter from "../container/Admin/Reports/VolMeter/VolMeter";
@@ -33,7 +31,8 @@ export const router = createHashRouter(
       <Route exact path="ResetPassword" element={<ResetPassword />} />
       <Route exact path="2FAVerfication" element={<TwoFaVerification />} />
       {/* <Route element={<PrivateRoutes />}> */}
-      <Route exact path="/AdminDashboard/" element={<AdminDashboard />}>
+      <Route exact path="/SystemAdmin/" element={<AdminDashboard />}>
+        <Route path="" element={<Bankuser />} />
         {/* <Route path="" element={<PropertyType />} /> */}
         {/* <Route path="" element={<AssetsBanking />} /> */}
         <Route path="AddBankUser" element={<Bankuser />} />

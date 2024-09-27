@@ -4,15 +4,33 @@ import { Col, Row } from "react-bootstrap";
 import {
   Button,
   Checkbox,
-  CorporateCustomUpload,
   CustomUpload,
   Paper,
   TextField,
 } from "../../../components/elements";
 import Select from "react-select";
 import { validateEmail } from "../../../commen/functions/emailValidation";
+import { useSelector } from "react-redux";
+import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
+import {
+  corporatePlusIconModalSystemAdmin,
+  editCompanyModalSystemAdmin,
+} from "../../../store/actions/BOPSystemAdminModalsActions";
+import { useDispatch } from "react-redux";
+import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
 
 const CorporateUser = () => {
+  const dispatch = useDispatch();
+  //Add Company Use Modal Calling
+  const PlusIconCorporateModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.corporatePlusIconModal
+  );
+
+  //Edit Company Use Modal Calling
+  const editCompanyModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.editCompanyModal
+  );
+
   //Corporate User State
   const [corporateUser, setCorporateUser] = useState({
     Name: {
@@ -96,6 +114,16 @@ const CorporateUser = () => {
     } else {
       setErrorShow(true);
     }
+  };
+
+  //handle Plus Button
+  const handlePlusButton = () => {
+    dispatch(corporatePlusIconModalSystemAdmin(true));
+  };
+
+  //Edit Button
+  const handleEditButton = () => {
+    dispatch(editCompanyModalSystemAdmin(true));
   };
 
   return (
@@ -209,7 +237,17 @@ const CorporateUser = () => {
                         />
                       </Col>
                       <Col lg={1} md={1} sm={12}>
-                        <CorporateCustomUpload />
+                        {/* <CorporateCustomUpload /> */}
+                        <Button
+                          className={styles["PlusButton"]}
+                          icon={<span className={styles["PlusIcon"]}>+</span>}
+                          onClick={handlePlusButton}
+                        />
+                        <Button
+                          className={styles["EditButton"]}
+                          icon={<i class="icon-edit color-blue"></i>}
+                          onClick={handleEditButton}
+                        />
                       </Col>
                       <Col lg={4} md={4} sm={12}></Col>
                     </Row>
@@ -222,9 +260,14 @@ const CorporateUser = () => {
                         </span>
                       </Col>
                       <Col lg={6} md={6} sm={12}>
-                        <Select
+                        {/* <Select
                           isSearchable={true}
                           className={styles["react-select-field"]}
+                        /> */}
+                        <TextField
+                          labelClass="d-none"
+                          name={"Category"}
+                          disable={true}
                         />
                       </Col>
 
@@ -330,6 +373,8 @@ const CorporateUser = () => {
           </Row>
         </Col>
       </Row>
+      {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
+      {editCompanyModalGobalState && <EditCompanyModal />}
     </section>
   );
 };

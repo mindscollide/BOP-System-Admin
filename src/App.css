@@ -38,7 +38,15 @@ span.CompanyName__indicator-separator.css-1u9des2-indicatorSeparator {
 }
 
 .CompanyName__indicator.CompanyName__dropdown-indicator.css-1xc3v61-indicatorContainer {
-  margin-right: 38px !important;
+  margin-right: 75px !important;
+}
+
+.CompanyNameBankUser__indicator.CompanyNameBankUser__dropdown-indicator.css-1xc3v61-indicatorContainer {
+  margin-right: 75px !important;
+}
+
+span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
+  display: none !important;
 }
 
 .CompanyName__control--is-focused {
@@ -143,6 +151,109 @@ span.CompanyName__indicator-separator.css-1u9des2-indicatorSeparator {
 
 @media (min-width: 1800px) {
   .BankUserList-table {
+    max-height: 45vh !important;
+    max-width: 100vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+/* Trade Access Management Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
+.TradeAccessManagement {
+  max-height: 45vh !important;
+  max-width: 76vw;
+  width: 100%;
+  box-sizing: border-box !important;
+  overflow-x: auto !important;
+  border-radius: 0px !important;
+}
+
+.TradeAccessManagement th.ant-table-cell {
+  color: #ffffff !important;
+  border-radius: 0% !important;
+  position: sticky !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  top: 0 !important;
+  z-index: 10;
+  background: #f3b273 !important;
+  padding: 0px 10px !important;
+}
+
+.TradeAccessManagement::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.TradeAccessManagement::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #ccc;
+  margin-left: -15px;
+}
+
+.TradeAccessManagement .ant-table-thead > tr > th {
+  height: 40px;
+  line-height: 30px;
+  padding: 0;
+}
+
+/* Table Responsiveness Handler */
+@media (max-width: 1300px) {
+  .TradeAccessManagement {
+    max-height: 45vh !important;
+    max-width: 75vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .TradeAccessManagement {
+    max-height: 45vh !important;
+    max-width: 72vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .TradeAccessManagement {
+    max-height: 45vh !important;
+    max-width: 67vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (min-width: 1500px) {
+  .TradeAccessManagement {
+    max-height: 45vh !important;
+    max-width: 80vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .TradeAccessManagement {
+    max-height: 45vh !important;
+    max-width: 82vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .TradeAccessManagement {
     max-height: 45vh !important;
     max-width: 100vw;
     box-sizing: border-box !important;
@@ -319,9 +430,12 @@ span.CompanyName__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* All TextFileds PlaceHolder Sizes */
 input.form-control {
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-family: "Roboto", sans-serif !important;
   font-weight: 500;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 /* TradeCount Select Nature Selector */
@@ -332,4 +446,208 @@ input.form-control {
 /* Trade Access Management */
 .BranchNameTradeAccessManagement {
   width: 280px !important;
+}
+
+/* TradeAccessManagement Edit Modal Table starts  */
+.TradeAccessManagementEdit {
+  max-height: 45vh !important;
+  max-width: 76vw;
+  width: 100%;
+  box-sizing: border-box !important;
+  overflow-x: auto !important;
+  border-radius: 0px !important;
+}
+
+.TradeAccessManagementEdit th.ant-table-cell {
+  color: #096fed !important;
+  border-radius: 0% !important;
+  position: sticky !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  top: 0 !important;
+  z-index: 10;
+  background: #fff !important;
+  padding: 0px 10px !important;
+}
+
+.TradeAccessManagementEdit tr:nth-child(1) th.ant-table-cell:nth-child(2) {
+  background: #fff !important;
+  border: 1px solid #e1e1e1 !important;
+  color: #000 !important;
+  font-weight: bold !important;
+}
+
+.TradeAccessManagementEdit tr:nth-child(1) th.ant-table-cell:nth-child(3) {
+  background: #fff !important;
+  border: 1px solid #e1e1e1 !important;
+  color: #000 !important;
+  font-weight: bold !important;
+}
+
+.TradeAccessManagementEdit::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.TradeAccessManagementEdit::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #ccc;
+  margin-left: -15px;
+}
+
+.TradeAccessManagementEdit .ant-table-thead > tr > th {
+  height: 40px;
+  line-height: 30px;
+  padding: 0;
+}
+
+.TradeAccessManagementEdit.ant-table-wrapper .ant-table-thead > tr > th,
+.TradeAccessManagementEdit.ant-table-wrapper .ant-table-thead > tr > td {
+  background: none !important;
+}
+
+/* Table Responsiveness Handler */
+@media (max-width: 1300px) {
+  .TradeAccessManagementEdit {
+    max-height: 45vh !important;
+    max-width: 75vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .TradeAccessManagementEdit {
+    max-height: 45vh !important;
+    max-width: 72vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .TradeAccessManagementEdit {
+    max-height: 45vh !important;
+    max-width: 67vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (min-width: 1500px) {
+  .TradeAccessManagementEdit {
+    max-height: 45vh !important;
+    max-width: 80vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .TradeAccessManagementEdit {
+    max-height: 45vh !important;
+    max-width: 82vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .TradeAccessManagementEdit {
+    max-height: 45vh !important;
+    max-width: 100vw;
+    box-sizing: border-box !important;
+    border-radius: 0px !important;
+    overflow-x: scroll !important;
+  }
+}
+/* Ends */
+
+/* Borders styling Spread Management Tabels */
+
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-content
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th,
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-header
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th,
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-body
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th,
+:where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
+  .groupTable.groupTable-bordered
+  > .groupTable-container
+  > .groupTable-summary
+  > table
+  > thead
+  > tr:not(:last-child)
+  > th {
+  border-radius: 0px !important;
+}
+
+.groupTable {
+  max-height: 45vh !important;
+  max-width: 90vw;
+  width: 100%;
+  box-sizing: border-box !important;
+  overflow-x: auto !important;
+  border-radius: 0px !important;
+}
+
+.groupTable th.ant-table-cell {
+  color: #ffffff !important;
+  border-radius: 0% !important;
+  position: sticky !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  top: 0 !important;
+  z-index: 10;
+  background: #575351 !important;
+}
+
+.groupTable ::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.groupTable ::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #ccc;
+  margin-left: -15px;
+}
+
+.groupTable .ant-table-thead > tr > th {
+  height: 40px;
+  line-height: 30px;
+  padding: 0;
+}
+
+.WidthInputParitySpot.ant-input {
+  width: 70px !important;
 }

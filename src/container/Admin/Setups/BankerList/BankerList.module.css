@@ -23,12 +23,6 @@
   background-color: #ffffff !important;
 }
 
-.customer-list-col-fields {
-  display: flex;
-  justify-content: center !important;
-  gap: 5px !important;
-}
-
 .Search-btn-BankList {
   font-size: 14px;
   border-radius: 4px !important;
@@ -92,7 +86,7 @@
 }
 
 .SectionContainer {
-  width: 95% !important;
+  width: 99% !important;
   margin: 0 auto !important;
 }
 
@@ -109,4 +103,34 @@
   align-items: center !important;
   display: flex;
   justify-content: center !important;
+}
+
+.Export_Button {
+  font-size: 14px;
+  border-radius: 4px !important;
+  padding: 6px 18px !important;
+  border: none;
+  height: 100% !important;
+  background: #019308 !important;
+  display: flex !important;
+  gap: 4px !important;
+  font-family: "Poppins", sans-serif;
+  align-items: center !important;
+}
+
+.Export_Button:is(:hover, :focus, :focus-visible) {
+  font-size: 14px;
+  border-radius: 4px !important;
+  padding: 6px 18px !important;
+  border: none;
+  height: 100% !important;
+  background: #019308 !important;
+  display: flex !important;
+  gap: 4px !important;
+  font-family: "Poppins", sans-serif;
+  align-items: center !important;
+}
+
+.spanshowClass {
+  font-family: "Roboto", sans-serif !important;
 }

@@ -8,6 +8,10 @@ const initialState = {
   deleteCorporateModal: false,
   userDetailsCorporateModal: false,
   addCategoryModal: false,
+  corporatePlusIconModal: false,
+  editCompanyModal: false,
+  editBankUserModal: false,
+  editModalTradeAccessManagement: false,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -44,6 +48,34 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         addCategoryModal: action.response,
+      };
+    }
+
+    case actions.CORPORATE_PLUS_ICON_MODAL: {
+      return {
+        ...state,
+        corporatePlusIconModal: action.response,
+      };
+    }
+
+    case actions.CORPORATE_EDIT_COMPANY_MODAL: {
+      return {
+        ...state,
+        editCompanyModal: action.response,
+      };
+    }
+
+    case actions.EDIT_BANK_USER_MODAL: {
+      return {
+        ...state,
+        editBankUserModal: action.response,
+      };
+    }
+
+    case actions.EDIT_TRADE_ACCESS_MANAGMENT_MODAL: {
+      return {
+        ...state,
+        editModalTradeAccessManagement: action.response,
       };
     }
 

@@ -11,15 +11,16 @@ import {
   uploadReducer,
   AddCategory,
   BOPSystemAdminModal,
+  BOPSystemAdminReducer,
 } from "./reducers";
 
 const AppReducer = combineReducers({
   auth: authReducer,
-
   downloadReducer: downloadReducer,
   uploadReducer: uploadReducer,
   AddCategory: AddCategory,
   BOPSystemAdminModal: BOPSystemAdminModal,
+  BOPSystemAdminReducer: BOPSystemAdminReducer,
 });
 
 const rootReducer = (state, action) => {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./LoginHistory.module.css";
 import DatePicker from "react-multi-date-picker";
+import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
 import {
   CustomPaper,
@@ -8,6 +9,7 @@ import {
   Button,
   Table,
 } from "../../../../components/elements";
+import ExportShowComponent from "../BankerList/ExportShowComponent";
 
 const LoginHistory = () => {
   //Login History States
@@ -197,6 +199,9 @@ const LoginHistory = () => {
                   onChange={LoginHistoryValidateHandler}
                 />
               </Col>
+              <Col lg={2} md={2} sm={12}>
+                <Select />
+              </Col>
               <Col
                 lg={4}
                 md={4}
@@ -215,6 +220,12 @@ const LoginHistory = () => {
                   showOtherDays={true}
                   inputClass={styles["Tradecount-Datepicker-right"]}
                 />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <ExportShowComponent />
               </Col>
             </Row>
 
@@ -237,9 +248,9 @@ const LoginHistory = () => {
                 />
 
                 <Button
-                  icon={<i class="icon-download-excel"></i>}
+                  icon={<i class="icon-download"></i>}
                   className={styles["Download-button"]}
-                  text="Download Excel"
+                  text="Export"
                 />
               </Col>
             </Row>

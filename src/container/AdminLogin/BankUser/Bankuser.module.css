@@ -22,7 +22,7 @@
 }
 
 .Container_bank_user {
-  width: 95% !important;
+  width: 97% !important;
   margin: 0 auto !important;
 }
 
@@ -148,7 +148,7 @@
 .PlusButton {
   width: 40px;
   position: absolute !important;
-  right: 42.8% !important;
+  right: 42.6% !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -162,7 +162,7 @@
 .PlusButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
-  right: 42.8% !important;
+  right: 42.6% !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -179,4 +179,43 @@
   margin-top: -12px !important;
   display: flex;
   justify-content: center;
+}
+
+.EditButton {
+  width: 40px;
+  position: absolute !important;
+  right: 45.5% !important;
+  height: 100% !important;
+  align-items: center !important;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0px !important;
+}
+
+.EditButton:is(:hover, :focus, :focus-visible, :active) {
+  width: 45px;
+  width: 40px;
+  position: absolute !important;
+  right: 45.5% !important;
+  height: 100% !important;
+  align-items: center !important;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0px !important;
+}
+
+@media (max-width: 1024px) {
+  .EditButton,
+  .PlusButton {
+    width: 35px;
+    right: 40% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .EditButton,
+  .PlusButton {
+    width: 30px;
+    right: 35% !important;
+  }
 }

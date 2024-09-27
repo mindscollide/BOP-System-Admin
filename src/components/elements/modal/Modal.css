@@ -20,6 +20,14 @@
   padding: 10px !important;
 }
 
+.UniversalBOPModalStylesTradeAccessManagment .modal-content {
+  background: #ffffff !important;
+  border: 1px solid #dbd7d5 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding: 10px !important;
+}
+
 .UniversalBOPModalStylesAddCategory .modal-content {
   background: #f3f2f1 !important;
   border: 1px solid #dbd7d5 !important;
@@ -35,9 +43,16 @@
   border: 1px solid #dbd7d5 !important;
   padding: 10px 12px !important;
   width: 100% !important;
+  overflow: auto !important;
 }
 
 .UniversalBOPModalStylesfooter {
   width: 100% !important;
   display: contents;
+}
+
+.UniversalBOPModalStylesfooterTradeAccessMangement {
+  width: 100% !important;
+  display: Block !important;
+  border: none !important;
 }
