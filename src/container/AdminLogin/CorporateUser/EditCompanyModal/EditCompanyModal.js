@@ -25,6 +25,7 @@ const EditCompanyModal = () => {
       NatureOfBusinessId: 2,
       CorporateId: 33,
     };
+    //  dispatch(UpdateCorporateUsersAPI(navigate, data));
     dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
   };
   return (
