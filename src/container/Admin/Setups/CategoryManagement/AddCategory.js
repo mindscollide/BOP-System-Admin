@@ -1,4 +1,6 @@
 import React from "react";
+import { Col, Row } from "react-bootstrap";
+import { Button, TextField } from "../../../../components/elements";
 
 const AddCategory = () => {
   return (
@@ -22,10 +24,10 @@ const AddCategory = () => {
               maxLength={100}
               labelClass="d-none"
               required={true}
-              value={categoryupdate.category.value}
-              onChange={HandleUpdateChange}
+              // value={categoryupdate.category.value}
+              // onChange={HandleUpdateChange}
             />
-            <p
+            {/* <p
               className={
                 errormessege && categoryupdate.category.value === ""
                   ? "errorMessage"
@@ -33,7 +35,7 @@ const AddCategory = () => {
               }
             >
               Please Fill all the credentials
-            </p>
+            </p> */}
           </Col>
         </Row>
 
@@ -61,8 +63,8 @@ const AddCategory = () => {
                   maxLength={100}
                   labelClass="d-none"
                   required={true}
-                  value={categoryupdate.bidSpread.value}
-                  onChange={HandleUpdateChange}
+                  // value={categoryupdate.bidSpread.value}
+                  // onChange={HandleUpdateChange}
                 />
               </Col>
             </Row>
@@ -82,8 +84,8 @@ const AddCategory = () => {
                   maxLength={100}
                   labelClass="d-none"
                   required={true}
-                  value={categoryupdate.offerSpread.value}
-                  onChange={HandleUpdateChange}
+                  // value={categoryupdate.offerSpread.value}
+                  // onChange={HandleUpdateChange}
                 />
               </Col>
             </Row>
@@ -99,13 +101,13 @@ const AddCategory = () => {
             <Button
               className="Update_button_category"
               text="Update"
-              onClick={updateCategoryFunction}
+              // onClick={updateCategoryFunction}
               //   onClick={UpdateCategory}
             />
             <Button
               className="Cancel_button_cateogry"
               text="Cancel"
-              onClick={addCategoryFunction}
+              // onClick={addCategoryFunction}
               //   onClick={() => CloseUpdateCategory(data.corporateID)}
             />
           </Col>
