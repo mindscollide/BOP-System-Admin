@@ -16,6 +16,8 @@ import {
   UpdateCorporateUsers,
   GetBankUserByUserID,
   UpdateBankUserByBankID,
+  GetVolmeterByBankID,
+  AddUpdateVolmeter,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -372,25 +374,25 @@ const GetAllBranchesFail = (message) => {
   };
 };
 
-const GetAllBranchesAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const GetAllBranchesAPI = (navigate) => {
+  // let token = JSON.parse(localStorage.getItem("token"));
   return (dispatch) => {
     dispatch(GetAllBranchesInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllBranches.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
+    // form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
       url: systemAdminAPI,
       data: form,
       headers: {
-        _token: token,
+        // _token: token,
       },
     })
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(GetAllBranchesAPI(navigate, data));
+          dispatch(GetAllBranchesAPI(navigate));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -1352,6 +1354,174 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
   };
 };
 
+//Get VolMeters By Bannking ID
+
+const GetVolmeterByBankIDInit = () => {
+  return {
+    type: actions.GET_VOLMETER_BY_BANKID_INIT,
+  };
+};
+
+const GetVolmeterByBankIDsuccess = (response, message) => {
+  return {
+    type: actions.GET_VOLMETER_BY_BANKID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetVolmeterByBankIDfail = (message) => {
+  return {
+    type: actions.GET_VOLMETER_BY_BANKID_FAIL,
+    message: message,
+  };
+};
+
+const GetVolmeterByBankIDAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(GetVolmeterByBankIDInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetVolmeterByBankID.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetVolmeterByBankIDAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_01".toLowerCase()
+            ) {
+              dispatch(
+                GetVolmeterByBankIDsuccess(
+                  response.data.responseResult,
+                  "Successfull"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetVolmeterByBankIDfail("Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetVolmeterByBankIDfail("Something went wrong"));
+            }
+          } else {
+            dispatch(GetVolmeterByBankIDfail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetVolmeterByBankIDfail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetVolmeterByBankIDfail("something went wrong"));
+      });
+  };
+};
+
+//Add Update Volmeter
+
+const AddUpdateVolmterInit = () => {
+  return {
+    type: actions.ADD_UPDATE_VOLMTER_INIT,
+  };
+};
+
+const AddUpdateVolmterSuccess = (response, message) => {
+  return {
+    type: actions.ADD_UPDATE_VOLMTER_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const AddUpdateVolmterFail = (message) => {
+  return {
+    type: actions.ADD_UPDATE_VOLMTER_FAIL,
+    message: message,
+  };
+};
+
+const AddUpdateVolmterAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(AddUpdateVolmterInit());
+    let form = new FormData();
+    form.append("RequestMethod", AddUpdateVolmeter.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(AddUpdateVolmterAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_01".toLowerCase()
+            ) {
+              dispatch(
+                AddUpdateVolmterSuccess(
+                  response.data.responseResult,
+                  "Successfull"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_02".toLowerCase()
+                )
+            ) {
+              dispatch(AddUpdateVolmterFail("Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_03".toLowerCase()
+                )
+            ) {
+              dispatch(AddUpdateVolmterFail("Something went wrong"));
+            }
+          } else {
+            dispatch(AddUpdateVolmterFail("Something went wrong"));
+          }
+        } else {
+          dispatch(AddUpdateVolmterFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(AddUpdateVolmterFail("something went wrong"));
+      });
+  };
+};
+
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -1369,4 +1539,6 @@ export {
   UpdateCorporateUsersAPI,
   GetBankUserByUserIDAPI,
   UpdateBankUserByUserIdAPI,
+  GetVolmeterByBankIDAPI,
+  AddUpdateVolmterAPI,
 };

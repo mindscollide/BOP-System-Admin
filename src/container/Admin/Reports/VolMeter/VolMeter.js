@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import style from "./VolMeter.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -6,10 +6,23 @@ import {
   TextField,
   Button,
   Notification,
+  Loader,
 } from "../../../../components/elements";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  AddUpdateVolmterAPI,
+  GetVolmeterByBankIDAPI,
+} from "../../../../store/actions/BOPSystemAdminActions";
+import { useSelector } from "react-redux";
 
 const VolMeter = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  //Global Staate
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
   const [open, setOpen] = useState({
     open: false,
     message: "",
@@ -40,6 +53,14 @@ const VolMeter = () => {
 
     isVolActive: true,
   });
+
+  //Getting volmeter data
+  useEffect(() => {
+    let data = {
+      BankID: 1,
+    };
+    dispatch(GetVolmeterByBankIDAPI(navigate, data));
+  }, []);
 
   const onChanngeVolMterValidation = (e) => {
     let name = e.target.name;
@@ -115,7 +136,28 @@ const VolMeter = () => {
     }
   };
 
-  const onUpdateBtnHit = async () => {};
+  //Handle Click Update Button
+  const onUpdateBtnHit = async () => {
+    let data = {
+      VolMeters: [
+        {
+          VolMeterID: 1,
+          meter: 1343,
+        },
+        {
+          VolMeterID: 2,
+          meter: 456,
+        },
+        {
+          VolMeterID: 3,
+          meter: 7896,
+        },
+      ],
+      BankID: 1,
+    };
+
+    dispatch(AddUpdateVolmterAPI(navigate, data));
+  };
 
   return (
     <section className={style["VolmeterContainer"]}>
@@ -194,7 +236,7 @@ const VolMeter = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {/* {systemReducer.Loading ? <Loader /> : null} */}
+      {BOPSystemAdminReducer.Loading && <Loader />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

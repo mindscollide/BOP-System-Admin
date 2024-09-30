@@ -6,13 +6,22 @@ import Select from "react-select";
 import { editBankUserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Button, Modal, TextField } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
+import { UpdateBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import { useNavigate } from "react-router-dom";
 const EditBankUserModal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   //handle Cancel Button
   const handleCancelButton = () => {
     dispatch(editBankUserModalSystemAdmin(false));
+  };
+
+  //Handle Update Branch
+  const handleUpdateBranch = () => {
+    let data = {};
+    dispatch(UpdateBranchAPI(navigate, data));
   };
   return (
     <Modal
@@ -78,6 +87,7 @@ const EditBankUserModal = () => {
               text={"Update"}
               className={styles["AddBranchClass"]}
               iconClass={styles["IconClass"]}
+              onClick={handleUpdateBranch}
             />
 
             <Button

@@ -6,12 +6,28 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import { corporatePlusIconModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Col, Row } from "react-bootstrap";
+import { CreateNewCorporateAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import { useNavigate } from "react-router-dom";
 const CorporatePlusIconModal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const handleCrossIcon = () => {
     dispatch(corporatePlusIconModalSystemAdmin(false));
+  };
+
+  const handleAddCorporateModal = () => {
+    let data = {
+      FK_AssetTypeID: 2,
+      RFQTreasuryExpiryTimer: 30,
+      RFQCorporateExpiryTimer: 40,
+      CorporateName: "Stonk Tech",
+      NatureOfBusinessID: 2,
+      FK_CategoryID: 57,
+      BankId: 1,
+    };
+    dispatch(CreateNewCorporateAPI(navigate, data));
   };
   return (
     <Modal
@@ -126,6 +142,7 @@ const CorporatePlusIconModal = () => {
                 text={"Add"}
                 icon={<i class="icon-users"></i>}
                 className={styles["AddButton"]}
+                onClick={handleAddCorporateModal}
               />
               <Button
                 text={"Cancel"}

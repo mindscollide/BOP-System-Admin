@@ -6,12 +6,26 @@ import Select from "react-select";
 import { editCompanyModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Button, Modal, TextField } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
+import { UpdateCorporateByCorporateIDAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import { useNavigate } from "react-router-dom";
 const EditCompanyModal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const handleCrossIcon = () => {
     dispatch(editCompanyModalSystemAdmin(false));
+  };
+
+  const handleUpdateEditCompany = () => {
+    let data = {
+      RFQTreasuryExpiryTimer: 30,
+      RFQCorporateExpiryTimer: 40,
+      CorporateName: "Stonk Technologies",
+      NatureOfBusinessId: 2,
+      CorporateId: 33,
+    };
+    dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
   };
   return (
     <Modal
@@ -113,6 +127,7 @@ const EditCompanyModal = () => {
                 text={"Update"}
                 icon={<i class="icon-refresh"></i>}
                 className={styles["AddButton"]}
+                onClick={handleUpdateEditCompany}
               />
               <Button
                 text={"Cancel"}

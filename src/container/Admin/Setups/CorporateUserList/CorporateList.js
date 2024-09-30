@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CorporateList.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -19,9 +19,18 @@ import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
 import CorporatePlusIconModal from "../../../AdminLogin/CorporateUser/CorporatePlusIconModal/CorporatePlusIconModal";
 import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
+import { useNavigate } from "react-router-dom";
+import { getAllCorporatesCategory } from "../../../../store/actions/Auth-Actions";
+import { SearchCorporateUsersAPI } from "../../../../store/actions/BOPSystemAdminActions";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //Get All Coporates
+  useEffect(() => {
+    dispatch(getAllCorporatesCategory(navigate));
+  }, []);
 
   //States Corporate List
   const [corporateList, setCorporateList] = useState({
@@ -151,6 +160,19 @@ const CorporateList = () => {
     dispatch(DeleteCorporateModalSystemAdmin(false));
   };
 
+  //Handle search Button even
+  const handleSearchEventButton = () => {
+    let data = {
+      FirstName: "",
+      CategoryID: 0,
+      Email: "",
+      CompanyName: "",
+      PageNumber: 1,
+      Length: 10,
+    };
+    dispatch(SearchCorporateUsersAPI(navigate, data));
+  };
+
   //Table columns for customer List
   const columns = [
     {
@@ -240,7 +262,6 @@ const CorporateList = () => {
   ];
 
   //Dummy Data
-
   const data = [
     {
       key: "1",
@@ -324,6 +345,7 @@ const CorporateList = () => {
                   icon={<i className="icon-search icon-check-space"></i>}
                   className={styles["CorporateList-btn-Search"]}
                   text="Search"
+                  onClick={handleSearchEventButton}
                 />
                 <Button
                   icon={<i className="icon-refresh icon-check-space"></i>}
