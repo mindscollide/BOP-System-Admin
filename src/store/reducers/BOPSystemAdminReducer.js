@@ -20,6 +20,8 @@ const initialState = {
   UpdateCorporateUsersData: null,
   GetBankUserByUserIDData: null,
   UpdateBankUserByUserIdData: null,
+  GetVolmeterByBankIDData: null,
+  AddUpdateVolmeter: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -355,6 +357,46 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         Loading: false,
         UpdateBankUserByUserIdData: null,
         ResponseMessage: action.message,
+      };
+    //Get VolMeters By Bannking ID
+    case actions.GET_VOLMETER_BY_BANKID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_VOLMETER_BY_BANKID_SUCCESS:
+      return {
+        ...state,
+        Loading: true,
+        GetVolmeterByBankIDData: action.response,
+        ResponseMessage: action.response,
+      };
+    case actions.GET_VOLMETER_BY_BANKID_FAIL:
+      return {
+        ...state,
+        Loading: true,
+        GetVolmeterByBankIDData: null,
+        ResponseMessage: action.response,
+      };
+    //Add Update Volmeter
+    case actions.ADD_UPDATE_VOLMTER_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.ADD_UPDATE_VOLMTER_SUCCESS:
+      return {
+        ...state,
+        Loading: true,
+        AddUpdateVolmeter: action.response,
+        ResponseMessage: action.response,
+      };
+    case actions.ADD_UPDATE_VOLMTER_FAIL:
+      return {
+        ...state,
+        Loading: true,
+        AddUpdateVolmeter: null,
+        ResponseMessage: action.response,
       };
     default:
       return { ...state };

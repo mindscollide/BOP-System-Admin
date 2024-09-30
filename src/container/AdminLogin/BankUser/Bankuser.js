@@ -7,6 +7,7 @@ import {
   Button,
   CustomUpload,
   Notification,
+  Loader,
 } from "../../../components/elements";
 import { validateEmail } from "../../../commen/functions/emailValidation";
 import Select from "react-select";
@@ -22,8 +23,10 @@ import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
 const Bankuser = () => {
   const dispatch = useDispatch();
 
-  //Checking snakbar state
+  //Global Staate
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
 
+  //Checking snakbar state
   const [open, setOpen] = useState(false);
 
   //Add Bank  Use Modal Calling
@@ -98,6 +101,12 @@ const Bankuser = () => {
       errorMessage: "",
       errorStatus: false,
     },
+
+    EmployeeID: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
   });
 
   //add bank user security admin validate handler
@@ -105,9 +114,31 @@ const Bankuser = () => {
     let name = e.target.name;
     let value = e.target.value;
 
+    if (name === "EmployeeID" && value !== "") {
+      let valueCheck = value.replace(/[^0-9]/g, "");
+      if (valueCheck !== "") {
+        setAddBankUser({
+          ...addBankUser,
+          EmployeeID: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "EmployeeID" && value === "") {
+      setAddBankUser({
+        ...addBankUser,
+        EmployeeID: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
+
     if (name === "firstName" && value !== "") {
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setAddBankUser({
           ...addBankUser,
@@ -146,9 +177,8 @@ const Bankuser = () => {
     }
 
     if (name === "ldapAccount" && value !== "") {
-      // let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      // console.log("valueCheckvalueCheck", valueCheck);
-      if (value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
         setAddBankUser({
           ...addBankUser,
           ldapAccount: {
@@ -255,7 +285,7 @@ const Bankuser = () => {
       },
     });
   };
-  console.log(open, "openopen");
+
   // show error message When user hit activate btn
   const activateHandler = () => {
     setOpen({
@@ -278,10 +308,6 @@ const Bankuser = () => {
           Email: addBankUser.email.value,
           ContactNumber: addBankUser.Contact.value,
           LDAPAccount: addBankUser.ldapAccount.value,
-          // LDAPAccount: `mindscollide.${addBankUser.Name.value.replace(
-          //   " ",
-          //   ""
-          // )}`,
           UserRoleID: addBankUser.roleID.value,
         },
         BankId: 1,
@@ -299,6 +325,7 @@ const Bankuser = () => {
     console.log("uploadedFileuploadedFile", uploadedFile);
     var ext = uploadedFile.name.split(".").pop();
     if (ext === "xls" || ext === "xlsx") {
+      // dispatch(BankUsersBankListAPI(navigate, data));
       // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
     } else {
       alert("Invalid type");
@@ -332,7 +359,13 @@ const Bankuser = () => {
                         </span>
                       </Col>
                       <Col lg={5} md={5} sm={12}>
-                        <TextField name={"firstName"} labelClass="d-none" />
+                        <TextField
+                          name={"EmployeeID"}
+                          labelClass="d-none"
+                          value={addBankUser.EmployeeID.value}
+                          maxLength={4}
+                          onChange={addBankUserValidateHandler}
+                        />
                       </Col>
 
                       <Col lg={4} md={4} sm={4}>
@@ -350,6 +383,7 @@ const Bankuser = () => {
                         <TextField
                           name={"firstName"}
                           value={addBankUser.firstName.value}
+                          maxLength={50}
                           onChange={addBankUserValidateHandler}
                           labelClass="d-none"
                         />
@@ -565,6 +599,8 @@ const Bankuser = () => {
       </Row>
       {AddBankUserModalGobalState && <AddBankUserModal />}
       {EditBankUserModalGobalState && <EditBankUserModal />}
+      {BOPSystemAdminReducer.Loading && <Loader />}
+
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

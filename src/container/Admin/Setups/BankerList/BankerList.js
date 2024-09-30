@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./BankerList.module.css";
 import Select from "react-select";
 
@@ -8,10 +8,30 @@ import {
   TextField,
   Button,
   Table,
+  Notification,
+  Loader,
 } from "../../../../components/elements";
 import ExportShowComponent from "./ExportShowComponent";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  GetAllBranchesAPI,
+  SearchBankUsersAPI,
+} from "../../../../store/actions/BOPSystemAdminActions";
+import { useSelector } from "react-redux";
 
 const BankerList = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  //Global State
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
+
+  //Get All Branches
+  useEffect(() => {
+    dispatch(GetAllBranchesAPI(navigate));
+  }, []);
+
   //State BankList
   const [bankList, setBankList] = useState({
     Name: {
@@ -25,6 +45,9 @@ const BankerList = () => {
       errorStatus: false,
     },
   });
+
+  //Checking snakbar state
+  const [open, setOpen] = useState(false);
 
   //Banker List validate handler
   const BankerListValidateHandler = (e) => {
@@ -73,6 +96,21 @@ const BankerList = () => {
         },
       });
     }
+  };
+
+  //handle Search Button event
+  const handleSearchEventButton = () => {
+    let data = {
+      FirstName: "",
+      LastName: "",
+      RoleID: 0,
+      StatusID: 0,
+      Email: "",
+      LDAPAccount: "",
+      PageNumber: 1,
+      Length: 10,
+    };
+    dispatch(SearchBankUsersAPI(navigate, data));
   };
   //Table columns for customer List
   const columns = [
@@ -211,6 +249,7 @@ const BankerList = () => {
                   icon={<i className="icon-search icon-check-space"></i>}
                   className={styles["Search-btn-BankList"]}
                   text="Search"
+                  onClick={handleSearchEventButton}
                 />
                 <Button
                   icon={<i className="icon-refresh icon-check-space"></i>}
@@ -238,6 +277,9 @@ const BankerList = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {BOPSystemAdminReducer.Loading && <Loader />}
+
+      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };

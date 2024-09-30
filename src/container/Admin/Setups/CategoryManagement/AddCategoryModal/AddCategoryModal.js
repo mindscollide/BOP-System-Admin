@@ -5,13 +5,34 @@ import { AddCategoryModalSystemAdmin } from "../../../../../store/actions/BOPSys
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
 
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   //handle Cross icon
   const handleCrossIcon = () => {
+    dispatch(AddCategoryModalSystemAdmin(false));
+  };
+
+  //handle Add Button
+  const handleAddButton = () => {
+    let data = {
+      Category: "Forex Category By Mehdee",
+      BidSpread: 0.5,
+      OfferSpread: 0.75,
+      AssetTypeId: 2,
+      UserId: 48,
+      BankID: 1,
+    };
+    dispatch(Addcategory(navigate, data));
+  };
+
+  //handle CancelButton
+  const handleCancelButton = () => {
     dispatch(AddCategoryModalSystemAdmin(false));
   };
 
@@ -84,8 +105,16 @@ const AddCategoryModal = () => {
               sm={12}
               className="d-flex justify-content-center gap-2"
             >
-              <Button text={"Add"} className={style["AddButton"]} />
-              <Button text={"Cancel"} className={style["cancelButton"]} />
+              <Button
+                text={"Add"}
+                className={style["AddButton"]}
+                onClick={handleAddButton}
+              />
+              <Button
+                text={"Cancel"}
+                className={style["cancelButton"]}
+                onClick={handleCancelButton}
+              />
             </Col>
           </Row>
         </>

@@ -118,6 +118,16 @@ const UpdateBankUserByBankID = {
   RequestMethod: "ServiceManager.UpdateBankUserbyUserID",
 };
 
+//Get VolMeters By Bannking ID
+const GetVolmeterByBankID = {
+  RequestMethod: "ServiceManager.GetVolMetersByBankID",
+};
+
+//ADD Update Volmeter
+const AddUpdateVolmeter = {
+  RequestMethod: "ServiceManager.AddUpdateVolmeter",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -146,4 +156,6 @@ export {
   UpdateCorporateUsers,
   GetBankUserByUserID,
   UpdateBankUserByBankID,
+  GetVolmeterByBankID,
+  AddUpdateVolmeter,
 };
