@@ -419,7 +419,7 @@ const loginSystemAdminFailed = (response, message) => {
 };
 
 const loginSystemAdminAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
   return (dispatch) => {
     dispatch(loginSystemAdmininit());
     let form = new FormData();
@@ -430,7 +430,7 @@ const loginSystemAdminAPI = (navigate, data) => {
       url: authenticationAPI,
       data: form,
       headers: {
-        _token: token,
+        // _token: token,
       },
     })
       .then(async (response) => {
