@@ -1,20 +1,30 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Container, Col, Row, InputGroup, Form } from "react-bootstrap";
 import { Button, Loader, Notification } from "../../../../components/elements";
-import BOPlogo from "../../../../assets/images/BOP-logo.png";
-import "./SystemLogin.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import BOPlogo from "../../../../assets/images/BOP-logo.png";
 import {
   cleareMessage,
   loginSystemAdminAPI,
 } from "../../../../store/actions/Auth-Actions";
-import { useSelector } from "react-redux";
+import "./SystemLogin.css";
 const SystemLogin = () => {
+  const { auth } = useSelector((state) => state);
+  console.log(auth, "authReducerauthReducerauthReducer");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { auth } = useSelector((state) => state);
+  const ResponseMessageAuthReducerState = useSelector(
+    (state) => state.auth.ResponseMessage
+  );
 
+  const LoadingAuthReducerState = useSelector(
+    (state) => state.auth.ResponseMessage
+  );
+  console.log(
+    LoadingAuthReducerState,
+    "LoadingAuthReducerStateLoadingAuthReducerStateLoadingAuthReducerState"
+  );
   //Auth States
   const [open, setOpen] = useState({
     open: false,
@@ -23,8 +33,8 @@ const SystemLogin = () => {
   const UserName = useRef(null);
   const Password = useRef(null);
 
-  const [passwordText, setPasswordText] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  // const [passwordText, setPasswordText] = useState("");
+  const [showPassword, setShowPassword] = useState(true);
   const [securityCredentials, setSecurityCredentials] = useState({
     UserName: "",
     Password: "",
@@ -71,8 +81,8 @@ const SystemLogin = () => {
       let data = {
         UserName: securityCredentials.UserName,
         Password: securityCredentials.Password,
-        DeviceID: "ABCD1234-5678-90EF-GHIJ-KLMNOPQRSTUV",
-        Device: "iPhone 13 Pro",
+        DeviceID: "1",
+        Device: "Browser",
       };
       dispatch(loginSystemAdminAPI(navigate, data));
     } else {
@@ -90,10 +100,11 @@ const SystemLogin = () => {
   };
 
   useEffect(() => {
-    if (auth.ResponseMessage !== "") {
+    console.log("loginSystemAdmin", ResponseMessageAuthReducerState);
+    if (ResponseMessageAuthReducerState) {
       setOpen({
         open: true,
-        message: auth.ResponseMessage,
+        message: ResponseMessageAuthReducerState,
       });
       setTimeout(() => {
         setOpen({
@@ -102,8 +113,10 @@ const SystemLogin = () => {
         });
       }, 4000);
       dispatch(cleareMessage());
+    } else if (ResponseMessageAuthReducerState !== undefined) {
+      dispatch(cleareMessage());
     }
-  }, [auth.ResponseMessage]);
+  }, [ResponseMessageAuthReducerState]);
 
   return (
     <Fragment>
@@ -159,15 +172,15 @@ const SystemLogin = () => {
                             placeholder="Password"
                             aria-label="passwordText"
                             aria-describedby="basic-addon2"
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? "password" : "text"}
                             value={
-                              showPassword
-                                ? securityCredentials.Password
-                                : securityCredentials.fakePassword
+                              securityCredentials.Password
+                              // showPassword
+                              //   ? securityCredentials.Password
+                              //   : securityCredentials.fakePassword
                             }
                             onChange={setCredentialHandler}
                           />
-
                           <InputGroup.Text
                             id="basic-addon2"
                             className="eyeIcon-Field-class-BOP-login"
@@ -197,8 +210,9 @@ const SystemLogin = () => {
           </Row>
         </Container>
       </Col>
-      {auth.Loading && <Loader />}
+      {LoadingAuthReducerState && <Loader />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
+      {auth.Loading ? <Loader /> : null}
     </Fragment>
   );
 };

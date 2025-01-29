@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./BankerList.module.css";
 import Select from "react-select";
-
 import { Col, Row } from "react-bootstrap";
 import {
   CustomPaper,
@@ -14,15 +13,29 @@ import {
 import ExportShowComponent from "./ExportShowComponent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import EditBankerModal from "./EditBankUserModal/EditBankerModal";
 import {
   GetAllBranchesAPI,
   SearchBankUsersAPI,
 } from "../../../../store/actions/BOPSystemAdminActions";
 import { useSelector } from "react-redux";
-
+import { roleOptions } from "../../../../helpers/Dropdown";
+import { bankListSchema } from "../../../../utils/schemas";
+import { editBankUserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  //State for category
+  const [Role, setRole] = useState("");
+
+  // //State for category
+  // const [category, setCategory] = useState("");
+
+  //Edit Corporate Use Modal Calling
+  const EditBankerModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.editBankUserModal
+  );
 
   //Global State
   const { BOPSystemAdminReducer } = useSelector((state) => state);
@@ -33,18 +46,7 @@ const BankerList = () => {
   }, []);
 
   //State BankList
-  const [bankList, setBankList] = useState({
-    Name: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    Email: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-  });
+  const [bankList, setBankList] = useState({ ...bankListSchema });
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
@@ -96,29 +98,103 @@ const BankerList = () => {
         },
       });
     }
+
+    //Employee ID
+    if (name === "EmployeeID" && value !== "") {
+      if (value !== "") {
+        setBankList({
+          ...bankList,
+          EmployeeID: {
+            value: value.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "EmployeeID" && value === "") {
+      setBankList({
+        ...bankList,
+        EmployeeID: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
   };
 
   //handle Search Button event
   const handleSearchEventButton = () => {
+    // let data = {
+    //   FirstName: "",
+    //   LastName: "",
+    //   RoleID: 0,
+    //   StatusID: 0,
+    //   Email: "",
+    //   LDAPAccount: "",
+    //   PageNumber: 1,
+    //   Length: 10,
+    // };
     let data = {
-      FirstName: "",
-      LastName: "",
-      RoleID: 0,
+      EmployeeID: bankList.EmployeeID.value,
+      FirstName: bankList.Name.value,
+      Email: bankList.Email.value,
+      Role: bankList.Role.value,
       StatusID: 0,
-      Email: "",
-      LDAPAccount: "",
       PageNumber: 1,
       Length: 10,
     };
-    dispatch(SearchBankUsersAPI(navigate, data));
+    console.log("BankList Data", data);
+
+    // dispatch(SearchBankUsersAPI(navigate, data));
   };
+
+  //Handle Select Change
+  // A generic function to handle dropdown changes
+  const handleDropdownChange = (field, value, setter, userField) => {
+    setter(value); // Set the state
+    userField.value = value.value; // Update the corporateUser object
+  };
+
+  //Handle Reset
+  const handleReset = () => {
+    // Reset all form fields, including the dropdown
+    setBankList({
+      EmployeeID: { value: "" },
+      Name: { value: "" },
+      Email: { value: "" },
+      Role: { value: "" }, // Ensure role is cleared
+    });
+    setRole(null); // Reset dropdown value
+
+    let resetData = {
+      EmployeeID: "",
+      FirstName: "",
+      Email: "",
+      Role: "",
+      StatusID: 0,
+      PageNumber: 1,
+      Length: 10,
+    };
+
+    // Call API to fetch all records after reset
+    dispatch(SearchBankUsersAPI(navigate, resetData));
+  };
+
+  //handle Edit Corporate
+  const handleEditBanker = () => {
+    dispatch(editBankUserModalSystemAdmin(true));
+    // dispatch(DeleteCorporateModalSystemAdmin(false));
+    // dispatch(UserDetailsCorporateModalSystemAdmin(false));
+  };
+
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="bottom-table-header">Name</label>,
-      dataIndex: "Name",
-      key: "Name",
-      width: "100px",
+      title: <label className="bottom-table-header">EmployeeID</label>,
+      dataIndex: "EmployeeID",
+      key: "EmployeeID",
+      width: "50px",
       ellipsis: true,
       align: "center",
     },
@@ -126,52 +202,56 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Email</label>,
       dataIndex: "email",
       key: "email",
-      width: "120px",
+      width: "60px",
       align: "center",
       ellipsis: true,
     },
-
+    {
+      title: <label className="bottom-table-header">Name</label>,
+      dataIndex: "Name",
+      key: "Name",
+      width: "60px",
+      ellipsis: true,
+      align: "center",
+    },
     {
       title: <label className="bottom-table-header">Role</label>,
-      dataIndex: "Corporatename",
-      key: "Corporatename",
+      dataIndex: "Role",
+      key: "Role",
       width: "60px",
       ellipsis: true,
       align: "center",
     },
     {
       title: <label className="bottom-table-header">Branch Name</label>,
-      dataIndex: "Status",
-      key: "Status",
-      width: "120px",
+      dataIndex: "BranchName",
+      key: "BranchName",
+      width: "60px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Contact</label>,
-      dataIndex: "LastPassowrdChange",
-      key: "LastPassowrdChange",
+      dataIndex: "ContactNumber",
+      key: "ContactNumber",
+      width: "60px",
       align: "center",
-      width: "80px",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Status</label>,
-      dataIndex: "creationDateTime",
-      key: "creationDateTime",
+      dataIndex: "Status",
+      key: "Status",
+      width: "60px",
       align: "center",
-      width: "70px",
       ellipsis: true,
     },
-
     {
-      title: (
-        <label className="bottom-table-header">Last Password Change</label>
-      ),
-      dataIndex: "creationDateTime",
-      key: "creationDateTime",
+      title: <label className="bottom-table-header">Last Password</label>,
+      dataIndex: "LastPassowrdChange",
+      key: "LastPassowrdChange",
       align: "center",
-      width: "170px",
+      width: "70px",
       ellipsis: true,
     },
     {
@@ -179,19 +259,87 @@ const BankerList = () => {
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
-      width: "150px",
+      width: "70px",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header"></label>,
-      dataIndex: "creationDateTime",
-      key: "creationDateTime",
+      dataIndex: "Edit",
+      key: "Edit",
       align: "center",
-      width: "70px",
+      width: "100px",
       ellipsis: true,
+      render: () => {
+        return (
+          <>
+            <Row>
+              <Col
+                lg={12}
+                md={12}
+                sm={12}
+                className="d-flex gap-2 justify-content-center align-items-center"
+              >
+                <Button
+                  className={styles["EditButton"]}
+                  icon={<i class="icon-edit color-blue"></i>}
+                  onClick={handleEditBanker}
+                />
+                {/* <Button
+                  className={styles["EditButton"]}
+                  icon={<i class="icon-trash color-red"></i>}
+                  iconClass={"iconClassTrashCorporate"}
+                  // onClick={handleDeleteCorporate}
+                /> */}
+              </Col>
+            </Row>
+          </>
+        );
+      },
     },
   ];
-
+  //Dummy Data
+  const data = [
+    {
+      key: "1",
+      EmployeeID: "0123",
+      email: "john.doe@example.com",
+      Name: "John Doe",
+      Role: "Branch",
+      BranchName: "Saddar",
+      ContactNumber: "03909090909",
+      Status: "Active",
+      LastPassowrdChange: "13/05/2023 01:15:10",
+      creationDateTime: "13/05/2023 01:15:10",
+      Edit: (
+        <Row>
+          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
+            <i className="icon-edit color-blue"></i>
+            {/* <i className="icon-trash color-red"></i> */}
+          </Col>
+        </Row>
+      ),
+    },
+    {
+      key: "2",
+      EmployeeID: "0654",
+      email: "yunus@bop.com",
+      Name: "Tom Cruise",
+      Role: "Dealer",
+      BranchName: "Clifton",
+      ContactNumber: "01234567890",
+      Status: "Active",
+      LastPassowrdChange: "13/05/2023 01:15:10",
+      creationDateTime: "13/05/2023 01:15:10",
+      Edit: (
+        <Row>
+          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
+            <i className="icon-edit color-blue"></i>
+            {/* <i className="icon-trash color-red"></i> */}
+          </Col>
+        </Row>
+      ),
+    },
+  ];
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
@@ -204,7 +352,13 @@ const BankerList = () => {
           <CustomPaper className={styles["customer-List-paper"]}>
             <Row className="mt-3">
               <Col lg={3} md={3} sm={12}>
-                <TextField placeholder="Employee ID" labelClass={"d-none"} />
+                <TextField
+                  name={"EmployeeID"}
+                  placeholder="Employee ID"
+                  labelClass={"d-none"}
+                  value={bankList.EmployeeID.value}
+                  onChange={BankerListValidateHandler}
+                />
               </Col>
               <Col lg={3} md={3} sm={12}>
                 <TextField
@@ -226,8 +380,14 @@ const BankerList = () => {
               </Col>
               <Col lg={3} md={3} sm={12}>
                 <Select
-                  name="userStatus"
-                  placeholder={"Select Category"}
+                  name="Role"
+                  isSearchable={true}
+                  placeholder={"Select Role"}
+                  options={roleOptions}
+                  value={Role}
+                  onChange={(e) =>
+                    handleDropdownChange("Role", e, setRole, bankList.Role)
+                  }
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
@@ -255,7 +415,8 @@ const BankerList = () => {
                   icon={<i className="icon-refresh icon-check-space"></i>}
                   className={styles["Banklist-Reset-btn"]}
                   text="Reset"
-                />{" "}
+                  onClick={handleReset}
+                />
                 <Button
                   icon={<i class="icon-download"></i>}
                   className={styles["Export_Button"]}
@@ -270,6 +431,9 @@ const BankerList = () => {
                 <Table
                   column={columns}
                   pagination={false}
+                  rows={data}
+                  scroll={true}
+                  expandable={true}
                   className={"BankUserList-table"}
                 />
               </Col>
@@ -277,6 +441,8 @@ const BankerList = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {EditBankerModalGobalState && <EditBankerModal />}
+
       {BOPSystemAdminReducer.Loading && <Loader />}
 
       <Notification setOpen={setOpen} open={open.open} message={open.message} />

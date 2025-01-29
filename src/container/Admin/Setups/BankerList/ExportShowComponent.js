@@ -4,7 +4,7 @@ import styles from "./BankerList.module.css";
 import { Col, Row } from "react-bootstrap";
 const ExportShowComponent = () => {
   const { Option } = Select;
-  const [dropdownvalue, setDropdownvalue] = useState(25);
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   const handleChangeDropDown = (value) => {
     console.log(`selected ${value}`);
@@ -27,8 +27,8 @@ const ExportShowComponent = () => {
             style={{ width: 60, margin: "0 10px" }}
             onChange={handleChangeDropDown}
           >
-            <Option value={10}>10</Option>
-            <Option value={25}>25</Option>
+            {/* <Option value={10}>10</Option>
+            <Option value={25}>25</Option> */}
             <Option value={50}>50</Option>
             <Option value={100}>100</Option>
           </Select>

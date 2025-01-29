@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./AddBankUserModal.module.css";
 import {
   Button,
@@ -13,35 +13,24 @@ import { AdduserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdmi
 import { Col, Row } from "react-bootstrap";
 import { AddBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
+import { addBranchSchema } from "../../../../utils/schemas";
+import { categoryOptions } from "../../../../helpers/Dropdown";
 const AddBankUserModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
-  //States
-  const [open, setOpen] = useState(false);
-  const [addBranch, setAddBranch] = useState({
-    BranchName: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    BranchCode: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    Category: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    BranchContact: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
+  //Auth States
+  const [open, setOpen] = useState({
+    open: false,
+    message: "",
   });
+  const [addBranch, setAddBranch] = useState({ ...addBranchSchema });
+
+  //Activate add branch button
+  const [isActive, setIsActive] = useState(false);
+
+  const [categoryID, setCategoryID] = useState("");
 
   //handle Cancel Button
   const handleCancelButton = () => {
@@ -53,22 +42,22 @@ const AddBankUserModal = () => {
     let name = e.target.name;
     let value = e.target.value;
 
-    if (name === "BranchName" && value !== "") {
+    if (name === "branchName" && value !== "") {
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
       if (valueCheck !== "") {
         setAddBranch({
           ...addBranch,
-          BranchName: {
+          branchName: {
             value: valueCheck.trimStart(),
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "BranchName" && value === "") {
+    } else if (name === "branchName" && value === "") {
       setAddBranch({
         ...addBranch,
-        BranchName: {
+        branchName: {
           value: "",
           errorMessage: "",
           errorStatus: true,
@@ -76,22 +65,22 @@ const AddBankUserModal = () => {
       });
     }
 
-    if (name === "BranchCode" && value !== "") {
+    if (name === "branchCode" && value !== "") {
       let valueCheck = value.replace(/[^0-9]/g, "");
       if (valueCheck !== "") {
         setAddBranch({
           ...addBranch,
-          BranchCode: {
+          branchCode: {
             value: valueCheck.trimStart(),
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "BranchCode" && value === "") {
+    } else if (name === "branchCode" && value === "") {
       setAddBranch({
         ...addBranch,
-        BranchCode: {
+        branchCode: {
           value: "",
           errorMessage: "",
           errorStatus: true,
@@ -99,28 +88,39 @@ const AddBankUserModal = () => {
       });
     }
 
-    if (name === "BranchContact" && value !== "") {
+    if (name === "branchContact" && value !== "") {
       let valueCheck = value.replace(/[^0-9]/g, "");
       if (valueCheck !== "") {
         setAddBranch({
           ...addBranch,
-          BranchContact: {
+          branchContact: {
             value: valueCheck.trimStart(),
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "BranchContact" && value === "") {
+    } else if (name === "branchContact" && value === "") {
       setAddBranch({
         ...addBranch,
-        BranchContact: {
+        branchContact: {
           value: "",
           errorMessage: "",
           errorStatus: true,
         },
       });
     }
+  };
+
+  //handle select categoryID
+  const handleSelectCategory = async (selectedCategory) => {
+    console.log(selectedCategory.value, "selectedCategoryselectedCategory");
+    setCategoryID(selectedCategory);
+
+    setAddBranch((prevState) => ({
+      ...prevState,
+      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+    }));
   };
 
   //Handle Add Branch Event
@@ -128,13 +128,29 @@ const AddBankUserModal = () => {
     e.preventDefault();
     let data = {
       BankID: 1,
-      BranchName: "Gulshan Branch",
-      BranchCode: "BOP002",
-      BranchContact: "021234567890",
-      CategoryID: 59,
+      BranchName: addBranch.branchName.value,
+      BranchCode: addBranch.branchCode.value,
+      BranchContact: addBranch.branchContact.value,
+      CategoryID: addBranch.categoryID.value,
     };
+    console.log("datadatadatadata", data);
     dispatch(AddBranchAPI(navigate, data));
   };
+
+  //useeffect to activate add branch button
+  useEffect(() => {
+    if (
+      addBranch.branchName.value !== "" &&
+      addBranch.branchCode.value !== "" &&
+      addBranch.branchContact.value !== "" &&
+      addBranch.categoryID.value !== ""
+    ) {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
+  }, [addBranch]);
+
   return (
     <>
       <Modal
@@ -161,9 +177,9 @@ const AddBankUserModal = () => {
               </Col>
               <Col lg={8} md={8} sm={12}>
                 <TextField
-                  name={"BranchName"}
+                  name={"branchName"}
                   labelClass="d-none"
-                  value={addBranch.BranchName.value}
+                  value={addBranch.branchName.value}
                   onChange={handleChangeAddBranch}
                   maxLength={50}
                 />
@@ -178,11 +194,11 @@ const AddBankUserModal = () => {
               </Col>
               <Col lg={8} md={8} sm={12}>
                 <TextField
-                  name={"BranchCode"}
+                  name={"branchCode"}
                   labelClass="d-none"
-                  value={addBranch.BranchCode.value}
-                  maxLength={4}
+                  value={addBranch.branchCode.value}
                   onChange={handleChangeAddBranch}
+                  maxLength={4}
                 />
               </Col>
             </Row>
@@ -194,7 +210,14 @@ const AddBankUserModal = () => {
                 </span>
               </Col>
               <Col lg={8} md={8} sm={12}>
-                <Select isSearchable={true} />
+                <Select
+                  name="categoryID"
+                  options={categoryOptions}
+                  value={categoryID}
+                  onChange={handleSelectCategory}
+                  isSearchable={true}
+                  className={styles["react-select-field"]}
+                />
               </Col>
             </Row>
 
@@ -207,10 +230,11 @@ const AddBankUserModal = () => {
               </Col>
               <Col lg={8} md={8} sm={12}>
                 <TextField
-                  name={"BranchContact"}
+                  name={"branchContact"}
                   labelClass="d-none"
-                  value={addBranch.BranchContact.value}
+                  value={addBranch.branchContact.value}
                   onChange={handleChangeAddBranch}
+                  maxLength={20}
                 />
               </Col>
             </Row>
@@ -225,15 +249,16 @@ const AddBankUserModal = () => {
               className="d-flex justify-content-center gap-2"
             >
               <Button
-                icon={<i class="icon-users"></i>}
+                icon={<i className="icon-users"></i>}
                 text={"Add Branch"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleAddBranchEvent}
+                disableBtn={isActive ? false : true}
               />
 
               <Button
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Cancel"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

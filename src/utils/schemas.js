@@ -1,0 +1,426 @@
+export const addBranchSchema = {
+  bankID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchCode: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  categoryID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchContact: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const updateBranchSchema = {
+  branchID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchCode: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchContact: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const addBankUserSchema = {
+  Name: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  firstName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  lastName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  email: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Contact: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  ldapAccount: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  roleID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  branchID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  EmployeeID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const viewCounterModalSchema = {
+  counterFileType: {
+    value: 3,
+    errorMessage: "",
+    errorStatus: false,
+  },
+  corporateName: {
+    value: "",
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  avaliableLimit: {
+    value: "",
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  instrumentName: {
+    value: "",
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  weightage: {
+    value: 0,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  instrumentAvaliableLimit: {
+    value: 0,
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const counterModalFieldSchema = {
+  corporateName: {
+    value: "",
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  avaliableLimit: {
+    value: "",
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  instumentNameTbill: {
+    value: 0,
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  instumentNamePib: {
+    value: 0,
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  instumentNameSukuk: {
+    value: 0,
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const viewCustomerSchema = {
+  Name: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  FirstName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  LastName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  Category: {
+    value: 0,
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  corporateID: {
+    value: "",
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  selectShield: 0,
+  fieldOneTwoThree: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const corporateListSchema = {
+  Name: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  CorporateName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Email: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  category: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const addCorporateUserSchema = {
+  firstName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  email: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  contactNumber: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  companyName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  isChatActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  corporateID: {
+    value: 1,
+    errorMessage: "",
+    errorStatus: false,
+  },
+  category: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const addCompanySchema = {
+  companyName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  category: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  RFQTimerTreasury: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  RFQTimerCorporate: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  natureOfClient: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const updateCorporateUserSchema = {
+  firstName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  email: { value: "", errorMessage: "", errorStatus: false },
+  corporateName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  RFQTimerTreasury: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  RFQTimerCorporate: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  activeUser: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const bankListSchema = {
+  EmployeeID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Name: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Email: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Role: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+
+export const updateBankUserSchema = {
+  firstName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  email: { value: "", errorMessage: "", errorStatus: false },
+
+  role: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  ContactNumber: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  activeUser: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
+export const loginHistorySchema = {
+  Name: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  CounterPartyName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Email: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Role: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  category: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  dateFrom: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  dateTo: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};

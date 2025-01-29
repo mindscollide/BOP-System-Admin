@@ -8,21 +8,18 @@
   color: #004990 !important;
   font-weight: 500;
 }
-
-.aesterick-color {
-  color: #cf5b5b !important;
-}
-
 .ActiveStatus {
   font-size: 12px !important;
   color: #00ee28 !important;
   font-weight: 500;
 }
-
 .InactiveStatus {
   font-size: 12px !important;
   color: #cf5b5b !important;
   font-weight: 500;
+}
+.aesterick-color {
+  color: #cf5b5b !important;
 }
 
 .AddBranchClass {

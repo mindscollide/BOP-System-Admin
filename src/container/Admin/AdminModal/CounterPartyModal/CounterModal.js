@@ -11,6 +11,7 @@ import {
 import { Checkbox } from "antd";
 import "./CounterModal.css";
 import { useEffect } from "react";
+import { counterModalFieldSchema } from "../../../../utils/schemas";
 
 const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
   const navigate = useNavigate();
@@ -19,40 +20,7 @@ const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
   console.log(systemReducer, "systemReducersystemReducer");
   // state for CounterModal edit user
   const [counterModalField, setCounterModalField] = useState({
-    corporateName: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    avaliableLimit: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instumentNameTbill: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instumentNamePib: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instumentNameSukuk: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
+    ...counterModalFieldSchema,
   });
   console.log(counterModalField, "counterModalField");
   // onchange handler for counterModal

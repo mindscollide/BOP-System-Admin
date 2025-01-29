@@ -13,6 +13,7 @@ import CounterModal from "../../AdminModal/CounterPartyModal/CounterModal";
 import CounterPartyModal from "../../AdminModal/CounterPartyUplaodModal/CounterPartyModal";
 import { Spin, Upload } from "antd";
 import "./CounterLimit.css";
+import { viewCounterModalSchema } from "../../../../utils/schemas";
 
 const CounterLimit = () => {
   const navigate = useNavigate();
@@ -47,43 +48,7 @@ const CounterLimit = () => {
 
   // view Counter party modal
   const [viewCounterModal, setViewCounterModal] = useState({
-    counterFileType: {
-      value: 3,
-      errorMessage: "",
-      errorStatus: false,
-    },
-    corporateName: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    avaliableLimit: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instrumentName: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    weightage: {
-      value: 0,
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instrumentAvaliableLimit: {
-      value: 0,
-      errorMessage: "",
-      errorStatus: false,
-    },
+    ...viewCounterModalSchema,
   });
 
   //open counterParty modal on click

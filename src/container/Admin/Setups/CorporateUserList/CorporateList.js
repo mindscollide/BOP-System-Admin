@@ -17,40 +17,40 @@ import {
 } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
-import CorporatePlusIconModal from "../../../AdminLogin/CorporateUser/CorporatePlusIconModal/CorporatePlusIconModal";
+// import CorporatePlusIconModal from "../../../AdminLogin/CorporateUser/CorporatePlusIconModal/CorporatePlusIconModal";
 import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
 import { useNavigate } from "react-router-dom";
-import { getAllCorporatesCategory } from "../../../../store/actions/Auth-Actions";
-import { SearchCorporateUsersAPI } from "../../../../store/actions/BOPSystemAdminActions";
+// import { getAllCorporatesCategory } from "../../../../store/actions/Auth-Actions";
+import {
+  getAllCorporatesCategory,
+  SearchCorporateUsersAPI,
+} from "../../../../store/actions/BOPSystemAdminActions";
+import { corporateListSchema } from "../../../../utils/schemas";
+import { categoryOptions } from "../../../../helpers/Dropdown";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // State to control visibility of export buttons
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  // Function to toggle the export options (PDF & Excel buttons)
+  const toggleExportOptions = () => {
+    setShowExportOptions(!showExportOptions);
+  };
+
   //Get All Coporates
   useEffect(() => {
     dispatch(getAllCorporatesCategory(navigate));
-  }, []);
+  }, [dispatch, navigate]);
 
   //States Corporate List
   const [corporateList, setCorporateList] = useState({
-    Name: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    CorporateName: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    Email: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
+    ...corporateListSchema,
   });
+
+  //State for dropdown
+  const [category, setCategory] = useState("");
 
   //Edit Corporate Use Modal Calling
   const EditCorporateModalGobalState = useSelector(
@@ -162,15 +162,57 @@ const CorporateList = () => {
 
   //Handle search Button even
   const handleSearchEventButton = () => {
+    // let data = {
+    //   FirstName: "",
+    //   CategoryID: 0,
+    //   Email: "",
+    //   CompanyName: "",
+    //   PageNumber: 1,
+    //   Length: 10,
+    // };
+
     let data = {
+      FirstName: corporateList.Name.value,
+      CompanyName: corporateList.CorporateName.value,
+      CategoryID: corporateList.category.value,
+      Email: corporateList.Email.value,
+      PageNumber: 1,
+      Length: 10,
+      // CompanyName: "",
+    };
+
+    console.log("Data to Search", data);
+    dispatch(SearchCorporateUsersAPI(navigate, data));
+  };
+  //Handle Select Change
+  // A generic function to handle dropdown changes
+  const handleDropdownChange = (field, value, setter, userField) => {
+    setter(value); // Set the state
+    userField.value = value.value; // Update the corporateUser object
+  };
+
+  const handleReset = () => {
+    // Reset all form fields, including the dropdown
+    setCorporateList({
+      Name: { value: "", errorMessage: "", errorStatus: false },
+      CorporateName: { value: "", errorMessage: "", errorStatus: false },
+      Email: { value: "", errorMessage: "", errorStatus: false },
+      category: { value: "", errorMessage: "", errorStatus: false }, // Ensure role is cleared
+    });
+    setCategory(""); // Reset dropdown value
+
+    let resetData = {
+      EmployeeID: "",
       FirstName: "",
-      CategoryID: 0,
       Email: "",
-      CompanyName: "",
+      Role: "",
+      StatusID: 0,
       PageNumber: 1,
       Length: 10,
     };
-    dispatch(SearchCorporateUsersAPI(navigate, data));
+
+    // Call API to fetch all records after reset
+    dispatch(SearchCorporateUsersAPI(navigate, resetData));
   };
 
   //Table columns for customer List
@@ -208,7 +250,7 @@ const CorporateList = () => {
     },
     {
       title: (
-        <label className="bottom-table-header">last password Change</label>
+        <label className="bottom-table-header">last Password Change</label>
       ),
       dataIndex: "LastPassowrdChange",
       key: "LastPassowrdChange",
@@ -280,6 +322,29 @@ const CorporateList = () => {
       Edit: (
         <Row>
           <Col lg={12} md={12} sm={12} className="d-flex gap-2">
+            <i className="icon-edit color-blue"></i>
+            <i className="icon-trash color-red"></i>
+          </Col>
+        </Row>
+      ),
+    },
+    {
+      key: "2",
+      email: (
+        <>
+          <span className="cursor-pointer" onClick={handleOnClickEmail}>
+            tom.cruise@bop.com
+          </span>
+        </>
+      ),
+      Name: "Tom Cruise",
+      Corporatename: "Yunus Corp",
+      Status: "Inactive",
+      LastPassowrdChange: "13/05/2023 01:15:10",
+      creationDateTime: "13/05/2023 01:15:10",
+      Edit: (
+        <Row>
+          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
             <i class="icon-edit color-blue"></i>
             <i class="icon-trash color-red"></i>
           </Col>
@@ -310,8 +375,8 @@ const CorporateList = () => {
               </Col>
               <Col lg={3} md={3} sm={12}>
                 <TextField
-                  placeholder="Corporate Name"
                   labelClass={"d-none"}
+                  placeholder="Corporate Name"
                   name={"corporateName"}
                   value={corporateList.CorporateName.value}
                   onChange={CorporateListValidateHandler}
@@ -328,7 +393,20 @@ const CorporateList = () => {
               </Col>
               <Col lg={3} md={3} sm={12}>
                 <Select
+                  name="category"
+                  isSearchable={true}
                   placeholder={"Select Category"}
+                  options={categoryOptions}
+                  value={category}
+                  onChange={(e) =>
+                    handleDropdownChange(
+                      "category",
+                      e,
+                      setCategory,
+                      corporateList.category
+                    )
+                  }
+                  className={styles["react-select-field"]}
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
@@ -352,15 +430,40 @@ const CorporateList = () => {
                   className={styles["Corporatelist-Reset-btn"]}
                   text="Reset"
                   iconClass={styles["resetIconClass"]}
+                  onClick={handleReset}
                 />
                 <Button
                   icon={<i class="icon-download"></i>}
                   className={styles["Export_Button"]}
                   text="Export"
                   iconClass={styles["resetIconClass"]}
+                  onClick={toggleExportOptions}
                 />
               </Col>
             </Row>
+            {showExportOptions && (
+              <Row className="mt-3">
+                <Col
+                  lg={12}
+                  md={12}
+                  sm={12}
+                  className="d-flex justify-content-center gap-1"
+                >
+                  {/* Export as PDF Button */}
+                  <Button
+                    variant="primary"
+                    text="Export as PDF"
+                    onClick={() => console.log("Exporting as PDF")}
+                  />
+                  {/* Export as Excel Button */}
+                  <Button
+                    variant="secondary"
+                    text="Export as Excel"
+                    onClick={() => console.log("Exporting as Excel")}
+                  />
+                </Col>
+              </Row>
+            )}
 
             <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>

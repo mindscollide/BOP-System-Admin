@@ -10,6 +10,10 @@ const Addcateogry = {
   RequestMethod: "ServiceManager.AddCategory",
 };
 
+const UpdateCategory = {
+  RequestMethod: "ServiceManager.UpdateCategory",
+};
+
 const getallCoporatesSystem = {
   RequestMethod: "ServiceManager.GetAllCorporateDetails",
 };
@@ -118,6 +122,11 @@ const UpdateBankUserByBankID = {
   RequestMethod: "ServiceManager.UpdateBankUserbyUserID",
 };
 
+//Get All Bank Users
+const GetAllBankUsers = {
+  RequestMethod: "ServiceManager.GetAllBankUsers",
+};
+
 //Get VolMeters By Bannking ID
 const GetVolmeterByBankID = {
   RequestMethod: "ServiceManager.GetVolMetersByBankID",
@@ -128,10 +137,26 @@ const AddUpdateVolmeter = {
   RequestMethod: "ServiceManager.AddUpdateVolmeter",
 };
 
+//Update Volmeter by Dealer
+const UpdateVolmeterByDealer = {
+  RequestMethod: "ServiceManager.UpdateVolmeterByDealer",
+};
+
+//Update Volmeter Setting By Bank Id
+const UpdateVolMeterSettingByBankId = {
+  RequestMethod: "ServiceManager.UpdateVolMeterSettingByBankId",
+};
+
+//Update Volmeter Setting By Bank Id
+const GetVolMeterSettingByBankId = {
+  RequestMethod: "ServiceManager.GetVolMeterSettingByBankId",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
   Addcateogry,
+  UpdateCategory,
   getallCoporatesSystem,
   downloadCorporateUserLogin,
   downloadBankUserLoginHistory,
@@ -158,4 +183,8 @@ export {
   UpdateBankUserByBankID,
   GetVolmeterByBankID,
   AddUpdateVolmeter,
+  UpdateVolmeterByDealer,
+  UpdateVolMeterSettingByBankId,
+  GetVolMeterSettingByBankId,
+  GetAllBankUsers,
 };

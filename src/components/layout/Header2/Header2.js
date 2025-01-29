@@ -3,13 +3,20 @@ import { Container, Nav, Dropdown } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import BOPLogo from "../../../assets/images/logo-white.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signOut } from "../../../store/actions/Auth-Actions";
+import { message } from "antd";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   //HandleClick on logo
   const onClickLogo = () => {
     navigate("/SystemAdmin/AddBankUser");
   };
+  function handelLogout() {
+    dispatch(signOut(navigate, message));
+  }
   return (
     <>
       <Container fluid className="container-header-2">
@@ -35,8 +42,8 @@ const Header = () => {
                     <label className="dropdown-select-labels">Setting</label>
                   </Nav.Link>
                 </Dropdown.Item>
-                <Dropdown.Item>
-                  <i class="icon-logout me-1"></i>
+                <Dropdown.Item onClick={handelLogout}>
+                  <i className="icon-logout me-1"></i>
                   <label className="dropdown-select-labels">Logout</label>
                 </Dropdown.Item>
               </Dropdown.Menu>

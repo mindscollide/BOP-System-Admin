@@ -651,3 +651,8 @@ input.form-control {
 .WidthInputParitySpot.ant-input {
   width: 70px !important;
 }
+
+/*  */
+.ModalAbsoluteDropdown__menu-portal {
+  z-index: 999999 !important;
+}

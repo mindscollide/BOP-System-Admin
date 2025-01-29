@@ -235,14 +235,11 @@
 }
 
 .SearchButton_loginHistory:is(:hover, :focus, :focus-visible) {
-  font-size: 14px;
-  border-radius: 4px !important;
-  padding: 6px 12px !important;
-  height: 100% !important;
   border: none;
-  background: #096fed !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
   display: flex !important;
   gap: 4px !important;
   font-family: "Poppins", sans-serif;
+  height: 100% !important;
   align-items: center !important;
 }

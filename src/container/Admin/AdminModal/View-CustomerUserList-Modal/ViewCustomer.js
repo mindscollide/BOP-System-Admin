@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./ViewCustomer.css";
 import Select from "react-select";
+import { viewCustomerSchema } from "../../../../utils/schemas";
 
 const ViewCustomer = ({
   viewCustomerModal,
@@ -37,46 +38,7 @@ const ViewCustomer = ({
   const [enableSelectCompanyName, setEnableSelectCompanyName] = useState(true);
 
   //state for view modal Customer List
-  const [viewCustomer, setViewCustomer] = useState({
-    Name: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    FirstName: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    LastName: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    Category: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    corporateID: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    selectShield: 0,
-    fieldOneTwoThree: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-  });
+  const [viewCustomer, setViewCustomer] = useState({ ...viewCustomerSchema });
   // for close modal handler
   const closeViewModal = () => {
     setModalViewCustomerList({

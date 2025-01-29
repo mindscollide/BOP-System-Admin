@@ -124,7 +124,8 @@
   padding: 6px 18px !important;
   border: none;
   height: 100% !important;
-  background: #019308 !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+
   display: flex !important;
   gap: 4px !important;
   font-family: "Poppins", sans-serif;
@@ -133,4 +134,11 @@
 
 .spanshowClass {
   font-family: "Roboto", sans-serif !important;
+}
+
+.EditButton {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }

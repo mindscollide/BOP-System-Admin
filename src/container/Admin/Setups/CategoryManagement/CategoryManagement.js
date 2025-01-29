@@ -10,9 +10,9 @@ import { useDispatch } from "react-redux";
 import {
   DeleteCorporateCategoryAPI,
   UpdatecorporateMapping,
-  getAllCorporatesCategory,
 } from "../../../../store/actions/Auth-Actions";
 import { useSelector } from "react-redux";
+
 import { Addcategory } from "../../../../store/actions/AddCategoryActions";
 import {
   forNumbersOnly,
@@ -24,6 +24,7 @@ import DeleteModal from "./DeleRejectModal";
 import { DeleteOutlined } from "@material-ui/icons";
 import AddCategoryModal from "./AddCategoryModal/AddCategoryModal";
 import { AddCategoryModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { getAllCorporatesCategory } from "../../../../store/actions/BOPSystemAdminActions";
 
 const CategoryManagement = () => {
   //Accordian

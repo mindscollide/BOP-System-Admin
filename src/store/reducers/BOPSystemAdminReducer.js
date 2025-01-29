@@ -22,6 +22,12 @@ const initialState = {
   UpdateBankUserByUserIdData: null,
   GetVolmeterByBankIDData: null,
   AddUpdateVolmeter: null,
+
+  //from here
+  UpdateVolmeterByDealer: null,
+  UpdateVolMeterSettingByBankId: null,
+  GetVolMeterSettingByBankId: null,
+  GetAllBankUsers: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -318,6 +324,28 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         UpdateCorporateUsersData: null,
         ResponseMessage: action.message,
       };
+
+    //Get All Bank Users
+    case actions.GET_ALL_BANK_USERS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_ALL_BANK_USERS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBankUsers: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_ALL_BANK_USERS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBankUsers: null,
+        ResponseMessage: action.message,
+      };
+
     //Get Bank User by UserID
     case actions.GET_BANK_USER_BY_USERID_INIT:
       return {
@@ -367,16 +395,16 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.GET_VOLMETER_BY_BANKID_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         GetVolmeterByBankIDData: action.response,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
     case actions.GET_VOLMETER_BY_BANKID_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         GetVolmeterByBankIDData: null,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
     //Add Update Volmeter
     case actions.ADD_UPDATE_VOLMTER_INIT:
@@ -387,17 +415,83 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.ADD_UPDATE_VOLMTER_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         AddUpdateVolmeter: action.response,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
     case actions.ADD_UPDATE_VOLMTER_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         AddUpdateVolmeter: null,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
+
+    //Update Volmeter By Dealer
+    case actions.UPDATE_VOLMETER_BY_DEALER_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.UPDATE_VOLMETER_BY_DEALER_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterByDealer: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_VOLMETER_BY_DEALER_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterByDealer: null,
+        ResponseMessage: action.message,
+      };
+
+    //Update VolMeter Setting By Bank Id
+    case actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterSettingByBankId: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterSettingByBankId: null,
+        ResponseMessage: action.message,
+      };
+
+    //Get Vometer setting by bank ID
+    case actions.GET_VOLMETER_SETTING_BY_BANK_ID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_VOLMETER_SETTING_BY_BANK_ID_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetVolmeterSettingByBankId: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_VOLMETER_SETTING_BY_BANK_ID_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetVolMeterSettingByBankId: null,
+        ResponseMessage: action.message,
+      };
+    //Delete Volmeter
     default:
       return { ...state };
   }

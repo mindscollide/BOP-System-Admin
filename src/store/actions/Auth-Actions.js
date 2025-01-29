@@ -2,17 +2,18 @@ import * as actions from "../action_types";
 import axios from "axios";
 import {
   authenticationRefreshToken,
-  getallCoporatesSystem,
+  // getallCoporatesSystem,
   UpdateCorporateMapping,
   DeleteCategory,
   LoginSystemAdmin,
-  CorporateUserLogin,
+  // CorporateUserLogin,
   SendEmailResetPassword,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
+import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
 
 const cleareMessage = (response) => {
   return {
@@ -53,9 +54,9 @@ const refreshtokenSuccess = (response, message) => {
 };
 // API
 const RefreshToken = (navigate) => {
-  let Token = JSON.parse(localStorage.getItem("token"));
-  let RefreshToken = JSON.parse(localStorage.getItem("refreshToken"));
-  console.log("RefreshToken", Token, RefreshToken);
+  let Token = localStorage.getItem("token");
+  let RefreshToken = localStorage.getItem("refreshToken");
+  console.log("RefreshToken", { Token, RefreshToken });
   let Data = {
     Token: Token,
     RefreshToken: RefreshToken,
@@ -73,19 +74,21 @@ const RefreshToken = (navigate) => {
       .then(async (response) => {
         console.log("RefreshToken", response);
         if (response.data.responseCode === 200) {
-          await dispatch(
-            refreshtokenSuccess(
-              response.data.responseResult,
-              "Refresh Token Update Successfully"
-            )
-          );
-        } else {
-          console.log("RefreshToken", response);
-          let message2 = "Your Session has expired. Please login again";
-          dispatch(signOut(navigate, message2));
-          await dispatch(
-            refreshtokenFail("Your Session has expired. Please login again.")
-          );
+          if (response.data.responseResult.isExecuted) {
+            await dispatch(
+              refreshtokenSuccess(
+                response.data.responseResult,
+                "Refresh Token Update Successfully"
+              )
+            );
+          } else {
+            console.log("RefreshToken", response);
+            let message2 = "Your Session has expired. Please login again";
+            dispatch(signOut(navigate, message2));
+            await dispatch(
+              refreshtokenFail("Your Session has expired. Please login again.")
+            );
+          }
         }
       })
       .catch((response) => {
@@ -96,101 +99,101 @@ const RefreshToken = (navigate) => {
   };
 };
 
-const getallcoporatesinit = () => {
-  return {
-    type: actions.GET_ALL_CORPORATES_INIT,
-  };
-};
+// const getallcoporatesinit = () => {
+//   return {
+//     type: actions.GET_ALL_CORPORATES_INIT,
+//   };
+// };
 
-const getallcorporatessuccess = (response, message) => {
-  return {
-    type: actions.GET_ALL_CORPORATES_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
+// const getallcorporatessuccess = (response, message) => {
+//   return {
+//     type: actions.GET_ALL_CORPORATES_SUCCESS,
+//     response: response,
+//     message: message,
+//   };
+// };
 
-const getallcorporatesfailed = (message) => {
-  return {
-    type: actions.GET_ALL_CORPORATES_FAIL,
-    message: message,
-  };
-};
+// const getallcorporatesfailed = (message) => {
+//   return {
+//     type: actions.GET_ALL_CORPORATES_FAIL,
+//     message: message,
+//   };
+// };
 
-const getAllCorporatesCategory = (navigate) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
-  let data = {};
-  return (dispatch) => {
-    // dispatch(categoryCompanyInit());
-    let form = new FormData();
-    form.append("RequestMethod", getallCoporatesSystem.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        // _token: token,
-      },
-    })
-      .then(async (response) => {
-        console.log("CorporateCategoryCorporateCategory", response);
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(getAllCorporatesCategory(navigate));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_01".toLowerCase()
-            ) {
-              dispatch(
-                getallcorporatessuccess(
-                  response.data.responseResult.corporateCategories,
-                  "Record found"
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_02".toLowerCase()
-                )
-            ) {
-              dispatch(getallcorporatesfailed("No Record Found"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_03".toLowerCase()
-                )
-            ) {
-              dispatch(getallcorporatesfailed("Invalid Role"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_04".toLowerCase()
-                )
-            ) {
-              dispatch(
-                getallcorporatesfailed("Exception Something went wrong")
-              );
-            }
-          } else {
-            dispatch(getallcorporatesfailed("Something went wrong"));
-            console.log("There's no corporates category");
-          }
-        } else {
-          dispatch(getallcorporatesfailed("Something went wrong"));
-          console.log("There's no corporates category");
-        }
-      })
-      .catch((response) => {
-        dispatch(getallcorporatesfailed("something went wrong"));
-      });
-  };
-};
+// const getAllCorporatesCategory = (navigate, data) => {
+//   let token = JSON.parse(localStorage.getItem("token"));
+//   // let data = {};
+//   return async (dispatch) => {
+//     dispatch(getallcoporatesinit());
+//     let form = new FormData();
+//     form.append("RequestMethod", getallCoporatesSystem.RequestMethod);
+//     form.append("RequestData", JSON.stringify(data));
+//     axios({
+//       method: "POST",
+//       url: systemAdminAPI,
+//       data: form,
+//       headers: {
+//         _token: token,
+//       },
+//     })
+//       .then(async (response) => {
+//         console.log("CorporateCategoryCorporateCategory", response);
+//         if (response.data.responseCode === 417) {
+//           await dispatch(RefreshToken(navigate));
+//           dispatch(getAllCorporatesCategory(navigate));
+//         } else if (response.data.responseCode === 200) {
+//           if (response.data.responseResult.isExecuted === true) {
+//             if (
+//               response.data.responseResult.responseMessage.toLowerCase() ===
+//               "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_01".toLowerCase()
+//             ) {
+//               dispatch(
+//                 getallcorporatessuccess(
+//                   response.data.responseResult.corporateCategories,
+//                   "Record found"
+//                 )
+//               );
+//             } else if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_02".toLowerCase()
+//                 )
+//             ) {
+//               dispatch(getallcorporatesfailed("No Record Found"));
+//             } else if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_03".toLowerCase()
+//                 )
+//             ) {
+//               dispatch(getallcorporatesfailed("Invalid Role"));
+//             } else if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_04".toLowerCase()
+//                 )
+//             ) {
+//               dispatch(
+//                 getallcorporatesfailed("Exception Something went wrong")
+//               );
+//             }
+//           } else {
+//             dispatch(getallcorporatesfailed("Something went wrong"));
+//             console.log("There's no corporates category");
+//           }
+//         } else {
+//           dispatch(getallcorporatesfailed("Something went wrong"));
+//           console.log("There's no corporates category");
+//         }
+//       })
+//       .catch((response) => {
+//         dispatch(getallcorporatesfailed("something went wrong"));
+//       });
+//   };
+// };
 
 const updatecorporateinit = () => {
   return {
@@ -216,7 +219,7 @@ const updatecorporatefailed = (message) => {
 const UpdatecorporateMapping = (navigate, data) => {
   let token = JSON.parse(localStorage.getItem("token"));
   return (dispatch) => {
-    // dispatch(categoryCompanyInit());
+    dispatch(updatecorporateinit());
     let form = new FormData();
     form.append("RequestMethod", UpdateCorporateMapping.RequestMethod);
     form.append("RequestData", JSON.stringify(data));
@@ -411,7 +414,9 @@ const loginSystemAdminSuccess = (response, message) => {
   };
 };
 
-const loginSystemAdminFailed = (response, message) => {
+const loginSystemAdminFailed = (message) => {
+  console.log("loginSystemAdminFailed", message);
+
   return {
     type: actions.LOG_IN_FAIL,
     message: message,
@@ -419,7 +424,8 @@ const loginSystemAdminFailed = (response, message) => {
 };
 
 const loginSystemAdminAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
+
   return (dispatch) => {
     dispatch(loginSystemAdmininit());
     let form = new FormData();
@@ -429,20 +435,21 @@ const loginSystemAdminAPI = (navigate, data) => {
       method: "POST",
       url: authenticationAPI,
       data: form,
-      headers: {
-        _token: token,
-      },
     })
       .then(async (response) => {
+        console.log("loginSystemAdmin", response);
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(loginSystemAdminAPI(navigate, data));
         } else if (response.data.responseCode === 200) {
+          console.log("loginSystemAdmin", response);
+
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_AuthManager_Login_01".toLowerCase()
             ) {
+              console.log("loginSystemAdmin", response);
               dispatch(
                 loginSystemAdminFailed(
                   response.data.responseResult,
@@ -454,14 +461,22 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_02".toLowerCase())
             ) {
+              console.log("loginSystemAdmin", response);
+
               dispatch(loginSystemAdminFailed("Device ID is Empty"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
+              console.log("loginSystemAdminSuccess", response);
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
               localStorage.setItem("token", response.data.responseResult.token);
+              localStorage.setItem(
+                "refreshToken",
+                response.data.responseResult.refreshToken
+              );
+
               localStorage.setItem(
                 "userID",
                 response.data.responseResult.userID
@@ -471,69 +486,81 @@ const loginSystemAdminAPI = (navigate, data) => {
                 response.data.responseResult.userName
               );
               navigate("/SystemAdmin/AddBankUser");
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_04".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("LDAP Auth Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_05".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("User is Locked"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_06".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("User is Disabled"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_07".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("User is Closed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_08".toLowerCase())
+            ) {
+              console.log("loginSystemAdminFa", response);
+              dispatch(loginSystemAdminFailed("User is Dormant"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_09".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("Login Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_12".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("Not A valid role to login"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_10".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("Login Failed"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_11".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("Something went wrong"));
             }
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_04".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("LDAP Auth Failed"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_05".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("User is Locked"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_06".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("User is Disabled"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_07".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("User is Closed"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_08".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("User is Dormant"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_09".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("Login Failed"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_12".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("Not A valid role to login"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_10".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("Login Failed"));
-          } else if (
-            response.data.responseResult.responseMessage
-              .toLowerCase()
-              .includes("ERM_AuthService_AuthManager_Login_11".toLowerCase())
-          ) {
-            dispatch(loginSystemAdminFailed("Something went wrong"));
           } else {
+            console.log("loginSystemAdmin", response);
             dispatch(loginSystemAdminFailed("Something went wrong"));
           }
         } else {
+          console.log("loginSystemAdmin", response);
           dispatch(loginSystemAdminFailed("Something went wrong"));
         }
       })
       .catch((response) => {
+        console.log("loginSystemAdmin", response);
         dispatch(loginSystemAdminFailed("something went wrong"));
       });
   };
@@ -643,7 +670,7 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
 export {
   signOut,
   RefreshToken,
-  getAllCorporatesCategory,
+  // getAllCorporatesCategory,
   UpdatecorporateMapping,
   DeleteCorporateCategoryAPI,
   loginSystemAdminAPI,

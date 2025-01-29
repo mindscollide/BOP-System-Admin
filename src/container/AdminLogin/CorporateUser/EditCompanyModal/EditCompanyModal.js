@@ -13,7 +13,8 @@ const EditCompanyModal = () => {
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
-  const handleCrossIcon = () => {
+  //handle Cancel Button
+  const handleCancelButton = () => {
     dispatch(editCompanyModalSystemAdmin(false));
   };
 
@@ -46,9 +47,9 @@ const EditCompanyModal = () => {
             <Col lg={1} md={1} sm={12}>
               <Button
                 className={styles["CrossButton"]}
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 iconClass={styles["crossIconClass"]}
-                onClick={handleCrossIcon}
+                onClick={handleCancelButton}
               />
             </Col>
           </Row>
@@ -126,14 +127,15 @@ const EditCompanyModal = () => {
             >
               <Button
                 text={"Update"}
-                icon={<i class="icon-refresh"></i>}
+                icon={<i className="icon-refresh"></i>}
                 className={styles["AddButton"]}
                 onClick={handleUpdateEditCompany}
               />
               <Button
                 text={"Cancel"}
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 className={styles["CancelButton"]}
+                onClick={handleCancelButton}
               />
             </Col>
           </Row>
