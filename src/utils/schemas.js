@@ -424,3 +424,51 @@ export const loginHistorySchema = {
     errorStatus: false,
   },
 };
+
+export const tradeCountSchema = {
+  TxnID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  clientName: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  side: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Nature: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Amount: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  LC: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  AccountNumber: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  dateFrom: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  dateTo: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};

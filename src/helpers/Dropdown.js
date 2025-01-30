@@ -39,3 +39,8 @@ export const natureOfClientOptions = [
   { value: "Delayed Payment", label: "Delayed Payment" },
   { value: "Priority Client", label: "Priority Client" },
 ];
+
+export const transactionSide = [
+  { value: "Buy", label: "Buy" },
+  { value: "Sell", label: "Sell" },
+];
