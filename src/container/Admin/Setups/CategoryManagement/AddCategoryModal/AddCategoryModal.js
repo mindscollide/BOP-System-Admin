@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./AddCategoryModal.module.css";
 import { Button, Modal, TextField } from "../../../../../components/elements";
 import { AddCategoryModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
@@ -7,11 +7,13 @@ import { useDispatch } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
+import { addCategroyModalSchema } from "../../../../../utils/schemas";
 
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const [addCategory, setAddCategory] = useState({ ...addCategroyModalSchema });
 
   //handle Cross icon
   const handleCrossIcon = () => {
@@ -36,6 +38,37 @@ const AddCategoryModal = () => {
     dispatch(AddCategoryModalSystemAdmin(false));
   };
 
+  const handleValueChange = (e) => {
+    const { name, value } = e.target;
+
+    const validateInput = {
+      Name: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
+      Bid: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+      Offer: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+    };
+    const isFieldEmpty = (val) => val === "";
+
+    // Update field function
+    const updateField = (fieldName, fieldValue) => {
+      const validValue = validateInput[fieldName]
+        ? validateInput[fieldName](fieldValue)
+        : fieldValue;
+
+      const hasError = isFieldEmpty(validValue);
+
+      setAddCategory((prevState) => ({
+        ...prevState,
+        [fieldName]: {
+          value: validValue,
+          errorMessage: hasError ? "This field is required" : "",
+          errorStatus: hasError,
+        },
+      }));
+    };
+
+    // Update the specific field
+    updateField(name, value);
+  };
   return (
     <Modal
       show={BOPSystemAdminModal.addCategoryModal}
@@ -70,7 +103,12 @@ const AddCategoryModal = () => {
               <span className={style["Label"]}>
                 Name <span className={style["asteric"]}>*</span>
               </span>
-              <TextField labelClass={"d-none"} />
+              <TextField
+                labelClass={"d-none"}
+                name={"Name"}
+                value={addCategory.Name.value}
+                onChange={handleValueChange}
+              />
             </Col>
           </Row>
           <Row className="mt-3">
@@ -85,13 +123,23 @@ const AddCategoryModal = () => {
               <span className={style["Label"]}>
                 Bid <span className={style["asteric"]}>*</span>
               </span>
-              <TextField labelClass={"d-none"} />
+              <TextField
+                labelClass={"d-none"}
+                value={addCategory.Bid.value}
+                name={"Bid"}
+                onChange={handleValueChange}
+              />
             </Col>
             <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
               <span className={style["Label"]}>
                 Offer <span className={style["asteric"]}>*</span>
               </span>
-              <TextField labelClass={"d-none"} />
+              <TextField
+                labelClass={"d-none"}
+                value={addCategory.Offer.value}
+                name={"Offer"}
+                onChange={handleValueChange}
+              />
             </Col>
           </Row>
         </>

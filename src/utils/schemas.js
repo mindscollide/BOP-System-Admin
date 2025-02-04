@@ -494,3 +494,21 @@ export const updateCorporateDataSchema = {
     errorStatus: false,
   },
 };
+
+export const addCategroyModalSchema = {
+  Name: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Bid: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  Offer: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};
