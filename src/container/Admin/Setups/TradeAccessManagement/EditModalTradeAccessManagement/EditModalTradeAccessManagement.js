@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./EditModalTradeAccessManagement.module.css";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
@@ -7,19 +7,35 @@ import { editTradeAccessManagementModalSystemAdmin } from "../../../../../store/
 import { Col, Row } from "react-bootstrap";
 import {
   Button,
+  CustomSwitch,
   Modal,
   Table,
   TextField,
 } from "../../../../../components/elements";
+import { updateCorporateDataSchema } from "../../../../../utils/schemas";
+import { instrumentType } from "../../../../../helpers/Dropdown";
+import DeleteConfirmationModal from "../../CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
 const EditModalTradeAccessManagement = () => {
   const dispatch = useDispatch();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const [updateCorporateData, setUpdateCorporateData] = useState({
+    ...updateCorporateDataSchema,
+  });
+  const [InstrumentType, setInstrumentType] = useState("");
+  //state for error Message
+  const [errorShow, setErrorShow] = useState(false);
+  //Checking snakbar state
+  const [open, setOpen] = useState(false);
+
+  //save changes modal
+  const [saveChanges, setSaveChanges] = useState(false);
 
   //handle No Button
   const handleNoButton = () => {
     dispatch(editTradeAccessManagementModalSystemAdmin(false));
   };
 
+  //table columns for corporate
   const columns = [
     {
       title: "",
@@ -29,11 +45,11 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Instrument",
           key: "Instrument",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
-      key: "Instrument",
-      dataIndex: "currentBid",
+      key: "",
+      dataIndex: "",
       align: "center",
     },
     {
@@ -42,17 +58,17 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Buy",
-          dataIndex: "currentBid",
-          key: "currentBid",
+          dataIndex: "BuyCrossRate",
+          key: "BuyCrossRate",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
         {
           title: "Sell",
-          dataIndex: "currentBid",
-          key: "currentBid",
+          dataIndex: "SellCrossRate",
+          key: "SellCrossRate",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
     },
@@ -62,34 +78,34 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Buy",
-          dataIndex: "currentBid",
-          key: "currentBid",
+          dataIndex: "BuyParity",
+          key: "BuyParity",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
         {
           title: "Sell",
-          dataIndex: "currentBid",
-          key: "currentBid",
+          dataIndex: "SellParity",
+          key: "SellParity",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
     },
     {
-      title: "",
+      // title: "",
+      // key: "",
+      // dataIndex: "",
+      // align: "center",
       children: [
         {
           title: "Forward",
           dataIndex: "Forward",
           key: "Forward",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
-      key: "",
-      dataIndex: "",
-      align: "center",
     },
     {
       title: "",
@@ -99,12 +115,12 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Discounting",
           key: "Discounting",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
-      key: "",
-      dataIndex: "",
-      align: "center",
+      // key: "",
+      // dataIndex: "",
+      // align: "center",
     },
     {
       title: "",
@@ -114,7 +130,7 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Active",
           key: "Active",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
       key: "",
@@ -129,7 +145,7 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Hide",
           key: "Hide",
           align: "center",
-          render: () => {},
+          // render: () => {},
         },
       ],
       key: "",
@@ -137,6 +153,146 @@ const EditModalTradeAccessManagement = () => {
       align: "center",
     },
   ];
+
+  //Dummy Data
+  const dataSource = [
+    {
+      key: "1",
+      Instrument: "0123",
+      BuyCrossRate: "PKR",
+      SellCrossRate: "278",
+      BuyParity: "PKR",
+      SellParity: "278",
+      Forward: "192.168.121.111",
+      Discounting: "Yunus Zanzibarwala",
+      Active: (
+        <>
+          <CustomSwitch size="small" defaultChecked />
+        </>
+      ),
+      Hide: (
+        <>
+          <CustomSwitch size="small" defaultChecked />
+        </>
+      ),
+    },
+    {
+      key: "2",
+      Instrument: "0654",
+      BuyCrossRate: "CAD",
+      SellCrossRate: "550",
+      BuyParity: "PKR",
+      SellParity: "278",
+      Forward: "192.168.121.111",
+      Discounting: "Yunus Zanzibarwala",
+
+      Active: (
+        <>
+          <CustomSwitch size="small" defaultChecked />
+        </>
+      ),
+      Hide: (
+        <>
+          <CustomSwitch size="small" defaultChecked />
+        </>
+      ),
+    },
+  ];
+  const handleValueChange = (e) => {
+    const { name, value } = e.target;
+
+    //
+    const validateInput = {
+      TotalLimit: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+      DefaultMinAmountLimit: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+      DefaultMaxAmountLimit: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+    };
+    const isFieldEmpty = (val) => val === "";
+    // Update field function
+    const updateField = (fieldName, fieldValue) => {
+      const validValue = validateInput[fieldName]
+        ? validateInput[fieldName](fieldValue)
+        : fieldValue;
+
+      const hasError = isFieldEmpty(validValue);
+
+      setUpdateCorporateData((prevState) => ({
+        ...prevState,
+        [fieldName]: {
+          value: validValue,
+          errorMessage: hasError ? "This field is required" : "",
+          errorStatus: hasError,
+        },
+      }));
+    };
+
+    // Update the specific field
+    updateField(name, value);
+  };
+  //Handle Select Change
+  // A generic function to handle dropdown changes
+  const handleDropdownChange = (field, value, setter, userField) => {
+    setter(value); // Set the state
+    userField.value = value.value; // Update the corporateUser object
+  };
+
+  //handle Active Button
+  // show error message When user hit activate btn
+  const handleSaveChangesButton = () => {
+    if (
+      updateCorporateData.TotalLimit.value !== "" &&
+      updateCorporateData.InstrumentType.value !== "" &&
+      updateCorporateData.DefaultMinAmountLimit.value !== "" &&
+      updateCorporateData.DefaultMaxAmountLimit.value !== ""
+    ) {
+      if (
+        parseInt(updateCorporateData.DefaultMinAmountLimit.value) <=
+        parseInt(updateCorporateData.DefaultMaxAmountLimit.value)
+      ) {
+        setSaveChanges(true);
+        setErrorShow(false);
+        let newData = {
+          corporateData: {
+            TotalLimit: updateCorporateData.TotalLimit.value,
+            InstrumentType: updateCorporateData.InstrumentType.value,
+            DefaultMinAmountLimit:
+              updateCorporateData.DefaultMinAmountLimit.value,
+            DefaultMaxAmountLimit:
+              updateCorporateData.DefaultMaxAmountLimit.value,
+          },
+        };
+        console.log("newData", newData);
+        // dispatch(UpdateCorporateUsersAPI(navigate, newData));
+        setOpen({
+          open: true,
+          message: "Hello Update Corporate User dispatched",
+        });
+      } else {
+        setErrorShow(true);
+        console.log(
+          "Default Min Amount Limit should be less than or equal to Default Max Amount Limit"
+        );
+        setOpen({
+          open: true,
+          message:
+            "Default Min Amount Limit should be less than or equal to Default Max Amount Limit",
+        });
+      }
+    } else {
+      // setTimeout();
+      setErrorShow(true);
+      console.log(
+        "Default Min Amount Limit should be less than or equal to Default Max Amount Limit"
+      );
+      setOpen({
+        open: true,
+        message: "Fill All Required Fields",
+      });
+      setErrorShow(true);
+    }
+  };
+
+  // const data source
   return (
     <Modal
       show={BOPSystemAdminModal.editModalTradeAccessManagement}
@@ -164,14 +320,34 @@ const EditModalTradeAccessManagement = () => {
                     Total Limit (PKR)
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
-                  <TextField name={"firstName"} labelClass="d-none" />
+                  <TextField
+                    name={"TotalLimit"}
+                    labelClass="d-none"
+                    placeholder={"Total Limit"}
+                    value={updateCorporateData.TotalLimit.value}
+                    onChange={handleValueChange}
+                    maxLength={10}
+                  />
                 </Col>
                 <Col lg={6} md={6} sm={6}>
                   <span className={styles["labels-add-bank"]}>
                     Instrument allowed
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
-                  <Select />
+                  <Select
+                    options={instrumentType}
+                    placeholder={"Select Instrument"}
+                    name="InstrumentType"
+                    isSearchable
+                    onChange={(e) =>
+                      handleDropdownChange(
+                        "InstrumentType",
+                        e,
+                        setInstrumentType,
+                        updateCorporateData.InstrumentType
+                      )
+                    }
+                  />
                 </Col>
               </Row>
               <Row className="mt-3">
@@ -184,16 +360,22 @@ const EditModalTradeAccessManagement = () => {
               <Row className="mt-3">
                 <Col lg={6} md={6} sm={6}>
                   <TextField
-                    name={"firstName"}
+                    name={"DefaultMinAmountLimit"}
                     labelClass="d-none"
-                    placeholder={"Min Amount"}
+                    placeholder={"Min Amount Limit"}
+                    value={updateCorporateData.DefaultMinAmountLimit.value}
+                    onChange={handleValueChange}
+                    maxLength={10}
                   />
                 </Col>
                 <Col lg={6} md={6} sm={6}>
                   <TextField
-                    name={"firstName"}
+                    name={"DefaultMaxAmountLimit"}
                     labelClass="d-none"
-                    placeholder={"Max Amount"}
+                    placeholder={"Max Amount Limit"}
+                    value={updateCorporateData.DefaultMaxAmountLimit.value}
+                    onChange={handleValueChange}
+                    maxLength={10}
                   />
                 </Col>
               </Row>
@@ -205,7 +387,7 @@ const EditModalTradeAccessManagement = () => {
               <Table
                 column={columns}
                 pagination={true}
-                // rows={dataSource}
+                rows={dataSource}
                 className={"TradeAccessManagementEdit"}
               />
             </Col>
@@ -222,14 +404,15 @@ const EditModalTradeAccessManagement = () => {
               className="d-flex justify-content-center gap-2"
             >
               <Button
-                icon={<i class="icon-refresh"></i>}
+                icon={<i className="icon-refresh"></i>}
                 text={"Save Changes"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
+                onClick={handleSaveChangesButton}
               />
 
               <Button
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Cancel"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}
@@ -237,6 +420,7 @@ const EditModalTradeAccessManagement = () => {
               />
             </Col>
           </Row>
+          {saveChanges && <DeleteConfirmationModal />}
         </>
       }
     />

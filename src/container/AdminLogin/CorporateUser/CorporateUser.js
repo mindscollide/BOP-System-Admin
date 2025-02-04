@@ -266,6 +266,12 @@ const CorporateUser = () => {
       email: {
         value: "",
       },
+      companyName: {
+        value: "",
+      },
+      category: {
+        value: "",
+      },
     });
   };
 

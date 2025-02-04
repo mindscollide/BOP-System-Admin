@@ -472,3 +472,25 @@ export const tradeCountSchema = {
     errorStatus: false,
   },
 };
+export const updateCorporateDataSchema = {
+  TotalLimit: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  InstrumentType: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  DefaultMinAmountLimit: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  DefaultMaxAmountLimit: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+};

@@ -276,6 +276,13 @@ const Bankuser = () => {
       Contact: {
         value: "",
       },
+
+      roleID: {
+        value: "",
+      },
+      branchID: {
+        value: "",
+      },
     });
   };
 

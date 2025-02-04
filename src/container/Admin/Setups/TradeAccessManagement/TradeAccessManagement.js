@@ -90,13 +90,13 @@ const TradeAccessManagement = () => {
       width: "190px",
       ellipsis: true,
       align: "left",
-      render: () => {
-        return (
-          <>
-            <span>Atlas Honda</span>
-          </>
-        );
-      },
+      // render: () => {
+      //   return (
+      //     <>
+      //       <span>Atlas Honda</span>
+      //     </>
+      //   );
+      // },
     },
     {
       title: <label className="bottom-table-header">Edit</label>,
@@ -130,9 +130,10 @@ const TradeAccessManagement = () => {
   const dataSource = [
     {
       key: "1",
-      CounterPartyName: (
-        <span className={styles["spanshowClass"]}>Atlas Honda</span>
-      ),
+      // CounterPartyName: (
+      //   <span className={styles["spanshowClass"]}>Atlas Honda</span>
+      // ),
+      CounterPartyName: "Atlas Honda",
       Edit: (
         <>
           <Row>
@@ -188,7 +189,7 @@ const TradeAccessManagement = () => {
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
+            <Row className="mt-4">
               <Col
                 lg={12}
                 md={12}
@@ -211,7 +212,7 @@ const TradeAccessManagement = () => {
                 <span className={styles["spanshowClass"]}>entries</span>
               </Col>
             </Row>
-            <Row className="mt-3">
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}

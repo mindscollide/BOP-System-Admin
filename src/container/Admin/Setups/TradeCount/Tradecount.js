@@ -26,6 +26,12 @@ const TradeCount = () => {
 
   //Sate for Nature
   const [nature, setNature] = useState("");
+  //handle Edit Corporate
+  const handleEditBanker = () => {
+    // dispatch(editBankUserModalSystemAdmin(true));
+    // dispatch(DeleteCorporateModalSystemAdmin(false));
+    // dispatch(UserDetailsCorporateModalSystemAdmin(false));
+  };
 
   // Trade Count validate handler
   const tradeCountValidateHandler = (e) => {
@@ -130,39 +136,40 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Nature</label>,
-      dataIndex: "category",
-      key: "category",
-      width: "100px",
+      dataIndex: "nature",
+      key: "nature",
+      width: "200px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">CCY1</label>,
-      dataIndex: "email",
-      key: "email",
+      dataIndex: "CCY1",
+      key: "CCY1",
       width: "100px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Amount</label>,
-      dataIndex: "securityType",
-      key: "securityType",
+      dataIndex: "CCY1Amount",
+      key: "CCY1Amount",
       width: "100px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Rate</label>,
-      dataIndex: "position",
-      key: "position",
+      dataIndex: "rate",
+      key: "rate",
       width: "100px",
+      align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">CCY2</label>,
-      dataIndex: "amount",
-      key: "amount",
+      dataIndex: "CCY2",
+      key: "CCY2",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -170,8 +177,8 @@ const TradeCount = () => {
 
     {
       title: <label className="bottom-table-header">Amount</label>,
-      dataIndex: "rateDone",
-      key: "rateDone",
+      dataIndex: "CCY2Amount",
+      key: "CCY2Amount",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -180,41 +187,61 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Date</label>,
       dataIndex: "tradeDate",
       key: "tradeDate",
-      width: "100px",
+      width: "120px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Time</label>,
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "time",
+      key: "time",
       width: "100px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">LC #</label>,
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "LC",
+      key: "LC",
       width: "100px",
       align: "center",
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Amount</label>,
-      dataIndex: "status",
-      key: "status",
-      width: "100px",
+      title: <label className="bottom-table-header">Account #</label>,
+      dataIndex: "account",
+      key: "account",
+      width: "200px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Comment</label>,
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "comment",
+      key: "comment",
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: () => {
+        return (
+          <>
+            <Row>
+              <Col
+                lg={12}
+                md={12}
+                sm={12}
+                className="d-flex gap-2 justify-content-center align-items-center"
+              >
+                <Button
+                  className={styles["comment-icon"]}
+                  icon={<i className="icon-view-comment color-blue"></i>}
+                  onClick={handleEditBanker}
+                />
+              </Col>
+            </Row>
+          </>
+        );
+      },
     },
     {
       title: <label className="bottom-table-header">Status</label>,
@@ -226,6 +253,32 @@ const TradeCount = () => {
     },
   ];
 
+  const data = [
+    {
+      key: "1",
+      transactionID: "245ABD",
+      name: "John Doe",
+      side: "Buy",
+      nature: "Important Payment",
+      CCY1: "USD",
+      CCY1Amount: "100",
+      rate: "290",
+      CCY2: "KWD",
+      CCY2Amount: "100",
+      tradeDate: "13/05/2023",
+      time: "12:07 pm",
+      LC: "12345",
+      account: "02909090908",
+      comment: (
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <i className="icon-view-comment color-blue"></i>
+          </Col>
+        </Row>
+      ),
+      status: "Active",
+    },
+  ];
   const handleSearchEventButton = () => {
     let searchData = {
       TxnID: tradeCount.TxnID.value,
@@ -268,51 +321,6 @@ const TradeCount = () => {
     setter(value); // Set the state
     userField.value = value.value; // Update the corporateUser object
   };
-
-  const data = [
-    {
-      key: "1",
-      // email: (
-      //   <>
-      //     <span className="cursor-pointer" onClick={handleOnClickEmail}>
-      //       john.doe@example.com
-      //     </span>
-      //   </>
-      // ),
-      Name: "John Doe",
-      Corporatename: "Acme Corp",
-      Status: "Active",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i className="icon-edit color-blue"></i>
-            <i className="icon-trash color-red"></i>
-          </Col>
-        </Row>
-      ),
-    },
-    {
-      key: "2",
-      // email: (
-
-      // ),
-      Name: "Tom Cruise",
-      Corporatename: "Yunus Corp",
-      Status: "Inactive",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i class="icon-edit color-blue"></i>
-            <i class="icon-trash color-red"></i>
-          </Col>
-        </Row>
-      ),
-    },
-  ];
 
   return (
     <section className={styles["SectionContainer"]}>
@@ -358,6 +366,7 @@ const TradeCount = () => {
                   }
                 ></Select>
               </Col>
+
               <Col lg={2} md={2} sm={12}>
                 <Select
                   placeholder="Select Nature"
@@ -376,6 +385,7 @@ const TradeCount = () => {
                   }
                 />
               </Col>
+
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Amount"
@@ -413,7 +423,7 @@ const TradeCount = () => {
                 lg={4}
                 md={4}
                 sm={12}
-                className="d-flex align-items-center  pe-4"
+                className="d-flex align-items-center pe-4"
               >
                 <DatePicker
                   name="dateFrom"
@@ -446,10 +456,15 @@ const TradeCount = () => {
                   className={styles["Search-tradeCount-btn"]}
                   onClick={handleSearchEventButton}
                 />
-                <Button
-                  text="Downlaod Excel"
+                {/* <Button
+                  text="Export"
                   icon={<i className="icon-download-excel"></i>}
                   className={styles["tradeCount-Download-Excel-btn"]}
+                /> */}
+                <Button
+                  icon={<i class="icon-download"></i>}
+                  className={styles["Export_Button"]}
+                  text="Export"
                 />
                 <Button
                   icon={<i className="icon-refresh icon-check-space"></i>}
@@ -460,13 +475,13 @@ const TradeCount = () => {
               </Col>
             </Row>
 
-            <Row className="mt-2">
+            <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
             </Row>
 
-            <Row className="mt-2">
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={tradeColumns}

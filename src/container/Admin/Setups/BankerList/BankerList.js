@@ -194,7 +194,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">EmployeeID</label>,
       dataIndex: "EmployeeID",
       key: "EmployeeID",
-      width: "50px",
+      width: "100px",
       ellipsis: true,
       align: "center",
     },
@@ -202,7 +202,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Email</label>,
       dataIndex: "email",
       key: "email",
-      width: "60px",
+      width: "220px",
       align: "center",
       ellipsis: true,
     },
@@ -210,7 +210,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Name</label>,
       dataIndex: "Name",
       key: "Name",
-      width: "60px",
+      width: "150px",
       ellipsis: true,
       align: "center",
     },
@@ -218,7 +218,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Role</label>,
       dataIndex: "Role",
       key: "Role",
-      width: "60px",
+      width: "100px",
       ellipsis: true,
       align: "center",
     },
@@ -226,7 +226,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Branch Name</label>,
       dataIndex: "BranchName",
       key: "BranchName",
-      width: "60px",
+      width: "100px",
       align: "center",
       ellipsis: true,
     },
@@ -234,7 +234,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Contact</label>,
       dataIndex: "ContactNumber",
       key: "ContactNumber",
-      width: "60px",
+      width: "150px",
       align: "center",
       ellipsis: true,
     },
@@ -242,7 +242,7 @@ const BankerList = () => {
       title: <label className="bottom-table-header">Status</label>,
       dataIndex: "Status",
       key: "Status",
-      width: "60px",
+      width: "100px",
       align: "center",
       ellipsis: true,
     },
@@ -251,7 +251,7 @@ const BankerList = () => {
       dataIndex: "LastPassowrdChange",
       key: "LastPassowrdChange",
       align: "center",
-      width: "70px",
+      width: "180px",
       ellipsis: true,
     },
     {
@@ -259,7 +259,7 @@ const BankerList = () => {
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
-      width: "70px",
+      width: "180px",
       ellipsis: true,
     },
     {
@@ -281,7 +281,7 @@ const BankerList = () => {
               >
                 <Button
                   className={styles["EditButton"]}
-                  icon={<i class="icon-edit color-blue"></i>}
+                  icon={<i className="icon-edit color-blue"></i>}
                   onClick={handleEditBanker}
                 />
                 {/* <Button
@@ -392,11 +392,6 @@ const BankerList = () => {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <ExportShowComponent />
-              </Col>
-            </Row>
 
             <Row className="mt-3">
               <Col
@@ -425,8 +420,13 @@ const BankerList = () => {
                 />
               </Col>
             </Row>
-
             <Row className="mt-3">
+              <Col lg={12} md={12} sm={12}>
+                <ExportShowComponent />
+              </Col>
+            </Row>
+
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}

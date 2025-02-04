@@ -27,6 +27,7 @@ import {
 } from "../../../../store/actions/BOPSystemAdminActions";
 import { corporateListSchema } from "../../../../utils/schemas";
 import { categoryOptions } from "../../../../helpers/Dropdown";
+import ExportShowComponent from "../BankerList/ExportShowComponent";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
@@ -221,14 +222,15 @@ const CorporateList = () => {
       title: <label className="bottom-table-header">Email</label>,
       dataIndex: "email",
       key: "email",
-      width: "160px",
+      width: "200px",
       align: "center",
+      ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Name</label>,
       dataIndex: "Name",
       key: "Name",
-      width: "100px",
+      width: "200px",
       ellipsis: true,
       align: "center",
     },
@@ -236,7 +238,7 @@ const CorporateList = () => {
       title: <label className="bottom-table-header">Corporate Name</label>,
       dataIndex: "Corporatename",
       key: "Corporatename",
-      width: "120px",
+      width: "200px",
       ellipsis: true,
       align: "center",
     },
@@ -244,7 +246,7 @@ const CorporateList = () => {
       title: <label className="bottom-table-header">Status</label>,
       dataIndex: "Status",
       key: "Status",
-      width: "100px",
+      width: "80px",
       align: "center",
       ellipsis: true,
     },
@@ -255,7 +257,7 @@ const CorporateList = () => {
       dataIndex: "LastPassowrdChange",
       key: "LastPassowrdChange",
       align: "center",
-      width: "150px",
+      width: "180px",
       ellipsis: true,
     },
     {
@@ -263,7 +265,7 @@ const CorporateList = () => {
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
-      width: "140px",
+      width: "180px",
       ellipsis: true,
     },
 
@@ -441,6 +443,7 @@ const CorporateList = () => {
                 />
               </Col>
             </Row>
+
             {showExportOptions && (
               <Row className="mt-3">
                 <Col
@@ -466,6 +469,12 @@ const CorporateList = () => {
             )}
 
             <Row className="mt-3">
+              <Col lg={12} md={12} sm={12}>
+                <ExportShowComponent />
+              </Col>
+            </Row>
+
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}

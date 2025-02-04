@@ -44,3 +44,14 @@ export const transactionSide = [
   { value: "Buy", label: "Buy" },
   { value: "Sell", label: "Sell" },
 ];
+
+export const instrumentType = [
+  { value: "AUDPKR", label: "AUDPKR" },
+  { value: "CADPKR", label: "CADPKR" },
+  { value: "EURPKR", label: "EURPKR" },
+  { value: "GBPPKR", label: "GBPPKR" },
+  { value: "JPYPKR", label: "JPYPKR" },
+  { value: "USDPKR", label: "USDPKR" },
+  { value: "CNYPKR", label: "CNYPKR" },
+  { value: "CHFPKR", label: "CHFPKR" },
+];

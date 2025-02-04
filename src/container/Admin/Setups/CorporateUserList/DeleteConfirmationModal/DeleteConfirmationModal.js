@@ -48,14 +48,14 @@ const DeleteConfirmationModal = () => {
             className="d-flex justify-content-center gap-2"
           >
             <Button
-              icon={<i class="icon-check"></i>}
+              icon={<i className="icon-check"></i>}
               text={"Yes"}
               className={styles["AddBranchClass"]}
               iconClass={styles["IconClass"]}
             />
 
             <Button
-              icon={<i class="icon-close"></i>}
+              icon={<i className="icon-close"></i>}
               text={"No"}
               className={styles["CancelButton"]}
               iconClass={styles["IconClass"]}

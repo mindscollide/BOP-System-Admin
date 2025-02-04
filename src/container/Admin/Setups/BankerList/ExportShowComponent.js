@@ -24,7 +24,7 @@ const ExportShowComponent = () => {
 
           <Select
             defaultValue={dropdownvalue}
-            style={{ width: 60, margin: "0 10px" }}
+            style={{ width: 70, margin: "0 10px" }}
             onChange={handleChangeDropDown}
           >
             {/* <Option value={10}>10</Option>

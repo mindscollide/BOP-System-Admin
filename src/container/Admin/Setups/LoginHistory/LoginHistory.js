@@ -98,7 +98,7 @@ const LoginHistory = () => {
       title: <label className="bottom-table-header">Email</label>,
       dataIndex: "Email",
       key: "Email",
-      width: "100px",
+      width: "220px",
       ellipsis: true,
       align: "center",
     },
@@ -106,7 +106,7 @@ const LoginHistory = () => {
       title: <label className="bottom-table-header">Name</label>,
       dataIndex: "Name",
       key: "Name",
-      width: "100px",
+      width: "200px",
       align: "center",
       ellipsis: true,
     },
@@ -115,16 +115,16 @@ const LoginHistory = () => {
       title: <label className="bottom-table-header">Counter party Name</label>,
       dataIndex: "CounterPartyName",
       key: "CounterPartyName",
-      width: "119px",
-      ellipsis: true,
+      width: "200px",
       align: "center",
+      ellipsis: true,
     },
 
     {
       title: <label className="bottom-table-header">Role</label>,
       dataIndex: "Role",
       key: "Role",
-      width: "119px",
+      width: "100px",
       ellipsis: true,
       align: "center",
     },
@@ -133,16 +133,16 @@ const LoginHistory = () => {
       title: <label className="bottom-table-header">Branch</label>,
       dataIndex: "BranchName",
       key: "BranchName",
-      width: "119px",
+      width: "100px",
       ellipsis: true,
       align: "center",
     },
 
     {
       title: <label className="bottom-table-header">IP Address</label>,
-      dataIndex: "Status",
-      key: "Status",
-      width: "100px",
+      dataIndex: "IPAddress",
+      key: "IPAddress",
+      width: "150px",
       align: "center",
       ellipsis: true,
     },
@@ -151,7 +151,7 @@ const LoginHistory = () => {
       dataIndex: "LastPassowrdChange",
       key: "LastPassowrdChange",
       align: "center",
-      width: "120px",
+      width: "180px",
       ellipsis: true,
     },
     {
@@ -159,7 +159,7 @@ const LoginHistory = () => {
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
-      width: "120px",
+      width: "180px",
       ellipsis: true,
     },
 
@@ -168,7 +168,7 @@ const LoginHistory = () => {
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
-      width: "130px",
+      width: "180px",
       ellipsis: true,
     },
   ];
@@ -181,6 +181,8 @@ const LoginHistory = () => {
       Name: "John Doe",
       Role: "Branch",
       BranchName: "Saddar",
+      IPAddress: "225.225.225.225",
+      CounterPartyName: "Zohair Zanzibarwala",
       ContactNumber: "03909090909",
       Status: "Active",
       LastPassowrdChange: "13/05/2023 01:15:10",
@@ -201,7 +203,8 @@ const LoginHistory = () => {
       Name: "Tom Cruise",
       Role: "Dealer",
       BranchName: "Clifton",
-      CounterPartyName: "Yunus Zanzibar",
+      IPAddress: "192.168.121.111",
+      CounterPartyName: "Yunus Zanzibarwala",
       ContactNumber: "01234567890",
       Status: "Active",
       LastPassowrdChange: "13/05/2023 01:15:10",
@@ -337,6 +340,7 @@ const LoginHistory = () => {
                 />
               </Col>
             </Row>
+
             <Row className="mt-3">
               <Col lg={3} md={3} sm={12}>
                 <Select
@@ -391,9 +395,9 @@ const LoginHistory = () => {
               >
                 <Button
                   icon={<i className="icon-search icon-check-space"></i>}
+                  className={styles["SearchButton_loginHistory"]}
                   text="Search"
                   onClick={handleSearchEventButton}
-                  className={styles["SearchButton_loginHistory"]}
                 />
                 <Button
                   icon={<i className="icon-refresh icon-check-space"></i>}
@@ -404,44 +408,19 @@ const LoginHistory = () => {
 
                 <Button
                   icon={<i class="icon-download"></i>}
-                  className={styles["Download-button"]}
+                  className={styles["Export_Button"]}
                   text="Export"
                 />
               </Col>
             </Row>
 
-            {/* <Row className="mt-3">
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex justify-content-center gap-1"
-              >
-                <Button
-                  icon={<i className="icon-search icon-check-space"></i>}
-                  text="Search"
-                  className={styles["SearchButton_loginHistory"]}
-                />
-                <Button
-                  icon={<i className="icon-refresh icon-check-space"></i>}
-                  className={styles["Banklist-Reset-btn"]}
-                  text="Reset"
-                />
-
-                <Button
-                  icon={<i class="icon-download"></i>}
-                  className={styles["Download-button"]}
-                  text="Export"
-                />
-              </Col>
-            </Row> */}
-            <Row>
+            <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
             </Row>
 
-            <Row className="mt-3">
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}
