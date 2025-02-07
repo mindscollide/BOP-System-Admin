@@ -1,570 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./SpreadManagement.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
 import { Button, CustomPaper, Table } from "../../../../components/elements";
+import { categoryOptions } from "../../../../helpers/Dropdown";
+// import { categorySpreadManagementSchema } from "../../../../utils/schemas";
+import {
+  CrossRatecolumns,
+  data,
+  Discountingcolumns,
+  emptyData,
+  emptyInitialState,
+  Forwardcolumns,
+  initialState,
+  ParitySpotcolumns,
+} from "./SpreadManagementColumns";
 import { Input } from "antd";
 const SpreadManagement = () => {
-  //Table columns for parity spot
-  const ParitySpotcolumns = [
-    {
-      title: <label className="bottom-table-header">Currency</label>,
-      dataIndex: "currency",
-      key: "currency",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-    },
-    {
-      title: <label className="bottom-table-header">Bid Spread</label>,
-      dataIndex: "bidSpread",
-      key: "bidSpread",
-      width: "100px",
-      align: "center",
-      ellipsis: true,
-      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
-    },
+  // const [categorySpread, setCategorySpread] = useState({
+  //   ...categorySpreadManagementSchema,
+  // });
+  const defaultCategory = categoryOptions.find(
+    (option) => option.value === "Category 1"
+  );
+  const [category, setCategory] = useState(defaultCategory);
+  const [paritySpotData, setParitySpotData] = useState(data);
+  const [crossRateData, setCrossRateData] = useState(data);
+  const [forwardData, setForwardData] = useState(initialState);
+  const [discountingData, setDiscountingData] = useState(initialState);
 
-    {
-      title: <label className="bottom-table-header">Ask Spread</label>,
-      dataIndex: "askSpread",
-      key: "askSpread",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
-    },
-  ];
+  // Handle table cell changes
+  const handleTableChange = (key, field, value, tableSetter, tableData) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = tableData.map((row) =>
+      row.key === key ? { ...row, [field]: validateValue } : row
+    );
+    tableSetter(updatedData);
+  };
 
-  //Table columns for parity spot
-  const CrossRatecolumns = [
-    {
-      title: <label className="bottom-table-header">Currency</label>,
-      dataIndex: "currency",
-      key: "currency",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-    },
-    {
-      title: <label className="bottom-table-header">Bid Spread</label>,
-      dataIndex: "bidSpread",
-      key: "bidSpread",
-      width: "100px",
-      align: "center",
-      ellipsis: true,
-      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
-    },
+  // Reset specific table data
+  const resetTableData = (val) => {
+    // setter(
+    //   initialData.map((row) => ({ ...row, bidSpread: "", askSpread: "" }))
+    // );
+    if (val === "resetParityAndCross") {
+      setParitySpotData(emptyData);
+      setCrossRateData(emptyData);
+    } else if (val === "resetForward") {
+      setForwardData(emptyInitialState);
+    } else if (val === "resetDiscounting") {
+      setDiscountingData(emptyInitialState);
+    }
+  };
 
-    {
-      title: <label className="bottom-table-header">Ask Spread</label>,
-      dataIndex: "askSpread",
-      key: "askSpread",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-      render: (text) => <Input className="WidthInputParitySpot" value={text} />,
-    },
-  ];
+  // Save action placeholder (can be extended to API calls)
+  const saveData = (dataType) => {
+    console.log(`Saving data for ${dataType}:`, JSON.stringify(dataType));
+  };
 
-  // Dummy data for the table
-  const data = [
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-    {
-      key: "1",
-      currency: "EUR",
-      bidSpread: "3.3",
-      askSpread: "3.3",
-    },
-  ];
-
-  //Forward Table
-  const Forwardcolumns = [
-    {
-      title: "Tenor",
-      dataIndex: "tenor",
-      key: "tenor",
-      fixed: "left",
-      align: "center",
-      ecllipse: true,
-      width: 100,
-      render: (text) => {
-        return (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-            {text}
-          </span>
-        );
-      },
-    },
-    {
-      title: "USD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "usdBid",
-          key: "usdBid",
-          align: "center",
-          width: 100,
-          ecllipse: true,
-
-          render: (text) => <Input width={80} value={text} />,
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "usdAsk",
-          align: "center",
-          key: "usdAsk",
-          width: 100,
-
-          render: (text) => <Input width={80} value={text} />,
-        },
-      ],
-    },
-    {
-      title: "EUR",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "eurBid",
-          align: "center",
-          key: "eurBid",
-          width: 100,
-
-          render: (text) => <Input width={80} value={text} />,
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "eurAsk",
-          align: "center",
-          key: "eurAsk",
-          width: 100,
-
-          render: (text) => <Input width={80} value={text} />,
-        },
-      ],
-    },
-    {
-      title: "GBP",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "gbpBid",
-          key: "gbpBid",
-          align: "center",
-          width: 100,
-          render: (text) => <Input width={80} value={text} />,
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "gbpAsk",
-          key: "gbpAsk",
-          align: "center",
-          width: 100,
-
-          render: (text) => <Input width={80} value={text} />,
-        },
-      ],
-    },
-    {
-      title: "HKD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "hkdBid",
-          key: "hkdBid",
-          align: "center",
-          width: 100,
-          render: (text) => <Input width={80} value={text} />,
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "hkdAsk",
-          width: 100,
-          align: "center",
-          key: "hkdAsk",
-          render: (text) => <Input width={80} value={text} />,
-        },
-      ],
-    },
-    {
-      title: "JPY",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "jpyBid",
-          key: "jpyBid",
-          width: 100,
-          align: "center",
-          render: (text) => <Input width={80} value={text} />,
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "jpyAsk",
-          key: "jpyAsk",
-          width: 100,
-          align: "center",
-          ecllipse: true,
-          render: (text) => <Input width={80} value={text} />,
-        },
-      ],
-    },
-  ];
-
-  //Discounting Table
-  const Discountingcolumns = [
-    {
-      title: "Tenor",
-      dataIndex: "tenor",
-      key: "tenor",
-      fixed: "left",
-      align: "center",
-      ecllipse: true,
-      width: 100,
-      render: (text) => {
-        return (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-            {text}
-          </span>
-        );
-      },
-    },
-    {
-      title: "USD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Value
-              </span>
-            </>
-          ),
-          dataIndex: "usdBid",
-          key: "usdBid",
-          align: "center",
-          width: 100,
-          ecllipse: true,
-
-          render: (text) => (
-            <Input
-              className={style["InputTableSpreadManagement"]}
-              value={text}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "EUR",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Value
-              </span>
-            </>
-          ),
-          dataIndex: "eurBid",
-          align: "center",
-          key: "eurBid",
-          width: 100,
-
-          render: (text) => (
-            <Input
-              className={style["InputTableSpreadManagement"]}
-              value={text}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "GBP",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Value
-              </span>
-            </>
-          ),
-          dataIndex: "gbpBid",
-          key: "gbpBid",
-          align: "center",
-          width: 100,
-          render: (text) => (
-            <Input
-              className={style["InputTableSpreadManagement"]}
-              value={text}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "HKD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Value
-              </span>
-            </>
-          ),
-          dataIndex: "hkdBid",
-          key: "hkdBid",
-          align: "center",
-          width: 100,
-          render: (text) => (
-            <Input
-              className={style["InputTableSpreadManagement"]}
-              value={text}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "JPY",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Value
-              </span>
-            </>
-          ),
-          dataIndex: "jpyBid",
-          key: "jpyBid",
-          width: 100,
-          align: "center",
-          render: (text) => (
-            <Input
-              className={style["InputTableSpreadManagement"]}
-              value={text}
-            />
-          ),
-        },
-      ],
-    },
-  ];
-
-  //Forward Table Dummy Data
-  const initialState = [
-    {
-      key: "1",
-      tenor: "1 WEEK",
-      usdBid: "10.10",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-    {
-      key: "2",
-      tenor: "3 WEEK",
-      usdBid: "10.00",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-    {
-      key: "3",
-      tenor: "1 MONTH",
-      usdBid: "10.00",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-    {
-      key: "4",
-      tenor: "3 MONTH",
-      usdBid: "10.00",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-    {
-      key: "5",
-      tenor: "6 MONTH",
-      usdBid: "10.00",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-    {
-      key: "6",
-      tenor: "9 MONTH",
-      usdBid: "10.00",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-    {
-      key: "7",
-      tenor: "10 MONTH",
-      usdBid: "10.00",
-      usdAsk: "10.10",
-      eurBid: "10.00",
-      eurAsk: "10.10",
-      gbpBid: "10.00",
-      gbpAsk: "10.10",
-      hkdBid: "10.00",
-      hkdAsk: "10.10",
-      jpyBid: "10.00",
-      jpyAsk: "10.10",
-    },
-  ];
+  //Handle Select Change
+  // A generic function to handle dropdown changes
+  const handleDropdownChange = (field, value, setter, userField) => {
+    setter(value); // Set the state
+    userField.value = value.value || ""; // Update the corporateUser object
+  };
+  console.log(category);
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
       <Row className="mt-4">
@@ -576,9 +76,14 @@ const SpreadManagement = () => {
         <Col lg={3} md={3} sm={12}></Col>
         <Col lg={3} md={3} sm={12}>
           <Select
-            name="userStatus"
-            placeholder={"Category"}
+            name="category"
+            placeholder={"Select Category"}
             classNamePrefix={"CategorySpreadManagement"}
+            options={categoryOptions}
+            value={category}
+            isSearchable
+            onChange={(e) => setCategory(e)}
+            className={style["react-select-field"]}
           />
         </Col>
       </Row>
@@ -589,9 +94,30 @@ const SpreadManagement = () => {
               <Col lg={6} md={6} sm={12}>
                 <span className={style["ParitySpotHeading"]}>Parity Spot</span>
                 <Table
-                  column={ParitySpotcolumns}
+                  column={ParitySpotcolumns.map((col) => ({
+                    ...col,
+                    render:
+                      col.dataIndex !== "currency"
+                        ? (text, record) => (
+                            <Input
+                              maxLength={5}
+                              style={{ width: "75px" }}
+                              value={record[col.dataIndex]}
+                              onChange={(e) =>
+                                handleTableChange(
+                                  record.key,
+                                  col.dataIndex,
+                                  e.target.value,
+                                  setParitySpotData,
+                                  paritySpotData
+                                )
+                              }
+                            />
+                          )
+                        : undefined,
+                  }))}
                   bordered
-                  rows={data}
+                  rows={paritySpotData}
                   pagination={false}
                   className={"GrayHeader-table"}
                 />
@@ -599,8 +125,29 @@ const SpreadManagement = () => {
               <Col lg={6} md={6} sm={12}>
                 <span className={style["ParitySpotHeading"]}>Cross Rate</span>
                 <Table
-                  column={CrossRatecolumns}
-                  rows={data}
+                  column={CrossRatecolumns.map((col) => ({
+                    ...col,
+                    render:
+                      col.dataIndex !== "currency"
+                        ? (text, record) => (
+                            <Input
+                              maxLength={5}
+                              style={{ width: "75px" }}
+                              value={record[col.dataIndex]}
+                              onChange={(e) =>
+                                handleTableChange(
+                                  record.key,
+                                  col.dataIndex,
+                                  e.target.value,
+                                  setCrossRateData,
+                                  crossRateData
+                                )
+                              }
+                            />
+                          )
+                        : undefined,
+                  }))}
+                  rows={crossRateData}
                   bordered
                   pagination={false}
                   className={"GrayHeader-table"}
@@ -615,12 +162,16 @@ const SpreadManagement = () => {
                 className="d-flex justify-content-center gap-2"
               >
                 <Button
-                  icon={<i class="icon-refresh"></i>}
+                  icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
+                  onClick={
+                    () => resetTableData("resetParityAndCross")
+                    // resetTableData(setCrossRateData, data))
+                  }
                 />
                 <Button
-                  icon={<i class="icon-save"></i>}
+                  icon={<i className="icon-save"></i>}
                   className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
@@ -635,8 +186,29 @@ const SpreadManagement = () => {
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <Table
-                  column={Forwardcolumns}
-                  rows={initialState}
+                  column={Forwardcolumns.map((col) => ({
+                    ...col,
+                    render:
+                      col.dataIndex !== "currency"
+                        ? (text, record) => (
+                            <Input
+                              maxLength={5}
+                              style={{ width: "75px" }}
+                              value={record[col.dataIndex]}
+                              onChange={(e) =>
+                                handleTableChange(
+                                  record.key,
+                                  col.dataIndex,
+                                  e.target.value,
+                                  setForwardData,
+                                  forwardData
+                                )
+                              }
+                            />
+                          )
+                        : undefined,
+                  }))}
+                  rows={forwardData}
                   bordered
                   pagination={false}
                   prefixCls="groupTable"
@@ -651,12 +223,16 @@ const SpreadManagement = () => {
                 className="d-flex justify-content-center gap-2"
               >
                 <Button
-                  icon={<i class="icon-refresh"></i>}
+                  icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
+                  onClick={
+                    () => resetTableData("resetForward")
+                    // resetTableData(setCrossRateData, data))
+                  }
                 />
                 <Button
-                  icon={<i class="icon-save"></i>}
+                  icon={<i className="icon-save"></i>}
                   className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />
@@ -670,8 +246,29 @@ const SpreadManagement = () => {
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <Table
-                  column={Discountingcolumns}
-                  rows={initialState}
+                  column={Discountingcolumns.map((col) => ({
+                    ...col,
+                    render:
+                      col.dataIndex !== "currency"
+                        ? (text, record) => (
+                            <Input
+                              maxLength={5}
+                              style={{ width: "75px" }}
+                              value={record[col.dataIndex]}
+                              onChange={(e) =>
+                                handleTableChange(
+                                  record.key,
+                                  col.dataIndex,
+                                  e.target.value,
+                                  setDiscountingData,
+                                  discountingData
+                                )
+                              }
+                            />
+                          )
+                        : undefined,
+                  }))}
+                  rows={discountingData}
                   bordered
                   pagination={false}
                   prefixCls="groupTable"
@@ -686,12 +283,16 @@ const SpreadManagement = () => {
                 className="d-flex justify-content-center gap-2"
               >
                 <Button
-                  icon={<i class="icon-refresh"></i>}
+                  icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
+                  onClick={
+                    () => resetTableData("resetDiscounting")
+                    // resetTableData(setCrossRateData, data))
+                  }
                 />
                 <Button
-                  icon={<i class="icon-save"></i>}
+                  icon={<i className="icon-save"></i>}
                   className={style["Search-btn-spreadManagement"]}
                   text="Save"
                 />

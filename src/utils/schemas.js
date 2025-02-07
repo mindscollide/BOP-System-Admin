@@ -512,3 +512,9 @@ export const addCategroyModalSchema = {
     errorStatus: false,
   },
 };
+
+// export const categorySpreadManagementSchema = {
+//   Category: {
+//     value: "",
+//   },
+// };

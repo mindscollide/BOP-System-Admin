@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./AddCategoryModal.module.css";
 import { Button, Modal, TextField } from "../../../../../components/elements";
 import { AddCategoryModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
@@ -6,14 +6,16 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
+// import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
 import { addCategroyModalSchema } from "../../../../../utils/schemas";
+import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
 
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const [addCategory, setAddCategory] = useState({ ...addCategroyModalSchema });
+  const [activeAddButton, setActiveAddButton] = useState(false);
 
   //handle Cross icon
   const handleCrossIcon = () => {
@@ -22,15 +24,23 @@ const AddCategoryModal = () => {
 
   //handle Add Button
   const handleAddButton = () => {
-    let data = {
-      Category: "Forex Category By Mehdee",
-      BidSpread: 0.5,
-      OfferSpread: 0.75,
-      AssetTypeId: 2,
-      UserId: 48,
-      BankID: 1,
-    };
-    dispatch(Addcategory(navigate, data));
+    if (
+      addCategory.Name.value.trim() === "" ||
+      addCategory.Bid.value.trim() === "" ||
+      addCategory.Offer.value.trim() === ""
+    ) {
+      alert("All fields are required");
+      return;
+    } else {
+      let data = {
+        Name: addCategory.Name.value,
+        Bid: addCategory.Bid.value,
+        Offer: addCategory.Offer.value,
+      };
+
+      console.log("data save", data);
+      dispatch(Addcategory(navigate, data));
+    }
   };
 
   //handle CancelButton
@@ -69,6 +79,20 @@ const AddCategoryModal = () => {
     // Update the specific field
     updateField(name, value);
   };
+
+  useEffect(() => {
+    if (
+      addCategory.Name.value !== "" &&
+      addCategory.Bid.value !== "" &&
+      addCategory.Offer.value !== ""
+    ) {
+      setActiveAddButton(true);
+    } else {
+      setActiveAddButton(false);
+    }
+  }, [addCategory]);
+  console.log(addCategory);
+
   return (
     <Modal
       show={BOPSystemAdminModal.addCategoryModal}
@@ -108,6 +132,7 @@ const AddCategoryModal = () => {
                 name={"Name"}
                 value={addCategory.Name.value}
                 onChange={handleValueChange}
+                maxLength={25}
               />
             </Col>
           </Row>
@@ -120,25 +145,23 @@ const AddCategoryModal = () => {
           </Row>
           <Row>
             <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
-              <span className={style["Label"]}>
-                Bid <span className={style["asteric"]}>*</span>
-              </span>
+              <span className={style["Label"]}>Bid</span>
               <TextField
                 labelClass={"d-none"}
                 value={addCategory.Bid.value}
                 name={"Bid"}
                 onChange={handleValueChange}
+                maxLength={10}
               />
             </Col>
             <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
-              <span className={style["Label"]}>
-                Offer <span className={style["asteric"]}>*</span>
-              </span>
+              <span className={style["Label"]}>Offer</span>
               <TextField
                 labelClass={"d-none"}
                 value={addCategory.Offer.value}
                 name={"Offer"}
                 onChange={handleValueChange}
+                maxLength={10}
               />
             </Col>
           </Row>
@@ -157,6 +180,7 @@ const AddCategoryModal = () => {
                 text={"Add"}
                 className={style["AddButton"]}
                 onClick={handleAddButton}
+                disableBtn={activeAddButton ? false : true}
               />
               <Button
                 text={"Cancel"}

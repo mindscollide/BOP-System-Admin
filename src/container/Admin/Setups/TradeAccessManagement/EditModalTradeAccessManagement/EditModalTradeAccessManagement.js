@@ -347,6 +347,7 @@ const EditModalTradeAccessManagement = () => {
                         updateCorporateData.InstrumentType
                       )
                     }
+                    className={styles["react-select-field"]}
                   />
                 </Col>
               </Row>

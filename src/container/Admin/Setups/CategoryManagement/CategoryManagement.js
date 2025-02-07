@@ -21,7 +21,7 @@ import {
   stringConvertintoNumber,
 } from "../../../../commen/functions/numberFormatter";
 import DeleteModal from "./DeleRejectModal";
-import { DeleteOutlined } from "@material-ui/icons";
+// import { DeleteOutlined } from "@material-ui/icons";
 import AddCategoryModal from "./AddCategoryModal/AddCategoryModal";
 import { AddCategoryModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { getAllCorporatesCategory } from "../../../../store/actions/BOPSystemAdminActions";
@@ -604,7 +604,7 @@ const CategoryManagement = () => {
     let newdata = editCategoryList.find((element) => element === recorde);
     console.log(newdata, "gggggggggggggg");
     console.log(recorde, "hhhhhhh");
-    if (newdata != undefined) {
+    if (newdata !== undefined) {
       return true;
     } else {
       return false;
@@ -814,7 +814,7 @@ const CategoryManagement = () => {
   const checkForAdd = (recorde) => {
     let newdata = addCategoryList.find((element) => element === recorde);
     console.log(newdata, "hhhhhhh");
-    if (newdata != undefined) {
+    if (newdata !== undefined) {
       return true;
     } else {
       return false;

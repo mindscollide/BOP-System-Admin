@@ -29,18 +29,18 @@ const VolMeter = () => {
   });
 
   // state for volmeter array field
-  const [volMeter, setVolMeter] = useState([]);
+  // const [volMeter, setVolMeter] = useState([]);
 
   // state for vol meter field
   const [volMeterFields, setVolMeterFields] = useState({
     volatilityMeter: {
-      value: 1,
+      value: 0,
       errorMessage: "",
       errorStatus: false,
     },
 
     nameVol: {
-      label: "",
+      value: 0,
       errorMessage: "",
       errorStatus: false,
     },
@@ -65,20 +65,22 @@ const VolMeter = () => {
   const onChanngeVolMterValidation = (e) => {
     let name = e.target.name;
     let value = e.target.value;
+    let validateValue = value.replace(/[^0-9.]/g, "");
 
-    if (name === "volatilityMeter" && value !== "") {
-      console.log("valuevalueemailvaluevalueemail", value);
-      if (value !== "") {
+    if (name === "volatilityMeter" && validateValue !== "") {
+      console.log("valuevalueemailvaluevalueemail", validateValue);
+
+      if (validateValue !== "") {
         setVolMeterFields({
           ...volMeterFields,
           volatilityMeter: {
-            value: value.trimStart(),
+            value: validateValue.trimStart(),
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "volatilityMeter" && value === "") {
+    } else if (name === "volatilityMeter" && validateValue === "") {
       setVolMeterFields({
         ...volMeterFields,
         volatilityMeter: {
@@ -89,19 +91,19 @@ const VolMeter = () => {
       });
     }
 
-    if (name === "nameVol" && value !== "") {
+    if (name === "nameVol" && validateValue !== "") {
       console.log("valuevalueemailvaluevalueemail", value);
-      if (value !== "") {
+      if (validateValue !== "") {
         setVolMeterFields({
           ...volMeterFields,
           nameVol: {
-            value: value.trimStart(),
+            value: validateValue.trimStart(),
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "nameVol" && value === "") {
+    } else if (name === "nameVol" && validateValue === "") {
       setVolMeterFields({
         ...volMeterFields,
         nameVol: {
@@ -112,19 +114,19 @@ const VolMeter = () => {
       });
     }
 
-    if (name === "volMeter" && value !== "") {
-      console.log("valuevalueemailvaluevalueemail", value);
-      if (value !== "") {
+    if (name === "volMeter" && validateValue !== "") {
+      console.log("valuevalueemailvaluevalueemail", validateValue);
+      if (validateValue !== "") {
         setVolMeterFields({
           ...volMeterFields,
           volMeter: {
-            value: value.trimStart(),
+            value: validateValue.trimStart(),
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "volMeter" && value === "") {
+    } else if (name === "volMeter" && validateValue === "") {
       setVolMeterFields({
         ...volMeterFields,
         volMeter: {
@@ -155,7 +157,7 @@ const VolMeter = () => {
       ],
       BankID: 1,
     };
-
+    console.log("data AddUpdateVolmterAPI(navigate, data)", data);
     dispatch(AddUpdateVolmterAPI(navigate, data));
   };
 
@@ -173,8 +175,7 @@ const VolMeter = () => {
             <Row className="mt-4">
               <Col lg={12} md={12} sm={12}>
                 <label className={style["volMeter-load-heading"]}>
-                  {" "}
-                  % load to spread{" "}
+                  % load to spread
                   <span className={style["volMeter-aesterick-color"]}>*</span>
                 </label>
               </Col>
@@ -191,6 +192,7 @@ const VolMeter = () => {
                       value={volMeterFields.volatilityMeter.value}
                       onChange={onChanngeVolMterValidation}
                       labelClass="d-none"
+                      disable={true}
                     />
                   </Col>
                   <Col lg={2} md={2} sm={12}>
@@ -199,8 +201,9 @@ const VolMeter = () => {
                       name="nameVol"
                       type="text"
                       onChange={onChanngeVolMterValidation}
-                      value={volMeterFields.nameVol.label}
+                      value={volMeterFields.nameVol.value}
                       labelClass="d-none"
+                      maxLength={5}
                     />
                   </Col>
                   <Col lg={2} md={2} sm={12}>
@@ -211,6 +214,7 @@ const VolMeter = () => {
                       value={volMeterFields.volMeter.value}
                       onChange={onChanngeVolMterValidation}
                       labelClass="d-none"
+                      maxLength={5}
                     />
                   </Col>
                 </Row>

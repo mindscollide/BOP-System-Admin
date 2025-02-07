@@ -90,3 +90,16 @@
 .WidthInputParitySpot {
   width: 30px !important;
 }
+/* .CategorySpreadManagement li {
+  display: flex;
+  color: #096fed;
+  z-index: 9990px !important;
+}
+.CategorySpreadManagementCSS li {
+  color: #096fed;
+  border: 1px solid salmon;
+  margin-top: 1000px;
+} */
+.react-select-field {
+  z-index: 10000 !important;
+}
