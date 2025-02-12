@@ -7,6 +7,7 @@ import { editTradeAccessManagementModalSystemAdmin } from "../../../../../store/
 import { Col, Row } from "react-bootstrap";
 import {
   Button,
+  Checkbox,
   CustomSwitch,
   Modal,
   Table,
@@ -34,6 +35,44 @@ const EditModalTradeAccessManagement = () => {
   const handleNoButton = () => {
     dispatch(editTradeAccessManagementModalSystemAdmin(false));
   };
+  //Dummy Data
+  const [dataSource, setDataSource] = useState([
+    {
+      key: "1",
+      Instrument: "AUDPKR",
+      BuyCrossRate: false,
+      SellCrossRate: false,
+      BuyParity: true,
+      SellParity: false,
+      Forward: false,
+      Discounting: false,
+      Active: true,
+      Hide: false,
+    },
+    {
+      key: "2",
+      Instrument: "EURPKR",
+      BuyCrossRate: true,
+      SellCrossRate: true,
+      BuyParity: false,
+      SellParity: true,
+      Forward: false,
+      Discounting: true,
+      Active: false,
+      Hide: true,
+    },
+  ]);
+
+  //checkbox value change method
+  const handleCheckboxChange = (key, field) => {
+    const newDataSource = dataSource.map((item) => {
+      if (item.key === key) {
+        return { ...item, [field]: !item[field] };
+      }
+      return item;
+    });
+    setDataSource(newDataSource);
+  };
 
   //table columns for corporate
   const columns = [
@@ -45,7 +84,6 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Instrument",
           key: "Instrument",
           align: "center",
-          // render: () => {},
         },
       ],
       key: "",
@@ -61,14 +99,24 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "BuyCrossRate",
           key: "BuyCrossRate",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <Checkbox
+              checked={record.BuyCrossRate}
+              onChange={() => handleCheckboxChange(record.key, "BuyCrossRate")}
+            />
+          ),
         },
         {
           title: "Sell",
           dataIndex: "SellCrossRate",
           key: "SellCrossRate",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <Checkbox
+              checked={record.SellCrossRate}
+              onChange={() => handleCheckboxChange(record.key, "SellCrossRate")}
+            />
+          ),
         },
       ],
     },
@@ -81,14 +129,24 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "BuyParity",
           key: "BuyParity",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <Checkbox
+              checked={record.BuyParity}
+              onChange={() => handleCheckboxChange(record.key, "BuyParity")}
+            />
+          ),
         },
         {
           title: "Sell",
           dataIndex: "SellParity",
           key: "SellParity",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <Checkbox
+              checked={record.SellParity}
+              onChange={() => handleCheckboxChange(record.key, "SellParity")}
+            />
+          ),
         },
       ],
     },
@@ -103,7 +161,12 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Forward",
           key: "Forward",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <Checkbox
+              checked={record.Forward}
+              onChange={() => handleCheckboxChange(record.key, "Forward")}
+            />
+          ),
         },
       ],
     },
@@ -115,7 +178,12 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Discounting",
           key: "Discounting",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <Checkbox
+              checked={record.Discounting}
+              onChange={() => handleCheckboxChange(record.key, "Discounting")}
+            />
+          ),
         },
       ],
       // key: "",
@@ -130,7 +198,13 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Active",
           key: "Active",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <CustomSwitch
+              size="small"
+              checked={record.Active}
+              onChange={() => handleCheckboxChange(record.key, "Active")}
+            />
+          ),
         },
       ],
       key: "",
@@ -145,7 +219,13 @@ const EditModalTradeAccessManagement = () => {
           dataIndex: "Hide",
           key: "Hide",
           align: "center",
-          // render: () => {},
+          render: (_, record) => (
+            <CustomSwitch
+              checked={record.Hide}
+              onChange={() => handleCheckboxChange(record.key, "Hide")}
+              size="small"
+            />
+          ),
         },
       ],
       key: "",
@@ -154,54 +234,9 @@ const EditModalTradeAccessManagement = () => {
     },
   ];
 
-  //Dummy Data
-  const dataSource = [
-    {
-      key: "1",
-      Instrument: "0123",
-      BuyCrossRate: "PKR",
-      SellCrossRate: "278",
-      BuyParity: "PKR",
-      SellParity: "278",
-      Forward: "192.168.121.111",
-      Discounting: "Yunus Zanzibarwala",
-      Active: (
-        <>
-          <CustomSwitch size="small" defaultChecked />
-        </>
-      ),
-      Hide: (
-        <>
-          <CustomSwitch size="small" defaultChecked />
-        </>
-      ),
-    },
-    {
-      key: "2",
-      Instrument: "0654",
-      BuyCrossRate: "CAD",
-      SellCrossRate: "550",
-      BuyParity: "PKR",
-      SellParity: "278",
-      Forward: "192.168.121.111",
-      Discounting: "Yunus Zanzibarwala",
-
-      Active: (
-        <>
-          <CustomSwitch size="small" defaultChecked />
-        </>
-      ),
-      Hide: (
-        <>
-          <CustomSwitch size="small" defaultChecked />
-        </>
-      ),
-    },
-  ];
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    //
     const validateInput = {
       TotalLimit: (val) => val.replace(/[^0-9]/g, "").trimStart(),
       DefaultMinAmountLimit: (val) => val.replace(/[^0-9]/g, "").trimStart(),
@@ -236,8 +271,7 @@ const EditModalTradeAccessManagement = () => {
     userField.value = value.value; // Update the corporateUser object
   };
 
-  //handle Active Button
-  // show error message When user hit activate btn
+  //Save Button
   const handleSaveChangesButton = () => {
     if (
       updateCorporateData.TotalLimit.value !== "" &&
@@ -260,6 +294,8 @@ const EditModalTradeAccessManagement = () => {
             DefaultMaxAmountLimit:
               updateCorporateData.DefaultMaxAmountLimit.value,
           },
+          //including data of checkbox and radio button here
+          tradeAccessData: dataSource,
         };
         console.log("newData", newData);
         // dispatch(UpdateCorporateUsersAPI(navigate, newData));
@@ -268,29 +304,80 @@ const EditModalTradeAccessManagement = () => {
           message: "Hello Update Corporate User dispatched",
         });
       } else {
-        setErrorShow(true);
         console.log(
-          "Default Min Amount Limit should be less than or equal to Default Max Amount Limit"
+          "Default Min Amount Limit should be less than Default Max Amount Limit"
         );
+        setErrorShow(true);
         setOpen({
           open: true,
           message:
-            "Default Min Amount Limit should be less than or equal to Default Max Amount Limit",
+            "Default Min Amount Limit should be less than Default Max Amount Limit",
         });
       }
     } else {
-      // setTimeout();
+      console.log("Please fill all the Required Fields");
       setErrorShow(true);
-      console.log(
-        "Default Min Amount Limit should be less than or equal to Default Max Amount Limit"
-      );
       setOpen({
         open: true,
-        message: "Fill All Required Fields",
+        message: "Please fill all the Required Fields",
       });
-      setErrorShow(true);
+      return;
     }
   };
+  // // show error message When user hit activate btn
+  // const handleSaveChangesButton = () => {
+  //   if (
+  //     updateCorporateData.TotalLimit.value !== "" &&
+  //     updateCorporateData.InstrumentType.value !== "" &&
+  //     updateCorporateData.DefaultMinAmountLimit.value !== "" &&
+  //     updateCorporateData.DefaultMaxAmountLimit.value !== ""
+  //   ) {
+  //     if (
+  //       parseInt(updateCorporateData.DefaultMinAmountLimit.value) <=
+  //       parseInt(updateCorporateData.DefaultMaxAmountLimit.value)
+  //     ) {
+  //       setSaveChanges(true);
+  //       setErrorShow(false);
+  //       let newData = {
+  //         corporateData: {
+  //           TotalLimit: updateCorporateData.TotalLimit.value,
+  //           InstrumentType: updateCorporateData.InstrumentType.value,
+  //           DefaultMinAmountLimit:
+  //             updateCorporateData.DefaultMinAmountLimit.value,
+  //           DefaultMaxAmountLimit:
+  //             updateCorporateData.DefaultMaxAmountLimit.value,
+  //         },
+  //       };
+  //       console.log("newData", newData);
+  //       // dispatch(UpdateCorporateUsersAPI(navigate, newData));
+  //       setOpen({
+  //         open: true,
+  //         message: "Hello Update Corporate User dispatched",
+  //       });
+  //     } else {
+  //       setErrorShow(true);
+  //       console.log(
+  //         "Default Min Amount Limit should be less than or equal to Default Max Amount Limit"
+  //       );
+  //       setOpen({
+  //         open: true,
+  //         message:
+  //           "Default Min Amount Limit should be less than or equal to Default Max Amount Limit",
+  //       });
+  //     }
+  //   } else {
+  //     // setTimeout();
+  //     setErrorShow(true);
+  //     console.log(
+  //       "Default Min Amount Limit should be less than or equal to Default Max Amount Limit"
+  //     );
+  //     setOpen({
+  //       open: true,
+  //       message: "Fill All Required Fields",
+  //     });
+  //     setErrorShow(true);
+  //   }
+  // };
 
   // const data source
   return (

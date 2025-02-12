@@ -18,3 +18,11 @@
 .spanshowClass {
   font-family: "Roboto", sans-serif !important;
 }
+.edit-icon {
+  display: flex !important;
+  justify-content: center;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}

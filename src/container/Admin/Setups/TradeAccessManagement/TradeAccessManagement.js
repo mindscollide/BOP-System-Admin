@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./TradeAccessManagement.module.css";
 import {
+  Button,
   CustomPaper,
   CustomRadio,
   CustomSwitch,
@@ -130,18 +131,22 @@ const TradeAccessManagement = () => {
   const dataSource = [
     {
       key: "1",
-      // CounterPartyName: (
-      //   <span className={styles["spanshowClass"]}>Atlas Honda</span>
-      // ),
+
       CounterPartyName: "Atlas Honda",
       Edit: (
         <>
           <Row>
-            <Col lg={12} md={12} sm={12} className="color-blue">
-              <i
-                class="icon-edit "
+            <Col
+              lg={12}
+              md={12}
+              sm={12}
+              className="d-flex gap-2 justify-content-center align-items-center"
+            >
+              <Button
+                className={styles["edit-icon"]}
+                icon={<i className="icon-edit color-blue"></i>}
                 onClick={handleEditTradeAccessManagementModal}
-              ></i>
+              />
             </Col>
           </Row>
         </>
