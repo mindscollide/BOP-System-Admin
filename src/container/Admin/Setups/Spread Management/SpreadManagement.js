@@ -2,69 +2,122 @@ import React, { useState } from "react";
 import style from "./SpreadManagement.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
-import { Button, CustomPaper, Table } from "../../../../components/elements";
+import { Button, CustomPaper } from "../../../../components/elements";
 import { categoryOptions } from "../../../../helpers/Dropdown";
-// import { categorySpreadManagementSchema } from "../../../../utils/schemas";
 import {
-  CrossRatecolumns,
-  data,
-  Discountingcolumns,
-  emptyData,
-  emptyInitialState,
-  Forwardcolumns,
-  initialState,
-  ParitySpotcolumns,
+  crossData,
+  initialDiscountingState,
+  initialForwardState,
+  parityData,
 } from "./SpreadManagementColumns";
-import { Input } from "antd";
+import ParitySpotTable from "./ParitySpotTable";
+import CrossRateTable from "./CrossRateTable.js";
+import ForwardTable from "./ForwardTable.js";
+import DiscountingTable from "./DiscountingTable.js";
 const SpreadManagement = () => {
-  // const [categorySpread, setCategorySpread] = useState({
-  //   ...categorySpreadManagementSchema,
-  // });
   const defaultCategory = categoryOptions.find(
     (option) => option.value === "Category 1"
   );
   const [category, setCategory] = useState(defaultCategory);
-  const [paritySpotData, setParitySpotData] = useState(data);
-  const [crossRateData, setCrossRateData] = useState(data);
-  const [forwardData, setForwardData] = useState(initialState);
-  const [discountingData, setDiscountingData] = useState(initialState);
+  const [paritySpotData, setParitySpotData] = useState(parityData);
+  const [crossRateData, setCrossRateData] = useState(crossData);
+  const [forwardData, setForwardData] = useState(initialForwardState);
+  const [discountingData, setDiscountingData] = useState(
+    initialDiscountingState
+  );
 
-  // Handle table cell changes
-  const handleTableChange = (key, field, value, tableSetter, tableData) => {
+  // Function to handle input changes in Parity Spot table
+  const handleParitySpotInputChange = (index, field, value) => {
     let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = tableData.map((row) =>
-      row.key === key ? { ...row, [field]: validateValue } : row
-    );
-    tableSetter(updatedData);
+    const updatedData = [...paritySpotData];
+    updatedData[index][field] = validateValue;
+    setParitySpotData(updatedData);
+  };
+  // Function to handle input changes in Cross Rate table
+  const handleCrossRateInputChange = (index, field, value) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = [...crossRateData];
+    updatedData[index][field] = validateValue;
+    setCrossRateData(updatedData);
   };
 
-  // Reset specific table data
-  const resetTableData = (val) => {
-    // setter(
-    //   initialData.map((row) => ({ ...row, bidSpread: "", askSpread: "" }))
-    // );
-    if (val === "resetParityAndCross") {
-      setParitySpotData(emptyData);
-      setCrossRateData(emptyData);
-    } else if (val === "resetForward") {
-      setForwardData(emptyInitialState);
-    } else if (val === "resetDiscounting") {
-      setDiscountingData(emptyInitialState);
-    }
+  // Function to handle input changes in Forward table
+  const handleForwardInputChange = (index, field, value) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = [...forwardData];
+    updatedData[index][field] = validateValue;
+    setForwardData(updatedData);
+  };
+
+  // Function to handle input changes in Discounting table
+  const handleDiscountingInputChange = (index, field, value) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = [...discountingData];
+    updatedData[index][field] = validateValue;
+    setDiscountingData(updatedData);
   };
 
   // Save action placeholder (can be extended to API calls)
   const saveData = (dataType) => {
-    console.log(`Saving data for ${dataType}:`, JSON.stringify(dataType));
+    // console.log(`Saving data for ${dataType}:`, JSON.stringify(dataType));
+    console.log(
+      `Saving data for Parity Data: ${paritySpotData}:`,
+      JSON.stringify(paritySpotData),
+
+      `Saving data for Cross Data: ${crossRateData}:`,
+      JSON.stringify(crossRateData)
+    );
   };
 
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value || ""; // Update the corporateUser object
+  //reset Parity and Cross Rate to 0.0
+  const handleResetParityAndCross = () => {
+    setParitySpotData(
+      parityData.map((row) => ({
+        ...row,
+        bidSpread: "0.0",
+        askSpread: "0.0",
+      }))
+    );
+    setCrossRateData(
+      crossData.map((row) => ({
+        ...row,
+        bidSpread: "0.0",
+        askSpread: "0.0",
+      }))
+    );
   };
-  console.log(category);
+
+  //Reset Discouting Table to 0
+  const resetDiscountingState = initialDiscountingState.map((row) => ({
+    ...row,
+    usdBid: "0.0",
+    usdAsk: "0.0",
+    eurBid: "0.0",
+    eurAsk: "0.0",
+    gbpBid: "0.0",
+    gbpAsk: "0.0",
+    hkdBid: "0.0",
+    hkdAsk: "0.0",
+    jpyBid: "0.0",
+    jpyAsk: "0.0",
+  }));
+
+  //Reset Forward Table to 0
+  const resetForwardState = initialForwardState.map((row) => ({
+    ...row,
+    usdBid: "0.0",
+    usdAsk: "0.0",
+    eurBid: "0.0",
+    eurAsk: "0.0",
+    gbpBid: "0.0",
+    gbpAsk: "0.0",
+    hkdBid: "0.0",
+    hkdAsk: "0.0",
+    jpyBid: "0.0",
+    jpyAsk: "0.0",
+  }));
+
+  // useEffect(() => {}, [resetTableData]);
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
       <Row className="mt-4">
@@ -93,68 +146,22 @@ const SpreadManagement = () => {
             <Row>
               <Col lg={6} md={6} sm={12}>
                 <span className={style["ParitySpotHeading"]}>Parity Spot</span>
-                <Table
-                  column={ParitySpotcolumns.map((col) => ({
-                    ...col,
-                    render:
-                      col.dataIndex !== "currency"
-                        ? (text, record) => (
-                            <Input
-                              maxLength={5}
-                              style={{ width: "75px" }}
-                              value={record[col.dataIndex]}
-                              onChange={(e) =>
-                                handleTableChange(
-                                  record.key,
-                                  col.dataIndex,
-                                  e.target.value,
-                                  setParitySpotData,
-                                  paritySpotData
-                                )
-                              }
-                            />
-                          )
-                        : undefined,
-                  }))}
-                  bordered
-                  rows={paritySpotData}
-                  pagination={false}
-                  className={"GrayHeader-table"}
+                <ParitySpotTable
+                  data={paritySpotData}
+                  onInputChange={handleParitySpotInputChange}
                 />
               </Col>
+
               <Col lg={6} md={6} sm={12}>
                 <span className={style["ParitySpotHeading"]}>Cross Rate</span>
-                <Table
-                  column={CrossRatecolumns.map((col) => ({
-                    ...col,
-                    render:
-                      col.dataIndex !== "currency"
-                        ? (text, record) => (
-                            <Input
-                              maxLength={5}
-                              style={{ width: "75px" }}
-                              value={record[col.dataIndex]}
-                              onChange={(e) =>
-                                handleTableChange(
-                                  record.key,
-                                  col.dataIndex,
-                                  e.target.value,
-                                  setCrossRateData,
-                                  crossRateData
-                                )
-                              }
-                            />
-                          )
-                        : undefined,
-                  }))}
-                  rows={crossRateData}
-                  bordered
-                  pagination={false}
-                  className={"GrayHeader-table"}
+                <CrossRateTable
+                  data={crossRateData}
+                  onInputChange={handleCrossRateInputChange}
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
+
+            <Row className="mt-4 mb-5">
               <Col
                 lg={12}
                 md={12}
@@ -165,56 +172,28 @@ const SpreadManagement = () => {
                   icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
-                  onClick={
-                    () => resetTableData("resetParityAndCross")
-                    // resetTableData(setCrossRateData, data))
-                  }
+                  onClick={handleResetParityAndCross}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
                   className={style["Search-btn-spreadManagement"]}
                   text="Save"
+                  onClick={() => saveData()}
                 />
               </Col>
             </Row>
+
             {/* Forward Table  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <span className={style["ForwardLabel"]}>Forward</span>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <Table
-                  column={Forwardcolumns.map((col) => ({
-                    ...col,
-                    render:
-                      col.dataIndex !== "currency"
-                        ? (text, record) => (
-                            <Input
-                              maxLength={5}
-                              style={{ width: "75px" }}
-                              value={record[col.dataIndex]}
-                              onChange={(e) =>
-                                handleTableChange(
-                                  record.key,
-                                  col.dataIndex,
-                                  e.target.value,
-                                  setForwardData,
-                                  forwardData
-                                )
-                              }
-                            />
-                          )
-                        : undefined,
-                  }))}
-                  rows={forwardData}
-                  bordered
-                  pagination={false}
-                  prefixCls="groupTable"
+                <ForwardTable
+                  data={forwardData}
+                  onInputChange={handleForwardInputChange}
                 />
               </Col>
             </Row>
+
             <Row className="mt-4 mb-5">
               <Col
                 lg={12}
@@ -226,10 +205,7 @@ const SpreadManagement = () => {
                   icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
-                  onClick={
-                    () => resetTableData("resetForward")
-                    // resetTableData(setCrossRateData, data))
-                  }
+                  onClick={() => setForwardData(resetForwardState)}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
@@ -238,43 +214,18 @@ const SpreadManagement = () => {
                 />
               </Col>
             </Row>
+
+            {/* Discounting Table  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <span className={style["ForwardLabel"]}>Discounting</span>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <Table
-                  column={Discountingcolumns.map((col) => ({
-                    ...col,
-                    render:
-                      col.dataIndex !== "currency"
-                        ? (text, record) => (
-                            <Input
-                              maxLength={5}
-                              style={{ width: "75px" }}
-                              value={record[col.dataIndex]}
-                              onChange={(e) =>
-                                handleTableChange(
-                                  record.key,
-                                  col.dataIndex,
-                                  e.target.value,
-                                  setDiscountingData,
-                                  discountingData
-                                )
-                              }
-                            />
-                          )
-                        : undefined,
-                  }))}
-                  rows={discountingData}
-                  bordered
-                  pagination={false}
-                  prefixCls="groupTable"
+                <DiscountingTable
+                  data={discountingData}
+                  onInputChange={handleDiscountingInputChange}
                 />
               </Col>
             </Row>
+
             <Row className="mt-4 mb-5">
               <Col
                 lg={12}
@@ -286,10 +237,7 @@ const SpreadManagement = () => {
                   icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
-                  onClick={
-                    () => resetTableData("resetDiscounting")
-                    // resetTableData(setCrossRateData, data))
-                  }
+                  onClick={() => setDiscountingData(resetDiscountingState)}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}

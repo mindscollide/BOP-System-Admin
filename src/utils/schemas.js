@@ -518,3 +518,27 @@ export const addCategroyModalSchema = {
 //     value: "",
 //   },
 // };
+
+export const settingSchema = {
+  chatPannalOverlap: true,
+  soundOnEveryMessage: true,
+  twoFactorAuthentication: "",
+  newPassword: {
+    value: "",
+  },
+  confirmNewPassword: {
+    value: "",
+  },
+  monToThurStartTime: {
+    value: "",
+  },
+  monToThurEndTime: {
+    value: "",
+  },
+  friStartTime: {
+    value: "",
+  },
+  friEndTime: {
+    value: "",
+  },
+};

@@ -84,13 +84,14 @@
 }
 
 .InputTableSpreadManagement {
-  width: 67px !important;
+  width: 60px !important;
+  text-align: center !important;
 }
 
 .WidthInputParitySpot {
   width: 30px !important;
 }
-/* .CategorySpreadManagement li {
+.CategorySpreadManagement li {
   display: flex;
   color: #096fed;
   z-index: 9990px !important;
@@ -99,7 +100,7 @@
   color: #096fed;
   border: 1px solid salmon;
   margin-top: 1000px;
-} */
+}
 .react-select-field {
-  z-index: 10000 !important;
+  z-index: 101;
 }

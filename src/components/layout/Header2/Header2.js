@@ -6,10 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../../store/actions/Auth-Actions";
 import { message } from "antd";
+import { useState } from "react";
+import SettingModal from "../../../container/Pages/Modals/Setting-Modal/SettingModal";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [SettingModalState, setSettingModalState] = useState(false);
+
+  const onClickSetting = () => {
+    setSettingModalState(true);
+  };
   //HandleClick on logo
   const onClickLogo = () => {
     navigate("/SystemAdmin/AddBankUser");
@@ -39,7 +46,12 @@ const Header = () => {
                 <Dropdown.Item>
                   <Nav.Link>
                     <i className="icon-settings me-1"></i>
-                    <label className="dropdown-select-labels">Setting</label>
+                    <label
+                      className="dropdown-select-labels"
+                      onClick={onClickSetting}
+                    >
+                      Setting
+                    </label>
                   </Nav.Link>
                 </Dropdown.Item>
                 <Dropdown.Item onClick={handelLogout}>
@@ -50,6 +62,12 @@ const Header = () => {
             </Dropdown>
           </Container>
         </Navbar>
+        {SettingModalState ? (
+          <SettingModal
+            SettingModalState={SettingModalState}
+            setSettingModalState={setSettingModalState}
+          />
+        ) : null}
       </Container>
     </>
   );
