@@ -108,7 +108,16 @@
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
+.react-select-field-with-add-edit {
+  width: 83.5% !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
 
+.react-select-field-with-add-edit .css-13cymwt-control {
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
 .select-clickable-icon {
   height: 38px !important;
   max-height: 38px;

@@ -24,6 +24,14 @@ const DeleteCorporateModalSystemAdmin = (response, message) => {
   };
 };
 
+// ******************Action for Reducer*********************** by Yunus
+const AddBankUserConfirmationModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.ADD_BANK_USER_CONFIRMATION_MODAL,
+    response: response,
+    message: message,
+  };
+};
 const UserDetailsCorporateModalSystemAdmin = (response, message) => {
   return {
     type: actions.USER_DETAILS_CORPORATE_MODAL,
@@ -82,4 +90,5 @@ export {
   editCompanyModalSystemAdmin,
   editBankUserModalSystemAdmin,
   editTradeAccessManagementModalSystemAdmin,
+  AddBankUserConfirmationModalSystemAdmin,
 };

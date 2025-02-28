@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./EditBankUserModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -21,6 +21,8 @@ const EditBankUserModal = () => {
 
   const [updateBranch, setUpdateBranch] = useState({ ...updateBranchSchema });
 
+  //State to activate the edit button
+  const [isActive, setIsActive] = useState(false);
   //States
   const [open, setOpen] = useState(false);
 
@@ -113,6 +115,17 @@ const EditBankUserModal = () => {
     console.log("data", data);
     dispatch(UpdateBranchAPI(navigate, data));
   };
+  useEffect(() => {
+    if (
+      updateBranch.branchName.value === "" ||
+      updateBranch.branchCode.value === "" ||
+      updateBranch.branchContact.value === ""
+    ) {
+      setIsActive(false);
+    } else {
+      setIsActive(true);
+    }
+  }, [updateBranch]);
   return (
     <>
       <Modal
@@ -196,6 +209,7 @@ const EditBankUserModal = () => {
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleUpdateBranch}
+                disableBtn={isActive ? false : true}
               />
 
               <Button

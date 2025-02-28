@@ -13,13 +13,15 @@ import ExportShowComponent from "../BankerList/ExportShowComponent";
 import { categoryOptions, roleOptions } from "../../../../helpers/Dropdown";
 import { loginHistorySchema } from "../../../../utils/schemas";
 import { formatDate } from "../../../../helpers/reusableMethods";
-
+import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { AddBankUserConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { useDispatch } from "react-redux";
 const LoginHistory = () => {
   //Login History States
   const [loginHistory, setLoginHistory] = useState({
     ...loginHistorySchema,
   });
-
+  const dispatch = useDispatch();
   //State for category and role dropdown
   const [Role, setRole] = useState("");
   const [category, setCategory] = useState("");
@@ -235,8 +237,13 @@ const LoginHistory = () => {
     console.log("Search Customer:", data);
   };
 
-  //Handle Resest Button
+  // show error message When user hit activate btn
   const handleResetEventButton = () => {
+    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+  };
+
+  //Handle Resest Button
+  const handleResetYes = () => {
     // Reset the form
     setLoginHistory({
       ...loginHistorySchema,
@@ -268,22 +275,6 @@ const LoginHistory = () => {
         errorStatus: false,
       },
     }));
-
-    // Example validation: Start Date should be before End Date
-    if (
-      fieldName === "dateFrom" &&
-      loginHistory.To.value &&
-      new Date(value) > new Date(loginHistory.To.value)
-    ) {
-      setLoginHistory((prev) => ({
-        ...prev,
-        dateFrom: {
-          ...prev.dateFrom,
-          errorMessage: "Start date cannot be after end date.",
-          errorStatus: true,
-        },
-      }));
-    }
   };
 
   return (
@@ -298,8 +289,8 @@ const LoginHistory = () => {
       <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
+            <Row className="mt-2 g-2">
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"Name"}
                   placeholder="Name"
@@ -308,7 +299,7 @@ const LoginHistory = () => {
                   onChange={LoginHistoryValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"CounterPartyname"}
                   placeholder="Counter Party Name"
@@ -317,7 +308,7 @@ const LoginHistory = () => {
                   onChange={LoginHistoryValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"email"}
                   placeholder="Email"
@@ -326,7 +317,7 @@ const LoginHistory = () => {
                   onChange={LoginHistoryValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <Select
                   name="Role"
                   isSearchable={true}
@@ -339,10 +330,7 @@ const LoginHistory = () => {
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
-            </Row>
-
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
+              {/* <Col lg={2} md={2} sm={12}>
                 <Select
                   name="category"
                   isSearchable={true}
@@ -359,10 +347,10 @@ const LoginHistory = () => {
                   }
                   classNamePrefix="selectCateogyCorporateList"
                 />
-              </Col>
+              </Col> */}
               <Col
-                lg={3}
-                md={3}
+                lg={4}
+                md={4}
                 sm={12}
                 className="d-flex align-items-center pe-4"
               >
@@ -374,7 +362,10 @@ const LoginHistory = () => {
                   inputClass={styles["Tradecount-Datepicker-left"]}
                   value={loginHistory.dateFrom.value}
                   onChange={(date) => handleDateChange("dateFrom", date)}
+                  minDate={null} // No restriction initially
+                  maxDate={loginHistory.dateTo.value || null}
                 />
+
                 <label className={styles["Tradecount-date-to"]}>to</label>
 
                 <DatePicker
@@ -385,12 +376,16 @@ const LoginHistory = () => {
                   inputClass={styles["Tradecount-Datepicker-right"]}
                   value={loginHistory.dateTo.value}
                   onChange={(date) => handleDateChange("dateTo", date)}
+                  minDate={loginHistory.dateFrom.value || null} // Disable dates before selected startDate
+                  maxDate={null} // No restriction initially
                 />
               </Col>
+            </Row>
+            <Row className="mt-3">
               <Col
-                lg={6}
-                md={6}
-                sm={6}
+                lg={12}
+                md={12}
+                sm={12}
                 className="d-flex justify-content-center gap-1"
               >
                 <Button
@@ -407,7 +402,7 @@ const LoginHistory = () => {
                 />
 
                 <Button
-                  icon={<i class="icon-download"></i>}
+                  icon={<i className="icon-download"></i>}
                   className={styles["Export_Button"]}
                   text="Export"
                 />
@@ -433,6 +428,7 @@ const LoginHistory = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
     </section>
   );
 };

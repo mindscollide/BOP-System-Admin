@@ -151,3 +151,12 @@
 .iconClassTrashCorporate {
   font-size: 17px !important;
 }
+.ActiveStatus {
+  color: #00ee28 !important;
+}
+.InactiveStatus {
+  color: #cf5b5b !important;
+}
+.react-select-field {
+  z-index: 101;
+}

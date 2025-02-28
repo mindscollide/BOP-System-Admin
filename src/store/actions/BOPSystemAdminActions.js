@@ -52,7 +52,9 @@ const CreateNewCorporateFail = (message) => {
 };
 
 const CreateNewCorporateAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
+
   return (dispatch) => {
     dispatch(CreateNewCorporateInit());
     let form = new FormData();
@@ -68,6 +70,8 @@ const CreateNewCorporateAPI = (navigate, data) => {
     })
       .then(async (response) => {
         if (response.data.responseCode === 417) {
+          console.log("response", response);
+          return;
           await dispatch(RefreshToken(navigate));
           dispatch(CreateNewCorporateAPI(navigate, data));
         } else if (response.data.responseCode === 200) {
@@ -326,7 +330,9 @@ const UpdateBranchFail = (message) => {
 };
 
 const UpdateBranchAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
+
   return (dispatch) => {
     dispatch(UpdateBranchInit());
     let form = new FormData();
@@ -490,8 +496,11 @@ const CreateBankUserRequestFail = (message) => {
 };
 
 const CreateBankUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
-  console.log("JSON.parse(localStorage.getItem", token);
+  // console.log(data);
+  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
+
+  console.log("JSON.parse(localStorage.getItem:    ", token);
 
   return (dispatch) => {
     dispatch(CreateBankUserRequestInit());
@@ -507,6 +516,7 @@ const CreateBankUserRequestAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        console.log("response", response);
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(CreateBankUserRequestAPI(navigate, data));
@@ -569,6 +579,9 @@ const CreateBankUserRequestAPI = (navigate, data) => {
             ) {
               dispatch(CreateBankUserRequestFail("exception"));
             }
+          }
+          if (response.data.responseResult.isExecuted === true) {
+            console.log("It is executed successfully");
           } else {
             dispatch(CreateBankUserRequestFail("Something went wrong"));
           }
@@ -785,7 +798,9 @@ const CreateCorporateUserRequestFail = (message) => {
 };
 
 const CreateCorporateUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
+
   return (dispatch) => {
     dispatch(CreateCorporateUserRequestInit());
     let form = new FormData();

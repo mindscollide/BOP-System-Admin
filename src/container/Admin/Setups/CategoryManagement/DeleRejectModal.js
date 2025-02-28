@@ -46,10 +46,10 @@ const DeleteModal = ({
                   <Col lg={12} md={12} sm={12} className="ModalScroller">
                     {delteCateogry !== undefined && delteCateogry !== null ? (
                       <>
-                        {/* <p>{delteCateogry?.categoryName}</p>
-                    <p>{delteCateogry?.bidSpread}</p>
-                    <p>{delteCateogry?.categoryID}</p>
-                    <p>{delteCateogry?.offerSpread}</p> */}
+                        <p>{delteCateogry?.categoryName}</p>
+                        <p>{delteCateogry?.bidSpread}</p>
+                        <p>{delteCateogry?.categoryID}</p>
+                        <p>{delteCateogry?.offerSpread}</p>
                         {delteCateogry?.corporates.length > 0
                           ? delteCateogry?.corporates.map((data, index) => {
                               return (
@@ -64,7 +64,7 @@ const DeleteModal = ({
                             })
                           : ""}
 
-                        {/* <p>{delteCateogry?.categoryName}</p> */}
+                        <p>{delteCateogry?.categoryName}</p>
                       </>
                     ) : null}
                   </Col>

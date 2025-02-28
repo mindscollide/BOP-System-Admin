@@ -5,6 +5,7 @@ import {
   Button,
   Checkbox,
   CustomUpload,
+  Loader,
   Notification,
   Paper,
   TextField,
@@ -14,6 +15,7 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
 import {
+  AddBankUserConfirmationModalSystemAdmin,
   corporatePlusIconModalSystemAdmin,
   editCompanyModalSystemAdmin,
 } from "../../../store/actions/BOPSystemAdminModalsActions";
@@ -24,10 +26,19 @@ import { categoryOptions, companyOptions } from "../../../helpers/Dropdown";
 import { validateBopEmail } from "../../../utils/regexUtil";
 import { useNavigate } from "react-router-dom";
 import { CreateCorporateUserRequestAPI } from "../../../store/actions/BOPSystemAdminActions";
-
+import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+// import ActivateConfirmationModal from "../BankUser/ActivateConfirmationModal/ActivateConfirmationModal";
 const CorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  //Global Staate
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
+
+  //  //Global Modal for confirmation
+  const AddBankUserConfirmationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
+  );
   //Add Company Use Modal Calling
   const PlusIconCorporateModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.corporatePlusIconModal
@@ -192,9 +203,17 @@ const CorporateUser = () => {
     updateField(name, value);
   };
 
-  //handle Active Button
   // show error message When user hit activate btn
   const handleActivateButton = () => {
+    if (validateBopEmail(corporateUser.email.value)) {
+      dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    } else {
+      setErrorShow(true);
+    }
+  };
+  //handle Active Button
+  // show error message When user hit activate btn
+  const handleActivateButtonYes = () => {
     if (
       corporateUser.firstName.value !== "" &&
       corporateUser.email.value !== "" &&
@@ -214,10 +233,11 @@ const CorporateUser = () => {
           IsChatActive: corporateUser.isChatActive.value,
         };
         console.log("newData", newData);
+
         dispatch(CreateCorporateUserRequestAPI(navigate, newData));
         setOpen({
           open: true,
-          message: "Hello CreateBankUserRequestAPI id dispatched",
+          message: "CreateCorporateUserRequestAPI id dispatched",
         });
       } else {
         console.log("corporateUsercorporateUser");
@@ -340,7 +360,7 @@ const CorporateUser = () => {
                         <CustomUpload />
                       </Col>
                     </Row>
-                    <Row className="mt-3"></Row>
+                    {/* <Row className="mt-3"></Row> */}
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
@@ -356,25 +376,38 @@ const CorporateUser = () => {
                           value={corporateUser.email.value}
                           onChange={addCorporateUserValidateHandler}
                         />
-                        <Row>
-                          <Col className="d-flex justify-content-start">
-                            <p
-                              className={
-                                errorShow &&
-                                !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
-                                  corporateUser.email.value
-                                )
-                                  ? styles["bankErrorMessage"]
-                                  : styles["bankErrorMessage_hidden"]
-                              }
-                            >
-                              Email address with domain of bop is required
-                            </p>
-                          </Col>
-                        </Row>
+                        {/* <Row>
+                            <Col className="d-flex justify-content-start">
+                              <p
+                                className={
+                                  errorShow &&
+                                  !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
+                                    corporateUser.email.value
+                                  )
+                                    ? styles["bankErrorMessage"]
+                                    : styles["bankErrorMessage_hidden"]
+                                }
+                              >
+                                Email address with domain of bop is required
+                              </p>
+                            </Col>
+                          </Row> */}
+                        {errorShow &&
+                        !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
+                          corporateUser.email.value
+                        ) ? (
+                          <Row>
+                            <Col className="d-flex justify-content-start">
+                              <p className={styles["bankErrorMessage"]}>
+                                Email address with domain of bop is required
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
                       </Col>
-
-                      <Col lg={4} md={4} sm={12}></Col>
+                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     <Row className="mt-3 position-relative">
@@ -415,9 +448,9 @@ const CorporateUser = () => {
                           onClick={handleEditButton}
                         />
                       </Col>
-                      <Col lg={4} md={4} sm={12}></Col>
+                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
-                    <Row className="mt-3"></Row>
+                    {/* <Row className="mt-3"></Row> */}
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
@@ -444,7 +477,7 @@ const CorporateUser = () => {
                         />
                       </Col>
 
-                      <Col lg={4} md={4} sm={12}></Col>
+                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     <Row className="mt-3">
@@ -506,9 +539,9 @@ const CorporateUser = () => {
                         </Row>
                       </Col>
 
-                      <Col lg={4} md={4} sm={12}></Col>
+                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
-                    <Row className="mt-3"></Row>
+                    {/* <Row className="mt-3"></Row> */}
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
@@ -555,7 +588,10 @@ const CorporateUser = () => {
       </Row>
       {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
       {editCompanyModalGobalState && <EditCompanyModal />}
-
+      {AddBankUserConfirmationModal && (
+        <ActivateConfirmationModal onConfirm={handleActivateButtonYes} />
+      )}
+      {BOPSystemAdminReducer.Loading && <Loader />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

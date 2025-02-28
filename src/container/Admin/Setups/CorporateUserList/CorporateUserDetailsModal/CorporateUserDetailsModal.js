@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./CorporateUserDetails.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -12,10 +12,60 @@ import {
 import DatePicker from "react-multi-date-picker";
 import { Col, Row } from "react-bootstrap";
 import { UserDetailsCorporateModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
+import Select from "react-select";
+import { formatDate } from "../../../../../helpers/reusableMethods";
 const CorporateUserDetailsModal = () => {
   const dispatch = useDispatch();
+
+  //State for Enabling Dropdown
+  const [isDropdownEnabled, setIsDropdownEnabled] = useState(false);
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
+  //company drpdown options
+  const companyOptions = [
+    { value: "Shield", label: "Shield" },
+    { value: "Gulahmed", label: "Gulahmed" },
+    { value: "Nestle", label: "Nestle" },
+  ];
+
+  //state for user data
+  const [userData, setUserData] = useState({
+    userDetails: {
+      email: {
+        value: "muhammad.ahmed@gmail.com",
+      },
+      name: {
+        value: "Muhammad Ahmed",
+      },
+      company: {
+        value: "Shield",
+      },
+      category: {
+        value: "Corporate",
+      },
+      ipAddress: {
+        value: "192.168.0.1",
+      },
+    },
+    rights: {
+      timer: {
+        value: "5 minutes",
+      },
+      natureOfBusiness: {
+        value: "Foods",
+      },
+    },
+  });
+  //state for date picker
+  const [searchUserRecord, setSearchUserRecord] = useState({
+    startDate: {
+      value: "",
+    },
+
+    endDate: {
+      value: "",
+    },
+  });
   //handle Cross Icon
   const handleCrossIcon = () => {
     dispatch(UserDetailsCorporateModalSystemAdmin(false));
@@ -90,7 +140,41 @@ const CorporateUserDetailsModal = () => {
       ellipsis: true,
     },
   ];
+  //Handle Date Change method
+  const handleDateChange = (fieldName, value) => {
+    setSearchUserRecord((prev) => ({
+      ...prev,
+      [fieldName]: {
+        ...prev[fieldName],
+        value,
+        errorMessage: "",
+        errorStatus: false,
+      },
+    }));
+  };
+  // // Example validation: Start Date should be before End Date
+  // if (
+  //   fieldName === "dateFrom" &&
+  //   tradeCount.dateTo.value &&
+  //   new Date(value) > new Date(tradeCount.dateTo.value)
+  // ) {
+  //   setTradeCount((prev) => ({
+  //     ...prev,
+  //     dateFrom: {
+  //       ...prev.dateFrom,
+  //       errorMessage: "Start date cannot be after end date.",
+  //       errorStatus: true,
+  //     },
+  //   }));
+  // }
 
+  const handleSearchRecord = () => {
+    let searchData = {
+      startDate: formatDate(searchUserRecord.startDate.value),
+      endDate: formatDate(searchUserRecord.endDate.value),
+    };
+    console.log("Search Date is: ", searchData);
+  };
   return (
     <Modal
       show={BOPSystemAdminModal.userDetailsCorporateModal}
@@ -110,7 +194,7 @@ const CorporateUserDetailsModal = () => {
             <Col lg={1} md={1} sm={1}>
               <Button
                 className={styles["CrossButton"]}
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 iconClass={styles["crossIconClass"]}
                 onClick={handleCrossIcon}
               />
@@ -126,9 +210,10 @@ const CorporateUserDetailsModal = () => {
                 </Col>
                 <Col lg={1} md={1} sm={12}>
                   <Button
-                    icon={<i class="icon-edit"></i>}
+                    icon={<i className="icon-edit"></i>}
                     className={styles["EditIconClass"]}
                     iconClass={styles["EditIconClassCross"]}
+                    onClick={() => setIsDropdownEnabled(true)}
                   />
                 </Col>
               </Row>
@@ -136,7 +221,7 @@ const CorporateUserDetailsModal = () => {
                 <Col lg={12} md={12} sm={12}>
                   <TextField
                     labelClass={"d-none"}
-                    placeholder={"muhammad.ahmed@gmail.com"}
+                    value={userData.userDetails.email.value}
                     disable={true}
                   />
                 </Col>
@@ -146,14 +231,19 @@ const CorporateUserDetailsModal = () => {
                   <TextField
                     labelClass={"d-none"}
                     placeholder={"muhammad.ahmed"}
+                    value={userData.userDetails.name.value}
                     disable={true}
                   />
                 </Col>
                 <Col lg={6} md={6} sm={12}>
-                  <TextField
-                    labelClass={"d-none"}
-                    placeholder={"Shield"}
-                    disable={true}
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    options={companyOptions}
+                    defaultValue={companyOptions[0]}
+                    isDisabled={isDropdownEnabled ? false : true}
+                    isSearchable={true}
+                    placeholder={"Select Category"}
                   />
                 </Col>
               </Row>
@@ -162,6 +252,7 @@ const CorporateUserDetailsModal = () => {
                   <TextField
                     labelClass={"d-none"}
                     placeholder={"Category 1"}
+                    value={userData.userDetails.category.value}
                     disable={true}
                   />
                 </Col>
@@ -169,6 +260,7 @@ const CorporateUserDetailsModal = () => {
                   <TextField
                     labelClass={"d-none"}
                     placeholder={"123"}
+                    value={userData.userDetails.ipAddress.value}
                     disable={true}
                   />
                 </Col>
@@ -198,6 +290,7 @@ const CorporateUserDetailsModal = () => {
                       labelClass={"d-none"}
                       placeholder={"5 minutes"}
                       disable={true}
+                      value={userData.rights.timer.value}
                     />
                   </Col>
                 </Row>
@@ -215,6 +308,7 @@ const CorporateUserDetailsModal = () => {
                       labelClass={"d-none"}
                       placeholder={"Foods"}
                       disable={true}
+                      value={userData.rights.natureOfBusiness.value}
                     />
                   </Col>
                 </Row>
@@ -226,15 +320,20 @@ const CorporateUserDetailsModal = () => {
               <CustomPaper className={styles["CustomPaperUserDetailsStyles"]}>
                 <Row>
                   <Col
-                    lg={4}
-                    md={4}
+                    lg={5}
+                    md={5}
                     sm={12}
                     className="d-flex align-items-center  pe-4"
                   >
                     <DatePicker
+                      name="startDate"
                       placeholder="Start date"
                       showOtherDays={true}
                       inputClass={styles["Tradecount-Datepicker-left"]}
+                      value={searchUserRecord.startDate.value}
+                      onChange={(date) => handleDateChange("startDate", date)}
+                      minDate={null} // No restriction initially
+                      maxDate={searchUserRecord.endDate.value || null}
                     />
                     <label className={styles["Tradecount-date-to"]}>to</label>
 
@@ -242,6 +341,12 @@ const CorporateUserDetailsModal = () => {
                       placeholder="End Date"
                       showOtherDays={true}
                       inputClass={styles["Tradecount-Datepicker-right"]}
+                      value={searchUserRecord.endDate.value}
+                      onChange={(date) => {
+                        handleDateChange("endDate", date);
+                      }}
+                      minDate={searchUserRecord.startDate.value || null} // Disable dates before selected startDate
+                      maxDate={null} // No restriction initially
                     />
                   </Col>
                   <Col
@@ -254,9 +359,10 @@ const CorporateUserDetailsModal = () => {
                       icon={<i className="icon-search icon-check-space"></i>}
                       className={styles["Search-btn-BankList"]}
                       text="Search"
+                      onClick={handleSearchRecord}
                     />
                     <Button
-                      icon={<i class="icon-download-excel"></i>}
+                      icon={<i className="icon-download-excel"></i>}
                       className={styles["Download-btn-Corporate"]}
                       text="Download Excel"
                     />
@@ -284,11 +390,11 @@ const CorporateUserDetailsModal = () => {
               <Button
                 text={"Update"}
                 className={styles["UpdateButton"]}
-                icon={<i class="icon-refresh"></i>}
+                icon={<i className="icon-refresh"></i>}
               />
               <Button
                 text={"Discard"}
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 className={styles["DiscardButton"]}
               />
             </Col>

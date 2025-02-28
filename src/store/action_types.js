@@ -175,6 +175,14 @@ export const EDIT_BANK_USER_MODAL = "EDIT_BANK_USER_MODAL";
 export const EDIT_TRADE_ACCESS_MANAGMENT_MODAL =
   "EDIT_TRADE_ACCESS_MANAGMENT_MODAL";
 
+//*************************************Global States for Confirmation Modal****************************by Yunus
+
+// Delete Corporate Modal
+export const ADD_BANK_USER_CONFIRMATION_MODAL =
+  "ADD_BANK_USER_CONFIRMATION_MODAL";
+
+// *******************************     END      ********************************************
+
 //Send Email For Reset Password
 export const SEND_EMAIL_RESET_PASSWORD_INIT = "SEND_EMAIL_RESET_PASSWORD_INIT";
 export const SEND_EMAIL_RESET_PASSWORD_SUCCESS =

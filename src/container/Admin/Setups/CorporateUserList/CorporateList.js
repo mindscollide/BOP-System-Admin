@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./CorporateList.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -11,6 +11,7 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import EditCorporateModal from "./EditCorporateModal/EditCorporateModal";
 import {
+  AddBankUserConfirmationModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
   EditCorporateModalSystemAdmin,
   UserDetailsCorporateModalSystemAdmin,
@@ -28,6 +29,7 @@ import {
 import { corporateListSchema } from "../../../../utils/schemas";
 import { categoryOptions } from "../../../../helpers/Dropdown";
 import ExportShowComponent from "../BankerList/ExportShowComponent";
+import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
@@ -192,7 +194,13 @@ const CorporateList = () => {
     userField.value = value.value; // Update the corporateUser object
   };
 
+  // show error message When user hit activate btn
   const handleReset = () => {
+    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+  };
+
+  const handleResetYes = () => {
+    // dispatch(AddBankUserConfirmationModalSystemAdmin(false));
     // Reset all form fields, including the dropdown
     setCorporateList({
       Name: { value: "", errorMessage: "", errorStatus: false },
@@ -213,7 +221,7 @@ const CorporateList = () => {
     };
 
     // Call API to fetch all records after reset
-    dispatch(SearchCorporateUsersAPI(navigate, resetData));
+    // dispatch(SearchCorporateUsersAPI(navigate, resetData));
   };
 
   //Table columns for customer List
@@ -246,6 +254,15 @@ const CorporateList = () => {
       title: <label className="bottom-table-header">Status</label>,
       dataIndex: "Status",
       key: "Status",
+      render: (status) => (
+        <span
+          className={
+            status === "Active" ? styles.ActiveStatus : styles.InactiveStatus
+          }
+        >
+          {status}
+        </span>
+      ),
       width: "80px",
       align: "center",
       ellipsis: true,
@@ -365,8 +382,8 @@ const CorporateList = () => {
       <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
+            <Row className="mt-2 g-2">
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Name"
                   labelClass={"d-none"}
@@ -375,7 +392,7 @@ const CorporateList = () => {
                   onChange={CorporateListValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   labelClass={"d-none"}
                   placeholder="Corporate Name"
@@ -384,7 +401,7 @@ const CorporateList = () => {
                   onChange={CorporateListValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Email"
                   labelClass={"d-none"}
@@ -393,7 +410,7 @@ const CorporateList = () => {
                   onChange={CorporateListValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <Select
                   name="category"
                   isSearchable={true}
@@ -412,12 +429,9 @@ const CorporateList = () => {
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
-            </Row>
-
-            <Row className="mt-3">
               <Col
-                lg={12}
-                md={12}
+                lg={4}
+                md={4}
                 sm={12}
                 className="d-flex justify-content-center gap-1"
               >
@@ -443,6 +457,8 @@ const CorporateList = () => {
                 />
               </Col>
             </Row>
+
+            <Row className="mt-3"></Row>
 
             {showExportOptions && (
               <Row className="mt-3">
@@ -490,7 +506,10 @@ const CorporateList = () => {
       {EditCorporateModalGobalState && <EditCorporateModal />}
       {DeleteCorporateModalGobalState && <DeleteConfirmationModal />}
       {UserDetailsCorporateModalGobalState && <CorporateUserDetailsModal />}
-      {/* {UserDetailsCorporateModalGobalState && <CorporatePlusIconModal />} */}
+      {/* {UserDetailsCorporateModalGobalState && <CorporatePlusIconModal />}
+       */}
+
+      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
     </section>
   );
 };

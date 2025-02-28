@@ -1350,7 +1350,7 @@ const CategoryManagement = () => {
                                           >
                                             <div className="title_bid">Bid</div>
                                             <div className="rate val-highlight1">
-                                              {data.bidSpread != ""
+                                              {data.bidSpread !== ""
                                                 ? formatNumberForFourDecimal(
                                                     data.bidSpread
                                                   )
@@ -1377,7 +1377,7 @@ const CategoryManagement = () => {
                                               offer
                                             </div>
                                             <div className="rate val-highlight2">
-                                              {data.offerSpread != ""
+                                              {data.offerSpread !== ""
                                                 ? formatNumberForFourDecimal(
                                                     data.offerSpread
                                                   )

@@ -21,7 +21,12 @@ import {
 import { useSelector } from "react-redux";
 import { roleOptions } from "../../../../helpers/Dropdown";
 import { bankListSchema } from "../../../../utils/schemas";
-import { editBankUserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  AddBankUserConfirmationModalSystemAdmin,
+  editBankUserModalSystemAdmin,
+} from "../../../../store/actions/BOPSystemAdminModalsActions";
+import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+// import { render } from "@testing-library/react";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -156,8 +161,14 @@ const BankerList = () => {
     userField.value = value.value; // Update the corporateUser object
   };
 
-  //Handle Reset
+  // show error message When user hit activate btn
   const handleReset = () => {
+    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+  };
+
+  //Handle Reset
+  const handleResetYes = () => {
+    // dispatch(AddBankUserConfirmationModalSystemAdmin(false));
     // Reset all form fields, including the dropdown
     setBankList({
       EmployeeID: { value: "" },
@@ -178,7 +189,7 @@ const BankerList = () => {
     };
 
     // Call API to fetch all records after reset
-    dispatch(SearchBankUsersAPI(navigate, resetData));
+    // dispatch(SearchBankUsersAPI(navigate, resetData));
   };
 
   //handle Edit Corporate
@@ -245,6 +256,15 @@ const BankerList = () => {
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: (status) => (
+        <span
+          className={
+            status === "Active" ? styles.ActiveStatus : styles.InactiveStatus
+          }
+        >
+          {status}
+        </span>
+      ),
     },
     {
       title: <label className="bottom-table-header">Last Password</label>,
@@ -327,7 +347,7 @@ const BankerList = () => {
       Role: "Dealer",
       BranchName: "Clifton",
       ContactNumber: "01234567890",
-      Status: "Active",
+      Status: "Inactive",
       LastPassowrdChange: "13/05/2023 01:15:10",
       creationDateTime: "13/05/2023 01:15:10",
       Edit: (
@@ -350,8 +370,8 @@ const BankerList = () => {
       <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
+            <Row className="mt-2 g-2">
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"EmployeeID"}
                   placeholder="Employee ID"
@@ -360,7 +380,7 @@ const BankerList = () => {
                   onChange={BankerListValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Name"
                   labelClass={"d-none"}
@@ -369,7 +389,7 @@ const BankerList = () => {
                   onChange={BankerListValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Email"
                   labelClass={"d-none"}
@@ -378,7 +398,7 @@ const BankerList = () => {
                   onChange={BankerListValidateHandler}
                 />
               </Col>
-              <Col lg={3} md={3} sm={12}>
+              <Col lg={2} md={2} sm={12}>
                 <Select
                   name="Role"
                   isSearchable={true}
@@ -391,12 +411,9 @@ const BankerList = () => {
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
-            </Row>
-
-            <Row className="mt-3">
               <Col
-                lg={12}
-                md={12}
+                lg={4}
+                md={4}
                 sm={12}
                 className="d-flex justify-content-center gap-1"
               >
@@ -413,13 +430,15 @@ const BankerList = () => {
                   onClick={handleReset}
                 />
                 <Button
-                  icon={<i class="icon-download"></i>}
+                  icon={<i className="icon-download"></i>}
                   className={styles["Export_Button"]}
                   text="Export"
                   iconClass={styles["resetIconClass"]}
                 />
               </Col>
             </Row>
+
+            <Row className="mt-3"></Row>
             <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
@@ -444,7 +463,7 @@ const BankerList = () => {
       {EditBankerModalGobalState && <EditBankerModal />}
 
       {BOPSystemAdminReducer.Loading && <Loader />}
-
+      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

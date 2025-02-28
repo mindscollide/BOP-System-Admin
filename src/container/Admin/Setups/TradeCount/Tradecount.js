@@ -16,8 +16,12 @@ import {
   transactionSide,
 } from "../../../../helpers/Dropdown";
 import { formatDate } from "../../../../helpers/reusableMethods";
+import { useDispatch } from "react-redux";
+import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { AddBankUserConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 
 const TradeCount = () => {
+  const dispatch = useDispatch();
   //Trade Count States
   const [tradeCount, setTradeCount] = useState({ ...tradeCountSchema });
 
@@ -295,7 +299,12 @@ const TradeCount = () => {
     console.log("searchData is", searchData);
   };
 
+  // show error message When user hit activate btn
   const handleResetEventButton = () => {
+    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+  };
+
+  const handleResetYes = () => {
     setTradeCount({
       ...tradeCountSchema,
       side: {
@@ -332,7 +341,7 @@ const TradeCount = () => {
       <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-3">
+            <Row className="mt-2 g-2">
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="TXN ID"
@@ -408,7 +417,7 @@ const TradeCount = () => {
               </Col>
             </Row>
 
-            <Row className="mt-3">
+            <Row className="mt-3 g-2">
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   placeholder="Account Number"
@@ -432,6 +441,8 @@ const TradeCount = () => {
                   showOtherDays="true"
                   inputClass={styles["Tradecount-Datepicker-left"]}
                   onChange={(date) => handleDateChange("dateFrom", date)}
+                  maxDate={tradeCount.dateTo.value}
+                  minDate={null}
                 />
                 <label className={styles["Tradecount-date-to"]}>to</label>
 
@@ -442,6 +453,8 @@ const TradeCount = () => {
                   showOtherDays="true"
                   inputClass={styles["Tradecount-Datepicker-right"]}
                   onChange={(date) => handleDateChange("dateTo", date)}
+                  minDate={tradeCount.dateFrom.value}
+                  maxDate={null}
                 />
               </Col>
               <Col
@@ -462,7 +475,7 @@ const TradeCount = () => {
                   className={styles["tradeCount-Download-Excel-btn"]}
                 /> */}
                 <Button
-                  icon={<i class="icon-download"></i>}
+                  icon={<i className="icon-download"></i>}
                   className={styles["Export_Button"]}
                   text="Export"
                 />
@@ -494,6 +507,7 @@ const TradeCount = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
     </section>
   );
 };

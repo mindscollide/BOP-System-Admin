@@ -156,16 +156,16 @@ const EditCorporateModal = () => {
 
   useEffect(() => {
     if (
-      updateCorporate.firstName.value !== "" &&
-      updateCorporate.email.value !== "" &&
-      updateCorporate.corporateName.value !== "" &&
-      updateCorporate.RFQTimerTreasury.value !== "" &&
-      updateCorporate.RFQTimerCorporate.value !== "" &&
-      updateCorporate.activeUser.value !== ""
+      updateCorporate.firstName.value === "" ||
+      // updateCorporate.email.value === "" ||
+      // updateCorporate.corporateName.value === "" ||
+      updateCorporate.RFQTimerTreasury.value === "" ||
+      updateCorporate.RFQTimerCorporate.value === ""
+      // updateCorporate.activeUser.value === ""
     ) {
-      setIsActive(true);
-    } else {
       setIsActive(false);
+    } else {
+      setIsActive(true);
     }
   }, [
     updateCorporate,
@@ -215,10 +215,11 @@ const EditCorporateModal = () => {
                 name="email"
                 value={updateCorporate.email.value}
                 onChange={handleValueChangeAndValidation}
+                disable
               />
             </Col>
 
-            <Col className="d-flex justify-content-start">
+            {/* <Col className="d-flex justify-content-start">
               <p
                 className={
                   errorShow &&
@@ -231,7 +232,7 @@ const EditCorporateModal = () => {
               >
                 Email address with domain of bop is required
               </p>
-            </Col>
+            </Col> */}
           </Row>
 
           <Row className="mt-3">
@@ -245,6 +246,7 @@ const EditCorporateModal = () => {
                 name={"corporateName"}
                 value={updateCorporate.corporateName.value}
                 onChange={handleValueChangeAndValidation}
+                disable={true}
               />
             </Col>
           </Row>
@@ -356,7 +358,7 @@ const EditCorporateModal = () => {
               className="d-flex justify-content-center gap-2"
             >
               <Button
-                icon={<i class="icon-refresh"></i>}
+                icon={<i className="icon-refresh"></i>}
                 text={"Update"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
@@ -365,7 +367,7 @@ const EditCorporateModal = () => {
               />
 
               <Button
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Discard"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

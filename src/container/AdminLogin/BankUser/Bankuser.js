@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./Bankuser.module.css";
 import { Row, Col } from "react-bootstrap";
 import {
@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import AddBankUserModal from "./AddBankUserModal/AddBankUserModal";
 import {
   AdduserModalSystemAdmin,
+  // DeleteCorporateModalSystemAdmin,
+  AddBankUserConfirmationModalSystemAdmin,
   editBankUserModalSystemAdmin,
 } from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
@@ -26,19 +28,27 @@ import {
 import { useNavigate } from "react-router-dom";
 import { validateBopEmail } from "../../../utils/regexUtil";
 import { roleOptions } from "../../../helpers/Dropdown";
-
+import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+// import ActivateConfirmationModal from "./ActivateConfirmationModal/ActivateConfirmationModal";
 const Bankuser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { BOPSystemAdminModal } = useSelector((state) => state);
   //Dummy employee ID
   const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
 
+  // const modalforactivationconfirmation = useSelector(
+  //   (state) => state.BOPSystemAdminModal.deleteCorporateModal
+  // );
+
+  const AddBankUserConfirmationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
+  );
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([
-    { value: "Gulshan", label: "Gulshan" },
-    { value: "Saddar", label: "Saddar" },
-    { value: "Clifton", label: "Clifton" },
+    { value: "1234 - Gulshan", label: "1234 - Gulshan" },
+    { value: "2342 - Saddar", label: "2342 - Saddar" },
+    { value: "4563 - Clifton", label: "4563 - Clifton" },
   ]);
 
   //Global Staate
@@ -105,27 +115,77 @@ const Bankuser = () => {
     let name = e.target.name;
     let value = e.target.value;
 
-    if (name === "EmployeeID" && value !== "") {
+    // if (name === "EmployeeID" && value !== "") {
+    //   let valueCheck = value.replace(/[^0-9]/g, "");
+    //   if (valueCheck !== "") {
+    //     setAddBankUser({
+    //       ...addBankUser,
+    //       EmployeeID: {
+    //         value: valueCheck.trimStart(),
+    //         errorMessage: "",
+    //         errorStatus: false,
+    //       },
+    //     });
+    //   } else if (name === "EmployeeID" && value.length < 5) {
+    //     setAddBankUser({
+    //       ...addBankUser,
+    //       EmployeeID: {
+    //         value: "",
+    //         errorMessage: "ID must be 4 digits",
+    //         errorStatus: true,
+    //       },
+    //     });
+    //     console.log("in this block");
+    //   }
+    // } else if (name === "EmployeeID" && value === "") {
+    //   setAddBankUser({
+    //     ...addBankUser,
+    //     EmployeeID: {
+    //       value: "",
+    //       errorMessage: "",
+    //       errorStatus: true,
+    //     },
+    //   });
+    //   console.log("in 2nd block");
+    // }
+    if (name === "EmployeeID") {
       let valueCheck = value.replace(/[^0-9]/g, "");
+
       if (valueCheck !== "") {
+        let errorMessage = "";
+        let errorStatus = false;
+
+        // Check if the length is less than 4 digits
+        if (valueCheck.length < 4) {
+          errorMessage = "ID must be 4 digits";
+          errorStatus = true;
+        }
+        // Check if the ID already exists in dummyEmployeeIDs
+        else if (dummyEmployeeIDs.includes(valueCheck)) {
+          errorMessage = `Employee ID till ${
+            dummyEmployeeIDs[dummyEmployeeIDs.length - 1]
+          } is already used`;
+          errorStatus = true;
+        }
+
         setAddBankUser({
           ...addBankUser,
           EmployeeID: {
             value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
+            errorMessage: errorMessage,
+            errorStatus: errorStatus,
+          },
+        });
+      } else {
+        setAddBankUser({
+          ...addBankUser,
+          EmployeeID: {
+            value: "",
+            errorMessage: "ID must be 4 digits",
+            errorStatus: true,
           },
         });
       }
-    } else if (name === "EmployeeID" && value === "") {
-      setAddBankUser({
-        ...addBankUser,
-        EmployeeID: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
     }
 
     if (name === "firstName" && value !== "") {
@@ -176,12 +236,18 @@ const Bankuser = () => {
             errorMessage: "",
             errorStatus: false,
           },
+          email: {
+            value: value.trimStart() + "@bop.com",
+            errorMessage: "",
+            errorStatus: false,
+          },
         });
       }
     } else if (name === "ldapAccount" && value === "") {
       setAddBankUser({
         ...addBankUser,
         ldapAccount: { value: "", errorMessage: "", errorStatus: false },
+        email: { value: "", errorMessage: "", errorStatus: false },
       });
     }
 
@@ -204,30 +270,30 @@ const Bankuser = () => {
       });
     }
 
-    if (name === "email" && value !== "") {
-      // Remove all spaces from the input
-      const trimmedValue = value.replace(/\s+/g, "");
+    // if (name === "email" && value !== "") {
+    //   // Remove all spaces from the input
+    //   const trimmedValue = value.replace(/\s+/g, "");
 
-      if (trimmedValue !== "") {
-        setAddBankUser({
-          ...addBankUser,
-          email: {
-            value: trimmedValue,
-            errorMessage: "",
-            errorStatus: false,
-          },
-        });
-      }
-    } else if (name === "email" && value === "") {
-      setAddBankUser({
-        ...addBankUser,
-        email: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
-    }
+    //   if (trimmedValue !== "") {
+    //     setAddBankUser({
+    //       ...addBankUser,
+    //       email: {
+    //         value: trimmedValue,
+    //         errorMessage: "",
+    //         errorStatus: false,
+    //       },
+    //     });
+    //   }
+    // } else if (name === "email" && value === "") {
+    //   setAddBankUser({
+    //     ...addBankUser,
+    //     email: {
+    //       value: "",
+    //       errorMessage: "",
+    //       errorStatus: true,
+    //     },
+    //   });
+    // }
   };
 
   const bankSelectRoleHandler = async (selectedRole) => {
@@ -240,6 +306,15 @@ const Bankuser = () => {
       roleID: { ...prevState.roleID, value: selectedRole.value },
       branchID: { value: "" },
     }));
+    // Automatically select the first branch option if the role is "Branch"
+    if (selectedRole.value === "Branch" && branchOptions.length > 0) {
+      const firstBranchOption = branchOptions[0];
+      setBranchRole(firstBranchOption);
+      setAddBankUser((prevState) => ({
+        ...prevState,
+        branchID: { ...prevState.branchID, value: firstBranchOption.value },
+      }));
+    }
   };
 
   const branchSelectRoleHandler = async (selectedBranch) => {
@@ -288,6 +363,11 @@ const Bankuser = () => {
 
   // show error message When user hit activate btn
   const handleActivateButton = () => {
+    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+  };
+
+  const handleConfirmationYes = useCallback(() => {
+    // dispatch(AddBankUser);
     let employeeID = addBankUser.EmployeeID.value;
     if (
       addBankUser.firstName.value !== "" &&
@@ -302,7 +382,6 @@ const Bankuser = () => {
         parseInt(dummyEmployeeIDs[dummyEmployeeIDs.length - 1])
       ) {
         setErrorShow(false);
-
         //Validating email address
         if (validateBopEmail(addBankUser.email.value)) {
           setErrorShow(false);
@@ -325,7 +404,7 @@ const Bankuser = () => {
           dispatch(CreateBankUserRequestAPI(navigate, newData));
           setOpen({
             open: true,
-            message: "Hello CreateBankUserRequestAPI is dispatched",
+            message: "CreateBankUserRequestAPI is dispatched",
           });
         } else {
           setErrorShow(true);
@@ -339,10 +418,9 @@ const Bankuser = () => {
             errorStatus: true,
           },
         });
-        // setErrorShow(true);
       }
     }
-  };
+  }, [addBankUser]);
 
   // Handle File upload
   const HandleFileUpload = (data) => {
@@ -362,7 +440,7 @@ const Bankuser = () => {
   //Handle activate button when branch is selected
   useEffect(() => {
     if (
-      addBankUser.EmployeeID.value !== "" &&
+      addBankUser.EmployeeID.errorStatus !== true &&
       addBankUser.firstName.value !== "" &&
       addBankUser.roleID.value !== "" &&
       addBankUser.ldapAccount.value !== "" &&
@@ -384,6 +462,10 @@ const Bankuser = () => {
     }
   }, [addBankUser]);
 
+  console.log(
+    "addBankUser.EmployeeID.errorMessage",
+    addBankUser.EmployeeID.value.length
+  );
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -410,6 +492,7 @@ const Bankuser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
+
                       <Col lg={5} md={5} sm={12}>
                         <TextField
                           name={"EmployeeID"}
@@ -418,7 +501,16 @@ const Bankuser = () => {
                           maxLength={4}
                           onChange={addBankUserValidateHandler}
                         />
-                        <Row>
+                        {addBankUser.EmployeeID.errorStatus && (
+                          <Row>
+                            <Col className="d-flex justify-content-start">
+                              <p className={styles["bankErrorMessage"]}>
+                                {addBankUser.EmployeeID.errorMessage}
+                              </p>
+                            </Col>
+                          </Row>
+                        )}
+                        {/* <Row>
                           <Col className="d-flex justify-content-start">
                             <p
                               className={
@@ -432,7 +524,7 @@ const Bankuser = () => {
                               number is already used{" "}
                             </p>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Col>
 
                       <Col lg={4} md={4} sm={4}>
@@ -455,25 +547,7 @@ const Bankuser = () => {
                           onChange={addBankUserValidateHandler}
                           labelClass="d-none"
                         />
-                        <Row className="mt-3"></Row>
-                        {/* <Row>
-                          <Col
-                            lg={12}
-                            md={12}
-                            sm={12}
-                            className="d-flex justify-content-start"
-                          >
-                            <p
-                              className={
-                                errorShow && addBankUser.firstName.value === ""
-                                  ? styles["bankErrorMessage"]
-                                  : styles["bankErrorMessage_hidden"]
-                              }
-                            >
-                              First Name is required
-                            </p>
-                          </Col>
-                        </Row> */}
+                        {/* <Row className="mt-3"></Row> */}
                       </Col>
                     </Row>
 
@@ -493,7 +567,7 @@ const Bankuser = () => {
                           isSearchable={true}
                           className={styles["react-select-field"]}
                         />
-                        <Row className="mt-3"></Row>
+                        {/* <Row className="mt-3"></Row> */}
 
                         {/* <Row>
                           <Col className="d-flex justify-content-start">
@@ -510,7 +584,7 @@ const Bankuser = () => {
                         </Row> */}
                       </Col>
 
-                      <Col lg={4} md={4} sm={12}></Col>
+                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     {roles.value === "Branch" && (
@@ -552,7 +626,7 @@ const Bankuser = () => {
                               onClick={handleOpenEditBankUserModal}
                             />
                           </Col>
-                          <Row className="mt-3"></Row>
+                          {/* <Row className="mt-3"></Row> */}
                         </Row>
 
                         <Row className="mt-3">
@@ -572,7 +646,7 @@ const Bankuser = () => {
                               labelClass="d-none"
                             />
                           </Col>
-                          <Row className="mt-3"></Row>
+                          {/* <Row className="mt-3"></Row> */}
 
                           <Col lg={4} md={4} sm={12}></Col>
                         </Row>
@@ -594,7 +668,7 @@ const Bankuser = () => {
                           labelClass="d-none"
                           maxLength={50}
                         />
-                        <Row className="mt-3"></Row>
+                        {/* <Row className="mt-3"></Row> */}
                       </Col>
                     </Row>
 
@@ -609,13 +683,13 @@ const Bankuser = () => {
                         <TextField
                           name={"email"}
                           value={addBankUser.email.value}
-                          // disable={true}
-                          onChange={addBankUserValidateHandler}
+                          disable={true}
+                          // onChange={addBankUserValidateHandler}
                           labelClass="d-none"
-                          maxLength={50}
+                          // maxLength={50}
                         />
 
-                        <Row>
+                        {/* <Row>
                           <Col className="d-flex justify-content-start">
                             <p
                               className={
@@ -630,7 +704,7 @@ const Bankuser = () => {
                               Email address with domain of bop is required
                             </p>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Col>
                     </Row>
 
@@ -684,6 +758,10 @@ const Bankuser = () => {
 
       {AddBankUserModalGobalState && <AddBankUserModal />}
       {EditBankUserModalGobalState && <EditBankUserModal />}
+      {AddBankUserConfirmationModal && (
+        <ActivateConfirmationModal onConfirm={handleConfirmationYes} />
+      )}
+
       {BOPSystemAdminReducer.Loading && <Loader />}
 
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
