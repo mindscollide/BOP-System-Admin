@@ -15,7 +15,8 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
 import {
-  AddBankUserConfirmationModalSystemAdmin,
+  // AddBankUserConfirmationModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
   corporatePlusIconModalSystemAdmin,
   editCompanyModalSystemAdmin,
 } from "../../../store/actions/BOPSystemAdminModalsActions";
@@ -206,7 +207,7 @@ const CorporateUser = () => {
   // show error message When user hit activate btn
   const handleActivateButton = () => {
     if (validateBopEmail(corporateUser.email.value)) {
-      dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+      dispatch(ConfirmationModalSystemAdmin(true));
     } else {
       setErrorShow(true);
     }

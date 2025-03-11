@@ -15,8 +15,9 @@ import AddBankUserModal from "./AddBankUserModal/AddBankUserModal";
 import {
   AdduserModalSystemAdmin,
   // DeleteCorporateModalSystemAdmin,
-  AddBankUserConfirmationModalSystemAdmin,
+  // AddBankUserConfirmationModalSystemAdmin,
   editBankUserModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
 } from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
 import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
@@ -363,7 +364,7 @@ const Bankuser = () => {
 
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    dispatch(ConfirmationModalSystemAdmin(true));
   };
 
   const handleConfirmationYes = useCallback(() => {

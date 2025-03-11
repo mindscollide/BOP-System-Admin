@@ -1,3 +1,4 @@
+import { KeyboardReturnSharp } from "@material-ui/icons";
 import * as actions from "../action_types";
 
 const AdduserModalSystemAdmin = (response, message) => {
@@ -28,6 +29,21 @@ const DeleteCorporateModalSystemAdmin = (response, message) => {
 const AddBankUserConfirmationModalSystemAdmin = (response, message) => {
   return {
     type: actions.ADD_BANK_USER_CONFIRMATION_MODAL,
+    response: response,
+    message: message,
+  };
+};
+const ConfirmationModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.CONFIRMATION_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
+const TradeCountCommentModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.TRADE_COUNT_COMMENT_MODAL,
     response: response,
     message: message,
   };
@@ -90,5 +106,7 @@ export {
   editCompanyModalSystemAdmin,
   editBankUserModalSystemAdmin,
   editTradeAccessManagementModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
   AddBankUserConfirmationModalSystemAdmin,
+  TradeCountCommentModalSystemAdmin,
 };

@@ -22,20 +22,31 @@ import { useSelector } from "react-redux";
 import { roleOptions } from "../../../../helpers/Dropdown";
 import { bankListSchema } from "../../../../utils/schemas";
 import {
-  AddBankUserConfirmationModalSystemAdmin,
+  // AddBankUserConfirmationModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
   editBankUserModalSystemAdmin,
 } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { Popover } from "antd";
 // import { render } from "@testing-library/react";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  // State to control visibility of export buttons
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  // Function to toggle the export options (PDF & Excel buttons)
+  const toggleExportOptions = () => {
+    setShowExportOptions(!showExportOptions);
+  };
 
   //State for category
   const [Role, setRole] = useState("");
 
   // //State for category
   // const [category, setCategory] = useState("");
+
+  // //Sate for handling export options
+  // const [showExportOptions, setShowExportOptions] = useState(false);
 
   //Edit Corporate Use Modal Calling
   const EditBankerModalGobalState = useSelector(
@@ -55,6 +66,29 @@ const BankerList = () => {
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
+
+  //Metod to perform action of Export options
+  const ExportOptions = ({ onClose }) => {
+    return (
+      <div className={styles["export-options"]}>
+        <button
+          onClick={() => {
+            /* Handle CSV export */
+          }}
+        >
+          Export as CSV
+        </button>
+        <button
+          onClick={() => {
+            /* Handle PDF export */
+          }}
+        >
+          Export as PDF
+        </button>
+        <button onClick={onClose}>Close</button>
+      </div>
+    );
+  };
 
   //Banker List validate handler
   const BankerListValidateHandler = (e) => {
@@ -163,7 +197,7 @@ const BankerList = () => {
 
   // show error message When user hit activate btn
   const handleReset = () => {
-    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    dispatch(ConfirmationModalSystemAdmin(true));
   };
 
   //Handle Reset
@@ -360,6 +394,34 @@ const BankerList = () => {
       ),
     },
   ];
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+  const handleExport = (format) => {
+    if (format === "excel") {
+      exportToExcel();
+    } else if (format === "pdf") {
+      exportToPDF();
+    }
+  };
+
+  const exportToExcel = () => {
+    // const worksheet = XLSX.utils.json_to_sheet(data);
+    // const workbook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
+    // XLSX.writeFile(workbook, "CorporateList.xlsx");
+    console.log("Doc saved as Excel");
+  };
+
+  const exportToPDF = () => {
+    // const doc = new jsPDF();
+    // doc.autoTable({
+    //   head: [columns.map((col) => col.title)],
+    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
+    // });
+    // doc.save("CorporateList.pdf");
+    console.log("doc saved as pdf");
+  };
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
@@ -429,17 +491,49 @@ const BankerList = () => {
                   text="Reset"
                   onClick={handleReset}
                 />
-                <Button
+                {/* <Button
                   icon={<i className="icon-download"></i>}
                   className={styles["Export_Button"]}
                   text="Export"
                   iconClass={styles["resetIconClass"]}
-                />
+                  // onClick={() => setShowExportOptions(!showExportOptions)}
+                /> */}
+                <Popover
+                  content={
+                    <div className={styles["export-options"]}>
+                      <Button
+                        icon={<i className="icon-download-excel"></i>}
+                        onClick={() => handleExport("excel")}
+                        className={styles["export-button"]}
+                      />
+                      <Button
+                        // text="PDF"
+                        icon={<i className="icon-download-pdf"></i>}
+                        onClick={() => handleExport("pdf")}
+                        className={styles["export-button"]}
+                      />
+                    </div>
+                  }
+                  // title="Title"
+                  trigger="click"
+                  open={open}
+                  onOpenChange={handleOpenChange}
+                  placement="bottomLeft"
+                  arrow={false}
+                >
+                  <Button
+                    icon={<i className="icon-download"></i>}
+                    className={styles["Export_Button"]}
+                    text="Export"
+                    iconClass={styles["resetIconClass"]}
+                    onClick={toggleExportOptions}
+                  />
+                </Popover>
               </Col>
             </Row>
 
-            <Row className="mt-3"></Row>
-            <Row className="mt-3">
+            {/* <Row className="mt-3"></Row> */}
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
@@ -465,6 +559,9 @@ const BankerList = () => {
       {BOPSystemAdminReducer.Loading && <Loader />}
       {<ActivateConfirmationModal onConfirm={handleResetYes} />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
+      {/* {showExportOptions && (
+        <ExportOptions onClose={() => setShowExportOptions(false)} />
+      )} */}
     </section>
   );
 };

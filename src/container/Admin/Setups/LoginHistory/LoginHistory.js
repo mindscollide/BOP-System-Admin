@@ -14,8 +14,12 @@ import { categoryOptions, roleOptions } from "../../../../helpers/Dropdown";
 import { loginHistorySchema } from "../../../../utils/schemas";
 import { formatDate } from "../../../../helpers/reusableMethods";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import { AddBankUserConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  AddBankUserConfirmationModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
+} from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
+import { Popover } from "antd";
 const LoginHistory = () => {
   //Login History States
   const [loginHistory, setLoginHistory] = useState({
@@ -25,6 +29,16 @@ const LoginHistory = () => {
   //State for category and role dropdown
   const [Role, setRole] = useState("");
   const [category, setCategory] = useState("");
+
+  // State to control visibility of export buttons
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  // Function to toggle the export options (PDF & Excel buttons)
+  //Checking snakbar state
+  const [open, setOpen] = useState(false);
+
+  const toggleExportOptions = () => {
+    setShowExportOptions(!showExportOptions);
+  };
 
   //Login History validate handler
   const LoginHistoryValidateHandler = (e) => {
@@ -239,7 +253,7 @@ const LoginHistory = () => {
 
   // show error message When user hit activate btn
   const handleResetEventButton = () => {
-    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    dispatch(ConfirmationModalSystemAdmin(true));
   };
 
   //Handle Resest Button
@@ -275,6 +289,56 @@ const LoginHistory = () => {
         errorStatus: false,
       },
     }));
+  };
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+  const handleExport = (format) => {
+    if (format === "excel") {
+      exportToExcel();
+    } else if (format === "pdf") {
+      exportToPDF();
+    }
+  };
+
+  const exportToExcel = () => {
+    // const worksheet = XLSX.utils.json_to_sheet(data);
+    // const workbook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
+    // XLSX.writeFile(workbook, "CorporateList.xlsx");
+    console.log("Doc saved as Excel");
+  };
+
+  const exportToPDF = () => {
+    // const doc = new jsPDF();
+    // doc.autoTable({
+    //   head: [columns.map((col) => col.title)],
+    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
+    // });
+    // doc.save("CorporateList.pdf");
+    console.log("doc saved as pdf");
+  };
+  //Metod to perform action of Export options
+  const ExportOptions = ({ onClose }) => {
+    return (
+      <div className={styles["export-options"]}>
+        <button
+          onClick={() => {
+            /* Handle CSV export */
+          }}
+        >
+          Export as CSV
+        </button>
+        <button
+          onClick={() => {
+            /* Handle PDF export */
+          }}
+        >
+          Export as PDF
+        </button>
+        <button onClick={onClose}>Close</button>
+      </div>
+    );
   };
 
   return (
@@ -401,15 +465,40 @@ const LoginHistory = () => {
                   onClick={handleResetEventButton}
                 />
 
-                <Button
-                  icon={<i className="icon-download"></i>}
-                  className={styles["Export_Button"]}
-                  text="Export"
-                />
+                <Popover
+                  content={
+                    <div className={styles["export-options"]}>
+                      <Button
+                        text="Excel"
+                        onClick={() => handleExport("excel")}
+                        className={styles["export-button"]}
+                      />
+                      <Button
+                        text="PDF"
+                        onClick={() => handleExport("pdf")}
+                        className={styles["export-button"]}
+                      />
+                    </div>
+                  }
+                  // title="Title"
+                  trigger="click"
+                  open={open}
+                  onOpenChange={handleOpenChange}
+                  placement="bottomRight"
+                  arrow={false}
+                >
+                  <Button
+                    icon={<i className="icon-download"></i>}
+                    className={styles["Export_Button"]}
+                    text="Export"
+                    iconClass={styles["resetIconClass"]}
+                    onClick={toggleExportOptions}
+                  />
+                </Popover>
               </Col>
             </Row>
 
-            <Row className="mt-3">
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>

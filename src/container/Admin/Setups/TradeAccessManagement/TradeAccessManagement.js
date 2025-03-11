@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import EditModalTradeAccessManagement from "./EditModalTradeAccessManagement/EditModalTradeAccessManagement";
 import { useDispatch } from "react-redux";
 import { editTradeAccessManagementModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { tradeAccessManagementSchema } from "../../../../utils/schemas";
 const TradeAccessManagement = () => {
   const { Option } = Select;
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const TradeAccessManagement = () => {
     (state) => state.BOPSystemAdminModal.editModalTradeAccessManagement
   );
   //States
-  const [value, setValue] = useState("Corporate");
+  const [radioValue, setRadioValue] = useState("Corporate");
   const [branchName, setBranchName] = useState({
     Name: {
       value: "",
@@ -41,7 +42,7 @@ const TradeAccessManagement = () => {
   //Radio Buttons Management
   const handleChange = (e) => {
     console.log("radio checked", e.target.value);
-    setValue(e.target.value);
+    setRadioValue(e.target.value);
   };
 
   //Options for radio
@@ -179,7 +180,7 @@ const TradeAccessManagement = () => {
                 <CustomRadio
                   options={radioOptions}
                   onChange={handleChange}
-                  value={value}
+                  value={radioValue}
                   name="customRadio"
                   size="default"
                   className={styles["custom-radio-group"]}

@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import EditCorporateModal from "./EditCorporateModal/EditCorporateModal";
 import {
   AddBankUserConfirmationModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
   EditCorporateModalSystemAdmin,
   UserDetailsCorporateModalSystemAdmin,
@@ -30,6 +31,7 @@ import { corporateListSchema } from "../../../../utils/schemas";
 import { categoryOptions } from "../../../../helpers/Dropdown";
 import ExportShowComponent from "../BankerList/ExportShowComponent";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { Popover } from "antd";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
@@ -196,7 +198,8 @@ const CorporateList = () => {
 
   // show error message When user hit activate btn
   const handleReset = () => {
-    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    // dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    dispatch(ConfirmationModalSystemAdmin(true));
   };
 
   const handleResetYes = () => {
@@ -372,6 +375,40 @@ const CorporateList = () => {
     },
   ];
 
+  const [open, setOpen] = useState(false);
+  const hide = () => {
+    setOpen(false);
+  };
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+
+  const handleExport = (format) => {
+    if (format === "excel") {
+      exportToExcel();
+    } else if (format === "pdf") {
+      exportToPDF();
+    }
+  };
+
+  const exportToExcel = () => {
+    // const worksheet = XLSX.utils.json_to_sheet(data);
+    // const workbook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
+    // XLSX.writeFile(workbook, "CorporateList.xlsx");
+    console.log("Doc saved as Excel");
+  };
+
+  const exportToPDF = () => {
+    // const doc = new jsPDF();
+    // doc.autoTable({
+    //   head: [columns.map((col) => col.title)],
+    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
+    // });
+    // doc.save("CorporateList.pdf");
+    console.log("doc saved as pdf");
+  };
+
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
@@ -448,17 +485,40 @@ const CorporateList = () => {
                   iconClass={styles["resetIconClass"]}
                   onClick={handleReset}
                 />
-                <Button
-                  icon={<i class="icon-download"></i>}
-                  className={styles["Export_Button"]}
-                  text="Export"
-                  iconClass={styles["resetIconClass"]}
-                  onClick={toggleExportOptions}
-                />
+                <Popover
+                  content={
+                    <div className={styles["export-options"]}>
+                      <Button
+                        text="Excel"
+                        onClick={() => handleExport("excel")}
+                        className={styles["export-button"]}
+                      />
+                      <Button
+                        text="PDF"
+                        onClick={() => handleExport("pdf")}
+                        className={styles["export-button"]}
+                      />
+                    </div>
+                  }
+                  // title="Title"
+                  trigger="click"
+                  open={open}
+                  onOpenChange={handleOpenChange}
+                  placement="bottomRight"
+                  arrow={false}
+                >
+                  <Button
+                    icon={<i className="icon-download"></i>}
+                    className={styles["Export_Button"]}
+                    text="Export"
+                    iconClass={styles["resetIconClass"]}
+                    onClick={toggleExportOptions}
+                  />
+                </Popover>
               </Col>
             </Row>
 
-            <Row className="mt-3"></Row>
+            {/* <Row className="mt-3"></Row>
 
             {showExportOptions && (
               <Row className="mt-3">
@@ -468,13 +528,13 @@ const CorporateList = () => {
                   sm={12}
                   className="d-flex justify-content-center gap-1"
                 >
-                  {/* Export as PDF Button */}
+                //Export as PDF Button
                   <Button
                     variant="primary"
                     text="Export as PDF"
                     onClick={() => console.log("Exporting as PDF")}
                   />
-                  {/* Export as Excel Button */}
+                // Export as Excel Button 
                   <Button
                     variant="secondary"
                     text="Export as Excel"
@@ -482,9 +542,9 @@ const CorporateList = () => {
                   />
                 </Col>
               </Row>
-            )}
+            )} */}
 
-            <Row className="mt-3">
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>

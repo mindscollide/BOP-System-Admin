@@ -311,7 +311,9 @@ const deletecorporatecategoryfailed = (message) => {
 };
 
 const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
+
   return async (dispatch) => {
     dispatch(deletecorporatecategoryinit());
     let form = new FormData();

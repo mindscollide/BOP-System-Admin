@@ -148,3 +148,11 @@
 .InactiveStatus {
   color: #cf5b5b !important;
 }
+.export-button {
+  /* display: flex !important;
+  justify-content: center; */
+  /* background: none !important; */
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}

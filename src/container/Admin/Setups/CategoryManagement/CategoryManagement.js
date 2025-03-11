@@ -302,7 +302,7 @@ const CategoryManagement = () => {
     if (Object.keys(deletecategoryData).length > 0) {
       setDeltecategory(deletecategoryData);
     }
-    console.log("deletecategoryDatadeletecategoryData", deletecategoryData);
+    // console.log("deletecategoryDatadeletecategoryData", deletecategoryData);
   }, [auth.DeleteCategory]);
 
   // store data of corporates in loacal variable
@@ -313,7 +313,7 @@ const CategoryManagement = () => {
     }
   }, [auth.Corporates]);
 
-  console.log("authauth12 UpdateCategoryMap corporates", corporates);
+  // console.log("authauth12 UpdateCategoryMap corporates", corporates);
 
   //Sliders Function
   const SlideLeft = () => {
@@ -329,7 +329,7 @@ const CategoryManagement = () => {
   //  for drage card
   const handleDragEnd = (results) => {
     const { source, destination, type } = results;
-    console.log("handleDragEnd", results);
+    // console.log("handleDragEnd", results);
     if (!destination) return;
 
     if (
@@ -355,16 +355,16 @@ const CategoryManagement = () => {
       const storeSourceIndex = corporates.findIndex(
         (store) => store.categoryID === source.droppableId
       );
-      console.log("handleDragEnd for sender ", storeSourceIndex);
+      // console.log("handleDragEnd for sender ", storeSourceIndex);
 
       const storeDestinationIndex = corporates.findIndex(
         (store) => store.categoryID === destination.droppableId
       );
 
-      console.log("handleDragEnd for reciver", storeDestinationIndex);
-      console.log("handleDragEnd packege", results.draggableId);
-      console.log("handleDragEnd", corporates[storeSourceIndex]);
-      console.log("handleDragEnd", corporates[storeSourceIndex]);
+      // console.log("handleDragEnd for reciver", storeDestinationIndex);
+      // console.log("handleDragEnd packege", results.draggableId);
+      // console.log("handleDragEnd", corporates[storeSourceIndex]);
+      // console.log("handleDragEnd", corporates[storeSourceIndex]);
       let data = {
         CategoryID: corporates[storeDestinationIndex].categoryID,
         CorporateId: results.draggableId,
@@ -375,13 +375,13 @@ const CategoryManagement = () => {
 
   // for corporate data ui
   const showCards = (data) => {
-    console.log("showCardsshowCards", data);
+    // console.log("showCardsshowCards", data);
     if (Object.keys(data).length > 0) {
       return (
         <Droppable droppableId={data.categoryID}>
           {(provided) => (
             <Row style={{ height: "80vh" }}>
-              {console.log("authauth1234 ClientsClients", data)}
+              {/* {console.log("authauth1234 ClientsClients", data)} */}
               <Col
                 lg={12}
                 md={12}
@@ -426,7 +426,7 @@ const CategoryManagement = () => {
                                       {activeKey.includes("1") && (
                                         <Button
                                           icon={
-                                            <div className="special-component-category">
+                                            <div className="special-component-category ">
                                               <i className="icon-trash color-red"></i>
                                             </div>
                                           }
@@ -595,15 +595,15 @@ const CategoryManagement = () => {
         errorStatus: false,
       },
     });
-    console.log(" i am clicked", formatNumberForFourDecimal(data.bidSpread));
+    // console.log(" i am clicked", formatNumberForFourDecimal(data.bidSpread));
 
     setEditCategoryList([recorde]);
   };
 
   const checkForEdit = (recorde) => {
     let newdata = editCategoryList.find((element) => element === recorde);
-    console.log(newdata, "gggggggggggggg");
-    console.log(recorde, "hhhhhhh");
+    // console.log(newdata, "gggggggggggggg");
+    // console.log(recorde, "hhhhhhh");
     if (newdata !== undefined) {
       return true;
     } else {
@@ -617,7 +617,7 @@ const CategoryManagement = () => {
 
     if (name === "nameUpdate" && value !== "") {
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
+      // console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setCategoryUpdate({
           ...categoryupdate,
@@ -637,7 +637,7 @@ const CategoryManagement = () => {
 
     if (name === "Bidupdated" && value !== "") {
       let valueCheck = value.replace(/[^0-9]+/g, "");
-      console.log("valuevalueemailvaluevalueemail", value);
+      // console.log("valuevalueemailvaluevalueemail", value);
       if (forNumbersOnly(value.trimStart()) !== "") {
         if (numberformatgerWithFourDecimalValues(value.trimStart())) {
           setCategoryUpdate({
@@ -662,10 +662,10 @@ const CategoryManagement = () => {
     }
 
     if (name === "Offerupdate" && value !== "") {
-      console.log(
-        "valuevalueemailvaluevalueemail",
-        numberformatgerWithFourDecimalValues(value.trimStart())
-      );
+      // console.log(
+      //   "valuevalueemailvaluevalueemail",
+      //   numberformatgerWithFourDecimalValues(value.trimStart())
+      // );
       if (forNumbersOnly(value.trimStart()) !== "") {
         if (numberformatgerWithFourDecimalValues(value.trimStart())) {
           setCategoryUpdate({
@@ -803,7 +803,7 @@ const CategoryManagement = () => {
 
   const handleDelteCliked = (id) => {
     let bankId = localStorage.getItem("bankID");
-    console.log("handleDelteClikedhandleDelteCliked", id);
+    // console.log("handleDelteClikedhandleDelteCliked", id);
     let data = {
       CategoryId: parseInt(id),
       BankID: parseInt(bankId),
@@ -813,7 +813,7 @@ const CategoryManagement = () => {
 
   const checkForAdd = (recorde) => {
     let newdata = addCategoryList.find((element) => element === recorde);
-    console.log(newdata, "hhhhhhh");
+    // console.log(newdata, "hhhhhhh");
     if (newdata !== undefined) {
       return true;
     } else {
@@ -826,7 +826,7 @@ const CategoryManagement = () => {
     let value = e.target.value;
     if (name === "name" && value !== "") {
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
+      // console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setadDdata({
           ...addData,
@@ -849,7 +849,7 @@ const CategoryManagement = () => {
     }
 
     if (name === "Bid" && value !== "") {
-      console.log("valuevalueemailvaluevalueemail", value);
+      // console.log("valuevalueemailvaluevalueemail", value);
       if (forNumbersOnly(value.trimStart()) !== "") {
         if (numberformatgerWithFourDecimalValues(value.trimStart())) {
           setadDdata({
@@ -874,7 +874,7 @@ const CategoryManagement = () => {
     }
 
     if (name === "Offer" && value !== "") {
-      console.log("valuevalueemailvaluevalueemail", value);
+      // console.log("valuevalueemailvaluevalueemail", value);
       if (forNumbersOnly(value.trimStart()) !== "") {
         if (numberformatgerWithFourDecimalValues(value)) {
           setadDdata({
@@ -905,7 +905,7 @@ const CategoryManagement = () => {
       seterrormessege(false);
       let bankId = localStorage.getItem("bankID");
       let Userid = localStorage.getItem("userID");
-      console.log(" i am clicked", addData);
+      // console.log(" i am clicked", addData);
 
       let data = {
         Category: addData.category.value,
@@ -915,7 +915,7 @@ const CategoryManagement = () => {
         BankID: parseInt(bankId),
         UserId: parseInt(Userid),
       };
-      console.log(" i am clicked", data);
+      // console.log(" i am clicked", data);
 
       await dispatch(Addcategory(navigate, data));
     } else {
@@ -1263,7 +1263,7 @@ const CategoryManagement = () => {
                   {...outerProvided.droppableProps}
                 >
                   {corporates.map((data, index) => {
-                    console.log("datadatadata", data);
+                    // console.log("datadatadata", data);
                     return (
                       <>
                         {checkForEdit(data.categoryID) ? (

@@ -181,6 +181,11 @@ export const EDIT_TRADE_ACCESS_MANAGMENT_MODAL =
 export const ADD_BANK_USER_CONFIRMATION_MODAL =
   "ADD_BANK_USER_CONFIRMATION_MODAL";
 
+// Confirmation Modal
+export const CONFIRMATION_MODAL = "CONFIRMATION_MODAL";
+
+export const TRADE_COUNT_COMMENT_MODAL = "TRADE_COUNT_COMMENT_MODAL";
+
 // *******************************     END      ********************************************
 
 //Send Email For Reset Password

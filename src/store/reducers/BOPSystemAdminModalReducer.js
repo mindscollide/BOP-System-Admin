@@ -13,6 +13,8 @@ const initialState = {
   editBankUserModal: false,
   editModalTradeAccessManagement: false,
   addBankUserConfirmationModal: false,
+  confirmationModal: false,
+  tradeCountCommentModal: false,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -85,6 +87,20 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         addBankUserConfirmationModal: action.response,
+      };
+    }
+
+    case actions.CONFIRMATION_MODAL: {
+      return {
+        ...state,
+        confirmationModal: action.response,
+      };
+    }
+
+    case actions.TRADE_COUNT_COMMENT_MODAL: {
+      return {
+        ...state,
+        tradeCountCommentModal: action.response,
       };
     }
 

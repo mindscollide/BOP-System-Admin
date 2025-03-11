@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./EditModalTradeAccessManagement.module.css";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-import { editTradeAccessManagementModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  ConfirmationModalSystemAdmin,
+  editTradeAccessManagementModalSystemAdmin,
+} from "../../../../../store/actions/BOPSystemAdminModalsActions";
 import { Col, Row } from "react-bootstrap";
 import {
   Button,
@@ -16,6 +19,7 @@ import {
 import { updateCorporateDataSchema } from "../../../../../utils/schemas";
 import { instrumentType } from "../../../../../helpers/Dropdown";
 import DeleteConfirmationModal from "../../CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
+import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 const EditModalTradeAccessManagement = () => {
   const dispatch = useDispatch();
   const { BOPSystemAdminModal } = useSelector((state) => state);
@@ -30,6 +34,9 @@ const EditModalTradeAccessManagement = () => {
 
   //save changes modal
   const [saveChanges, setSaveChanges] = useState(false);
+
+  //disable and enable Save changes button
+  const [enableButton, setEnableButton] = useState(false);
 
   //handle No Button
   const handleNoButton = () => {
@@ -273,6 +280,10 @@ const EditModalTradeAccessManagement = () => {
 
   //Save Button
   const handleSaveChangesButton = () => {
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
+
+  const handleSaveChangesButtonYes = () => {
     if (
       updateCorporateData.TotalLimit.value !== "" &&
       updateCorporateData.InstrumentType.value !== "" &&
@@ -378,6 +389,35 @@ const EditModalTradeAccessManagement = () => {
   //     setErrorShow(true);
   //   }
   // };
+
+  useEffect(() => {
+    console.log("writing in useEffect");
+    const {
+      InstrumentType,
+      TotalLimit,
+      DefaultMinAmountLimit,
+      DefaultMaxAmountLimit,
+    } = updateCorporateData;
+
+    // Check if any field is empty
+    const isAnyFieldEmpty =
+      !InstrumentType.value ||
+      !TotalLimit.value ||
+      !DefaultMinAmountLimit.value ||
+      !DefaultMaxAmountLimit.value;
+
+    // Check if min limit is greater than max limit
+    const isMinGreaterThanMax =
+      parseInt(DefaultMinAmountLimit.value) >
+      parseInt(DefaultMaxAmountLimit.value);
+
+    // Disable button if any field is empty OR min > max
+    if (isAnyFieldEmpty || isMinGreaterThanMax) {
+      setEnableButton(false);
+    } else {
+      setEnableButton(true);
+    }
+  }, [updateCorporateData.InstrumentType.value, updateCorporateData]);
 
   // const data source
   return (
@@ -497,6 +537,7 @@ const EditModalTradeAccessManagement = () => {
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleSaveChangesButton}
+                disableBtn={!enableButton}
               />
 
               <Button
@@ -509,6 +550,7 @@ const EditModalTradeAccessManagement = () => {
             </Col>
           </Row>
           {saveChanges && <DeleteConfirmationModal />}
+          {<ActivateConfirmationModal onConfirm={handleSaveChangesButtonYes} />}
         </>
       }
     />

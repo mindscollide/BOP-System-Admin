@@ -14,7 +14,11 @@ import ParitySpotTable from "./ParitySpotTable";
 import CrossRateTable from "./CrossRateTable.js";
 import ForwardTable from "./ForwardTable.js";
 import DiscountingTable from "./DiscountingTable.js";
+import { useDispatch } from "react-redux";
+import { ConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions.js";
+import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal.js";
 const SpreadManagement = () => {
+  const dispatch = useDispatch();
   const defaultCategory = categoryOptions.find(
     (option) => option.value === "Category 1"
   );
@@ -25,6 +29,7 @@ const SpreadManagement = () => {
   const [discountingData, setDiscountingData] = useState(
     initialDiscountingState
   );
+  const [resetOrSaveComponent, setResetOrSaveComponent] = useState("");
 
   // Function to handle input changes in Parity Spot table
   const handleParitySpotInputChange = (index, field, value) => {
@@ -71,22 +76,53 @@ const SpreadManagement = () => {
 
   //reset Parity and Cross Rate to 0.0
   const handleResetParityAndCross = () => {
-    setParitySpotData(
-      parityData.map((row) => ({
-        ...row,
-        bidSpread: "0.0",
-        askSpread: "0.0",
-      }))
-    );
-    setCrossRateData(
-      crossData.map((row) => ({
-        ...row,
-        bidSpread: "0.0",
-        askSpread: "0.0",
-      }))
-    );
+    setResetOrSaveComponent("resetPartyAndCrossTable");
+    dispatch(ConfirmationModalSystemAdmin(true));
   };
 
+  const handleSaveParityAndCross = () => {
+    setResetOrSaveComponent("savePartyAndCrossTable");
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
+
+  const handleResetForward = () => {
+    setResetOrSaveComponent("resetForwardTable");
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
+
+  const handleResetDiscounting = () => {
+    setResetOrSaveComponent("resetDiscountingTable");
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
+
+  const handleResetOrSave = () => {
+    if (resetOrSaveComponent === "resetForwardTable") {
+      setForwardData(resetForwardState);
+    }
+    if (resetOrSaveComponent === "resetPartyAndCrossTable") {
+      setParitySpotData(
+        parityData.map((row) => ({
+          ...row,
+          bidSpread: "0.0",
+          askSpread: "0.0",
+        }))
+      );
+      setCrossRateData(
+        crossData.map((row) => ({
+          ...row,
+          bidSpread: "0.0",
+          askSpread: "0.0",
+        }))
+      );
+    }
+    if (resetOrSaveComponent === "resetDiscountingTable") {
+      setDiscountingData(resetDiscountingState);
+    }
+    if (resetOrSaveComponent === "savePartyAndCrossTable") {
+      console.log("here i am now");
+      saveData();
+    }
+  };
   //Reset Discouting Table to 0
   const resetDiscountingState = initialDiscountingState.map((row) => ({
     ...row,
@@ -116,7 +152,6 @@ const SpreadManagement = () => {
     jpyBid: "0.0",
     jpyAsk: "0.0",
   }));
-
   // useEffect(() => {}, [resetTableData]);
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
@@ -178,7 +213,8 @@ const SpreadManagement = () => {
                   icon={<i className="icon-save"></i>}
                   className={style["Search-btn-spreadManagement"]}
                   text="Save"
-                  onClick={() => saveData()}
+                  // onClick={() => saveData()}
+                  onClick={handleSaveParityAndCross}
                 />
               </Col>
             </Row>
@@ -205,7 +241,7 @@ const SpreadManagement = () => {
                   icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
-                  onClick={() => setForwardData(resetForwardState)}
+                  onClick={handleResetForward}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
@@ -237,7 +273,8 @@ const SpreadManagement = () => {
                   icon={<i className="icon-refresh"></i>}
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
-                  onClick={() => setDiscountingData(resetDiscountingState)}
+                  // onClick={() => setDiscountingData(resetDiscountingState)}
+                  onClick={handleResetDiscounting}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
@@ -249,6 +286,8 @@ const SpreadManagement = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {<ActivateConfirmationModal onConfirm={handleResetOrSave} />}
+      {/* {<ActivateConfirmationModal onConfirm={handleResetForwardYes} />} */}
     </section>
   );
 };

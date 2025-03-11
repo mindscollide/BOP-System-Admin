@@ -18,7 +18,14 @@ import {
 import { formatDate } from "../../../../helpers/reusableMethods";
 import { useDispatch } from "react-redux";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import { AddBankUserConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  AddBankUserConfirmationModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
+  TradeCountCommentModalSystemAdmin,
+} from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { Popover } from "antd";
+import { useSelector } from "react-redux";
+import CommentModal from "./CommentModal/CommentModal";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
@@ -30,6 +37,15 @@ const TradeCount = () => {
 
   //Sate for Nature
   const [nature, setNature] = useState("");
+
+  //Checking snakbar state
+  const [open, setOpen] = useState(false);
+
+  //UserDetails Corporate Use Modal Calling
+  const TradeCountCommentModalGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.tradeCountCommentModal
+  );
+
   //handle Edit Corporate
   const handleEditBanker = () => {
     // dispatch(editBankUserModalSystemAdmin(true));
@@ -37,81 +53,13 @@ const TradeCount = () => {
     // dispatch(UserDetailsCorporateModalSystemAdmin(false));
   };
 
-  // Trade Count validate handler
-  const tradeCountValidateHandler = (e) => {
-    const { name, value } = e.target;
-
-    const updateField = (fieldName, regex, value) => {
-      let valueCheck = value.replace(regex, "");
-      if (valueCheck !== "") {
-        setTradeCount((prevTradeCount) => ({
-          ...prevTradeCount,
-          [fieldName]: {
-            value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
-          },
-        }));
-      } else {
-        setTradeCount((prevTradeCount) => ({
-          ...prevTradeCount,
-          [fieldName]: {
-            value: "",
-            errorMessage: "",
-            errorStatus: false,
-          },
-        }));
-      }
-    };
-    //validation rules
-    switch (name) {
-      case "transactionID":
-        updateField("TxnID", /[^a-zA-Z0-9/-]/g, value);
-        break;
-      case "ClientName":
-        updateField("clientName", /[^a-zA-Z ]/g, value);
-        break;
-      case "Amount":
-        updateField("Amount", /[^\d]/g, value);
-        break;
-      case "AccountNumber":
-        updateField("AccountNumber", /[^\d]/g, value);
-        break;
-      case "LC":
-        updateField("LC", /[^\d]/g, value);
-        break;
-      default:
-        break;
-    }
+  // State to control visibility of export buttons
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  // Function to toggle the export options (PDF & Excel buttons)
+  const toggleExportOptions = () => {
+    setShowExportOptions(!showExportOptions);
   };
-  //Handle Date Change method
-  const handleDateChange = (fieldName, value) => {
-    setTradeCount((prev) => ({
-      ...prev,
-      [fieldName]: {
-        ...prev[fieldName],
-        value,
-        errorMessage: "",
-        errorStatus: false,
-      },
-    }));
 
-    // Example validation: Start Date should be before End Date
-    if (
-      fieldName === "dateFrom" &&
-      tradeCount.dateTo.value &&
-      new Date(value) > new Date(tradeCount.dateTo.value)
-    ) {
-      setTradeCount((prev) => ({
-        ...prev,
-        dateFrom: {
-          ...prev.dateFrom,
-          errorMessage: "Start date cannot be after end date.",
-          errorStatus: true,
-        },
-      }));
-    }
-  };
   // column for LoginHistory
   const tradeColumns = [
     {
@@ -226,7 +174,7 @@ const TradeCount = () => {
       width: "100px",
       align: "center",
       ellipsis: true,
-      render: () => {
+      render: (text) => {
         return (
           <>
             <Row>
@@ -239,8 +187,10 @@ const TradeCount = () => {
                 <Button
                   className={styles["comment-icon"]}
                   icon={<i className="icon-view-comment color-blue"></i>}
-                  onClick={handleEditBanker}
+                  // onClick={handleEditBanker}
+                  onClick={() => handleClickCommentModal(text)}
                 />
+                {/* <span>{text}</span> */}
               </Col>
             </Row>
           </>
@@ -273,16 +223,100 @@ const TradeCount = () => {
       time: "12:07 pm",
       LC: "12345",
       account: "02909090908",
-      comment: (
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <i className="icon-view-comment color-blue"></i>
-          </Col>
-        </Row>
-      ),
+      // comment: (
+      //   <Row>
+      //     <Col lg={12} md={12} sm={12}>
+      //       <i className="icon-view-comment color-blue"></i>
+      //     </Col>
+      //   </Row>
+      // ),
+      comment: "Comment of data 1",
       status: "Active",
     },
   ];
+
+  // Trade Count validate handler
+  const tradeCountValidateHandler = (e) => {
+    const { name, value } = e.target;
+
+    const updateField = (fieldName, regex, value) => {
+      let valueCheck = value.replace(regex, "");
+      if (valueCheck !== "") {
+        setTradeCount((prevTradeCount) => ({
+          ...prevTradeCount,
+          [fieldName]: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        }));
+      } else {
+        setTradeCount((prevTradeCount) => ({
+          ...prevTradeCount,
+          [fieldName]: {
+            value: "",
+            errorMessage: "",
+            errorStatus: false,
+          },
+        }));
+      }
+    };
+    //validation rules
+    switch (name) {
+      case "transactionID":
+        updateField("TxnID", /[^a-zA-Z0-9/-]/g, value);
+        break;
+      case "ClientName":
+        updateField("clientName", /[^a-zA-Z ]/g, value);
+        break;
+      case "Amount":
+        updateField("Amount", /[^\d]/g, value);
+        break;
+      case "AccountNumber":
+        updateField("AccountNumber", /[^\d]/g, value);
+        break;
+      case "LC":
+        updateField("LC", /[^\d]/g, value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  //Handle Date Change method
+  const handleDateChange = (fieldName, value) => {
+    setTradeCount((prev) => ({
+      ...prev,
+      [fieldName]: {
+        ...prev[fieldName],
+        value,
+        errorMessage: "",
+        errorStatus: false,
+      },
+    }));
+
+    // Example validation: Start Date should be before End Date
+    if (
+      fieldName === "dateFrom" &&
+      tradeCount.dateTo.value &&
+      new Date(value) > new Date(tradeCount.dateTo.value)
+    ) {
+      setTradeCount((prev) => ({
+        ...prev,
+        dateFrom: {
+          ...prev.dateFrom,
+          errorMessage: "Start date cannot be after end date.",
+          errorStatus: true,
+        },
+      }));
+    }
+  };
+
+  const handleClickCommentModal = (text) => {
+    dispatch(TradeCountCommentModalSystemAdmin(true));
+    console.log("the comment is", text);
+  };
+
   const handleSearchEventButton = () => {
     let searchData = {
       TxnID: tradeCount.TxnID.value,
@@ -301,7 +335,7 @@ const TradeCount = () => {
 
   // show error message When user hit activate btn
   const handleResetEventButton = () => {
-    dispatch(AddBankUserConfirmationModalSystemAdmin(true));
+    dispatch(ConfirmationModalSystemAdmin(true));
   };
 
   const handleResetYes = () => {
@@ -330,7 +364,34 @@ const TradeCount = () => {
     setter(value); // Set the state
     userField.value = value.value; // Update the corporateUser object
   };
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+  const handleExport = (format) => {
+    if (format === "excel") {
+      exportToExcel();
+    } else if (format === "pdf") {
+      exportToPDF();
+    }
+  };
 
+  const exportToExcel = () => {
+    // const worksheet = XLSX.utils.json_to_sheet(data);
+    // const workbook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
+    // XLSX.writeFile(workbook, "CorporateList.xlsx");
+    console.log("Doc saved as Excel");
+  };
+
+  const exportToPDF = () => {
+    // const doc = new jsPDF();
+    // doc.autoTable({
+    //   head: [columns.map((col) => col.title)],
+    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
+    // });
+    // doc.save("CorporateList.pdf");
+    console.log("doc saved as pdf");
+  };
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
@@ -474,11 +535,38 @@ const TradeCount = () => {
                   icon={<i className="icon-download-excel"></i>}
                   className={styles["tradeCount-Download-Excel-btn"]}
                 /> */}
-                <Button
-                  icon={<i className="icon-download"></i>}
-                  className={styles["Export_Button"]}
-                  text="Export"
-                />
+                <Popover
+                  content={
+                    <div className={styles["export-options"]}>
+                      <Button
+                        icon={<i className="icon-download-excel"></i>}
+                        // text="Excel"
+                        onClick={() => handleExport("excel")}
+                        className={styles["export-button"]}
+                      />
+                      <Button
+                        // text="PDF"
+                        icon={<i className="icon-download-pdf"></i>}
+                        onClick={() => handleExport("pdf")}
+                        className={styles["export-button"]}
+                      />
+                    </div>
+                  }
+                  // title="Title"
+                  trigger="click"
+                  open={open}
+                  onOpenChange={handleOpenChange}
+                  placement="bottomRight"
+                  arrow={false}
+                >
+                  <Button
+                    icon={<i className="icon-download"></i>}
+                    className={styles["Export_Button"]}
+                    text="Export"
+                    iconClass={styles["resetIconClass"]}
+                    onClick={toggleExportOptions}
+                  />
+                </Popover>
                 <Button
                   icon={<i className="icon-refresh icon-check-space"></i>}
                   className={styles["Banklist-Reset-btn"]}
@@ -488,7 +576,7 @@ const TradeCount = () => {
               </Col>
             </Row>
 
-            <Row className="mt-3">
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
@@ -507,6 +595,7 @@ const TradeCount = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {TradeCountCommentModalGobalState && <CommentModal />}
       {<ActivateConfirmationModal onConfirm={handleResetYes} />}
     </section>
   );

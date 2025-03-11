@@ -25,7 +25,7 @@
   border: none !important;
   color: black;
   display: flex !important;
-  justify-content: end !important;
+  justify-content: flex-end !important;
 }
 
 .CrossButton:is(:hover, :active, :focus, :focus-visible) {
@@ -33,7 +33,7 @@
   border: none !important;
   color: black;
   display: flex !important;
-  justify-content: end !important;
+  justify-content: flex-end !important;
 }
 
 .AddButton {

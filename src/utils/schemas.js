@@ -542,3 +542,11 @@ export const settingSchema = {
     value: "",
   },
 };
+export const tradeAccessManagementSchema = {
+  searchCorporate: {
+    value: "",
+  },
+  searchBranch: {
+    value: "",
+  },
+};
