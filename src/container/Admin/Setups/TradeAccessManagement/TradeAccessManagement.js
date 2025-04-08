@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./TradeAccessManagement.module.css";
 import {
   Button,
@@ -15,9 +15,22 @@ import EditModalTradeAccessManagement from "./EditModalTradeAccessManagement/Edi
 import { useDispatch } from "react-redux";
 import { editTradeAccessManagementModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { tradeAccessManagementSchema } from "../../../../utils/schemas";
+import { useNavigate } from "react-router-dom";
+import { GetCounterPartyNamesAPI } from "../../../../store/actions/BOPSystemAdminActions";
 const TradeAccessManagement = () => {
   const { Option } = Select;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [tableData, setTableData] = useState([]);
+
+  //getcounterPartyNames API calling
+  const GetCounterPartyNames = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetCounterPartyNamesData
+  );
+
+  console.log(GetCounterPartyNames);
+
   //Add Bank  Use Modal Calling
   const EditTradeAccessManagementModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editModalTradeAccessManagement
@@ -31,7 +44,13 @@ const TradeAccessManagement = () => {
       errorStatus: false,
     },
   });
-
+  const [corporateName, setCorporateName] = useState({
+    Name: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
   const [dropdownvalue, setDropdownvalue] = useState(25);
 
   const handleChangeDropDown = (value) => {
@@ -56,8 +75,11 @@ const TradeAccessManagement = () => {
     let name = e.target.name;
     let value = e.target.value;
 
-    //Client Name
-    if (name === "Name" && value !== "") {
+    //Branch Name
+    if (name === "branchName" && value !== "") {
+      setCorporateName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
       if (valueCheck !== "") {
         setBranchName({
@@ -69,13 +91,70 @@ const TradeAccessManagement = () => {
           },
         });
       }
-    } else if (name === "Name" && value === "") {
+    } else if (name === "branchName" && value === "") {
+      setCorporateName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
       setBranchName({
         ...branchName,
         Name: { value: "", errorMessage: "", errorStatus: false },
       });
     }
+    //Branch Name
+    if (name === "corporateName" && value !== "") {
+      setBranchName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setCorporateName({
+          ...corporateName,
+          Name: {
+            value: valueCheck.trimStart(),
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "corporateName" && value === "") {
+      setBranchName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+      setCorporateName({
+        ...corporateName,
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
   };
+  useEffect(() => {
+    dispatch(GetCounterPartyNamesAPI(navigate));
+  }, []);
+
+  //useEffect to empty fields value on radio Change
+  useEffect(() => {
+    if (radioValue === "Branch") {
+      setCorporateName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    } else if (radioValue === "Corporate") {
+      setBranchName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
+  }, [radioValue]);
+
+  //to show data in the table
+  useEffect(() => {
+    if (GetCounterPartyNames !== null) {
+      console.log("GetCounterPartyNames", GetCounterPartyNames);
+      try {
+        const { counterPartyLists } = GetCounterPartyNames;
+        if (counterPartyLists.length > 0) {
+          setTableData(GetCounterPartyNames.counterPartyLists);
+        }
+      } catch (error) {}
+    }
+  }, [GetCounterPartyNames]);
 
   //Handle Edit Trade Access managment Modal
 
@@ -87,8 +166,8 @@ const TradeAccessManagement = () => {
   const columns = [
     {
       title: <label className="bottom-table-header">Counter Party Name</label>,
-      dataIndex: "CounterPartyName",
-      key: "CounterPartyName",
+      dataIndex: "counterPartyName",
+      key: "counterPartyName",
       width: "190px",
       ellipsis: true,
       align: "left",
@@ -107,24 +186,71 @@ const TradeAccessManagement = () => {
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            <Row>
+              <Col
+                lg={12}
+                md={12}
+                sm={12}
+                className="d-flex gap-2 justify-content-center align-items-center"
+              >
+                <Button
+                  className={styles["edit-icon"]}
+                  icon={<i className="icon-edit color-blue"></i>}
+                  onClick={() => handleEditTradeAccessManagementModal(record)}
+                />
+              </Col>
+            </Row>
+          </>
+        );
+      },
     },
 
     {
       title: <label className="bottom-table-header">Active</label>,
-      dataIndex: "Active",
-      key: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            <CustomSwitch
+              size="large"
+              checked={record.isActive}
+              // onChange={(e) => handleToggle(e, record)}
+            />
+          </>
+        );
+      },
     },
+    //  Active: (
+    //     <>
+    //     <CustomSwitch size="large" defaultChecked />
+    //   </>
+    // ),
 
     {
       title: <label className="bottom-table-header">Trade</label>,
-      dataIndex: "Trade",
-      key: "Trade",
+      dataIndex: "isTrade",
+      key: "isTrade",
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            <CustomSwitch
+              size="large"
+              checked={record.isTrade}
+              // onChange={(e) => handleToggle(e, record)}
+            />
+          </>
+        );
+      },
     },
   ];
 
@@ -185,14 +311,25 @@ const TradeAccessManagement = () => {
                   size="default"
                   className={styles["custom-radio-group"]}
                 />
-                <TextField
-                  placeholder="Corporate Name"
-                  labelClass={"d-none"}
-                  name={"Name"}
-                  value={branchName.Name.value}
-                  onChange={TradeAccessManagementValidateHandler}
-                  className={"BranchNameTradeAccessManagement"}
-                />
+                {radioValue === "Corporate" ? (
+                  <TextField
+                    placeholder="Corporate Name"
+                    labelClass={"d-none"}
+                    name={"corporateName"}
+                    value={corporateName.Name.value}
+                    onChange={TradeAccessManagementValidateHandler}
+                    className={"BranchNameTradeAccessManagement"}
+                  />
+                ) : (
+                  <TextField
+                    placeholder="Branch Name"
+                    labelClass={"d-none"}
+                    name={"branchName"}
+                    value={branchName.Name.value}
+                    onChange={TradeAccessManagementValidateHandler}
+                    className={"BranchNameTradeAccessManagement"}
+                  />
+                )}
               </Col>
             </Row>
             <Row className="mt-4">
@@ -223,7 +360,7 @@ const TradeAccessManagement = () => {
                 <Table
                   column={columns}
                   pagination={true}
-                  rows={dataSource}
+                  rows={tableData}
                   className={"TradeAccessManagement"}
                 />
               </Col>

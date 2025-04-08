@@ -82,16 +82,22 @@ export const addBankUserSchema = {
     errorStatus: false,
   },
   roleID: {
-    value: "",
+    value: 0,
+    label: "",
     errorMessage: "",
     errorStatus: false,
   },
   branchID: {
-    value: "",
+    value: 0,
     errorMessage: "",
     errorStatus: false,
   },
   EmployeeID: {
+    value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  category: {
     value: "",
     errorMessage: "",
     errorStatus: false,
@@ -233,8 +239,9 @@ export const corporateListSchema = {
     errorMessage: "",
     errorStatus: false,
   },
-  category: {
-    value: "",
+  categoryID: {
+    value: 0,
+    label: "",
     errorMessage: "",
     errorStatus: false,
   },
@@ -271,7 +278,7 @@ export const addCorporateUserSchema = {
   },
 
   corporateID: {
-    value: 1,
+    value: "",
     errorMessage: "",
     errorStatus: false,
   },
@@ -355,8 +362,9 @@ export const bankListSchema = {
     errorMessage: "",
     errorStatus: false,
   },
-  Role: {
-    value: "",
+  roleID: {
+    value: 0,
+    label: "",
     errorMessage: "",
     errorStatus: false,
   },
@@ -371,8 +379,9 @@ export const updateBankUserSchema = {
 
   email: { value: "", errorMessage: "", errorStatus: false },
 
-  role: {
-    value: "",
+  roleID: {
+    value: 0,
+    label: "",
     errorMessage: "",
     errorStatus: false,
   },
@@ -383,6 +392,11 @@ export const updateBankUserSchema = {
   },
   activeUser: {
     value: "",
+    errorMessage: "",
+    errorStatus: false,
+  },
+  userID: {
+    value: 0,
     errorMessage: "",
     errorStatus: false,
   },
@@ -548,5 +562,14 @@ export const tradeAccessManagementSchema = {
   },
   searchBranch: {
     value: "",
+  },
+};
+
+export const SpreadManagementSchema = {
+  categoryID: {
+    value: 0,
+    label: "",
+    errorMessage: "",
+    errorStatus: false,
   },
 };

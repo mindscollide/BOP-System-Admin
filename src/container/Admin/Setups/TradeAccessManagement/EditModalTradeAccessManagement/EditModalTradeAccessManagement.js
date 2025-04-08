@@ -462,6 +462,7 @@ const EditModalTradeAccessManagement = () => {
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <Select
+                    isMulti
                     options={instrumentType}
                     placeholder={"Select Instrument"}
                     name="InstrumentType"

@@ -43,7 +43,7 @@ const Header = () => {
                 <p className="user-name-header2">Owais Wajid</p>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown_menu-Header2">
-                <Dropdown.Item>
+                <Dropdown.Item className="dropdown_menu-Item">
                   <Nav.Link>
                     <i className="icon-settings me-1"></i>
                     <label

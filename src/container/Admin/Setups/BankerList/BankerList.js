@@ -16,37 +16,55 @@ import { useDispatch } from "react-redux";
 import EditBankerModal from "./EditBankUserModal/EditBankerModal";
 import {
   GetAllBranchesAPI,
+  GetBankUserByUserIDAPI,
   SearchBankUsersAPI,
 } from "../../../../store/actions/BOPSystemAdminActions";
 import { useSelector } from "react-redux";
-import { roleOptions } from "../../../../helpers/Dropdown";
 import { bankListSchema } from "../../../../utils/schemas";
-import {
-  // AddBankUserConfirmationModalSystemAdmin,
-  ConfirmationModalSystemAdmin,
-  editBankUserModalSystemAdmin,
-} from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { ConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { Popover } from "antd";
 // import { render } from "@testing-library/react";
+import pdfIcon from "../../../../assets/images/pdf.png";
+import excelIcon from "../../../../assets/images/excel.png";
+import { RoleListAPI } from "../../../../store/actions/Auth-Actions";
+import { formatDateAndTimeFromString } from "../../../../helpers/reusableMethods";
+import moment from "moment";
+
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
+
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
     setShowExportOptions(!showExportOptions);
   };
 
   //State for category
-  const [Role, setRole] = useState("");
-
-  // //State for category
-  // const [category, setCategory] = useState("");
+  // const [Role, setRole] = useState("");
+  const [tableData, setTableData] = useState([]);
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [roleID, setRoleID] = useState({
+    value: 0,
+    label: "",
+  });
 
   // //Sate for handling export options
   // const [showExportOptions, setShowExportOptions] = useState(false);
+
+  //Search all corporate Users
+  const SearchBankUsers = useSelector(
+    (state) => state.BOPSystemAdminReducer.SearchBankUsersData
+  );
+
+  console.log("tabledata", tableData);
+  console.log("SearchBankUserSearchBankUser", SearchBankUsers);
+
+  //Role List
+  const RoleList = useSelector((state) => state.auth.RoleList);
 
   //Edit Corporate Use Modal Calling
   const EditBankerModalGobalState = useSelector(
@@ -66,6 +84,22 @@ const BankerList = () => {
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
+
+  //Role list:
+  useEffect(() => {
+    if (RoleList !== null) {
+      try {
+        let newRolesData = RoleList.roles.map((role) => {
+          return {
+            ...role,
+            value: role.roleID,
+            label: role.roleName,
+          };
+        });
+        setRoleOptions(newRolesData);
+      } catch (error) {}
+    }
+  }, [RoleList]);
 
   //Metod to perform action of Export options
   const ExportOptions = ({ onClose }) => {
@@ -164,29 +198,36 @@ const BankerList = () => {
 
   //handle Search Button event
   const handleSearchEventButton = () => {
-    // let data = {
-    //   FirstName: "",
-    //   LastName: "",
-    //   RoleID: 0,
-    //   StatusID: 0,
-    //   Email: "",
-    //   LDAPAccount: "",
-    //   PageNumber: 1,
-    //   Length: 10,
-    // };
     let data = {
-      EmployeeID: bankList.EmployeeID.value,
       FirstName: bankList.Name.value,
-      Email: bankList.Email.value,
-      Role: bankList.Role.value,
+      LastName: "",
+      RoleID: roleID.roleID ? roleID.roleID : "",
       StatusID: 0,
+      Email: bankList.Email.value,
+      LDAPAccount: "",
+      // EmployeeID: bankList.EmployeeID.value,
       PageNumber: 1,
       Length: 10,
     };
-    console.log("BankList Data", data);
-
-    // dispatch(SearchBankUsersAPI(navigate, data));
+    console.log("Data to Search", data);
+    dispatch(SearchBankUsersAPI(navigate, data));
   };
+
+  useEffect(() => {
+    dispatch(RoleListAPI(navigate));
+    let data = {
+      EmployeeID: "",
+      FirstName: "",
+      Email: "",
+      Role: "",
+      StatusID: 0,
+      PageNumber: 1,
+      Length: 100,
+    };
+
+    console.log("Data to Search", data);
+    dispatch(SearchBankUsersAPI(navigate, data));
+  }, []);
 
   //Handle Select Change
   // A generic function to handle dropdown changes
@@ -208,11 +249,11 @@ const BankerList = () => {
       EmployeeID: { value: "" },
       Name: { value: "" },
       Email: { value: "" },
-      Role: { value: "" }, // Ensure role is cleared
+      roleID: { value: "" }, // Ensure role is cleared
     });
-    setRole(null); // Reset dropdown value
+    setRoleID(""); // Reset dropdown value
 
-    let resetData = {
+    let data = {
       EmployeeID: "",
       FirstName: "",
       Email: "",
@@ -223,12 +264,15 @@ const BankerList = () => {
     };
 
     // Call API to fetch all records after reset
-    // dispatch(SearchBankUsersAPI(navigate, resetData));
+    dispatch(SearchBankUsersAPI(navigate, data));
   };
 
   //handle Edit Corporate
-  const handleEditBanker = () => {
-    dispatch(editBankUserModalSystemAdmin(true));
+  const handleEditBanker = (record) => {
+    console.log(record.userID);
+    let Data = { UserId: record.userID };
+    dispatch(GetBankUserByUserIDAPI(navigate, Data));
+
     // dispatch(DeleteCorporateModalSystemAdmin(false));
     // dispatch(UserDetailsCorporateModalSystemAdmin(false));
   };
@@ -236,94 +280,117 @@ const BankerList = () => {
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="bottom-table-header">EmployeeID</label>,
-      dataIndex: "EmployeeID",
-      key: "EmployeeID",
+      title: <label className="px-3">EmployeeID</label>,
+      dataIndex: "employeeID",
+      key: "employeeID",
       width: "100px",
       ellipsis: true,
-      align: "center",
+      align: "left",
     },
     {
-      title: <label className="bottom-table-header">Email</label>,
+      title: <label className="px-3">Email</label>,
       dataIndex: "email",
       key: "email",
       width: "220px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Name</label>,
-      dataIndex: "Name",
-      key: "Name",
+      title: <label className="px-3">Name</label>,
+      dataIndex: "firstName",
+      key: "firstName",
       width: "150px",
       ellipsis: true,
-      align: "center",
+      align: "left",
     },
+    // Column definition for Role
     {
-      title: <label className="bottom-table-header">Role</label>,
-      dataIndex: "Role",
-      key: "Role",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-    },
-    {
-      title: <label className="bottom-table-header">Branch Name</label>,
-      dataIndex: "BranchName",
-      key: "BranchName",
-      width: "100px",
-      align: "center",
-      ellipsis: true,
-    },
-    {
-      title: <label className="bottom-table-header">Contact</label>,
-      dataIndex: "ContactNumber",
-      key: "ContactNumber",
+      title: <label className="px-3">Role</label>,
+      dataIndex: "userRoleID",
+      key: "userRoleID",
       width: "150px",
-      align: "center",
+      ellipsis: true,
+      align: "left",
+      render: (userRoleID) => {
+        // Find the role name from the roles array based on userRoleID
+        const role = RoleList.roles.find((role) => role.roleID === userRoleID);
+        return role ? role.roleName : ""; // Default if role not found
+      },
+    },
+    {
+      title: <label className="px-3">Branch Name</label>,
+      dataIndex: "branch",
+      key: "branch",
+      width: "150px",
+      align: "left",
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Status</label>,
-      dataIndex: "Status",
-      key: "Status",
-      width: "100px",
+      title: <label className="px-3">Contact</label>,
+      dataIndex: "contactNumber",
+      key: "contactNumber",
+      width: "120px",
+      align: "left",
+      ellipsis: true,
+    },
+    {
+      title: <label>Status</label>,
+      dataIndex: "userStatusID",
+      key: "userStatusID",
+      width: "70px",
       align: "center",
       ellipsis: true,
-      render: (status) => (
+      render: (userStatusID) => (
         <span
           className={
-            status === "Active" ? styles.ActiveStatus : styles.InactiveStatus
+            userStatusID === 1 ? styles.ActiveStatus : styles.InactiveStatus
           }
         >
-          {status}
+          {userStatusID === 1 ? "Active" : "Inactive"}
         </span>
       ),
     },
     {
-      title: <label className="bottom-table-header">Last Password</label>,
+      title: <label className="px-3">Last Password Change</label>,
       dataIndex: "LastPassowrdChange",
       key: "LastPassowrdChange",
       align: "center",
       width: "180px",
       ellipsis: true,
+      render: (LastPassowrdChange) => {
+        // Format the date and time
+        // return LastPassowrdChange !== ""
+        //   ? moment(formatDateAndTimeFromString(LastPassowrdChange)).format(
+        //       "DD/MM/YYYY HH:mm:ss"
+        //     )
+        // : "-";
+        return "-";
+      },
     },
     {
-      title: <label className="bottom-table-header">Creation Date Time</label>,
+      title: <label className="px-3">Creation Date Time</label>,
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
       width: "180px",
       ellipsis: true,
+      render: (creationDateTime) => {
+        // Format the date and time
+        return creationDateTime !== "-"
+          ? moment(formatDateAndTimeFromString(creationDateTime)).format(
+              "DD/MM/YYYY HH:mm:ss"
+            )
+          : "-";
+      },
     },
     {
-      title: <label className="bottom-table-header"></label>,
+      title: <label className="px-3"></label>,
       dataIndex: "Edit",
       key: "Edit",
       align: "center",
       width: "100px",
       ellipsis: true,
-      render: () => {
+      render: (text, record) => {
         return (
           <>
             <Row>
@@ -336,7 +403,7 @@ const BankerList = () => {
                 <Button
                   className={styles["EditButton"]}
                   icon={<i className="icon-edit color-blue"></i>}
-                  onClick={handleEditBanker}
+                  onClick={() => handleEditBanker(record)}
                 />
                 {/* <Button
                   className={styles["EditButton"]}
@@ -351,49 +418,19 @@ const BankerList = () => {
       },
     },
   ];
-  //Dummy Data
-  const data = [
-    {
-      key: "1",
-      EmployeeID: "0123",
-      email: "john.doe@example.com",
-      Name: "John Doe",
-      Role: "Branch",
-      BranchName: "Saddar",
-      ContactNumber: "03909090909",
-      Status: "Active",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i className="icon-edit color-blue"></i>
-            {/* <i className="icon-trash color-red"></i> */}
-          </Col>
-        </Row>
-      ),
-    },
-    {
-      key: "2",
-      EmployeeID: "0654",
-      email: "yunus@bop.com",
-      Name: "Tom Cruise",
-      Role: "Dealer",
-      BranchName: "Clifton",
-      ContactNumber: "01234567890",
-      Status: "Inactive",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i className="icon-edit color-blue"></i>
-            {/* <i className="icon-trash color-red"></i> */}
-          </Col>
-        </Row>
-      ),
-    },
-  ];
+
+  useEffect(() => {
+    if (SearchBankUsers !== null) {
+      console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
+      try {
+        const { bankUsers } = SearchBankUsers;
+        if (bankUsers.length > 0) {
+          setTableData(SearchBankUsers.bankUsers);
+        }
+      } catch (error) {}
+    }
+  }, [SearchBankUsers]);
+
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
@@ -404,7 +441,15 @@ const BankerList = () => {
       exportToPDF();
     }
   };
+  //handle select CategoryID
+  const handleSelectRole = async (selectedRole) => {
+    setRoleID(selectedRole);
 
+    bankListSchema((prevState) => ({
+      ...prevState,
+      roleID: { ...prevState.roleID, value: selectedRole.value },
+    }));
+  };
   const exportToExcel = () => {
     // const worksheet = XLSX.utils.json_to_sheet(data);
     // const workbook = XLSX.utils.book_new();
@@ -462,14 +507,11 @@ const BankerList = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <Select
-                  name="Role"
                   isSearchable={true}
                   placeholder={"Select Role"}
                   options={roleOptions}
-                  value={Role}
-                  onChange={(e) =>
-                    handleDropdownChange("Role", e, setRole, bankList.Role)
-                  }
+                  value={roleID.value !== 0 ? roleID : null}
+                  onChange={handleSelectRole}
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
@@ -502,19 +544,17 @@ const BankerList = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<i className="icon-download-excel"></i>}
+                        icon={<img src={excelIcon} alt="Excel Icon" />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        // text="PDF"
-                        icon={<i className="icon-download-pdf"></i>}
+                        icon={<img src={pdfIcon} alt="PDF Icon" />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                     </div>
                   }
-                  // title="Title"
                   trigger="click"
                   open={open}
                   onOpenChange={handleOpenChange}
@@ -544,9 +584,9 @@ const BankerList = () => {
                 <Table
                   column={columns}
                   pagination={false}
-                  rows={data}
-                  scroll={true}
-                  expandable={true}
+                  rows={tableData}
+                  // scroll={true}
+                  // expandable={true}
                   className={"BankUserList-table"}
                 />
               </Col>

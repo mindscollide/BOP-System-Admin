@@ -15,7 +15,7 @@ import {
   SearchBankUsers,
   UpdateCorporateUsers,
   GetBankUserByUserID,
-  UpdateBankUserByBankID,
+  UpdateBankUserByUserID,
   GetVolmeterByBankID,
   AddUpdateVolmeter,
   UpdateVolmeterByDealer,
@@ -24,10 +24,18 @@ import {
   UpdateCategory,
   getallCoporatesSystem,
   GetAllBankUsers,
+  GetAllCorporates,
+  GetAllCorporateUsers,
+  GetCorporateUserByUserID,
+  GetCounterPartyNames,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
-import { RefreshToken } from "./Auth-Actions";
+import { getAllCorporatesCategory, RefreshToken } from "./Auth-Actions";
+import {
+  editBankUserModalSystemAdmin,
+  EditCorporateModalSystemAdmin,
+} from "./BOPSystemAdminModalsActions";
 
 //Create New Corporate API
 const CreateNewCorporateInit = () => {
@@ -52,7 +60,6 @@ const CreateNewCorporateFail = (message) => {
 };
 
 const CreateNewCorporateAPI = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
   let token = localStorage.getItem("token");
 
   return (dispatch) => {
@@ -71,7 +78,6 @@ const CreateNewCorporateAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           console.log("response", response);
-          return;
           await dispatch(RefreshToken(navigate));
           dispatch(CreateNewCorporateAPI(navigate, data));
         } else if (response.data.responseCode === 200) {
@@ -86,6 +92,7 @@ const CreateNewCorporateAPI = (navigate, data) => {
                   "Corporate Saved"
                 )
               );
+              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -274,6 +281,9 @@ const AddBranchAPI = (navigate, data) => {
                   "branch created successfully"
                 )
               );
+              dispatch(GetAllBranchesAPI(navigate));
+
+              // dispatch(GetAllBranchesAPI());
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -400,6 +410,7 @@ const GetAllBranchesInit = () => {
 };
 
 const GetAllBranchesSuccess = (response, message) => {
+  // console.log(response);
   return {
     type: actions.GET_ALL_BRANCHES_SUCCESS,
     response: response,
@@ -415,7 +426,7 @@ const GetAllBranchesFail = (message) => {
 };
 
 const GetAllBranchesAPI = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(GetAllBranchesInit());
     let form = new FormData();
@@ -425,32 +436,50 @@ const GetAllBranchesAPI = (navigate, data) => {
       method: "POST",
       url: systemAdminAPI,
       data: form,
-      // headers: {
-      //   _token: token,
-      // },
+      headers: {
+        _token: token,
+      },
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(GetAllBranchesAPI(navigate));
-        } else if (response.data.responseCode === 200) {
+        console.log(
+          response,
+          response.data,
+          response.data.responseResult.responseMessage,
+          response.data.responseCode
+        );
+        // if (response.data?.responseCode === 417) {
+        //   await dispatch(RefreshToken(navigate));
+        //   dispatch(GetAllBranchesAPI(navigate));
+        // } else
+        if (response.data.responseCode === 200) {
+          console.log(
+            response,
+            response.data,
+            response.data.responseResult.responseMessage,
+            response.data.responseCode,
+            response.data.responseResult.isExecuted
+          );
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
-                .include("SystemAdmin_SystemAdminManager_GetAllBranches_01")
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllBranches_01".toLowerCase()
+                )
             ) {
-              dispatch(GetAllBranchesFail("No Data Available"));
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllBranches_02".toLowerCase()
-            ) {
+              console.log(response);
+
               dispatch(
                 GetAllBranchesSuccess(
                   response.data.responseResult,
                   "Data Available"
                 )
               );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetAllBranches_02".toLowerCase()
+            ) {
+              dispatch(GetAllBranchesFail("No Data Available"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -579,9 +608,6 @@ const CreateBankUserRequestAPI = (navigate, data) => {
             ) {
               dispatch(CreateBankUserRequestFail("exception"));
             }
-          }
-          if (response.data.responseResult.isExecuted === true) {
-            console.log("It is executed successfully");
           } else {
             dispatch(CreateBankUserRequestFail("Something went wrong"));
           }
@@ -699,81 +725,81 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
   };
 };
 
-//Get All Bank Users
-const GetAllBankUsersInit = () => {
-  return {
-    type: actions.GET_ALL_BRANCHES_INIT,
-  };
-};
+// //Get All Bank Users
+// const GetAllBankUsersInit = () => {
+//   return {
+//     type: actions.GET_ALL_BRANCHES_INIT,
+//   };
+// };
 
-const GetAllBankUsersSuccess = (response, message) => {
-  return {
-    type: actions.GET_ALL_BRANCHES_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
+// const GetAllBankUsersSuccess = (response, message) => {
+//   return {
+//     type: actions.GET_ALL_BRANCHES_SUCCESS,
+//     response: response,
+//     message: message,
+//   };
+// };
 
-const GetAllBankUsersFail = (message) => {
-  return {
-    type: actions.GET_ALL_BRANCHES_FAIL,
-    message: message,
-  };
-};
+// const GetAllBankUsersFail = (message) => {
+//   return {
+//     type: actions.GET_ALL_BRANCHES_FAIL,
+//     message: message,
+//   };
+// };
 
-const GetAllBankUsersAPI = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
-  return async (dispatch) => {
-    dispatch(GetAllBankUsersInit());
-    let form = new FormData();
-    form.append("RequestMethod", GetAllBankUsers.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      // headers: {
-      //   _token: token,
-      // },
-    })
-      .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(GetAllBankUsersAPI(navigate));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllBankUsers_01".toLowerCase()
-            ) {
-              dispatch(
-                GetAllBankUsersSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
-              );
-            }
-            // else if (
-            //   response.data.responseResult.responseMessage
-            //     .toLowerCase()
-            //     .includes(
-            //       "SystemAdmin_SystemAdminManager_GetAllBranches_03".toLowerCase()
-            //     )
-            // ) {
-            //   dispatch(GetAllBankUsersFail("Exception"));
-            // }
-          } else {
-            dispatch(GetAllBankUsersFail("Something went wrong"));
-          }
-        } else {
-          dispatch(GetAllBankUsersFail("Something went wrong"));
-        }
-      })
-      .catch((response) => {
-        dispatch(GetAllBankUsersFail("something went wrong"));
-      });
-  };
-};
+// const GetAllBankUsersAPI = (navigate, data) => {
+//   // let token = JSON.parse(localStorage.getItem("token"));
+//   return async (dispatch) => {
+//     dispatch(GetAllBankUsersInit());
+//     let form = new FormData();
+//     form.append("RequestMethod", GetAllBankUsers.RequestMethod);
+//     form.append("RequestData", JSON.stringify(data));
+//     axios({
+//       method: "POST",
+//       url: systemAdminAPI,
+//       data: form,
+//       // headers: {
+//       //   _token: token,
+//       // },
+//     })
+//       .then(async (response) => {
+//         if (response.data.responseCode === 417) {
+//           await dispatch(RefreshToken(navigate));
+//           dispatch(GetAllBankUsersAPI(navigate));
+//         } else if (response.data.responseCode === 200) {
+//           if (response.data.responseResult.isExecuted === true) {
+//             if (
+//               response.data.responseResult.responseMessage.toLowerCase() ===
+//               "SystemAdmin_SystemAdminManager_GetAllBankUsers_01".toLowerCase()
+//             ) {
+//               dispatch(
+//                 GetAllBankUsersSuccess(
+//                   response.data.responseResult,
+//                   "Data Available"
+//                 )
+//               );
+//             }
+//             // else if (
+//             //   response.data.responseResult.responseMessage
+//             //     .toLowerCase()
+//             //     .includes(
+//             //       "SystemAdmin_SystemAdminManager_GetAllBranches_03".toLowerCase()
+//             //     )
+//             // ) {
+//             //   dispatch(GetAllBankUsersFail("Exception"));
+//             // }
+//           } else {
+//             dispatch(GetAllBankUsersFail("Something went wrong"));
+//           }
+//         } else {
+//           dispatch(GetAllBankUsersFail("Something went wrong"));
+//         }
+//       })
+//       .catch((response) => {
+//         dispatch(GetAllBankUsersFail("something went wrong"));
+//       });
+//   };
+// };
 
 //Create Corporate User Request
 const CreateCorporateUserRequestInit = () => {
@@ -1027,104 +1053,167 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
   };
 };
 
-//Get All Corporate List
-const getallcoporatesinit = () => {
-  return {
-    type: actions.GET_ALL_CORPORATES_INIT,
-  };
-};
+// //Get All Corporate List
+// const getAllCoporatesInit = () => {
+//   return {
+//     type: actions.GET_ALL_CORPORATES_INIT,
+//   };
+// };
 
-const getallcorporatessuccess = (response, message) => {
-  return {
-    type: actions.GET_ALL_CORPORATES_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
+// const getAllCorporatesSuccess = (response, message) => {
+//   return {
+//     type: actions.GET_ALL_CORPORATES_SUCCESS,
+//     response: response,
+//     message: message,
+//   };
+// };
 
-const getallcorporatesfailed = (message) => {
-  return {
-    type: actions.GET_ALL_CORPORATES_FAIL,
-    message: message,
-  };
-};
+// const getAllCorporatesFail = (message) => {
+//   return {
+//     type: actions.GET_ALL_CORPORATES_FAIL,
+//     message: message,
+//   };
+// };
 
-const getAllCorporatesCategory = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
-  // let data = {};
-  return async (dispatch) => {
-    dispatch(getallcoporatesinit());
-    let form = new FormData();
-    form.append("RequestMethod", getallCoporatesSystem.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      // headers: {
-      //   _token: token,
-      // },
-    })
-      .then(async (response) => {
-        console.log("CorporateCategoryCorporateCategory", response);
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(getAllCorporatesCategory(navigate));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_01".toLowerCase()
-            ) {
-              dispatch(
-                getallcorporatessuccess(
-                  response.data.responseResult.corporateCategories,
-                  "Data found"
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_02".toLowerCase()
-                )
-            ) {
-              dispatch(getallcorporatesfailed("No Record Found"));
-            }
-            // else if (
-            //   response.data.responseResult.responseMessage
-            //     .toLowerCase()
-            //     .includes(
-            //       "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_03".toLowerCase()
-            //     )
-            // ) {
-            //   dispatch(getallcorporatesfailed("Invalid Role"));
-            // }
-            else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_04".toLowerCase()
-                )
-            ) {
-              dispatch(
-                getallcorporatesfailed("Exception Something went wrong")
-              );
-            }
-          } else {
-            dispatch(getallcorporatesfailed("Something went wrong"));
-            console.log("There's no corporates category");
-          }
-        } else {
-          dispatch(getallcorporatesfailed("Something went wrong"));
-          console.log("There's no corporates category");
-        }
-      })
-      .catch((response) => {
-        dispatch(getallcorporatesfailed("something went wrong"));
-      });
-  };
-};
+// const getAllCorporatesCategory = (navigate, data) => {
+//   let token = localStorage.getItem("token");
+//   return async (dispatch) => {
+//     dispatch(getAllCoporatesInit());
+//     let form = new FormData();
+//     form.append("RequestMethod", GetAllCorporates.RequestMethod);
+//     form.append("RequestData", JSON.stringify(data));
+//     axios({
+//       method: "POST",
+//       url: systemAdminAPI,
+//       data: form,
+//       headers: {
+//         _token: token,
+//       },
+//     })
+//       .then(async (response) => {
+//         // if (response.data?.responseCode === 417) {
+//         //   await dispatch(RefreshToken(navigate));
+//         //   dispatch(GetAllBranchesAPI(navigate));
+//         // } else
+//         if (response.data.responseCode === 200) {
+//           if (response.data.responseResult.isExecuted === true) {
+//             if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+//                 )
+//             ) {
+//               // console.log(response);
+
+//               dispatch(
+//                 getAllCorporatesSuccess(
+//                   response.data.responseResult,
+//                   "Data Available"
+//                 )
+//               );
+//             } else if (
+//               response.data.responseResult.responseMessage.toLowerCase() ===
+//               "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+//             ) {
+//               dispatch(getAllCorporatesFail("No Data Available"));
+//             } else if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+//                 )
+//             ) {
+//               dispatch(getAllCorporatesFail("Exception"));
+//             }
+//           } else {
+//             dispatch(getAllCorporatesFail("Something went wrong"));
+//           }
+//         } else {
+//           dispatch(getAllCorporatesFail("Something went wrong"));
+//         }
+//       })
+//       .catch((response) => {
+//         dispatch(getAllCorporatesFail("something went wrong"));
+//       });
+//   };
+// };
+// const getAllCorporatesCategory = (navigate, data) => {
+//   // let token = JSON.parse(localStorage.getItem("token"));
+//   // let data = {};
+//   return async (dispatch) => {
+//     dispatch(getallcoporatesinit());
+//     let form = new FormData();
+//     form.append("RequestMethod", getallCoporatesSystem.RequestMethod);
+//     form.append("RequestData", JSON.stringify(data));
+//     axios({
+//       method: "POST",
+//       url: systemAdminAPI,
+//       data: form,
+//       // headers: {
+//       //   _token: token,
+//       // },
+//     })
+//       .then(async (response) => {
+//         console.log("CorporateCategoryCorporateCategory", response);
+//         if (response.data.responseCode === 417) {
+//           await dispatch(RefreshToken(navigate));
+//           dispatch(getAllCorporatesCategory(navigate));
+//         } else if (response.data.responseCode === 200) {
+//           if (response.data.responseResult.isExecuted === true) {
+//             if (
+//               response.data.responseResult.responseMessage.toLowerCase() ===
+//               "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_01".toLowerCase()
+//             ) {
+//               dispatch(
+//                 getallcorporatessuccess(
+//                   response.data.responseResult.corporateCategories,
+//                   "Data found"
+//                 )
+//               );
+//             } else if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_02".toLowerCase()
+//                 )
+//             ) {
+//               dispatch(getallcorporatesfailed("No Record Found"));
+//             }
+//             // else if (
+//             //   response.data.responseResult.responseMessage
+//             //     .toLowerCase()
+//             //     .includes(
+//             //       "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_03".toLowerCase()
+//             //     )
+//             // ) {
+//             //   dispatch(getallcorporatesfailed("Invalid Role"));
+//             // }
+//             else if (
+//               response.data.responseResult.responseMessage
+//                 .toLowerCase()
+//                 .includes(
+//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_04".toLowerCase()
+//                 )
+//             ) {
+//               dispatch(
+//                 getallcorporatesfailed("Exception Something went wrong")
+//               );
+//             }
+//           } else {
+//             dispatch(getallcorporatesfailed("Something went wrong"));
+//             console.log("There's no corporates category");
+//           }
+//         } else {
+//           dispatch(getallcorporatesfailed("Something went wrong"));
+//           console.log("There's no corporates category");
+//         }
+//       })
+//       .catch((response) => {
+//         dispatch(getallcorporatesfailed("something went wrong"));
+//       });
+//   };
+// };
 
 //Bank Users BankUserList
 const BankUsersBankListInit = () => {
@@ -1339,7 +1428,7 @@ const SearchCorporateUsersFail = (message) => {
 };
 
 const SearchCorporateUsersAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(SearchCorporateUsersInit());
     let form = new FormData();
@@ -1422,7 +1511,7 @@ const SearchBankUsersFail = (message) => {
 };
 
 const SearchBankUsersAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(SearchBankUsersInit());
     let form = new FormData();
@@ -1566,7 +1655,6 @@ const UpdateCorporateUsersAPI = (navigate, data) => {
 };
 
 //Get Bank User by UserID
-
 const GetBankUserByUserIDInit = () => {
   return {
     type: actions.GET_BANK_USER_BY_USERID_INIT,
@@ -1589,7 +1677,7 @@ const GetBankUserByUserIDFail = (message) => {
 };
 
 const GetBankUserByUserIDAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(GetBankUserByUserIDInit());
     let form = new FormData();
@@ -1619,6 +1707,7 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
                   "User Status Updated"
                 )
               );
+              dispatch(editBankUserModalSystemAdmin(true));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1673,11 +1762,11 @@ const UpdateBankUserByUserIdFail = (message) => {
 };
 
 const UpdateBankUserByUserIdAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateBankUserByUserIdInit());
     let form = new FormData();
-    form.append("RequestMethod", UpdateBankUserByBankID.RequestMethod);
+    form.append("RequestMethod", UpdateBankUserByUserID.RequestMethod);
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
@@ -1695,7 +1784,7 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_01".toLowerCase()
+              "SystemAdmin_SystemAdminManager_UpdateBankUserbyUserID_01".toLowerCase()
             ) {
               dispatch(
                 UpdateBankUserByUserIdSuccess(
@@ -1703,11 +1792,13 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
                   "User Status Updated"
                 )
               );
+              dispatch(editBankUserModalSystemAdmin(false));
+              dispatch(SearchBankUsersAPI(navigate, data));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateBankUserbyUserID_02".toLowerCase()
                 )
             ) {
               dispatch(UpdateBankUserByUserIdFail("User Status Not Updated"));
@@ -1715,7 +1806,7 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateBankUserbyUserID_03".toLowerCase()
                 )
             ) {
               dispatch(UpdateBankUserByUserIdFail("Exception"));
@@ -1757,7 +1848,7 @@ const GetVolmeterByBankIDfail = (message) => {
 };
 
 const GetVolmeterByBankIDAPI = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(GetVolmeterByBankIDInit());
     let form = new FormData();
@@ -1767,9 +1858,9 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
       method: "POST",
       url: systemAdminAPI,
       data: form,
-      // headers: {
-      //   _token: token,
-      // },
+      headers: {
+        _token: token,
+      },
     })
       .then(async (response) => {
         if (response.data.responseCode === 417) {
@@ -1859,7 +1950,7 @@ const AddUpdateVolmterFail = (message) => {
 };
 
 const AddUpdateVolmterAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(AddUpdateVolmterInit());
     let form = new FormData();
@@ -2311,6 +2402,268 @@ const UpdateCategoryAPI = (navigate, data) => {
   };
 };
 
+//Get All Corporate Users
+const GetAllCorporateUsersInit = () => {
+  return {
+    type: actions.GET_ALL_CORPORATE_USER_INIT,
+  };
+};
+
+const GetAllCorporateUsersSuccess = (response, message) => {
+  console.log(response);
+  return {
+    type: actions.GET_ALL_CORPORATE_USER_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllCorporateUsersFail = (message) => {
+  return {
+    type: actions.GET_ALL_CORPORATE_USER_FAIL,
+    message: message,
+  };
+};
+
+const GetAllCorporateUsersAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllCorporateUsersInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllCorporateUsers.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllCorporateUsersAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllCorporateUsers_01".toLowerCase()
+                )
+            ) {
+              // console.log(response);
+
+              dispatch(
+                GetAllCorporateUsersSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetAllCorporateUsers_02".toLowerCase()
+            ) {
+              dispatch(GetAllCorporateUsersFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllCorporateUsers_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCorporateUsersFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllCorporateUsersFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllCorporateUsersFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllCorporateUsersFail("something went wrong"));
+      });
+  };
+};
+
+//Get All Corporate Users
+const GetCorporateUserByUserIDInit = () => {
+  return {
+    type: actions.GET_CORPORATE_USER_BY_USERID_INIT,
+  };
+};
+
+const GetCorporateUserByUserIDSuccess = (response, message) => {
+  console.log(response);
+  return {
+    type: actions.GET_CORPORATE_USER_BY_USERID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetCorporateUserByUserIDFail = (message) => {
+  return {
+    type: actions.GET_CORPORATE_USER_BY_USERID_FAIL,
+    message: message,
+  };
+};
+
+const GetCorporateUserByUserIDAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetCorporateUserByUserIDInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetCorporateUserByUserID.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetCorporateUserByUserIDAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCorporateUserByUserID_01".toLowerCase()
+                )
+            ) {
+              // console.log(response);
+
+              dispatch(
+                GetCorporateUserByUserIDSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+              dispatch(EditCorporateModalSystemAdmin(true));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCorporateUserByUserID_02".toLowerCase()
+            ) {
+              dispatch(GetCorporateUserByUserIDFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCorporateUserByUserID_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetCorporateUserByUserIDFail("Exception"));
+            }
+          } else {
+            dispatch(GetCorporateUserByUserIDFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetCorporateUserByUserIDFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetCorporateUserByUserIDFail("something went wrong"));
+      });
+  };
+};
+
+//Get All Branches
+const GetCounterPartyNamesInit = () => {
+  return {
+    type: actions.GET_COUNTER_PARTY_NAMES_INIT,
+  };
+};
+
+const GetCounterPartyNamesSuccess = (response, message) => {
+  console.log("in success", response);
+  return {
+    type: actions.GET_COUNTER_PARTY_NAMES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetCounterPartyNamesFail = (message) => {
+  return {
+    type: actions.GET_COUNTER_PARTY_NAMES_FAIL,
+    message: message,
+  };
+};
+
+const GetCounterPartyNamesAPI = (navigate) => {
+  console.log("in  GetCounterPartyNamesAPI");
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetCounterPartyNamesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetCounterPartyNames.RequestMethod);
+    // form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        console.log(
+          response
+          // response.data,
+          // response.data.responseResult.responseMessage,
+          // response.data.responseCode
+        );
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetCounterPartyNamesAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          // console.log(
+          //   response,
+          //   response.data,
+          //   response.data.responseResult.responseMessage,
+          //   response.data.responseCode,
+          //   response.data.responseResult.isExecuted
+          // );
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCounterPartyNames_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetCounterPartyNamesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCounterPartyNames_04".toLowerCase()
+            ) {
+              dispatch(GetCounterPartyNamesFail("Exception"));
+            }
+          } else {
+            dispatch(GetCounterPartyNamesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetCounterPartyNamesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetCounterPartyNamesFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -2325,7 +2678,7 @@ export {
   CorporateUsersBulkListAPI,
   SearchCorporateUsersAPI,
   SearchBankUsersAPI,
-  getAllCorporatesCategory,
+  // getAllCorporatesCategory,
   UpdateCorporateUsersAPI,
   GetBankUserByUserIDAPI,
   UpdateBankUserByUserIdAPI,
@@ -2335,5 +2688,8 @@ export {
   UpdateVolmeterSettingByBankIdAPI,
   GetVolMeterSettingByBankIdAPI,
   UpdateCategoryAPI,
-  GetAllBankUsersAPI,
+  // GetAllBankUsersAPI,
+  GetAllCorporateUsersAPI,
+  GetCorporateUserByUserIDAPI,
+  GetCounterPartyNamesAPI,
 };

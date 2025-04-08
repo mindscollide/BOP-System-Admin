@@ -3,10 +3,7 @@ import styles from "./ActivateConfirmationModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
-import {
-  AddBankUserConfirmationModalSystemAdmin,
-  ConfirmationModalSystemAdmin,
-} from "../../../store/actions/BOPSystemAdminModalsActions";
+import { ConfirmationModalSystemAdmin } from "../../../store/actions/BOPSystemAdminModalsActions";
 import { Button, Modal } from "../../../components/elements";
 
 const ActivateConfirmationModal = ({ onConfirm }) => {

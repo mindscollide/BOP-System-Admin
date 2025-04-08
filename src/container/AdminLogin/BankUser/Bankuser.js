@@ -6,7 +6,7 @@ import {
   TextField,
   Button,
   CustomUpload,
-  Notification,
+  // Notification,
   Loader,
 } from "../../../components/elements";
 import Select from "react-select";
@@ -16,7 +16,7 @@ import {
   AdduserModalSystemAdmin,
   // DeleteCorporateModalSystemAdmin,
   // AddBankUserConfirmationModalSystemAdmin,
-  editBankUserModalSystemAdmin,
+  // editBankUserModalSystemAdmin,
   ConfirmationModalSystemAdmin,
 } from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
@@ -30,11 +30,27 @@ import { useNavigate } from "react-router-dom";
 import { validateBopEmail } from "../../../utils/regexUtil";
 import { roleOptions } from "../../../helpers/Dropdown";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { GetAllCategoriesAPI } from "../../../store/actions/Auth-Actions";
+// import ResponseMessage from "../../../utils/ResponseMessage";
 // import ActivateConfirmationModal from "./ActivateConfirmationModal/ActivateConfirmationModal";
 const Bankuser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { BOPSystemAdminModal } = useSelector((state) => state);
+  const getALlBranches = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllBranchesData
+  );
+  //Search all corporate Users
+  const SearchBankUsers = useSelector(
+    (state) => state.BOPSystemAdminReducer.SearchBankUsersData
+  );
+
+  console.log("SearchBankUserSearchBankUser", SearchBankUsers);
+  // const getAllCategories = useSelector((state) => state.auth.getAllCategories);
+
+  console.log(getALlBranches, "getALlBranches");
+  // console.log("getAllCategories", getAllCategories.categories);
+
+  // const { BOPSystemAdminModal } = useSelector((state) => state);
   //Dummy employee ID
   const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
 
@@ -42,24 +58,15 @@ const Bankuser = () => {
   //   (state) => state.BOPSystemAdminModal.deleteCorporateModal
   // );
 
-  const AddBankUserConfirmationModal = useSelector(
-    (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
-  );
+  // const AddBankUserConfirmationModal = useSelector(
+  //   (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
+  // );
   //State for branch options
-  const [branchOptions, setBranchOptions] = useState([
-    { value: "1234 - Gulshan", label: "1234 - Gulshan" },
-    { value: "2342 - Saddar", label: "2342 - Saddar" },
-    { value: "4563 - Clifton", label: "4563 - Clifton" },
-  ]);
+  const [branchOptions, setBranchOptions] = useState([]);
+  // const [categoryOptions, setCategoryOptions] = useState([]);
 
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
-
-  //Checking snakbar state
-  const [open, setOpen] = useState(false);
-
-  //Set Activate Button
-  const [isActive, setIsActive] = useState(false);
 
   //Add Bank  Use Modal Calling
   const AddBankUserModalGobalState = useSelector(
@@ -75,41 +82,58 @@ const Bankuser = () => {
   const [errorShow, setErrorShow] = useState(false);
 
   //State for Roles
-  const [branchRole, setBranchRole] = useState(false);
-  const [roles, setRoles] = useState("");
+  const [branchRole, setBranchRole] = useState({
+    value: 0,
+    label: "",
+  });
+  const [roles, setRoles] = useState({
+    label: "",
+    value: 0,
+  });
+  // const [category, setCategory] = useState("");
+
+  //state for save button
+  const [saveClicked, setSaveClicked] = useState(false);
+
+  //state for cancel button
+  const [cancelClicked, setCancelClicked] = useState(false);
 
   //handle Open AddBankUser Modal
   const handleOpenAddBankUserModal = () => {
     dispatch(AdduserModalSystemAdmin(true));
   };
 
-  //handle Edit AddBankUser Modal
-  const handleOpenEditBankUserModal = () => {
-    dispatch(editBankUserModalSystemAdmin(true));
-  };
+  // //handle Edit AddBankUser Modal
+  // const handleOpenEditBankUserModal = () => {
+  //   dispatch(editBankUserModalSystemAdmin(true));
+  // };
 
   //state for Add Bank User
   const [addBankUser, setAddBankUser] = useState({
     ...addBankUserSchema,
   });
+  console.log(addBankUser);
 
   // Fetch branches on component mount
   useEffect(() => {
-    const fetchBranches = async () => {
-      const result = await dispatch(GetAllBranchesAPI(navigate));
-      if (result?.branches) {
-        const branchOptions = result.branches.map((branch) => ({
-          value: branch.branchID,
-          label: branch.branchName,
-        }));
-        setBranchOptions(branchOptions);
-      } else {
-        setBranchOptions(branchOptions);
-      }
-    };
+    dispatch(GetAllBranchesAPI(navigate));
+    dispatch(GetAllCategoriesAPI(navigate));
+  }, []);
 
-    fetchBranches();
-  }, [dispatch, navigate, branchOptions]);
+  useEffect(() => {
+    if (getALlBranches !== null) {
+      try {
+        let newBranchesData = getALlBranches.branches.map((branch) => {
+          return {
+            ...branch,
+            value: branch.branchID,
+            label: branch.branchName,
+          };
+        });
+        setBranchOptions(newBranchesData);
+      } catch (error) {}
+    }
+  }, [getALlBranches]);
 
   //add bank user security admin validate handler
   const addBankUserValidateHandler = (e) => {
@@ -271,49 +295,56 @@ const Bankuser = () => {
       });
     }
 
-    // if (name === "email" && value !== "") {
-    //   // Remove all spaces from the input
-    //   const trimmedValue = value.replace(/\s+/g, "");
+    if (name === "email" && value !== "") {
+      // Remove all spaces from the input
+      const trimmedValue = value.replace(/\s+/g, "");
 
-    //   if (trimmedValue !== "") {
-    //     setAddBankUser({
-    //       ...addBankUser,
-    //       email: {
-    //         value: trimmedValue,
-    //         errorMessage: "",
-    //         errorStatus: false,
-    //       },
-    //     });
-    //   }
-    // } else if (name === "email" && value === "") {
-    //   setAddBankUser({
-    //     ...addBankUser,
-    //     email: {
-    //       value: "",
-    //       errorMessage: "",
-    //       errorStatus: true,
-    //     },
-    //   });
-    // }
+      if (trimmedValue !== "") {
+        setAddBankUser({
+          ...addBankUser,
+          email: {
+            value: trimmedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+      }
+    } else if (name === "email" && value === "") {
+      setAddBankUser({
+        ...addBankUser,
+        email: {
+          value: "",
+          errorMessage: "",
+          errorStatus: true,
+        },
+      });
+    }
   };
 
   const bankSelectRoleHandler = async (selectedRole) => {
-    console.log(selectedRole.value, "selectroleselectroleselectrole");
     setRoles(selectedRole);
-    setBranchRole("");
+
+    console.log(selectedRole, "selectedRole");
 
     setAddBankUser((prevState) => ({
       ...prevState,
-      roleID: { ...prevState.roleID, value: selectedRole.value },
-      branchID: { value: "" },
+
+      roleID: {
+        ...prevState.roleID,
+        value: selectedRole.value,
+        label: selectedRole.label,
+      },
+      branchID: { value: 0 },
     }));
     // Automatically select the first branch option if the role is "Branch"
-    if (selectedRole.value === "Branch" && branchOptions.length > 0) {
+    if (selectedRole.value === 9 && branchOptions.length > 0) {
       const firstBranchOption = branchOptions[0];
+      console.log("firstBranchOption", firstBranchOption);
       setBranchRole(firstBranchOption);
       setAddBankUser((prevState) => ({
         ...prevState,
         branchID: { ...prevState.branchID, value: firstBranchOption.value },
+        category: firstBranchOption.categoryName,
       }));
     }
   };
@@ -324,11 +355,18 @@ const Bankuser = () => {
 
     setAddBankUser((prevState) => ({
       ...prevState,
-      branchID: { ...prevState.branchID, value: selectedBranch.value },
+      category: selectedBranch.categoryName,
+      branchID: { BranchID: selectedBranch.value },
     }));
   };
 
   const handleCancelButton = () => {
+    // console.log("addBankUser", addBankUser);
+    setCancelClicked(true);
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
+
+  const handleCancelYes = () => {
     setBranchRole("");
     setRoles("");
     setAddBankUser({
@@ -357,70 +395,90 @@ const Bankuser = () => {
         value: "",
       },
       branchID: {
-        value: "",
+        value: 0,
       },
     });
+    setCancelClicked(false);
   };
-
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    dispatch(ConfirmationModalSystemAdmin(true));
+    console.log("addBankUser", addBankUser);
+    setSaveClicked(true);
+    if (validateBopEmail(addBankUser.email.value)) {
+      setErrorShow(false);
+      dispatch(ConfirmationModalSystemAdmin(true));
+    } else {
+      setErrorShow(true);
+    }
   };
+  // console.log("saveClicked is: ", saveClicked);
 
   const handleConfirmationYes = useCallback(() => {
-    // dispatch(AddBankUser);
     let employeeID = addBankUser.EmployeeID.value;
+
+    // // Check if all required fields are filled
+    // if (
+    //   addBankUser.firstName.value !== "" &&
+    //   addBankUser.roleID.value !== "" &&
+    //   addBankUser.email.value !== "" &&
+    //   addBankUser.Contact.value !== "" &&
+    //   addBankUser.EmployeeID.value !== ""
+    // ) {
+    // Check if EmployeeID is unique and greater than the last dummy ID
     if (
-      addBankUser.firstName.value !== "" &&
-      addBankUser.roleID.value !== "" &&
-      addBankUser.ldapAccount.value !== "" &&
-      addBankUser.email.value !== "" &&
-      addBankUser.Contact.value !== ""
+      parseInt(employeeID) >
+      parseInt(dummyEmployeeIDs[dummyEmployeeIDs.length - 1])
     ) {
-      // checking if EmployeeID is already present
-      if (
-        parseInt(employeeID) >
-        parseInt(dummyEmployeeIDs[dummyEmployeeIDs.length - 1])
-      ) {
-        setErrorShow(false);
-        //Validating email address
-        if (validateBopEmail(addBankUser.email.value)) {
-          setErrorShow(false);
-          let newData = {
-            User: {
-              EmployeeID: addBankUser.EmployeeID.value,
-              FirstName: addBankUser.firstName.value,
-              UserRoleID: addBankUser.roleID.value,
-              LDAPAccount: addBankUser.ldapAccount.value,
-              Email: addBankUser.email.value,
-              ContactNumber: addBankUser.Contact.value,
-            },
-            BankId: 1,
-          };
-          // Add branchID only if UserRoleID is "Branch"
-          if (addBankUser.roleID.value === "Branch") {
-            newData.User.branchID = addBankUser.branchID.value;
-          }
-          console.log("newData", newData);
-          dispatch(CreateBankUserRequestAPI(navigate, newData));
-          setOpen({
-            open: true,
-            message: "CreateBankUserRequestAPI is dispatched",
-          });
-        } else {
-          setErrorShow(true);
-        }
-      } else {
-        setErrorShow(true);
-        setAddBankUser({
-          ...addBankUser,
-          EmployeeID: {
-            ...addBankUser.EmployeeID,
-            errorStatus: true,
+      setErrorShow(false);
+
+      // Extract LDAPAccount from email (part before "@")
+      const ldapAccountValue = addBankUser.email.value.split("@")[0];
+
+      // Prepare the data for API request
+      let newData = {
+        BankId: 1, // Default bank ID
+        User: {
+          UserID: 0, // Assuming this is a new user
+          FirstName: addBankUser.firstName.value,
+          Lastname: "Branch User", // Default value
+          Email: addBankUser.email.value,
+          ContactNumber: addBankUser.Contact.value,
+          LDAPAccount: ldapAccountValue, // Use the extracted LDAPAccount
+          FailedAttemptCount: 0, // Default value
+          // UserRoleID: addBankUser.roleID.value, // Role ID from the form
+          UserRoleID: 9,
+          EmployeeID: addBankUser.EmployeeID.value,
+
+          Branch: {
+            BranchID: addBankUser.branchID.value, // Include BranchID inside a Branch object
           },
-        });
-      }
+        },
+      };
+
+      // Add branchID only if the role is "Branch" (roleID === 7)
+      // if (addBankUser.roleID.value === 7) {
+      //   newData.User.branchID = addBankUser.branchID.value;
+      // }
+
+      console.log("newData", newData);
+
+      // Dispatch API request to create the bank user
+      dispatch(CreateBankUserRequestAPI(navigate, newData));
+    } else {
+      // Show error if EmployeeID is not unique
+      setErrorShow(true);
+      setAddBankUser({
+        ...addBankUser,
+        EmployeeID: {
+          ...addBankUser.EmployeeID,
+          errorStatus: true,
+        },
+      });
+      // }
     }
+
+    // Reset saveClicked state
+    setSaveClicked(false);
   }, [addBankUser]);
 
   // Handle File upload
@@ -438,30 +496,27 @@ const Bankuser = () => {
     }
   };
 
-  //Handle activate button when branch is selected
-  useEffect(() => {
-    if (
-      addBankUser.EmployeeID.errorStatus !== true &&
-      addBankUser.firstName.value !== "" &&
-      addBankUser.roleID.value !== "" &&
-      addBankUser.ldapAccount.value !== "" &&
-      addBankUser.email.value !== "" &&
-      addBankUser.Contact.value !== ""
-    ) {
-      if (
-        addBankUser.roleID.value === "Branch" &&
-        addBankUser.branchID.value === ""
-      ) {
-        setIsActive(false);
-      } else if (addBankUser.roleID.value !== "Branch") {
-        setIsActive(true);
-      } else {
-        setIsActive(true);
-      }
-    } else {
-      setIsActive(false);
-    }
-  }, [addBankUser]);
+  // //Handle activate button when branch is selected
+  // useEffect(() => {
+  //   if (
+  //     addBankUser.EmployeeID.errorStatus !== true &&
+  //     addBankUser.firstName.value !== "" &&
+  //     addBankUser.roleID.value !== "" &&
+  //     // addBankUser.ldapAccount.value !== "" &&
+  //     addBankUser.email.value !== "" &&
+  //     addBankUser.Contact.value !== ""
+  //   ) {
+  //     if (addBankUser.roleID.value === 7 && addBankUser.branchID.value === "") {
+  //       setIsActive(false);
+  //     } else if (addBankUser.roleID.value !== 7) {
+  //       setIsActive(true);
+  //     } else {
+  //       setIsActive(true);
+  //     }
+  //   } else {
+  //     setIsActive(false);
+  //   }
+  // }, [addBankUser]);
 
   console.log(
     "addBankUser.EmployeeID.errorMessage",
@@ -548,7 +603,6 @@ const Bankuser = () => {
                           onChange={addBankUserValidateHandler}
                           labelClass="d-none"
                         />
-                        {/* <Row className="mt-3"></Row> */}
                       </Col>
                     </Row>
 
@@ -588,7 +642,7 @@ const Bankuser = () => {
                       {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
-                    {roles.value === "Branch" && (
+                    {roles.value === 9 && (
                       <>
                         <Row className="mt-3 position-relative">
                           <Col lg={2} md={2} sm={12}>
@@ -609,6 +663,7 @@ const Bankuser = () => {
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
                               className={styles["react-select-field"]}
+                              menuPortalTarget={document.body}
                             />
                           </Col>
                           <Col lg={1} md={1} sm={12}>
@@ -620,13 +675,13 @@ const Bankuser = () => {
                               onClick={handleOpenAddBankUserModal}
                             />
                           </Col>
-                          <Col lg={1} md={1} sm={12}>
+                          {/* <Col lg={1} md={1} sm={12}>
                             <Button
                               className={styles["EditButton"]}
                               icon={<i className="icon-edit color-blue"></i>}
                               onClick={handleOpenEditBankUserModal}
                             />
-                          </Col>
+                          </Col> */}
                           {/* <Row className="mt-3"></Row> */}
                         </Row>
 
@@ -641,37 +696,30 @@ const Bankuser = () => {
                           </Col>
                           <Col lg={5} md={5} sm={12}>
                             <TextField
-                              name={"Category"}
-                              disable={true}
-                              placeholder={"01 bps"}
+                              name={"cateogry"}
+                              value={addBankUser.category}
+                              maxLength={50}
+                              // onChange={addBankUserValidateHandler}
                               labelClass="d-none"
                             />
                           </Col>
-                          {/* <Row className="mt-3"></Row> */}
 
-                          <Col lg={4} md={4} sm={12}></Col>
+                          {/* <Col lg={5} md={5} sm={12}>
+                            <Select
+                              name="cateogry"
+                              // options={categoryOptions}
+                              isDisabled
+                              // value={addBankUser.category}
+                              // value={category}
+                              // onChange={bankSelectRoleHandler}
+
+                              isSearchable={true}
+                              className={styles["react-select-field"]}
+                            />
+                          </Col> */}
                         </Row>
                       </>
                     )}
-
-                    <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          LDAP Account
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={5} md={5} sm={12}>
-                        <TextField
-                          name={"ldapAccount"}
-                          value={addBankUser.ldapAccount.value}
-                          onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
-                          maxLength={50}
-                        />
-                        {/* <Row className="mt-3"></Row> */}
-                      </Col>
-                    </Row>
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
@@ -684,28 +732,22 @@ const Bankuser = () => {
                         <TextField
                           name={"email"}
                           value={addBankUser.email.value}
-                          disable={true}
-                          // onChange={addBankUserValidateHandler}
+                          onChange={addBankUserValidateHandler}
                           labelClass="d-none"
                           // maxLength={50}
                         />
-
-                        {/* <Row>
-                          <Col className="d-flex justify-content-start">
-                            <p
-                              className={
-                                errorShow &&
-                                !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
-                                  addBankUser.email.value
-                                )
-                                  ? styles["bankErrorMessage"]
-                                  : styles["bankErrorMessage_hidden"]
-                              }
-                            >
-                              Email address with domain of bop is required
-                            </p>
-                          </Col>
-                        </Row> */}
+                        {errorShow &&
+                        !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
+                          addBankUser.email.value
+                        ) ? (
+                          <Row>
+                            <Col className="d-flex justify-content-start">
+                              <p className={styles["bankErrorMessage"]}>
+                                Email address with domain of bop is required
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : null}
                       </Col>
                     </Row>
 
@@ -739,7 +781,15 @@ const Bankuser = () => {
                           text="Activate"
                           onClick={handleActivateButton}
                           className={styles["Active-btn"]}
-                          disableBtn={isActive ? false : true}
+                          disableBtn={
+                            addBankUser.EmployeeID.errorStatus !== true &&
+                            addBankUser.firstName.value !== "" &&
+                            addBankUser.roleID.value !== "" &&
+                            addBankUser.email.value !== "" &&
+                            addBankUser.Contact.value !== ""
+                              ? false
+                              : true
+                          }
                         />
                         <Button
                           icon={<i className="icon-close icon-check-space"></i>}
@@ -759,13 +809,22 @@ const Bankuser = () => {
 
       {AddBankUserModalGobalState && <AddBankUserModal />}
       {EditBankUserModalGobalState && <EditBankUserModal />}
-      {AddBankUserConfirmationModal && (
-        <ActivateConfirmationModal onConfirm={handleConfirmationYes} />
-      )}
+      {
+        // AddBankUserConfirmationModal && (
+        saveClicked === true && (
+          <ActivateConfirmationModal onConfirm={handleConfirmationYes} />
+        )
+        // )
+      }
+      {
+        //
+        cancelClicked === true && (
+          <ActivateConfirmationModal onConfirm={handleCancelYes} />
+        )
+        // )
+      }
 
       {BOPSystemAdminReducer.Loading && <Loader />}
-
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };

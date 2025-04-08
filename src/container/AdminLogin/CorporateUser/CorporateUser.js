@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import styles from "./Corporateuser.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -23,18 +23,25 @@ import {
 import { useDispatch } from "react-redux";
 import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
 import { addCorporateUserSchema } from "../../../utils/schemas";
-import { categoryOptions, companyOptions } from "../../../helpers/Dropdown";
-import { validateBopEmail } from "../../../utils/regexUtil";
+// import { categoryOptions, companyOptions } from "../../../helpers/Dropdown";
+import { validateBopEmail, validateEmail } from "../../../utils/regexUtil";
 import { useNavigate } from "react-router-dom";
 import { CreateCorporateUserRequestAPI } from "../../../store/actions/BOPSystemAdminActions";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { getAllCorporatesCategory } from "../../../store/actions/Auth-Actions";
 // import ActivateConfirmationModal from "../BankUser/ActivateConfirmationModal/ActivateConfirmationModal";
 const CorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   //Global Staate
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
+  // const { BOPSystemAdminReducer } = useSelector((state) => state);
+
+  // get all corporates (company name)
+  const GetAllCorporates = useSelector(
+    (state) => state.auth.GetAllCorporatesData
+  );
+  console.log("GetAllCorporates", GetAllCorporates);
 
   //  //Global Modal for confirmation
   const AddBankUserConfirmationModal = useSelector(
@@ -55,12 +62,24 @@ const CorporateUser = () => {
     ...addCorporateUserSchema,
   });
 
-  // States for dropdown
-  const [companyName, setCompanyName] = useState("");
-  const [category, setCategory] = useState("");
+  // // States for dropdown
+  // // const [companyName, setCompanyName] = useState("");
+  // const [category, setCategory] = useState("");
 
-  //Set Activate Button
-  const [isActive, setIsActive] = useState(false);
+  //companyRoles
+  const [companyRole, setCompanyRole] = useState({
+    value: 0,
+    label: "",
+  });
+
+  //Global State
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
+  //State for branch options
+  const [companyNameOptions, setCompanyName] = useState([]);
+  console.log("companyNameOptions", companyNameOptions);
+
+  // //Set Activate Button
+  // const [isActive, setIsActive] = useState(false);
 
   //
 
@@ -206,7 +225,7 @@ const CorporateUser = () => {
 
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    if (validateBopEmail(corporateUser.email.value)) {
+    if (validateEmail(corporateUser.email.value)) {
       dispatch(ConfirmationModalSystemAdmin(true));
     } else {
       setErrorShow(true);
@@ -218,28 +237,35 @@ const CorporateUser = () => {
     if (
       corporateUser.firstName.value !== "" &&
       corporateUser.email.value !== "" &&
-      corporateUser.companyName.value !== "" &&
-      corporateUser.category.value !== ""
+      corporateUser.companyName !== ""
     ) {
-      if (validateBopEmail(corporateUser.email.value)) {
+      console.log(
+        "corporateUser.firstName.value",
+        corporateUser.firstName.value
+      );
+      console.log("corporateUser.email.value", corporateUser.email.value);
+      console.log(
+        "corporateUser.companyName.value",
+        corporateUser.companyName.value
+      );
+
+      if (validateEmail(corporateUser.email.value)) {
         setErrorShow(false);
         let newData = {
           User: {
             FirstName: corporateUser.firstName.value,
             Email: corporateUser.email.value,
+            ContactNumber: "03909090909",
           },
           // BankId: 1,
-          CategoryID: corporateUser.category.value,
-          CompanyName: corporateUser.companyName.value,
+          CorporateID: 1,
+          // CategoryID: corporateUser.category.value,
+          // CompanyName: corporateUser.companyName.value,
           IsChatActive: corporateUser.isChatActive.value,
         };
-        console.log("newData", newData);
+        // console.log("newDatanewDatanewDatanewData", newData);
 
         dispatch(CreateCorporateUserRequestAPI(navigate, newData));
-        setOpen({
-          open: true,
-          message: "CreateCorporateUserRequestAPI id dispatched",
-        });
       } else {
         console.log("corporateUsercorporateUser");
         setErrorShow(true);
@@ -260,10 +286,10 @@ const CorporateUser = () => {
     dispatch(corporatePlusIconModalSystemAdmin(true));
   };
 
-  //Edit Button
-  const handleEditButton = () => {
-    dispatch(editCompanyModalSystemAdmin(true));
-  };
+  // //Edit Button
+  // const handleEditButton = () => {
+  //   dispatch(editCompanyModalSystemAdmin(true));
+  // };
 
   const changeTick = () => {
     let opposeTick = !corporateUser.isChatActive.value;
@@ -277,8 +303,8 @@ const CorporateUser = () => {
 
   const handleCancelButton = () => {
     setCompanyName("");
-    setCategory("");
-    setIsActive(false);
+    // setCategory("");
+    // setIsActive(false);
     setCorporateUser({
       ...corporateUser,
       firstName: {
@@ -298,27 +324,67 @@ const CorporateUser = () => {
 
   //Handle Select Change
   // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
+  // const handleDropdownChange = (field, value, setter, userField) => {
+  //   setter(value); // Set the state
+  //   userField.value = value.value; // Update the corporateUser object
+  // };
+
+  // const CompanySelectHandler =
+  const CompanySelectHandler = async (selectedCompany) => {
+    console.log(
+      selectedCompany,
+      "selectedCompanyselectedCompanyselectedCompany"
+    );
+    setCompanyRole(selectedCompany);
+
+    setCorporateUser((prevState) => ({
+      ...prevState,
+      companyID: selectedCompany.value,
+      categoryName: selectedCompany.category.categoryName,
+      natureOfClient: selectedCompany.natureofBusiness.name,
+      rfqTreasury: `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+      rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+
+      //needs to be cleared
+    }));
   };
+  console.log("corporateUser.corporateID", corporateUser);
+
+  // useEffect(() => {
+  //   if (
+  //     corporateUser.firstName.value !== "" &&
+  //     corporateUser.email.value !== "" &&
+  //     corporateUser.companyName.value !== "" &&
+  //     corporateUser.category.value !== ""
+  //   ) {
+  //     setIsActive(true);
+  //   } else {
+  //     setIsActive(false);
+  //   }
+  // }, [
+  //   corporateUser,
+  //   corporateUser.companyName.value,
+  //   corporateUser.category.value,
+  // ]);
 
   useEffect(() => {
-    if (
-      corporateUser.firstName.value !== "" &&
-      corporateUser.email.value !== "" &&
-      corporateUser.companyName.value !== "" &&
-      corporateUser.category.value !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
+    dispatch(getAllCorporatesCategory(navigate));
+  }, []);
+
+  useEffect(() => {
+    if (GetAllCorporates !== null) {
+      try {
+        let newCorporateData = GetAllCorporates.corporates.map((corporate) => {
+          return {
+            ...corporate,
+            value: corporate.corporateID,
+            label: corporate.corporateName,
+          };
+        });
+        setCompanyName(newCorporateData);
+      } catch (error) {}
     }
-  }, [
-    corporateUser,
-    corporateUser.companyName.value,
-    corporateUser.category.value,
-  ]);
+  }, [GetAllCorporates]);
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -394,13 +460,13 @@ const CorporateUser = () => {
                             </Col>
                           </Row> */}
                         {errorShow &&
-                        !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
+                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
                           corporateUser.email.value
                         ) ? (
                           <Row>
                             <Col className="d-flex justify-content-start">
                               <p className={styles["bankErrorMessage"]}>
-                                Email address with domain of bop is required
+                                Enter Valid Email Address
                               </p>
                             </Col>
                           </Row>
@@ -418,37 +484,23 @@ const CorporateUser = () => {
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={5} md={5} sm={12} className="position-relative">
                         <Select
                           name="companyName"
+                          options={companyNameOptions}
                           isSearchable={true}
                           classNamePrefix={"companyName"}
-                          options={companyOptions}
-                          value={companyName}
-                          onChange={(e) =>
-                            handleDropdownChange(
-                              "companyName",
-                              e,
-                              setCompanyName,
-                              corporateUser.companyName
-                            )
-                          }
+                          value={companyRole}
+                          onChange={CompanySelectHandler}
                           className={styles["react-select-field"]}
                         />
-                      </Col>
-                      <Col lg={1} md={1} sm={12}>
-                        {/* <CorporateCustomUpload /> */}
                         <Button
                           className={styles["PlusButton"]}
                           icon={<span className={styles["PlusIcon"]}>+</span>}
                           onClick={handlePlusButton}
                         />
-                        <Button
-                          className={styles["EditButton"]}
-                          icon={<i className="icon-edit color-blue"></i>}
-                          onClick={handleEditButton}
-                        />
                       </Col>
+
                       {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
                     {/* <Row className="mt-3"></Row> */}
@@ -460,12 +512,21 @@ const CorporateUser = () => {
                         </span>
                       </Col>
                       <Col lg={5} md={5} sm={12}>
-                        <Select
+                        <TextField
+                          labelClass="d-none"
+                          name={"category"}
+                          value={corporateUser.categoryName}
+                          // onChange={addCorporateUserValidateHandler}
+                          maxLength={50}
+                          disable={true}
+                        />
+                        {/* <Select
                           name="category"
                           isSearchable={true}
                           classNamePrefix={"category"}
                           options={categoryOptions}
                           value={category}
+                          isDisabled
                           onChange={(e) =>
                             handleDropdownChange(
                               "category",
@@ -475,7 +536,7 @@ const CorporateUser = () => {
                             )
                           }
                           className={styles["react-select-field"]}
-                        />
+                        /> */}
                       </Col>
 
                       {/* <Col lg={4} md={4} sm={12}></Col> */}
@@ -520,8 +581,8 @@ const CorporateUser = () => {
                             </span>
                             <TextField
                               labelClass="d-none"
+                              value={corporateUser.rfqTreasury}
                               disable={true}
-                              placeholder={"3 Minutes"}
                             />
                           </Col>
                           <Col lg={5} md={5} sm={12}>
@@ -533,8 +594,8 @@ const CorporateUser = () => {
                             </span>
                             <TextField
                               labelClass="d-none"
+                              value={corporateUser.rfqCorporate}
                               disable={true}
-                              placeholder={"3 Minutes"}
                             />
                           </Col>
                         </Row>
@@ -552,7 +613,11 @@ const CorporateUser = () => {
                         </span>
                       </Col>
                       <Col lg={5} md={5} sm={12}>
-                        <TextField labelClass="d-none" disable={true} />
+                        <TextField
+                          labelClass="d-none"
+                          value={corporateUser.natureOfClient}
+                          disable={true}
+                        />
                       </Col>
 
                       {/* <Col lg={4} md={4} sm={12}></Col> */}
@@ -570,7 +635,14 @@ const CorporateUser = () => {
                           text="Activate"
                           className={styles["Active-btn"]}
                           onClick={handleActivateButton}
-                          disableBtn={isActive ? false : true}
+                          disableBtn={
+                            corporateUser.firstName.value !== "" &&
+                            corporateUser.email.value !== ""
+                              ? // &&
+                                // corporateUser.companyName.value !== ""
+                                false
+                              : true
+                          }
                         />
                         <Button
                           icon={<i className="icon-close icon-check-space"></i>}
@@ -589,9 +661,11 @@ const CorporateUser = () => {
       </Row>
       {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
       {editCompanyModalGobalState && <EditCompanyModal />}
-      {AddBankUserConfirmationModal && (
+      {
+        // AddBankUserConfirmationModal && (
         <ActivateConfirmationModal onConfirm={handleActivateButtonYes} />
-      )}
+        // )
+      }
       {BOPSystemAdminReducer.Loading && <Loader />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>

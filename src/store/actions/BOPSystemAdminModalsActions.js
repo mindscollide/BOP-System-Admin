@@ -1,4 +1,3 @@
-import { KeyboardReturnSharp } from "@material-ui/icons";
 import * as actions from "../action_types";
 
 const AdduserModalSystemAdmin = (response, message) => {

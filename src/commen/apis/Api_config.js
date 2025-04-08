@@ -118,7 +118,7 @@ const GetBankUserByUserID = {
   RequestMethod: "ServiceManager.GetBankUserbyUserID",
 };
 //Update Bank User By Bank ID
-const UpdateBankUserByBankID = {
+const UpdateBankUserByUserID = {
   RequestMethod: "ServiceManager.UpdateBankUserbyUserID",
 };
 
@@ -152,6 +152,35 @@ const GetVolMeterSettingByBankId = {
   RequestMethod: "ServiceManager.GetVolMeterSettingByBankId",
 };
 
+//Get All Categories
+const GetAllCategories = {
+  RequestMethod: "ServiceManager.GetAllCategories",
+};
+
+const GetAllCorporates = {
+  RequestMethod: "ServiceManager.GetAllCorporates",
+};
+
+const GetAllNatureOfBussiness = {
+  RequestMethod: "ServiceManager.GetAllNatureOfBussiness",
+};
+
+const GetAllCorporateUsers = {
+  RequestMethod: "ServiceManager.GetAllCorporateUsers",
+};
+
+const GetCorporateUserByUserID = {
+  RequestMethod: "ServiceManager.GetCorporateUserByUserID",
+};
+
+const RoleList = {
+  RequestMethod: "ServiceManager.RoleList",
+};
+
+const GetCounterPartyNames = {
+  RequestMethod: "ServiceManager.GetCounterPartyNames",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -180,11 +209,18 @@ export {
   SearchBankUsers,
   UpdateCorporateUsers,
   GetBankUserByUserID,
-  UpdateBankUserByBankID,
+  UpdateBankUserByUserID,
   GetVolmeterByBankID,
   AddUpdateVolmeter,
   UpdateVolmeterByDealer,
   UpdateVolMeterSettingByBankId,
   GetVolMeterSettingByBankId,
   GetAllBankUsers,
+  GetAllCategories,
+  GetAllCorporates,
+  GetAllNatureOfBussiness,
+  GetAllCorporateUsers,
+  GetCorporateUserByUserID,
+  RoleList,
+  GetCounterPartyNames,
 };

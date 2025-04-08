@@ -20,6 +20,7 @@ import "@fontsource/poppins/400-italic.css";
 import { Header } from "./components/layout";
 import { Sidebar2 } from "./components/layout";
 import PropertyType from "./container/Admin/Setups/PropertyType/PropertyType";
+import ResponseMessage from "./utils/ResponseMessage";
 
 function App() {
   return (

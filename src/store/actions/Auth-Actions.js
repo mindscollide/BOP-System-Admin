@@ -2,18 +2,20 @@ import * as actions from "../action_types";
 import axios from "axios";
 import {
   authenticationRefreshToken,
-  // getallCoporatesSystem,
   UpdateCorporateMapping,
   DeleteCategory,
   LoginSystemAdmin,
-  // CorporateUserLogin,
   SendEmailResetPassword,
+  GetAllCategories,
+  GetAllCorporates,
+  GetAllNatureOfBussiness,
+  RoleList,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
-import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
+// import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
 
 const cleareMessage = (response) => {
   return {
@@ -56,7 +58,7 @@ const refreshtokenSuccess = (response, message) => {
 const RefreshToken = (navigate) => {
   let Token = localStorage.getItem("token");
   let RefreshToken = localStorage.getItem("refreshToken");
-  console.log("RefreshToken", { Token, RefreshToken });
+  console.log("RefreshToken", Token, RefreshToken);
   let Data = {
     Token: Token,
     RefreshToken: RefreshToken,
@@ -73,22 +75,36 @@ const RefreshToken = (navigate) => {
     })
       .then(async (response) => {
         console.log("RefreshToken", response);
-        if (response.data.responseCode === 200) {
+        if (response.data.responseCode === 205) {
+          let message2 = "Your Session has expired. Please login again";
+          dispatch(signOut(navigate, message2));
+        } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted) {
-            await dispatch(
-              refreshtokenSuccess(
-                response.data.responseResult,
-                "Refresh Token Update Successfully"
+            if (
+              response.data.responseResult.responseMessage.includes.toLowerCase(
+                "ERM_AuthService_AuthManager_RefreshToken_01".toLowerCase()
               )
-            );
+            ) {
+              await dispatch(
+                refreshtokenSuccess(
+                  response.data.responseResult,
+                  "Refresh Token Update Successfully"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.includes.toLowerCase(
+                "ERM_AuthService_AuthManager_RefreshToken_02".toLowerCase()
+              )
+            ) {
+              let message2 = "Your Session has expired. Please login again";
+              dispatch(signOut(navigate, message2));
+            }
           } else {
-            console.log("RefreshToken", response);
-            let message2 = "Your Session has expired. Please login again";
-            dispatch(signOut(navigate, message2));
-            await dispatch(
-              refreshtokenFail("Your Session has expired. Please login again.")
-            );
+            dispatch(signOut(navigate, ""));
+            await dispatch(refreshtokenFail("Something went wrong"));
           }
+        } else {
+          dispatch(refreshtokenFail("Something went wrong"));
         }
       })
       .catch((response) => {
@@ -669,13 +685,375 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
   };
 };
 
+//Get All Categories
+const GetAllCategoriesInit = () => {
+  return {
+    type: actions.GET_ALL_CATEGORIES_INIT,
+  };
+};
+
+const GetAllCategoriesSuccess = (response, message) => {
+  console.log(response);
+  return {
+    type: actions.GET_ALL_CATEGORIES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllCategoriesFail = (message) => {
+  return {
+    type: actions.GET_ALL_CATEGORIES_FAIL,
+    message: message,
+  };
+};
+
+const GetAllCategoriesAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllCategoriesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllCategories.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        // console.log(
+        //   response,
+        //   response.data,
+        //   response.data.responseResult.responseMessage,
+        //   response.data.responseCode
+        // );
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllCategoriesAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          // console.log(
+          //   response,
+          //   response.data,
+          //   response.data.responseResult.responseMessage,
+          //   response.data.responseCode,
+          //   response.data.responseResult.isExecuted
+          // );
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCategories_01".toLowerCase()
+                )
+            ) {
+              // console.log(response);
+
+              dispatch(
+                GetAllCategoriesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllCategories_02".toLowerCase()
+            ) {
+              dispatch(GetAllCategoriesFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCategories_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCategoriesFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllCategoriesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllCategoriesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllCategoriesFail("something went wrong"));
+      });
+  };
+};
+
+const getAllCoporatesInit = () => {
+  return {
+    type: actions.GET_ALL_CORPORATES_INIT,
+  };
+};
+
+const getAllCorporatesSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_CORPORATES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const getAllCorporatesFail = (message) => {
+  return {
+    type: actions.GET_ALL_CORPORATES_FAIL,
+    message: message,
+  };
+};
+
+const getAllCorporatesCategory = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(getAllCoporatesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllCorporates.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        // if (response.data?.responseCode === 417) {
+        //   await dispatch(RefreshToken(navigate));
+        //   dispatch(GetAllBranchesAPI(navigate));
+        // } else
+        if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+                )
+            ) {
+              // console.log(response);
+
+              dispatch(
+                getAllCorporatesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+            ) {
+              dispatch(getAllCorporatesFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                )
+            ) {
+              dispatch(getAllCorporatesFail("Exception"));
+            }
+          } else {
+            dispatch(getAllCorporatesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(getAllCorporatesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(getAllCorporatesFail("something went wrong"));
+      });
+  };
+};
+//Get All Categories
+const GetAllNatureInit = () => {
+  return {
+    type: actions.GET_ALL_NATURE_OF_BUSINESS_INIT,
+  };
+};
+
+const GetAllNatureSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_NATURE_OF_BUSINESS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllNatureFail = (message) => {
+  return {
+    type: actions.GET_ALL_NATURE_OF_BUSINESS_FAIL,
+    message: message,
+  };
+};
+
+const GetAllNatureAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllNatureInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllNatureOfBussiness.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        // console.log(
+        //   response,
+        //   response.data,
+        //   response.data.responseResult.responseMessage,
+        //   response.data.responseCode
+        // );
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllNatureAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          // console.log(
+          //   response,
+          //   response.data,
+          //   response.data.responseResult.responseMessage,
+          //   response.data.responseCode,
+          //   response.data.responseResult.isExecuted
+          // );
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllNatureSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_02".toLowerCase()
+            ) {
+              dispatch(GetAllNatureFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllNatureFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllNatureFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllNatureFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllNatureFail("something went wrong"));
+      });
+  };
+};
+//Get All Categories
+const RoleListInit = () => {
+  console.log("here now");
+  return {
+    type: actions.ROLE_LIST_INIT,
+  };
+};
+
+const RoleListSuccess = (response, message) => {
+  console.log(response);
+  return {
+    type: actions.ROLE_LIST_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const RoleListFail = (message) => {
+  return {
+    type: actions.ROLE_LIST_FAIL,
+    message: message,
+  };
+};
+
+const RoleListAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(RoleListInit());
+    let form = new FormData();
+    form.append("RequestMethod", RoleList.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(RoleListAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_RoleList_01".toLowerCase()
+                )
+            ) {
+              // console.log(response);
+
+              dispatch(
+                RoleListSuccess(response.data.responseResult, "Data Available")
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_RoleList_02".toLowerCase()
+            ) {
+              dispatch(RoleListFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_RoleList_03".toLowerCase()
+                )
+            ) {
+              dispatch(RoleListFail("Exception"));
+            }
+          } else {
+            dispatch(RoleListFail("Something went wrong"));
+          }
+        } else {
+          dispatch(RoleListFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(RoleListFail("something went wrong"));
+      });
+  };
+};
 export {
   signOut,
   RefreshToken,
-  // getAllCorporatesCategory,
+  getAllCorporatesCategory,
   UpdatecorporateMapping,
   DeleteCorporateCategoryAPI,
   loginSystemAdminAPI,
   SendEmailResetPasswordAPI,
   cleareMessage,
+  GetAllCategoriesAPI,
+  GetAllNatureAPI,
+  RoleListAPI,
 };

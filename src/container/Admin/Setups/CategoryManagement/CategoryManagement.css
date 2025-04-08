@@ -1372,3 +1372,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 .trashiconClassredCollapse {
   margin-left: 23px !important;
 }
+.SectionContainer {
+  width: 99% !important;
+  margin: 0 auto !important;
+}

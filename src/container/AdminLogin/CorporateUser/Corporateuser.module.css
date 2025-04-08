@@ -161,7 +161,8 @@
 .PlusButton {
   width: 40px;
   position: absolute !important;
-  right: 34.3% !important;
+  top: 0;
+  right: 10px;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -175,7 +176,8 @@
 .PlusButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
-  right: 34.3% !important;
+  top: 0;
+  right: 10px;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;

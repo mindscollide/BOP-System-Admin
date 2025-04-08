@@ -14,7 +14,7 @@ const initialState = {
   allCorporateCompany: [],
   searchBankLogin: [],
   allUserStatus: [],
-  getAllNature: [],
+  // getAllNature: [],
   Corporates: [],
   UpdatedCorporates: [],
   DeleteCategory: [],
@@ -26,6 +26,10 @@ const initialState = {
   corporateUserlogin: null,
   sendEmailResetPassword: null,
   createCorporatePassword: null,
+  getAllCategories: null,
+  GetAllCorporatesData: null,
+  getAllNatureOfBuisness: null,
+  RoleList: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -222,25 +226,25 @@ const authReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
-    case actions.GET_ALL_NATURE_BUSINESS_INIT:
+    case actions.GET_ALL_NATURE_OF_BUSINESS_INIT:
       return {
         ...state,
         Loading: true,
       };
 
-    case actions.GET_ALL_NATURE_BUSINESS_SUCCESS:
+    case actions.GET_ALL_NATURE_OF_BUSINESS_SUCCESS:
       return {
         ...state,
         Loading: false,
-        getAllNature: action.response,
+        getAllNatureOfBuisness: action.response,
         ResponseMessage: action.message,
       };
 
-    case actions.GET_ALL_NATURE_BUSINESS_FAIL:
+    case actions.GET_ALL_NATURE_OF_BUSINESS_FAIL:
       return {
         ...state,
         Loading: false,
-        getAllNature: [],
+        getAllNatureOfBuisness: [],
         ResponseMessage: action.message,
       };
 
@@ -254,7 +258,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        Corporates: action.response,
+        GetAllCorporatesData: action.response,
         ResponseMessage: action.message,
       };
 
@@ -262,6 +266,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        GetAllCorporatesData: [],
         ResponseMessage: action.message,
       };
 
@@ -330,6 +335,71 @@ const authReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    //getAllCategories Reducer
+    case actions.GET_ALL_CATEGORIES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        getAllCategories: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_CATEGORIES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        getAllCategories: [],
+        ResponseMessage: action.message,
+      };
+
+    //RoleList Reducer
+    case actions.ROLE_LIST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.ROLE_LIST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        RoleList: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.ROLE_LIST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        RoleList: [],
+        ResponseMessage: action.message,
+      };
+    // //Get all Corporates
+    // case actions.GET_ALL_CORPORATES_INIT:
+    //   return {
+    //     ...state,
+    //     Loading: true,
+    //   };
+    // case actions.GET_ALL_CORPORATES_SUCCESS:
+    //   return {
+    //     ...state,
+    //     Loading: false,
+    //     GetAllCorporates: action.response,
+    //     ResponseMessage: action.message,
+    //   };
+    // case actions.GET_ALL_CORPORATES_FAIL:
+    //   return {
+    //     ...state,
+    //     Loading: false,
+    //     GetAllCorporates: null,
+    //     ResponseMessage: action.message,
+    //   };
     case actions.CLEARE_MESSAGE:
       return {
         ...state,

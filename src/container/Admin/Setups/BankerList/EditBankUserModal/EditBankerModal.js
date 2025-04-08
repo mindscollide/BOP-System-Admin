@@ -6,21 +6,31 @@ import {
   Button,
   CustomRadio,
   Modal,
+  Notification,
   TextField,
 } from "../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import { editBankUserModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
 import Select from "react-select";
-import { roleOptions } from "../../../../../helpers/Dropdown";
 import { updateBankUserSchema } from "../../../../../utils/schemas";
-// import { validateBopEmail } from "../../../../../utils/regexUtil";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+  GetBankUserByUserIDAPI,
+  UpdateBankUserByUserIdAPI,
+} from "../../../../../store/actions/BOPSystemAdminActions";
+import { RoleListAPI } from "../../../../../store/actions/Auth-Actions";
+
 // import { UpdateCorporateUsersAPI } from "../../../../../store/actions/BOPSystemAdminActions";
 
 const EditBankerModal = () => {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  //Notification state
+  const [open, setOpen] = useState({
+    open: false,
+    message: "",
+  });
   // const { auth } = useSelector((state) => state);
   // console.log("this is the user", auth);
   //States
@@ -28,17 +38,34 @@ const EditBankerModal = () => {
 
   //state for error Message
   // const [errorShow, setErrorShow] = useState(false);
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [roleID, setRoleID] = useState({
+    value: 0,
+    label: "",
+  });
+  // GetBankUserbyUserID
+  const GetBankUserbyUserID = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetBankUserbyUserIDData
+  );
+  console.log("GetBankUserbyUserID", GetBankUserbyUserID);
 
+  // updateBankUserByUserID
+  const UpdateBankUserbyUserID = useSelector(
+    (state) => state.BOPSystemAdminReducer.UpdateBankUserbyUserIDData
+  );
+  console.log("UpdateBankUserbyUserID", UpdateBankUserbyUserID);
+
+  //Role List
+  const RoleList = useSelector((state) => state.auth.RoleList);
   //Dummy User for handlin UI change bansed on the user Secuity admiin or system admin
   let user = "System Admin";
   //Checking snakbar state
-  const [open, setOpen] = useState(false);
 
   //State for add company
   const [updateBankUser, setUpdateBankUser] = useState({
     ...updateBankUserSchema,
   });
-
+  console.log(updateBankUser);
   // //State for add company
   // const [updateCorporate, setUpdateCorporate] = useState({
   //   ...updateCorporateUserSchema,
@@ -49,12 +76,6 @@ const EditBankerModal = () => {
     { label: "Active", value: "Active" },
     { label: "Inactive", value: "Inactive" },
   ];
-
-  //State For Role
-  const [role, setRole] = useState(null);
-
-  //Set Activate Button
-  const [isActive, setIsActive] = useState(false);
 
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
@@ -94,13 +115,6 @@ const EditBankerModal = () => {
     updateField(name, value);
   };
 
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
-    console.log("value", value);
-  };
   //Radio Buttons Management
   const handleRadioChange = (e) => {
     console.log("radio checked", e.target.value);
@@ -111,7 +125,15 @@ const EditBankerModal = () => {
       },
     });
   };
+  //handle select CategoryID
+  const handleSelectRole = async (selectedRole) => {
+    setRoleID(selectedRole);
 
+    updateBankUserSchema((prevState) => ({
+      ...prevState,
+      roleID: { ...prevState.roleID, value: selectedRole.value },
+    }));
+  };
   //handle Active Button
   // show error message When user hit activate btn
   const handleUpdateButton = () => {
@@ -123,26 +145,17 @@ const EditBankerModal = () => {
     ) {
       // setErrorShow(false);
       let newData = {
-        User: {
-          FirstName: updateBankUser.firstName.value,
-          ContactNumber: updateBankUser.ContactNumber.value,
-          Role: updateBankUser.role.value,
-          ActiveUser: updateBankUser.activeUser.value,
-        },
+        UserID: updateBankUser.userID.value, // temporary for state management
+        FirstName: updateBankUser.firstName.value,
+        ContactNumber: updateBankUser.ContactNumber.value,
+        UserRoleID: updateBankUser.role.value,
+        // ActiveUser: updateBankUser.activeUser.value,
+        BranchID: 1,
       };
       console.log("newData", newData);
-      // dispatch(UpdateCorporateUsersAPI(navigate, newData));
-      setOpen({
-        open: true,
-        message: "Hello Update Corporate User dispatched",
-      });
+      dispatch(UpdateBankUserByUserIdAPI(navigate, newData));
     } else {
       // setTimeout();
-
-      setOpen({
-        open: true,
-        message: "Fill All Required Fields",
-      });
       // setErrorShow(true);
     }
   };
@@ -153,164 +166,222 @@ const EditBankerModal = () => {
   };
 
   useEffect(() => {
-    if (
-      updateBankUser.firstName.value !== "" &&
-      updateBankUser.role.value !== "" &&
-      updateBankUser.ContactNumber.value !== "" &&
-      updateBankUser.activeUser.value !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
+    dispatch(RoleListAPI(navigate));
+  }, []);
+
+  useEffect(() => {
+    if (GetBankUserbyUserID !== null)
+      try {
+        let bankUser = GetBankUserbyUserID.bankUser;
+
+        setUpdateBankUser({
+          firstName: {
+            value: bankUser.firstName || "",
+            errorMessage: "",
+            errorStatus: false,
+          },
+          email: {
+            value: bankUser.email || "",
+            errorMessage: "",
+            errorStatus: false,
+          },
+          ContactNumber: {
+            value: bankUser.contactNumber || "",
+            errorMessage: "",
+            errorStatus: false,
+          },
+          role: {
+            value: bankUser.userRoleID || "",
+            errorMessage: "",
+            errorStatus: false,
+          },
+          activeUser: {
+            value: bankUser.userStatusID === 1 ? "Active" : "Inactive",
+            errorMessage: "",
+            errorStatus: false,
+          },
+          userID: {
+            value: bankUser.userID,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
+
+        // Set the role in the Select dropdown
+        const selectedRole = roleOptions.find(
+          (option) => option.value === bankUser.userRoleID
+        );
+        setRoleID(selectedRole);
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    if (RoleList !== null) {
+      try {
+        let newRolesData = RoleList.roles.map((role) => {
+          return {
+            ...role,
+            value: role.roleID,
+            label: role.roleName,
+          };
+        });
+        setRoleOptions(newRolesData);
+      } catch (error) {}
     }
-  }, [updateBankUser, updateBankUser.role]);
+  }, [GetBankUserbyUserID, RoleList]);
   return (
-    <Modal
-      show={BOPSystemAdminModal.editBankUserModal}
-      setShow={(value) => dispatch(editBankUserModalSystemAdmin(value))}
-      className="UniversalBOPModalStyles"
-      modalHeaderClassName={"d-none"}
-      modalFooterClassName="UniversalBOPModalStylesfooter"
-      size="md"
-      onHide={() => dispatch(editBankUserModalSystemAdmin(false))}
-      ModalBody={
-        <>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <span className={styles["AddBranchLabel"]}>Edit Bank</span>
-            </Col>
-          </Row>
+    <>
+      <Modal
+        show={BOPSystemAdminModal.editBankUserModal}
+        setShow={(value) => dispatch(editBankUserModalSystemAdmin(value))}
+        className="UniversalBOPModalStyles"
+        modalHeaderClassName={"d-none"}
+        modalFooterClassName="UniversalBOPModalStylesfooter"
+        size="md"
+        onHide={() => dispatch(editBankUserModalSystemAdmin(false))}
+        ModalBody={
+          <>
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <span className={styles["AddBranchLabel"]}>Edit Bank</span>
+              </Col>
+            </Row>
 
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
-              <span className={styles["labels-add-bank"]}>
-                Name
-                <span className={styles["aesterick-color"]}>*</span>
-              </span>
-              <TextField
-                labelClass="d-none"
-                name={"firstName"}
-                value={updateBankUser.firstName.value}
-                onChange={handleValueChangeAndValidation}
-                maxLength={50}
-              />
-            </Col>
-          </Row>
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
-              <span className={styles["labels-add-bank"]}>Email</span>
-              <TextField
-                disable={true}
-                labelClass="d-none"
-                name="email"
-                value={updateBankUser.email.value}
-                // onChange={handleValueChangeAndValidation}
-              />
-            </Col>
-          </Row>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+                <span className={styles["labels-add-bank"]}>
+                  Name
+                  <span className={styles["aesterick-color"]}>*</span>
+                </span>
+                <TextField
+                  labelClass="d-none"
+                  name={"firstName"}
+                  value={updateBankUser.firstName.value}
+                  onChange={handleValueChangeAndValidation}
+                  maxLength={50}
+                />
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+                <span className={styles["labels-add-bank"]}>Email</span>
+                <TextField
+                  disable={true}
+                  labelClass="d-none"
+                  name="email"
+                  value={updateBankUser.email.value}
+                  // onChange={handleValueChangeAndValidation}
+                />
+              </Col>
+            </Row>
 
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
-              <span className={styles["labels-add-bank"]}>
-                Select Role
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+                <span className={styles["labels-add-bank"]}>
+                  Select Role
+                  <span className={styles["aesterick-color"]}>*</span>
+                </span>
+                <Select
+                  classNamePrefix={"ModalAbsoluteDropdown"}
+                  options={roleOptions}
+                  value={roleID}
+                  isSearchable="true"
+                  menuPortalTarget={document.body}
+                  onChange={handleSelectRole}
+                />
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+                <span className={styles["labels-add-bank"]}>
+                  Contact
+                  <span className={styles["aesterick-color"]}>*</span>
+                </span>
+                <TextField
+                  labelClass="d-none"
+                  name={"ContactNumber"}
+                  value={updateBankUser.ContactNumber.value}
+                  onChange={handleValueChangeAndValidation}
+                  maxLength={20}
+                />
+              </Col>
+            </Row>
+
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12}>
+                <span className={styles["labels-add-bank"]}>Status</span>
                 <span className={styles["aesterick-color"]}>*</span>
-              </span>
-              <Select
-                className="role"
-                classNamePrefix={"ModalAbsoluteDropdown"}
-                options={roleOptions}
-                value={role}
-                isSearchable="true"
-                menuPortalTarget={document.body}
-                onChange={(e) =>
-                  handleDropdownChange("role", e, setRole, updateBankUser.role)
+              </Col>
+            </Row>
+
+            {user === "Security Admin" && (
+              <>
+                <Row>
+                  <Col lg={12} md={12} sm={12}>
+                    <CustomRadio
+                      name="customRadio"
+                      options={radioOptions}
+                      onChange={handleRadioChange}
+                      value={updateBankUser.activeUser?.value || ""}
+                      size="default"
+                      className="custom-radio-group"
+                    />
+                  </Col>
+                </Row>
+              </>
+            )}
+
+            {user === "System Admin" && (
+              <>
+                <Row>
+                  <Col lg={12} md={12} sm={12}>
+                    {updateBankUser.activeUser?.value === "Active" ? (
+                      <span className={styles["ActiveStatus"]}>Active</span>
+                    ) : (
+                      <span className={styles["InactiveStatus"]}>Inactive</span>
+                    )}
+                  </Col>
+                </Row>
+              </>
+            )}
+          </>
+        }
+        ModalFooter={
+          <Row className="mt-5">
+            <Col
+              lg={12}
+              md={12}
+              sm={12}
+              className="d-flex justify-content-center gap-2"
+            >
+              <Button
+                icon={<i class="icon-refresh"></i>}
+                text={"Update"}
+                className={styles["AddBranchClass"]}
+                iconClass={styles["IconClass"]}
+                onClick={handleUpdateButton}
+                disableBtn={
+                  updateBankUser.firstName.value !== "" &&
+                  // updateBankUser.role.value !== "" &&
+                  updateBankUser.ContactNumber.value !== ""
+                    ? // updateBankUser.activeUser.value !== ""
+                      false
+                    : true
                 }
               />
-            </Col>
-          </Row>
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
-              <span className={styles["labels-add-bank"]}>
-                Contact
-                <span className={styles["aesterick-color"]}>*</span>
-              </span>
-              <TextField
-                labelClass="d-none"
-                name={"ContactNumber"}
-                value={updateBankUser.ContactNumber.value}
-                onChange={handleValueChangeAndValidation}
-                maxLength={20}
+
+              <Button
+                icon={<i class="icon-close"></i>}
+                text={"Discard"}
+                className={styles["CancelButton"]}
+                iconClass={styles["IconClass"]}
+                onClick={handleDiscardButton}
               />
             </Col>
           </Row>
-
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12}>
-              <span className={styles["labels-add-bank"]}>Status</span>
-              <span className={styles["aesterick-color"]}>*</span>
-            </Col>
-          </Row>
-
-          {user === "Security Admin" && (
-            <>
-              <Row>
-                <Col lg={12} md={12} sm={12}>
-                  <CustomRadio
-                    name="customRadio"
-                    options={radioOptions}
-                    onChange={handleRadioChange}
-                    value={updateBankUser.activeUser?.value || ""}
-                    size="default"
-                    className="custom-radio-group"
-                  />
-                </Col>
-              </Row>
-            </>
-          )}
-
-          {user === "System Admin" && (
-            <>
-              <Row>
-                <Col lg={12} md={12} sm={12}>
-                  {updateBankUser.activeUser?.value === "Active" ? (
-                    <span className={styles["ActiveStatus"]}>Active</span>
-                  ) : (
-                    <span className={styles["InactiveStatus"]}>Inactive</span>
-                  )}
-                </Col>
-              </Row>
-            </>
-          )}
-        </>
-      }
-      ModalFooter={
-        <Row className="mt-5">
-          <Col
-            lg={12}
-            md={12}
-            sm={12}
-            className="d-flex justify-content-center gap-2"
-          >
-            <Button
-              icon={<i class="icon-refresh"></i>}
-              text={"Update"}
-              className={styles["AddBranchClass"]}
-              iconClass={styles["IconClass"]}
-              onClick={handleUpdateButton}
-              disableBtn={isActive ? false : true}
-            />
-
-            <Button
-              icon={<i class="icon-close"></i>}
-              text={"Discard"}
-              className={styles["CancelButton"]}
-              iconClass={styles["IconClass"]}
-              onClick={handleDiscardButton}
-            />
-          </Col>
-        </Row>
-      }
-    />
+        }
+      />
+      <Notification setOpen={setOpen} open={open.open} message={open.message} />
+    </>
   );
 };
 

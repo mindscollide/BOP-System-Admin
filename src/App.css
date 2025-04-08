@@ -656,3 +656,6 @@ input.form-control {
 .ModalAbsoluteDropdown__menu-portal {
   z-index: 999999 !important;
 }
+.companyName {
+  position: relative !important;
+}

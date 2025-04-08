@@ -26,6 +26,8 @@ import {
 import { Popover } from "antd";
 import { useSelector } from "react-redux";
 import CommentModal from "./CommentModal/CommentModal";
+import pdfIcon from "../../../../assets/images/pdf.png";
+import excelIcon from "../../../../assets/images/excel.png";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
@@ -188,6 +190,7 @@ const TradeCount = () => {
                   className={styles["comment-icon"]}
                   icon={<i className="icon-view-comment color-blue"></i>}
                   // onClick={handleEditBanker}
+                  // onClick={() => handleClickCommentModal(text)}
                   onClick={() => handleClickCommentModal(text)}
                 />
                 {/* <span>{text}</span> */}
@@ -539,14 +542,12 @@ const TradeCount = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<i className="icon-download-excel"></i>}
-                        // text="Excel"
+                        icon={<img src={excelIcon} alt="Excel Icon" />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        // text="PDF"
-                        icon={<i className="icon-download-pdf"></i>}
+                        icon={<img src={pdfIcon} alt="PDF Icon" />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />

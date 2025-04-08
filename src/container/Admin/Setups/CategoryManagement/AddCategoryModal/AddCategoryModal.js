@@ -9,13 +9,13 @@ import { useNavigate } from "react-router-dom";
 // import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
 import { addCategroyModalSchema } from "../../../../../utils/schemas";
 import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
+import { formatCurrencyInput } from "../../../../../helpers/reusableMethods";
 
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const [addCategory, setAddCategory] = useState({ ...addCategroyModalSchema });
-  const [activeAddButton, setActiveAddButton] = useState(false);
 
   //handle Cross icon
   const handleCrossIcon = () => {
@@ -53,8 +53,9 @@ const AddCategoryModal = () => {
 
     const validateInput = {
       Name: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
-      Bid: (val) => val.replace(/[^0-9]/g, "").trimStart(),
-      Offer: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+      // Bid: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+      Bid: (val) => formatCurrencyInput(val),
+      Offer: (val) => formatCurrencyInput(val),
     };
     const isFieldEmpty = (val) => val === "";
 
@@ -79,19 +80,6 @@ const AddCategoryModal = () => {
     // Update the specific field
     updateField(name, value);
   };
-
-  useEffect(() => {
-    if (
-      addCategory.Name.value !== "" &&
-      addCategory.Bid.value !== "" &&
-      addCategory.Offer.value !== ""
-    ) {
-      setActiveAddButton(true);
-    } else {
-      setActiveAddButton(false);
-    }
-  }, [addCategory]);
-  console.log(addCategory);
 
   return (
     <Modal
@@ -180,7 +168,13 @@ const AddCategoryModal = () => {
                 text={"Add"}
                 className={style["AddButton"]}
                 onClick={handleAddButton}
-                disableBtn={activeAddButton ? false : true}
+                disableBtn={
+                  addCategory.Name.value !== "" &&
+                  addCategory.Bid.value !== "" &&
+                  addCategory.Offer.value !== ""
+                    ? false
+                    : true
+                }
               />
               <Button
                 text={"Cancel"}

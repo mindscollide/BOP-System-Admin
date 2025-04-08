@@ -1,7 +1,7 @@
 export const roleOptions = [
-  { value: "Dealer", label: "Dealer" },
-  { value: "Treasury", label: "Treasury" },
-  { value: "Branch", label: "Branch" },
+  { value: 7, label: "Dealer" },
+  { value: 8, label: "Treasury" },
+  { value: 9, label: "Branch" },
 ];
 
 export const branchOptions = [
@@ -24,13 +24,13 @@ export const categoryOptions = [
 ];
 
 export const RFQTimerOptions = [
-  { value: "3 Minutes", label: "3 Minutes" },
-  { value: "5 Minutes", label: "5 Minutes" },
-  { value: "10 Minutes", label: "10 Minutes" },
-  { value: "15 Minutes", label: "15 Minutes" },
-  { value: "20 Minutes", label: "20 Minutes" },
-  { value: "25 Minutes", label: "25 Minutes" },
-  { value: "30 Minutes", label: "30 Minutes" },
+  { value: 3, label: "3 Minutes" },
+  { value: 5, label: "5 Minutes" },
+  { value: 10, label: "10 Minutes" },
+  { value: 15, label: "15 Minutes" },
+  { value: 20, label: "20 Minutes" },
+  { value: 25, label: "25 Minutes" },
+  { value: 30, label: "30 Minutes" },
 ];
 
 export const natureOfClientOptions = [

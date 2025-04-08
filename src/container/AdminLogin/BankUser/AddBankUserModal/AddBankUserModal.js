@@ -11,14 +11,23 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { AdduserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Col, Row } from "react-bootstrap";
-import { AddBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import {
+  AddBranchAPI,
+  GetAllBranchesAPI,
+} from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { addBranchSchema } from "../../../../utils/schemas";
-import { categoryOptions } from "../../../../helpers/Dropdown";
+// import { categoryOptions } from "../../../../helpers/Dropdown";
+import { GetAllCategoriesAPI } from "../../../../store/actions/Auth-Actions";
 const AddBankUserModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+
+  const getAllCategories = useSelector((state) => state.auth.getAllCategories);
+  console.log("getAllCategories", getAllCategories);
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   //Auth States
   const [open, setOpen] = useState({
@@ -30,7 +39,10 @@ const AddBankUserModal = () => {
   //Activate add branch button
   const [isActive, setIsActive] = useState(false);
 
-  const [categoryID, setCategoryID] = useState("");
+  const [categoryID, setCategoryID] = useState({
+    value: 0,
+    label: "",
+  });
 
   //handle Cancel Button
   const handleCancelButton = () => {
@@ -131,10 +143,11 @@ const AddBankUserModal = () => {
       BranchName: addBranch.branchName.value,
       BranchCode: addBranch.branchCode.value,
       BranchContact: addBranch.branchContact.value,
-      CategoryID: addBranch.categoryID.value,
+      CategoryID: 59,
     };
     console.log("datadatadatadata", data);
     dispatch(AddBranchAPI(navigate, data));
+    dispatch(AdduserModalSystemAdmin(false));
   };
 
   //useeffect to activate add branch button
@@ -150,6 +163,25 @@ const AddBankUserModal = () => {
       setIsActive(false);
     }
   }, [addBranch]);
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    dispatch(GetAllCategoriesAPI(navigate));
+  }, []);
+
+  useEffect(() => {
+    if (getAllCategories !== null) {
+      try {
+        let newCategoriesData = getAllCategories.categories.map((category) => {
+          return {
+            value: category.categoryID,
+            label: category.categoryName,
+          };
+        });
+        setCategoryOptions(newCategoriesData);
+      } catch (error) {}
+    }
+  }, [getAllCategories]);
 
   return (
     <>
@@ -213,8 +245,11 @@ const AddBankUserModal = () => {
                 <Select
                   name="categoryID"
                   options={categoryOptions}
-                  value={categoryID}
+                  placeholder="Select Category"
+                  classNamePrefix={"ModalAbsoluteDropdown"}
+                  value={categoryID.value !== 0 ? categoryID : null}
                   onChange={handleSelectCategory}
+                  menuPortalTarget={document.body}
                   isSearchable={true}
                   className={styles["react-select-field"]}
                 />
@@ -254,7 +289,14 @@ const AddBankUserModal = () => {
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleAddBranchEvent}
-                disableBtn={isActive ? false : true}
+                disableBtn={
+                  addBranch.branchName.value !== "" &&
+                  addBranch.branchCode.value !== "" &&
+                  addBranch.branchContact.value !== "" &&
+                  addBranch.categoryID.value !== ""
+                    ? false
+                    : true
+                }
               />
 
               <Button

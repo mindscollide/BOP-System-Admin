@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./SpreadManagement.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
 import { Button, CustomPaper } from "../../../../components/elements";
-import { categoryOptions } from "../../../../helpers/Dropdown";
+// import { categoryOptions } from "../../../../helpers/Dropdown";
 import {
   crossData,
   initialDiscountingState,
@@ -17,12 +17,18 @@ import DiscountingTable from "./DiscountingTable.js";
 import { useDispatch } from "react-redux";
 import { ConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions.js";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal.js";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { GetAllCategoriesAPI } from "../../../../store/actions/Auth-Actions.js";
+import { SpreadManagementSchema } from "../../../../utils/schemas.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
-  const defaultCategory = categoryOptions.find(
-    (option) => option.value === "Category 1"
-  );
-  const [category, setCategory] = useState(defaultCategory);
+  const navigate = useNavigate();
+
+  const getAllCategories = useSelector((state) => state.auth.getAllCategories);
+  console.log("getAllCategories", getAllCategories);
+
+  // const [category, setCategory] = useState(defaultCategory);
   const [paritySpotData, setParitySpotData] = useState(parityData);
   const [crossRateData, setCrossRateData] = useState(crossData);
   const [forwardData, setForwardData] = useState(initialForwardState);
@@ -30,7 +36,12 @@ const SpreadManagement = () => {
     initialDiscountingState
   );
   const [resetOrSaveComponent, setResetOrSaveComponent] = useState("");
-
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  //State for dropdown
+  const [categoryID, setCategoryID] = useState({
+    value: 0,
+    label: "",
+  });
   // Function to handle input changes in Parity Spot table
   const handleParitySpotInputChange = (index, field, value) => {
     let validateValue = value.replace(/[^0-9.]/g, "");
@@ -153,6 +164,33 @@ const SpreadManagement = () => {
     jpyAsk: "0.0",
   }));
   // useEffect(() => {}, [resetTableData]);
+
+  useEffect(() => {
+    dispatch(GetAllCategoriesAPI(navigate));
+  }, []);
+  useEffect(() => {
+    if (getAllCategories !== null) {
+      try {
+        let newCategoriesData = getAllCategories.categories.map((category) => {
+          return {
+            ...category,
+            value: { value: category.categoryID },
+            label: category.categoryName,
+          };
+        });
+        setCategoryOptions(newCategoriesData);
+      } catch (error) {}
+    }
+  }, [getAllCategories]);
+  //handle select CategoryID
+  const handleSelectCategory = async (selectedCategory) => {
+    setCategoryID(selectedCategory);
+
+    SpreadManagementSchema((prevState) => ({
+      ...prevState,
+      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+    }));
+  };
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
       <Row className="mt-4">
@@ -168,9 +206,9 @@ const SpreadManagement = () => {
             placeholder={"Select Category"}
             classNamePrefix={"CategorySpreadManagement"}
             options={categoryOptions}
-            value={category}
             isSearchable
-            onChange={(e) => setCategory(e)}
+            value={categoryID.value !== 0 ? categoryID : null}
+            onChange={handleSelectCategory}
             className={style["react-select-field"]}
           />
         </Col>

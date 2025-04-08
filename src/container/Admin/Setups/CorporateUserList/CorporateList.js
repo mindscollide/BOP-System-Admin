@@ -6,12 +6,13 @@ import {
   TextField,
   Button,
   Table,
+  Loader,
 } from "../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
 import EditCorporateModal from "./EditCorporateModal/EditCorporateModal";
 import {
-  AddBankUserConfirmationModalSystemAdmin,
+  // AddBankUserConfirmationModalSystemAdmin,
   ConfirmationModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
   EditCorporateModalSystemAdmin,
@@ -23,19 +24,33 @@ import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmatio
 import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
 import { useNavigate } from "react-router-dom";
 // import { getAllCorporatesCategory } from "../../../../store/actions/Auth-Actions";
-import {
-  getAllCorporatesCategory,
-  SearchCorporateUsersAPI,
-} from "../../../../store/actions/BOPSystemAdminActions";
+import { SearchCorporateUsersAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { corporateListSchema } from "../../../../utils/schemas";
-import { categoryOptions } from "../../../../helpers/Dropdown";
 import ExportShowComponent from "../BankerList/ExportShowComponent";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { Popover } from "antd";
+import pdfIcon from "../../../../assets/images/pdf.png";
+import excelIcon from "../../../../assets/images/excel.png";
+import {
+  GetAllCategoriesAPI,
+  // getAllCorporatesCategory,
+} from "../../../../store/actions/Auth-Actions";
+import { formatDateAndTimeFromString } from "../../../../helpers/reusableMethods";
+import moment from "moment";
 
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  //Global State
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
+  const getAllCategories = useSelector((state) => state.auth.getAllCategories);
+  console.log("getAllCategories", getAllCategories);
+
+  // const GetAllCorporateUsers = useSelector(
+  //   (state) => state.BOPSystemAdminReducer.GetAllCorporateUsers
+  // );
+  // console.log("GetAllCorporateUsers", GetAllCorporateUsers);
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -44,19 +59,21 @@ const CorporateList = () => {
     setShowExportOptions(!showExportOptions);
   };
 
-  //Get All Coporates
-  useEffect(() => {
-    dispatch(getAllCorporatesCategory(navigate));
-  }, [dispatch, navigate]);
-
   //States Corporate List
-  const [corporateList, setCorporateList] = useState({
-    ...corporateListSchema,
-  });
-
+  const [corporateList, setCorporateList] = useState(corporateListSchema);
+  const [tableData, setTableData] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState([]);
   //State for dropdown
-  const [category, setCategory] = useState("");
-
+  const [categoryID, setCategoryID] = useState({
+    value: 0,
+    label: "",
+  });
+  console.log(tableData, "tableData");
+  //Search all  corporate Users
+  const SearchCorporateUsers = useSelector(
+    (state) => state.BOPSystemAdminReducer.SearchCorporateUsersData
+  );
+  console.log("SearchCorporateUsers", SearchCorporateUsers);
   //Edit Corporate Use Modal Calling
   const EditCorporateModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editCorporateModal
@@ -72,6 +89,35 @@ const CorporateList = () => {
     (state) => state.BOPSystemAdminModal.userDetailsCorporateModal
   );
 
+  useEffect(() => {
+    dispatch(GetAllCategoriesAPI(navigate));
+    let data = {
+      FirstName: "",
+      CompanyName: "",
+      CategoryID: 0,
+      Email: "",
+      PageNumber: 1,
+      Length: 10,
+    };
+
+    console.log("Data to Search", data);
+    dispatch(SearchCorporateUsersAPI(navigate, data));
+  }, []);
+
+  useEffect(() => {
+    if (getAllCategories !== null) {
+      try {
+        let newCategoriesData = getAllCategories.categories.map((category) => {
+          return {
+            ...category,
+            value: { value: category.categoryID },
+            label: category.categoryName,
+          };
+        });
+        setCategoryOptions(newCategoriesData);
+      } catch (error) {}
+    }
+  }, [getAllCategories]);
   //Banker List validate handler
   const CorporateListValidateHandler = (e) => {
     let name = e.target.name;
@@ -145,18 +191,25 @@ const CorporateList = () => {
   };
 
   //handle Edit Corporate
-  const handleEditCorporate = () => {
+  const handleEditCorporate = (record) => {
+    // console.log("record: ", record);
+    // let Data = {
+    //   CorporateID: 1,
+    //   UserID: record.userID,
+    // };
+    // dispatch(GetCorporateUserByUserIDAPI(navigate, Data));
     dispatch(EditCorporateModalSystemAdmin(true));
+
     dispatch(DeleteCorporateModalSystemAdmin(false));
     dispatch(UserDetailsCorporateModalSystemAdmin(false));
   };
 
-  //handle Delete Corporate
-  const handleDeleteCorporate = () => {
-    dispatch(DeleteCorporateModalSystemAdmin(true));
-    dispatch(EditCorporateModalSystemAdmin(false));
-    dispatch(UserDetailsCorporateModalSystemAdmin(false));
-  };
+  // //handle Delete Corporate
+  // const handleDeleteCorporate = () => {
+  //   dispatch(DeleteCorporateModalSystemAdmin(true));
+  //   dispatch(EditCorporateModalSystemAdmin(false));
+  //   dispatch(UserDetailsCorporateModalSystemAdmin(false));
+  // };
 
   //handle OnClick Email
   const handleOnClickEmail = () => {
@@ -167,33 +220,17 @@ const CorporateList = () => {
 
   //Handle search Button even
   const handleSearchEventButton = () => {
-    // let data = {
-    //   FirstName: "",
-    //   CategoryID: 0,
-    //   Email: "",
-    //   CompanyName: "",
-    //   PageNumber: 1,
-    //   Length: 10,
-    // };
-
     let data = {
       FirstName: corporateList.Name.value,
       CompanyName: corporateList.CorporateName.value,
-      CategoryID: corporateList.category.value,
+      CategoryID: categoryID.categoryID,
       Email: corporateList.Email.value,
       PageNumber: 1,
       Length: 10,
-      // CompanyName: "",
     };
 
     console.log("Data to Search", data);
     dispatch(SearchCorporateUsersAPI(navigate, data));
-  };
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
   };
 
   // show error message When user hit activate btn
@@ -202,101 +239,116 @@ const CorporateList = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
   };
 
+  //Table columns for customer List
+
   const handleResetYes = () => {
-    // dispatch(AddBankUserConfirmationModalSystemAdmin(false));
-    // Reset all form fields, including the dropdown
     setCorporateList({
       Name: { value: "", errorMessage: "", errorStatus: false },
       CorporateName: { value: "", errorMessage: "", errorStatus: false },
       Email: { value: "", errorMessage: "", errorStatus: false },
-      category: { value: "", errorMessage: "", errorStatus: false }, // Ensure role is cleared
+      category: { value: "", errorMessage: "", errorStatus: false },
     });
-    setCategory(""); // Reset dropdown value
+    setCategoryID("");
 
-    let resetData = {
-      EmployeeID: "",
+    let data = {
       FirstName: "",
+      CompanyName: "",
+      CategoryID: 0,
       Email: "",
-      Role: "",
-      StatusID: 0,
       PageNumber: 1,
       Length: 10,
     };
 
-    // Call API to fetch all records after reset
-    // dispatch(SearchCorporateUsersAPI(navigate, resetData));
+    console.log("Data to Search", data);
+    dispatch(SearchCorporateUsersAPI(navigate, data));
   };
-
-  //Table columns for customer List
   const columns = [
     {
-      title: <label className="bottom-table-header">Email</label>,
+      title: <label className="px-3">Email</label>,
       dataIndex: "email",
       key: "email",
-      width: "200px",
-      align: "center",
+      width: "220px",
+      align: "left",
       ellipsis: true,
-    },
-    {
-      title: <label className="bottom-table-header">Name</label>,
-      dataIndex: "Name",
-      key: "Name",
-      width: "200px",
-      ellipsis: true,
-      align: "center",
-    },
-    {
-      title: <label className="bottom-table-header">Corporate Name</label>,
-      dataIndex: "Corporatename",
-      key: "Corporatename",
-      width: "200px",
-      ellipsis: true,
-      align: "center",
-    },
-    {
-      title: <label className="bottom-table-header">Status</label>,
-      dataIndex: "Status",
-      key: "Status",
-      render: (status) => (
-        <span
-          className={
-            status === "Active" ? styles.ActiveStatus : styles.InactiveStatus
-          }
-        >
-          {status}
+      render: (email) => (
+        <span style={{ cursor: "pointer" }} onClick={handleOnClickEmail}>
+          {email}
         </span>
       ),
-      width: "80px",
+    },
+    {
+      title: <label className="px-3">Name</label>,
+      dataIndex: "firstName",
+      key: "firstName",
+      width: "150px",
+      ellipsis: true,
+      align: "left",
+    },
+    {
+      title: <label className="px-3">Corporate Name</label>,
+      dataIndex: "corporateName",
+      key: "corporateName",
+      width: "150px",
+      ellipsis: true,
+      align: "left",
+    },
+    {
+      title: <label>Status</label>,
+      dataIndex: "statusId",
+      key: "statusId",
+      render: (statusId) => (
+        <span
+          className={
+            statusId === 1 ? styles.ActiveStatus : styles.InactiveStatus
+          }
+        >
+          {statusId === 1 ? "Active" : "Inactive"}
+        </span>
+      ),
+      width: "70px",
       align: "center",
       ellipsis: true,
     },
     {
-      title: (
-        <label className="bottom-table-header">last Password Change</label>
-      ),
-      dataIndex: "LastPassowrdChange",
-      key: "LastPassowrdChange",
+      title: <label>last Password Change</label>,
+      dataIndex: "passwordModificationTime",
+      key: "passwordModificationTime",
       align: "center",
       width: "180px",
       ellipsis: true,
+      render: (passwordModificationTime) => {
+        // Format the date and time
+        return passwordModificationTime !== "-"
+          ? moment(
+              formatDateAndTimeFromString(passwordModificationTime)
+            ).format("DD/MM/YYYY HH:mm:ss")
+          : "-";
+      },
     },
     {
-      title: <label className="bottom-table-header">Create Date Time</label>,
+      title: <label>Create Date Time</label>,
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
       width: "180px",
       ellipsis: true,
+      render: (creationDateTime) => {
+        console.log(creationDateTime, "creationDateTime");
+        // Format the date and time
+        return moment(formatDateAndTimeFromString(creationDateTime)).format(
+          "DD/MM/YYYY HH:mm:ss"
+        );
+      },
     },
 
     {
-      title: <label className="bottom-table-header"></label>,
+      title: <label></label>,
       dataIndex: "Edit",
       key: "Edit",
       align: "center",
       width: "100px",
       ellipsis: true,
-      render: () => {
+      render: (text, record) => {
         return (
           <>
             <Row>
@@ -304,19 +356,19 @@ const CorporateList = () => {
                 lg={12}
                 md={12}
                 sm={12}
-                className="d-flex gap-2 justify-content-center align-items-center"
+                // className="d-flex gap-2 justify-content-center align-items-center"
               >
                 <Button
                   className={styles["EditButton"]}
-                  icon={<i class="icon-edit color-blue"></i>}
-                  onClick={handleEditCorporate}
+                  icon={<i className="icon-edit color-blue"></i>}
+                  onClick={() => handleEditCorporate(record)}
                 />
-                <Button
+                {/* <Button
                   className={styles["EditButton"]}
                   icon={<i class="icon-trash color-red"></i>}
                   iconClass={"iconClassTrashCorporate"}
                   onClick={handleDeleteCorporate}
-                />
+                /> */}
               </Col>
             </Row>
           </>
@@ -324,61 +376,19 @@ const CorporateList = () => {
       },
     },
   ];
-
-  //Dummy Data
-  const data = [
-    {
-      key: "1",
-      email: (
-        <>
-          <span className="cursor-pointer" onClick={handleOnClickEmail}>
-            john.doe@example.com
-          </span>
-        </>
-      ),
-      Name: "John Doe",
-      Corporatename: "Acme Corp",
-      Status: "Active",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i className="icon-edit color-blue"></i>
-            <i className="icon-trash color-red"></i>
-          </Col>
-        </Row>
-      ),
-    },
-    {
-      key: "2",
-      email: (
-        <>
-          <span className="cursor-pointer" onClick={handleOnClickEmail}>
-            tom.cruise@bop.com
-          </span>
-        </>
-      ),
-      Name: "Tom Cruise",
-      Corporatename: "Yunus Corp",
-      Status: "Inactive",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i class="icon-edit color-blue"></i>
-            <i class="icon-trash color-red"></i>
-          </Col>
-        </Row>
-      ),
-    },
-  ];
+  useEffect(() => {
+    if (SearchCorporateUsers !== null) {
+      try {
+        const { corporateUsers } = SearchCorporateUsers;
+        if (corporateUsers.length > 0) {
+          setTableData(SearchCorporateUsers.corporateUsers);
+        }
+      } catch (error) {}
+    }
+  }, [SearchCorporateUsers]);
 
   const [open, setOpen] = useState(false);
-  const hide = () => {
-    setOpen(false);
-  };
+
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
@@ -391,6 +401,15 @@ const CorporateList = () => {
     }
   };
 
+  //handle select CategoryID
+  const handleSelectCategory = async (selectedCategory) => {
+    setCategoryID(selectedCategory);
+
+    corporateListSchema((prevState) => ({
+      ...prevState,
+      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+    }));
+  };
   const exportToExcel = () => {
     // const worksheet = XLSX.utils.json_to_sheet(data);
     // const workbook = XLSX.utils.book_new();
@@ -449,20 +468,12 @@ const CorporateList = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <Select
-                  name="category"
-                  isSearchable={true}
-                  placeholder={"Select Category"}
+                  // isClearable={true}
+                  // isSearchable={true}
+                  placeholder="Select Category"
                   options={categoryOptions}
-                  value={category}
-                  onChange={(e) =>
-                    handleDropdownChange(
-                      "category",
-                      e,
-                      setCategory,
-                      corporateList.category
-                    )
-                  }
-                  className={styles["react-select-field"]}
+                  value={categoryID.value !== 0 ? categoryID : null}
+                  onChange={handleSelectCategory}
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
@@ -489,13 +500,13 @@ const CorporateList = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        text="Excel"
-                        onClick={() => handleExport("excel")}
+                        icon={<img src={pdfIcon} alt="PDF Icon" />}
+                        onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        text="PDF"
-                        onClick={() => handleExport("pdf")}
+                        icon={<img src={excelIcon} alt="Excel Icon" />}
+                        onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                     </div>
@@ -555,7 +566,7 @@ const CorporateList = () => {
                 <Table
                   column={columns}
                   pagination={false}
-                  rows={data}
+                  rows={tableData}
                   className={"BankUserList-table"}
                 />
               </Col>
@@ -563,6 +574,8 @@ const CorporateList = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {BOPSystemAdminReducer.Loading && <Loader />}
+
       {EditCorporateModalGobalState && <EditCorporateModal />}
       {DeleteCorporateModalGobalState && <DeleteConfirmationModal />}
       {UserDetailsCorporateModalGobalState && <CorporateUserDetailsModal />}

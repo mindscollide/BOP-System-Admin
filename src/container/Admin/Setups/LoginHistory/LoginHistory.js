@@ -14,12 +14,11 @@ import { categoryOptions, roleOptions } from "../../../../helpers/Dropdown";
 import { loginHistorySchema } from "../../../../utils/schemas";
 import { formatDate } from "../../../../helpers/reusableMethods";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import {
-  AddBankUserConfirmationModalSystemAdmin,
-  ConfirmationModalSystemAdmin,
-} from "../../../../store/actions/BOPSystemAdminModalsActions";
+import { ConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
 import { Popover } from "antd";
+import pdfIcon from "../../../../assets/images/pdf.png";
+import excelIcon from "../../../../assets/images/excel.png";
 const LoginHistory = () => {
   //Login History States
   const [loginHistory, setLoginHistory] = useState({
@@ -421,9 +420,9 @@ const LoginHistory = () => {
                 <DatePicker
                   name={"dateFrom"}
                   labelClass={"d-none"}
+                  inputClass={styles["Tradecount-Datepicker-left"]}
                   placeholder="Start date"
                   showOtherDays={true}
-                  inputClass={styles["Tradecount-Datepicker-left"]}
                   value={loginHistory.dateFrom.value}
                   onChange={(date) => handleDateChange("dateFrom", date)}
                   minDate={null} // No restriction initially
@@ -469,12 +468,12 @@ const LoginHistory = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        text="Excel"
+                        icon={<img src={excelIcon} alt="Excel Icon" />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        text="PDF"
+                        icon={<img src={pdfIcon} alt="PDF Icon" />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />

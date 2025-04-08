@@ -6,18 +6,13 @@ import { Col, Row } from "react-bootstrap";
 import { Button, Modal } from "../../../../../components/elements";
 import { TradeCountCommentModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
 
-const CommentModal = (text) => {
+const CommentModal = ({ text }) => {
   const dispatch = useDispatch();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
-  const showActivationMOdal = useSelector(
-    (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
-  );
-
-  //handle No Button
-  const handleNoButton = () => {
-    dispatch(TradeCountCommentModalSystemAdmin(false));
-  };
+  // const showActivationMOdal = useSelector(
+  //   (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
+  // );
 
   // const handleYesButton = () => {
   //   if (onConfirm) {
@@ -25,10 +20,13 @@ const CommentModal = (text) => {
   //   }
   //   dispatch(TradeCountCommentModalSystemAdmin(false));
   // };
-
+  const handleCrossIcon = () => {
+    dispatch(TradeCountCommentModalSystemAdmin(false));
+  };
   return (
     <Modal
-      show={showActivationMOdal}
+      // show={showActivationMOdal}
+      show={BOPSystemAdminModal.tradeCountCommentModal}
       className="UniversalBOPModalStyles"
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
@@ -37,13 +35,20 @@ const CommentModal = (text) => {
       ModalBody={
         <>
           <Row>
-            <Col lg={12} md={12} sm={12}>
+            <Col lg={11} md={11} sm={11}>
               <span className={styles["AddBranchLabel"]}>Comments</span>
+            </Col>
+            <Col lg={1} md={1} sm={1}>
+              <Button
+                className={styles["CrossButton"]}
+                icon={<i className="icon-close"></i>}
+                onClick={handleCrossIcon}
+              />
             </Col>
           </Row>
           <Row className="mt-3">
             <Col lg={12} md={12} sm={12} className="d-flex align-items-center">
-              <span className={styles["labels-add-bank"]}>{text}</span>
+              <span className={styles["labels-add-bank"]}>{"text"}</span>
             </Col>
           </Row>
         </>
@@ -64,13 +69,13 @@ const CommentModal = (text) => {
               onClick={handleYesButton}
             /> */}
 
-            <Button
+            {/* <Button
               icon={<i className="icon-close"></i>}
               text={"No"}
               className={styles["CancelButton"]}
               iconClass={styles["IconClass"]}
               onClick={handleNoButton}
-            />
+            /> */}
           </Col>
         </Row>
       }

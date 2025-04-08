@@ -9,33 +9,50 @@ import { Col, Row } from "react-bootstrap";
 import { CreateNewCorporateAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { addCompanySchema } from "../../../../utils/schemas";
+import { RFQTimerOptions } from "../../../../helpers/Dropdown";
 import {
-  categoryOptions,
-  natureOfClientOptions,
-  RFQTimerOptions,
-} from "../../../../helpers/Dropdown";
+  GetAllCategoriesAPI,
+  GetAllNatureAPI,
+} from "../../../../store/actions/Auth-Actions";
 const CorporatePlusIconModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
+  const getAllCategories = useSelector((state) => state.auth.getAllCategories);
+  console.log("getAllCategories", getAllCategories);
+
+  const getAllNatureOfBuisness = useSelector(
+    (state) => state.auth.getAllNatureOfBuisness
+  );
+  // console.log("getAllNatureOfBuisness", getAllNatureOfBuisness);
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [natureOptions, setNatureOptions] = useState([]);
+
+  // console.log("categoryOptions", categoryOptions);
   //State for add company
   const [addCompany, setAddCompnany] = useState({ ...addCompanySchema });
 
   //State For Category dropdown
-  const [category, setCategory] = useState(null);
+  // const [category, setCategory] = useState(null);
 
+  const [categoryID, setCategoryID] = useState({
+    value: 0,
+    label: "",
+  });
+  const [natureID, setNatureID] = useState({
+    value: 0,
+    label: "",
+  });
   //State for RFQ Timer Treasury
   const [RFQTimerTreasury, setRFQTimerTreasury] = useState(null);
 
   //State for RFQ Timer Corporate
   const [RFQTimerCorporate, setRFQTimerCorporate] = useState(null);
 
-  //State for Nature of Client
-  const [natureOfClient, setNatureOfClient] = useState(null);
-
   //Activate Button
-  const [isActive, setIsActive] = useState(false);
+  // const [isActive, setIsActive] = useState(false);
 
   //Handle Cancel Button
   const handleCancelButton = () => {
@@ -83,46 +100,79 @@ const CorporatePlusIconModal = () => {
   };
 
   const handleAddCorporateCompany = () => {
-    // let data = {
-    //   FK_AssetTypeID: 2,
-    //   RFQTreasuryExpiryTimer: 30,
-    //   RFQCorporateExpiryTimer: 40,
-    //   CorporateName: "Stonk Tech",
-    //   NatureOfBusinessID: 2,
-    //   FK_CategoryID: 57,
-    //   BankId: 1,
-    // };
     let data = {
-      CorporateName: addCompany.companyName.value,
-      FK_CategoryID: addCompany.category.value,
+      FK_CategoryID: categoryID.categoryID,
+      FK_AssetTypeID: categoryID.fK_AssetTypeID,
       RFQTreasuryExpiryTimer: addCompany.RFQTimerTreasury.value,
       RFQCorporateExpiryTimer: addCompany.RFQTimerCorporate.value,
-      NatureOfBusinessID: addCompany.natureOfClient.value,
+      CorporateName: addCompany.companyName.value,
+      // NatureOfBusinessID: addCompany.natureOfClient.value,
+      NatureOfBusinessID: natureID.pK_NatureOfBusiness,
+      BankId: 1,
     };
-    console.log("Create New Corporate Company Data", data);
     dispatch(CreateNewCorporateAPI(navigate, data));
+    dispatch(corporatePlusIconModalSystemAdmin(false));
   };
 
+  // Fetch categories on component mount
   useEffect(() => {
-    if (
-      addCompany.companyName.value !== "" &&
-      addCompany.category.value !== "" &&
-      addCompany.RFQTimerTreasury.value !== "" &&
-      addCompany.RFQTimerCorporate.value !== "" &&
-      addCompany.natureOfClient.value !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }, [
-    addCompany,
-    addCompany.category.value,
-    addCompany.RFQTimerTreasury.value,
-    addCompany.RFQTimerCorporate.value,
-    addCompany.natureOfClient.value,
-  ]);
+    dispatch(GetAllCategoriesAPI(navigate));
+    dispatch(GetAllNatureAPI(navigate));
+  }, []);
 
+  useEffect(() => {
+    if (getAllCategories !== null) {
+      try {
+        let newCategoriesData = getAllCategories.categories.map((category) => {
+          return {
+            ...category,
+            value: { value: category.categoryID },
+            label: category.categoryName,
+          };
+        });
+        setCategoryOptions(newCategoriesData);
+      } catch (error) {}
+    }
+
+    if (getAllNatureOfBuisness !== null) {
+      try {
+        let newNatureOfBusiness = getAllNatureOfBuisness.natureofBusinesses.map(
+          (natureOfBusiness) => {
+            return {
+              ...natureOfBusiness,
+              value: natureOfBusiness.pK_NatureOfBusiness,
+              label: natureOfBusiness.name,
+            };
+          }
+        );
+        setNatureOptions(newNatureOfBusiness);
+      } catch (error) {}
+    }
+  }, [getAllCategories, getAllNatureOfBuisness]);
+
+  //handle select categoryID
+  const handleSelectCategory = async (selectedCategory) => {
+    setCategoryID(selectedCategory);
+
+    addCompanySchema((prevState) => ({
+      ...prevState,
+      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+    }));
+  };
+
+  //handle select categoryID
+  const handleSelectNature = async (selectedNature) => {
+    console.log(selectedNature.value, "selectedCategoryselectedCategory");
+    setNatureID(selectedNature);
+
+    addCompanySchema((prevState) => ({
+      ...prevState,
+      natureOfClient: {
+        ...prevState.natureOfClient,
+        value: selectedNature.value,
+      },
+    }));
+  };
   return (
     <Modal
       show={BOPSystemAdminModal.corporatePlusIconModal}
@@ -173,19 +223,13 @@ const CorporatePlusIconModal = () => {
             </Col>
             <Col lg={8} md={8} sm={12}>
               <Select
+                placeholder="Select Category"
                 classNamePrefix={"ModalAbsoluteDropdown"}
                 isSearchable="true"
                 options={categoryOptions}
-                value={category}
+                value={categoryID.value !== 0 ? categoryID : null}
                 menuPortalTarget={document.body}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    "category",
-                    e,
-                    setCategory,
-                    addCompany.category
-                  )
-                }
+                onChange={handleSelectCategory}
                 className={styles["react-select-field"]}
               />
             </Col>
@@ -238,23 +282,6 @@ const CorporatePlusIconModal = () => {
                     options={RFQTimerOptions}
                     value={RFQTimerCorporate}
                     isSearchable="true"
-                    // styles={{
-                    //   menuPortal: (props) => (
-                    //     <div
-                    //       {...props}
-                    //       style={{
-                    //         position: "absolute",
-                    //         top: "100%",
-                    //         left: "0",
-                    //         width: "100%",
-                    //         zIndex: "1000",
-                    //       }}
-                    //     >
-                    //       {props.children}
-                    //     </div>
-                    //   ),
-                    // }}
-                    // }}
                     menuPortalTarget={document.body}
                     onChange={(e) =>
                       handleDropdownChange(
@@ -278,19 +305,13 @@ const CorporatePlusIconModal = () => {
             </Col>
             <Col lg={8} md={8} sm={12}>
               <Select
+                placeholder
                 classNamePrefix="ModalAbsoluteDropdown"
-                options={natureOfClientOptions}
-                value={natureOfClient}
+                options={natureOptions}
+                value={natureID.value !== 0 ? natureID : null}
                 isSearchable="true"
                 menuPortalTarget={document.body}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    "natureOfClient",
-                    e,
-                    setNatureOfClient,
-                    addCompany.natureOfClient
-                  )
-                }
+                onChange={handleSelectNature}
               />
             </Col>
           </Row>
@@ -310,7 +331,16 @@ const CorporatePlusIconModal = () => {
                 icon={<i className="icon-users"></i>}
                 className={styles["AddButton"]}
                 onClick={handleAddCorporateCompany}
-                disableBtn={isActive ? false : true}
+                disableBtn={
+                  categoryID.value !== 0 &&
+                  categoryID.value !== 0 &&
+                  addCompany.RFQTimerTreasury.value !== "" &&
+                  addCompany.RFQTimerCorporate.value !== "" &&
+                  addCompany.companyName.value !== "" &&
+                  natureID.value !== 0
+                    ? false
+                    : true
+                }
               />
               <Button
                 text={"Cancel"}

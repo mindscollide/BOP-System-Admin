@@ -50,6 +50,10 @@
   margin-top: 10px !important;
 }
 
+.dropdown_menu-Item {
+  z-index: 1000;
+  color: #f26522;
+}
 @media (max-width: 1024px) and (min-width: 769px) {
   .container-header-2 {
     padding: 0 10px;

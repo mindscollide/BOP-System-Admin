@@ -94,7 +94,7 @@
 .CategorySpreadManagement li {
   display: flex;
   color: #096fed;
-  z-index: 9990px !important;
+  /* z-index: 9990px !important; */
 }
 .CategorySpreadManagementCSS li {
   color: #096fed;
@@ -102,5 +102,5 @@
   margin-top: 1000px;
 }
 .react-select-field {
-  z-index: 101;
+  z-index: 101 !important;
 }

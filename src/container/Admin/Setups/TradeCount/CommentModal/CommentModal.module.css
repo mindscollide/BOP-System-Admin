@@ -1,14 +1,14 @@
 .AddBranchLabel {
-  color: #f26522 !important;
+  color: #2c4cff !important;
   font-size: 1.25rem !important;
   display: flex !important;
-  justify-content: center !important;
+  justify-content: left !important;
+  font-weight: 700;
 }
 
 .labels-add-bank {
-  font-size: 1.25rem !important;
+  font-size: 1rem !important;
   color: #4d4946 !important;
-  font-weight: 700 !important;
 }
 
 .AddBranchClass {
@@ -40,26 +40,18 @@
   align-items: center !important;
 }
 
-.CancelButton {
-  display: flex !important;
-  gap: 10px !important;
-  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
-  border-radius: 4px;
+.CrossButton {
+  background: none !important;
   border: none !important;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  align-items: center !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
 }
 
-.CancelButton:is(:hover, :focus, :active, :focus-visible) {
-  display: flex !important;
-  gap: 10px !important;
-  background: #096fed !important;
-  border-radius: 4px;
+.CrossButton:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
   border: none !important;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  align-items: center !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
 }

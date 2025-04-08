@@ -23,6 +23,12 @@ const VolMeter = () => {
 
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
+
+  const GetVolmeterByBankID = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetVolmeterByBankID
+  );
+  console.log("GetVolmeterByBankID", GetVolmeterByBankID);
+
   const [open, setOpen] = useState({
     open: false,
     message: "",
@@ -61,6 +67,36 @@ const VolMeter = () => {
     };
     dispatch(GetVolmeterByBankIDAPI(navigate, data));
   }, []);
+  // Add this useEffect to set the values when API response is received
+  useEffect(() => {
+    if (
+      GetVolmeterByBankID &&
+      GetVolmeterByBankID.responseResult &&
+      GetVolmeterByBankID.responseResult.volMeters
+    ) {
+      const volMeters = GetVolmeterByBankID.responseResult.volMeters;
+
+      // Assuming the order is always Vol 1, Vol 2, Vol 3
+      setVolMeterFields({
+        volatilityMeter: {
+          value: volMeters[0]?.meter || 0,
+          errorMessage: "",
+          errorStatus: false,
+        },
+        nameVol: {
+          value: volMeters[1]?.meter || 0,
+          errorMessage: "",
+          errorStatus: false,
+        },
+        volMeter: {
+          value: volMeters[2]?.meter || 0,
+          errorMessage: "",
+          errorStatus: false,
+        },
+        isVolActive: true,
+      });
+    }
+  }, [GetVolmeterByBankID]);
 
   const onChanngeVolMterValidation = (e) => {
     let name = e.target.name;
@@ -144,15 +180,15 @@ const VolMeter = () => {
       VolMeters: [
         {
           VolMeterID: 1,
-          meter: 1343,
+          meter: volMeterFields.volatilityMeter.value,
         },
         {
           VolMeterID: 2,
-          meter: 456,
+          meter: volMeterFields.nameVol.value,
         },
         {
           VolMeterID: 3,
-          meter: 7896,
+          meter: volMeterFields.volMeter.value,
         },
       ],
       BankID: 1,
@@ -192,7 +228,6 @@ const VolMeter = () => {
                       value={volMeterFields.volatilityMeter.value}
                       onChange={onChanngeVolMterValidation}
                       labelClass="d-none"
-                      disable={true}
                     />
                   </Col>
                   <Col lg={2} md={2} sm={12}>

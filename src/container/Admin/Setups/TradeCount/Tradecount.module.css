@@ -162,6 +162,7 @@
   cursor: pointer;
   padding: 8px;
 }
+
 .Tradecount-Datepicker-left:is(:focus, :focus-visible) {
   outline: none !important;
 }
@@ -201,4 +202,17 @@
   border: none !important;
   padding: 0 !important;
   margin: 0 !important;
+}
+.export-options {
+  display: flex; /* Ensures items stay in a row */
+  gap: 15px; /* Adjust space between buttons */
+  align-items: center; /* Aligns items properly */
+}
+.export-button {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex; /* Ensures the button stays inline */
+  align-items: center; /* Align icon inside the button */
 }

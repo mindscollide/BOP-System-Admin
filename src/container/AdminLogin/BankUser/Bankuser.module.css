@@ -212,6 +212,9 @@
   border: 1px solid #ced4da;
   border-radius: 0px !important;
 }
+.branchName-field {
+  z-index: 99px !important;
+}
 
 @media (max-width: 1024px) {
   .EditButton,
