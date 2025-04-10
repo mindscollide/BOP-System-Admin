@@ -10,7 +10,6 @@ import {
   Table,
 } from "../../../../components/elements";
 import ExportShowComponent from "../BankerList/ExportShowComponent";
-import { categoryOptions, roleOptions } from "../../../../helpers/Dropdown";
 import { loginHistorySchema } from "../../../../utils/schemas";
 import { formatDate } from "../../../../helpers/reusableMethods";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
@@ -19,19 +18,31 @@ import { useDispatch } from "react-redux";
 import { Popover } from "antd";
 import pdfIcon from "../../../../assets/images/pdf.png";
 import excelIcon from "../../../../assets/images/excel.png";
+import { useSelector } from "react-redux";
 const LoginHistory = () => {
   //Login History States
   const [loginHistory, setLoginHistory] = useState({
     ...loginHistorySchema,
   });
+
   const dispatch = useDispatch();
+
+  const getAllCategories = useSelector((state) => state.auth.getAllCategories);
+  console.log("getAllCategories", getAllCategories);
+
   //State for category and role dropdown
   const [Role, setRole] = useState("");
-  const [category, setCategory] = useState("");
 
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  //State for dropdown
+  const [categoryID, setCategoryID] = useState({
+    value: 0,
+    label: "",
+  });
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
+
   //Checking snakbar state
   const [open, setOpen] = useState(false);
 
@@ -266,7 +277,6 @@ const LoginHistory = () => {
       category: { value: "", errorMessage: "", errorStatus: false },
       Role: { value: "", errorMessage: "", errorStatus: false },
     });
-    setCategory("");
     setRole("");
   };
 
@@ -385,7 +395,7 @@ const LoginHistory = () => {
                   name="Role"
                   isSearchable={true}
                   placeholder={"Select Role"}
-                  options={roleOptions}
+                  // options={roleOptions}
                   value={Role}
                   onChange={(e) =>
                     handleDropdownChange("Role", e, setRole, loginHistory.Role)

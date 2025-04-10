@@ -14,10 +14,7 @@ import { editBankUserModalSystemAdmin } from "../../../../../store/actions/BOPSy
 import Select from "react-select";
 import { updateBankUserSchema } from "../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
-import {
-  GetBankUserByUserIDAPI,
-  UpdateBankUserByUserIdAPI,
-} from "../../../../../store/actions/BOPSystemAdminActions";
+import { UpdateBankUserByUserIdAPI } from "../../../../../store/actions/BOPSystemAdminActions";
 import { RoleListAPI } from "../../../../../store/actions/Auth-Actions";
 
 // import { UpdateCorporateUsersAPI } from "../../../../../store/actions/BOPSystemAdminActions";

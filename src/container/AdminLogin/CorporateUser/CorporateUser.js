@@ -11,7 +11,6 @@ import {
   TextField,
 } from "../../../components/elements";
 import Select from "react-select";
-// import { validateEmail } from "../../../commen/functions/emailValidation";
 import { useSelector } from "react-redux";
 import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
 import {
@@ -23,13 +22,11 @@ import {
 import { useDispatch } from "react-redux";
 import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
 import { addCorporateUserSchema } from "../../../utils/schemas";
-// import { categoryOptions, companyOptions } from "../../../helpers/Dropdown";
-import { validateBopEmail, validateEmail } from "../../../utils/regexUtil";
+import { validateEmail } from "../../../utils/regexUtil";
 import { useNavigate } from "react-router-dom";
 import { CreateCorporateUserRequestAPI } from "../../../store/actions/BOPSystemAdminActions";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { getAllCorporatesCategory } from "../../../store/actions/Auth-Actions";
-// import ActivateConfirmationModal from "../BankUser/ActivateConfirmationModal/ActivateConfirmationModal";
 const CorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,12 +38,12 @@ const CorporateUser = () => {
   const GetAllCorporates = useSelector(
     (state) => state.auth.GetAllCorporatesData
   );
-  console.log("GetAllCorporates", GetAllCorporates);
 
   //  //Global Modal for confirmation
-  const AddBankUserConfirmationModal = useSelector(
-    (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
-  );
+  // const AddBankUserConfirmationModal = useSelector(
+  //   (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
+  // );
+
   //Add Company Use Modal Calling
   const PlusIconCorporateModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.corporatePlusIconModal
@@ -67,21 +64,16 @@ const CorporateUser = () => {
   // const [category, setCategory] = useState("");
 
   //companyRoles
-  const [companyRole, setCompanyRole] = useState({
+  const [companyRoleID, setCompanyRole] = useState({
     value: 0,
     label: "",
   });
 
   //Global State
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
+  const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
-  const [companyNameOptions, setCompanyName] = useState([]);
+  const [companyNameOptions, setCompanyNameOptions] = useState([]);
   console.log("companyNameOptions", companyNameOptions);
-
-  // //Set Activate Button
-  // const [isActive, setIsActive] = useState(false);
-
-  //
 
   //state for error Message
   const [errorShow, setErrorShow] = useState(false);
@@ -263,7 +255,6 @@ const CorporateUser = () => {
           // CompanyName: corporateUser.companyName.value,
           IsChatActive: corporateUser.isChatActive.value,
         };
-        // console.log("newDatanewDatanewDatanewData", newData);
 
         dispatch(CreateCorporateUserRequestAPI(navigate, newData));
       } else {
@@ -302,7 +293,7 @@ const CorporateUser = () => {
   };
 
   const handleCancelButton = () => {
-    setCompanyName("");
+    setCompanyNameOptions("");
     // setCategory("");
     // setIsActive(false);
     setCorporateUser({
@@ -322,14 +313,6 @@ const CorporateUser = () => {
     });
   };
 
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  // const handleDropdownChange = (field, value, setter, userField) => {
-  //   setter(value); // Set the state
-  //   userField.value = value.value; // Update the corporateUser object
-  // };
-
-  // const CompanySelectHandler =
   const CompanySelectHandler = async (selectedCompany) => {
     console.log(
       selectedCompany,
@@ -344,28 +327,9 @@ const CorporateUser = () => {
       natureOfClient: selectedCompany.natureofBusiness.name,
       rfqTreasury: `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
       rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
-
-      //needs to be cleared
     }));
   };
   console.log("corporateUser.corporateID", corporateUser);
-
-  // useEffect(() => {
-  //   if (
-  //     corporateUser.firstName.value !== "" &&
-  //     corporateUser.email.value !== "" &&
-  //     corporateUser.companyName.value !== "" &&
-  //     corporateUser.category.value !== ""
-  //   ) {
-  //     setIsActive(true);
-  //   } else {
-  //     setIsActive(false);
-  //   }
-  // }, [
-  //   corporateUser,
-  //   corporateUser.companyName.value,
-  //   corporateUser.category.value,
-  // ]);
 
   useEffect(() => {
     dispatch(getAllCorporatesCategory(navigate));
@@ -381,10 +345,39 @@ const CorporateUser = () => {
             label: corporate.corporateName,
           };
         });
-        setCompanyName(newCorporateData);
-      } catch (error) {}
+        setCompanyNameOptions(newCorporateData);
+        console.log("newCorporateData", newCorporateData[0]);
+        if (newCorporateData.length > 0) {
+          console.log("im here");
+          setCompanyRole(newCorporateData[0]);
+          console.log("companyRoleID", companyRoleID);
+          setCorporateUser((prevState) => ({
+            ...prevState,
+            companyID: newCorporateData[0].value,
+            categoryName: newCorporateData[0].category.categoryName,
+            natureOfClient: newCorporateData[0].natureofBusiness.name,
+            rfqTreasury: `${newCorporateData[0].rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+            rfqCorporate: `${newCorporateData[0].rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+            // isChatActive: newCorporateData[0].isChatActive.value,
+            //needs to be cleared
+          }));
+        }
+      } catch (error) {
+        console.log("Encounred an Error: ", error);
+      }
     }
   }, [GetAllCorporates]);
+  /*   setCompanyRole(selectedCompany);
+
+    setCorporateUser((prevState) => ({
+      ...prevState,
+      companyID: selectedCompany.value,
+      categoryName: selectedCompany.category.categoryName,
+      natureOfClient: selectedCompany.natureofBusiness.name,
+      rfqTreasury: `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+      rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+
+    }));*/
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -474,7 +467,6 @@ const CorporateUser = () => {
                           ""
                         )}
                       </Col>
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     <Row className="mt-3 position-relative">
@@ -490,7 +482,7 @@ const CorporateUser = () => {
                           options={companyNameOptions}
                           isSearchable={true}
                           classNamePrefix={"companyName"}
-                          value={companyRole}
+                          value={companyRoleID}
                           onChange={CompanySelectHandler}
                           className={styles["react-select-field"]}
                         />
@@ -500,10 +492,7 @@ const CorporateUser = () => {
                           onClick={handlePlusButton}
                         />
                       </Col>
-
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
-                    {/* <Row className="mt-3"></Row> */}
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
@@ -538,8 +527,6 @@ const CorporateUser = () => {
                           className={styles["react-select-field"]}
                         /> */}
                       </Col>
-
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     <Row className="mt-3">
@@ -559,8 +546,6 @@ const CorporateUser = () => {
                           }
                         />
                       </Col>
-
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     <Row className="mt-3">
@@ -600,10 +585,7 @@ const CorporateUser = () => {
                           </Col>
                         </Row>
                       </Col>
-
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
-                    {/* <Row className="mt-3"></Row> */}
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
@@ -619,8 +601,6 @@ const CorporateUser = () => {
                           disable={true}
                         />
                       </Col>
-
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     <Row className="mt-3 mb-5">
@@ -638,9 +618,7 @@ const CorporateUser = () => {
                           disableBtn={
                             corporateUser.firstName.value !== "" &&
                             corporateUser.email.value !== ""
-                              ? // &&
-                                // corporateUser.companyName.value !== ""
-                                false
+                              ? false
                               : true
                           }
                         />
@@ -659,6 +637,7 @@ const CorporateUser = () => {
           </Row>
         </Col>
       </Row>
+
       {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
       {editCompanyModalGobalState && <EditCompanyModal />}
       {
@@ -666,7 +645,7 @@ const CorporateUser = () => {
         <ActivateConfirmationModal onConfirm={handleActivateButtonYes} />
         // )
       }
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

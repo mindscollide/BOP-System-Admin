@@ -25,7 +25,6 @@ const CorporatePlusIconModal = () => {
   const getAllNatureOfBuisness = useSelector(
     (state) => state.auth.getAllNatureOfBuisness
   );
-  // console.log("getAllNatureOfBuisness", getAllNatureOfBuisness);
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [natureOptions, setNatureOptions] = useState([]);
@@ -41,10 +40,12 @@ const CorporatePlusIconModal = () => {
     value: 0,
     label: "",
   });
+
   const [natureID, setNatureID] = useState({
     value: 0,
     label: "",
   });
+
   //State for RFQ Timer Treasury
   const [RFQTimerTreasury, setRFQTimerTreasury] = useState(null);
 

@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   CustomUpload,
-  // Notification,
   Loader,
 } from "../../../components/elements";
 import Select from "react-select";
@@ -87,8 +86,8 @@ const Bankuser = () => {
     label: "",
   });
   const [roles, setRoles] = useState({
-    label: "",
-    value: 0,
+    label: "Dealer",
+    value: 7,
   });
   // const [category, setCategory] = useState("");
 
@@ -139,40 +138,6 @@ const Bankuser = () => {
   const addBankUserValidateHandler = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-
-    // if (name === "EmployeeID" && value !== "") {
-    //   let valueCheck = value.replace(/[^0-9]/g, "");
-    //   if (valueCheck !== "") {
-    //     setAddBankUser({
-    //       ...addBankUser,
-    //       EmployeeID: {
-    //         value: valueCheck.trimStart(),
-    //         errorMessage: "",
-    //         errorStatus: false,
-    //       },
-    //     });
-    //   } else if (name === "EmployeeID" && value.length < 5) {
-    //     setAddBankUser({
-    //       ...addBankUser,
-    //       EmployeeID: {
-    //         value: "",
-    //         errorMessage: "ID must be 4 digits",
-    //         errorStatus: true,
-    //       },
-    //     });
-    //     console.log("in this block");
-    //   }
-    // } else if (name === "EmployeeID" && value === "") {
-    //   setAddBankUser({
-    //     ...addBankUser,
-    //     EmployeeID: {
-    //       value: "",
-    //       errorMessage: "",
-    //       errorStatus: true,
-    //     },
-    //   });
-    //   console.log("in 2nd block");
-    // }
     if (name === "EmployeeID") {
       let valueCheck = value.replace(/[^0-9]/g, "");
 
@@ -323,12 +288,8 @@ const Bankuser = () => {
 
   const bankSelectRoleHandler = async (selectedRole) => {
     setRoles(selectedRole);
-
-    console.log(selectedRole, "selectedRole");
-
     setAddBankUser((prevState) => ({
       ...prevState,
-
       roleID: {
         ...prevState.roleID,
         value: selectedRole.value,
@@ -411,19 +372,10 @@ const Bankuser = () => {
       setErrorShow(true);
     }
   };
-  // console.log("saveClicked is: ", saveClicked);
 
   const handleConfirmationYes = useCallback(() => {
     let employeeID = addBankUser.EmployeeID.value;
 
-    // // Check if all required fields are filled
-    // if (
-    //   addBankUser.firstName.value !== "" &&
-    //   addBankUser.roleID.value !== "" &&
-    //   addBankUser.email.value !== "" &&
-    //   addBankUser.Contact.value !== "" &&
-    //   addBankUser.EmployeeID.value !== ""
-    // ) {
     // Check if EmployeeID is unique and greater than the last dummy ID
     if (
       parseInt(employeeID) >
@@ -448,7 +400,6 @@ const Bankuser = () => {
           // UserRoleID: addBankUser.roleID.value, // Role ID from the form
           UserRoleID: 9,
           EmployeeID: addBankUser.EmployeeID.value,
-
           Branch: {
             BranchID: addBankUser.branchID.value, // Include BranchID inside a Branch object
           },
@@ -495,33 +446,6 @@ const Bankuser = () => {
       alert("Invalid type");
     }
   };
-
-  // //Handle activate button when branch is selected
-  // useEffect(() => {
-  //   if (
-  //     addBankUser.EmployeeID.errorStatus !== true &&
-  //     addBankUser.firstName.value !== "" &&
-  //     addBankUser.roleID.value !== "" &&
-  //     // addBankUser.ldapAccount.value !== "" &&
-  //     addBankUser.email.value !== "" &&
-  //     addBankUser.Contact.value !== ""
-  //   ) {
-  //     if (addBankUser.roleID.value === 7 && addBankUser.branchID.value === "") {
-  //       setIsActive(false);
-  //     } else if (addBankUser.roleID.value !== 7) {
-  //       setIsActive(true);
-  //     } else {
-  //       setIsActive(true);
-  //     }
-  //   } else {
-  //     setIsActive(false);
-  //   }
-  // }, [addBankUser]);
-
-  console.log(
-    "addBankUser.EmployeeID.errorMessage",
-    addBankUser.EmployeeID.value.length
-  );
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -615,14 +539,13 @@ const Bankuser = () => {
                       </Col>
                       <Col lg={5} md={5} sm={12}>
                         <Select
-                          name="roleID"
+                          // name="roleID"
                           options={roleOptions}
                           value={roles}
                           onChange={bankSelectRoleHandler}
                           isSearchable={true}
                           className={styles["react-select-field"]}
                         />
-                        {/* <Row className="mt-3"></Row> */}
 
                         {/* <Row>
                           <Col className="d-flex justify-content-start">
@@ -638,8 +561,6 @@ const Bankuser = () => {
                           </Col>
                         </Row> */}
                       </Col>
-
-                      {/* <Col lg={4} md={4} sm={12}></Col> */}
                     </Row>
 
                     {roles.value === 9 && (
@@ -699,6 +620,7 @@ const Bankuser = () => {
                               name={"cateogry"}
                               value={addBankUser.category}
                               maxLength={50}
+                              disable
                               // onChange={addBankUserValidateHandler}
                               labelClass="d-none"
                             />

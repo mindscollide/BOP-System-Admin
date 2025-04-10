@@ -3,7 +3,6 @@ import style from "./SpreadManagement.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
 import { Button, CustomPaper } from "../../../../components/elements";
-// import { categoryOptions } from "../../../../helpers/Dropdown";
 import {
   crossData,
   initialDiscountingState,

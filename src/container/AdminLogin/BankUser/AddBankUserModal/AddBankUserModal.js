@@ -11,13 +11,9 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { AdduserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Col, Row } from "react-bootstrap";
-import {
-  AddBranchAPI,
-  GetAllBranchesAPI,
-} from "../../../../store/actions/BOPSystemAdminActions";
+import { AddBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { addBranchSchema } from "../../../../utils/schemas";
-// import { categoryOptions } from "../../../../helpers/Dropdown";
 import { GetAllCategoriesAPI } from "../../../../store/actions/Auth-Actions";
 const AddBankUserModal = () => {
   const dispatch = useDispatch();
@@ -35,9 +31,6 @@ const AddBankUserModal = () => {
     message: "",
   });
   const [addBranch, setAddBranch] = useState({ ...addBranchSchema });
-
-  //Activate add branch button
-  const [isActive, setIsActive] = useState(false);
 
   const [categoryID, setCategoryID] = useState({
     value: 0,
@@ -150,20 +143,6 @@ const AddBankUserModal = () => {
     dispatch(AdduserModalSystemAdmin(false));
   };
 
-  //useeffect to activate add branch button
-  useEffect(() => {
-    if (
-      addBranch.branchName.value !== "" &&
-      addBranch.branchCode.value !== "" &&
-      addBranch.branchContact.value !== "" &&
-      addBranch.categoryID.value !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }, [addBranch]);
-
   // Fetch categories on component mount
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
@@ -179,7 +158,21 @@ const AddBankUserModal = () => {
           };
         });
         setCategoryOptions(newCategoriesData);
-      } catch (error) {}
+
+        // Set the first category as default if categories exist
+        if (newCategoriesData.length > 0) {
+          setCategoryID(newCategoriesData[0]);
+          setAddBranch((prevState) => ({
+            ...prevState,
+            categoryID: {
+              ...prevState.categoryID,
+              value: newCategoriesData[0].value,
+            },
+          }));
+        }
+      } catch (error) {
+        console.error("Error processing categories:", error);
+      }
     }
   }, [getAllCategories]);
 

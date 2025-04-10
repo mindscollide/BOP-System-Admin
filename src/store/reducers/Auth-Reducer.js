@@ -14,7 +14,6 @@ const initialState = {
   allCorporateCompany: [],
   searchBankLogin: [],
   allUserStatus: [],
-  // getAllNature: [],
   Corporates: [],
   UpdatedCorporates: [],
   DeleteCategory: [],
@@ -30,6 +29,7 @@ const initialState = {
   GetAllCorporatesData: null,
   getAllNatureOfBuisness: null,
   RoleList: null,
+  GetAllInstruments: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -380,30 +380,33 @@ const authReducer = (state = initialState, action) => {
         RoleList: [],
         ResponseMessage: action.message,
       };
-    // //Get all Corporates
-    // case actions.GET_ALL_CORPORATES_INIT:
-    //   return {
-    //     ...state,
-    //     Loading: true,
-    //   };
-    // case actions.GET_ALL_CORPORATES_SUCCESS:
-    //   return {
-    //     ...state,
-    //     Loading: false,
-    //     GetAllCorporates: action.response,
-    //     ResponseMessage: action.message,
-    //   };
-    // case actions.GET_ALL_CORPORATES_FAIL:
-    //   return {
-    //     ...state,
-    //     Loading: false,
-    //     GetAllCorporates: null,
-    //     ResponseMessage: action.message,
-    //   };
     case actions.CLEARE_MESSAGE:
       return {
         ...state,
         ResponseMessage: "",
+      };
+
+    //GetAllInstruments Reducer
+    case actions.GET_ALL_INSTRUMENTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_INSTRUMENTS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstruments: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_INSTRUMENTS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstruments: [],
+        ResponseMessage: action.message,
       };
 
     default:

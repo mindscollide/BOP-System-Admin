@@ -180,6 +180,9 @@ const RoleList = {
 const GetCounterPartyNames = {
   RequestMethod: "ServiceManager.GetCounterPartyNames",
 };
+const GetAllInstruments = {
+  RequestMethod: "ServiceManager.GetAllInstrumentTypes",
+};
 
 export {
   authenticationRefreshToken,
@@ -223,4 +226,5 @@ export {
   GetCorporateUserByUserID,
   RoleList,
   GetCounterPartyNames,
+  GetAllInstruments,
 };

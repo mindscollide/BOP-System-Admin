@@ -10,18 +10,11 @@ export const branchOptions = [
   { value: "Clifton", label: "Clifton" },
 ];
 
-export const companyOptions = [
-  { value: "Minds Collide PVT LTD", label: "Minds Collide PVT LTD" },
-  { value: "Tresmark PVT LTD", label: "Tresmark PVT LTD" },
-  { value: "BOP", label: "BOP" },
-];
-
-export const categoryOptions = [
-  { value: "Category 1", label: "Category 1" },
-  { value: "Category 2", label: "Category 2" },
-  { value: "Category 3", label: "Category 3" },
-  { value: "Category 4", label: "Category 4" },
-];
+// export const companyOptions = [
+//   { value: "Minds Collide PVT LTD", label: "Minds Collide PVT LTD" },
+//   { value: "Tresmark PVT LTD", label: "Tresmark PVT LTD" },
+//   { value: "BOP", label: "BOP" },
+// ];
 
 export const RFQTimerOptions = [
   { value: 3, label: "3 Minutes" },

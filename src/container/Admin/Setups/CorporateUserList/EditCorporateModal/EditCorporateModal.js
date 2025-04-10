@@ -26,7 +26,7 @@ const EditCorporateModal = () => {
   // const [value, setValue] = useState("Corporate");
 
   //state for error Message
-  const [errorShow, setErrorShow] = useState(false);
+  // const [errorShow, setErrorShow] = useState(false);
 
   //Dummy User for handlin UI change bansed on the user Secuity admiin or system admin
   let user = "System Admin";
@@ -117,7 +117,7 @@ const EditCorporateModal = () => {
       updateCorporate.activeUser.value !== ""
     ) {
       if (validateBopEmail(updateCorporate.email.value)) {
-        setErrorShow(false);
+        // setErrorShow(false);
         let newData = {
           User: {
             FirstName: updateCorporate.firstName.value,
@@ -130,13 +130,9 @@ const EditCorporateModal = () => {
         };
         console.log("newData", newData);
         dispatch(UpdateCorporateUsersAPI(navigate, newData));
-        setOpen({
-          open: true,
-          message: "Hello Update Corporate User dispatched",
-        });
       } else {
         console.log("updateCorporateUser Dispatched");
-        setErrorShow(true);
+        // setErrorShow(true);
       }
     } else {
       // setTimeout();
@@ -145,7 +141,7 @@ const EditCorporateModal = () => {
         open: true,
         message: "Fill All Required Fields",
       });
-      setErrorShow(true);
+      // setErrorShow(true);
     }
   };
 

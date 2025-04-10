@@ -10,6 +10,7 @@ import {
   GetAllCorporates,
   GetAllNatureOfBussiness,
   RoleList,
+  GetAllInstruments,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -1044,6 +1045,88 @@ const RoleListAPI = (navigate) => {
       });
   };
 };
+
+const GetAllInstrumentsInit = () => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_INIT,
+  };
+};
+const GetAllInstrumentsSuccess = (response, message) => {
+  console.log(response);
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllInstrumentsFail = (message) => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_FAIL,
+    message: message,
+  };
+};
+
+const GetAllInstrumentsAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllInstrumentsInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllInstruments.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllInstrumentsAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllInstrumentTypes_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllInstrumentsSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllInstrumentTypes_02".toLowerCase()
+            ) {
+              dispatch(GetAllInstrumentsFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllInstrumentTypes_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllInstrumentsFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllInstrumentsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllInstrumentsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllInstrumentsFail("something went wrong"));
+      });
+  };
+};
+
 export {
   signOut,
   RefreshToken,
@@ -1056,4 +1139,5 @@ export {
   GetAllCategoriesAPI,
   GetAllNatureAPI,
   RoleListAPI,
+  GetAllInstrumentsAPI,
 };
