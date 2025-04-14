@@ -445,7 +445,7 @@ const BankerList = () => {
   const handleSelectRole = async (selectedRole) => {
     setRoleID(selectedRole);
 
-    bankListSchema((prevState) => ({
+    setBankList((prevState) => ({
       ...prevState,
       roleID: { ...prevState.roleID, value: selectedRole.value },
     }));
@@ -510,7 +510,7 @@ const BankerList = () => {
                   isSearchable={true}
                   placeholder={"Select Role"}
                   options={roleOptions}
-                  value={roleID.value !== 0 ? roleID : null}
+                  value={roleID.value ? roleID : null}
                   onChange={handleSelectRole}
                   classNamePrefix="selectCateogyCorporateList"
                 />
@@ -585,8 +585,6 @@ const BankerList = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  // scroll={true}
-                  // expandable={true}
                   className={"BankUserList-table"}
                 />
               </Col>

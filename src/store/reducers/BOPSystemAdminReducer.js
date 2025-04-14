@@ -32,6 +32,7 @@ const initialState = {
   GetCorporateUserByUserID: null,
   GetVolmeterByBankID: null,
   GetCounterPartyNamesData: null,
+  GetAllInstruments: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -586,6 +587,29 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetCounterPartyNamesData: "",
+        ResponseMessage: action.message,
+      };
+
+    //GetAllInstruments Reducer
+    case actions.GET_ALL_INSTRUMENTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_INSTRUMENTS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstruments: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_INSTRUMENTS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstruments: [],
         ResponseMessage: action.message,
       };
     default:

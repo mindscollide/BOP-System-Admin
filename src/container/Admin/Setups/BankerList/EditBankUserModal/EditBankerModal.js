@@ -278,7 +278,7 @@ const EditBankerModal = () => {
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <Select
-                  classNamePrefix={"ModalAbsoluteDropdown"}
+                  classNamePrefix={"selectCateogyCorporateList"}
                   options={roleOptions}
                   value={roleID}
                   isSearchable="true"

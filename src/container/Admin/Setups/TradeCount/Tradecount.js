@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Tradecount.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -28,17 +28,27 @@ import { useSelector } from "react-redux";
 import CommentModal from "./CommentModal/CommentModal";
 import pdfIcon from "../../../../assets/images/pdf.png";
 import excelIcon from "../../../../assets/images/excel.png";
+import { useNavigate } from "react-router-dom";
+import { GetAllNatureAPI } from "../../../../store/actions/Auth-Actions";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const getAllNatureOfBuisness = useSelector(
+    (state) => state.auth.getAllNatureOfBuisness
+  );
+
   //Trade Count States
   const [tradeCount, setTradeCount] = useState({ ...tradeCountSchema });
 
   //Sate For Side
   const [side, setSide] = useState("");
-
-  //Sate for Nature
-  const [nature, setNature] = useState("");
+  const [natureOptions, setNatureOptions] = useState([]);
+  const [natureID, setNatureID] = useState({
+    value: 0,
+    label: "",
+  });
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
@@ -358,7 +368,7 @@ const TradeCount = () => {
       },
     });
     setSide("");
-    setNature("");
+    setNatureID("");
   };
 
   //Handle Select Change
@@ -395,6 +405,40 @@ const TradeCount = () => {
     // doc.save("CorporateList.pdf");
     console.log("doc saved as pdf");
   };
+
+  //handle select categoryID
+  const handleSelectNature = async (selectedNature) => {
+    console.log(selectedNature.value, "selectedCategoryselectedCategory");
+    setNatureID(selectedNature);
+
+    setTradeCount((prevState) => ({
+      ...prevState,
+      natureOfClient: {
+        ...prevState.natureOfClient,
+        value: selectedNature.value,
+      },
+    }));
+  };
+  // Fetch categories on component mount
+  useEffect(() => {
+    dispatch(GetAllNatureAPI(navigate));
+  }, []);
+  useEffect(() => {
+    if (getAllNatureOfBuisness !== null) {
+      try {
+        let newNatureOfBusiness = getAllNatureOfBuisness.natureofBusinesses.map(
+          (natureOfBusiness) => {
+            return {
+              ...natureOfBusiness,
+              value: natureOfBusiness.pK_NatureOfBusiness,
+              label: natureOfBusiness.name,
+            };
+          }
+        );
+        setNatureOptions(newNatureOfBusiness);
+      } catch (error) {}
+    }
+  }, [getAllNatureOfBuisness]);
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
@@ -443,19 +487,12 @@ const TradeCount = () => {
               <Col lg={2} md={2} sm={12}>
                 <Select
                   placeholder="Select Nature"
-                  classNamePrefix={"TradeCountSelect"}
-                  name="nature"
-                  options={natureOfClientOptions}
-                  value={nature}
+                  // classNamePrefix={"TradeCountSelect"}
+                  classNamePrefix="selectCateogyCorporateList"
+                  options={natureOptions}
+                  value={natureID.value !== 0 ? natureID : null}
                   isSearchable
-                  onChange={(e) =>
-                    handleDropdownChange(
-                      "nature",
-                      e,
-                      setNature,
-                      tradeCount.Nature
-                    )
-                  }
+                  onChange={handleSelectNature}
                 />
               </Col>
 

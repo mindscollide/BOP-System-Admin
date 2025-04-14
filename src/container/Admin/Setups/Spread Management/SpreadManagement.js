@@ -203,12 +203,11 @@ const SpreadManagement = () => {
           <Select
             name="category"
             placeholder={"Select Category"}
-            classNamePrefix={"CategorySpreadManagement"}
+            classNamePrefix={"selectCateogyCorporateList"}
             options={categoryOptions}
             isSearchable
             value={categoryID.value !== 0 ? categoryID : null}
             onChange={handleSelectCategory}
-            className={style["react-select-field"]}
           />
         </Col>
       </Row>

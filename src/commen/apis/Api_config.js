@@ -181,9 +181,11 @@ const GetCounterPartyNames = {
   RequestMethod: "ServiceManager.GetCounterPartyNames",
 };
 const GetAllInstruments = {
+  RequestMethod: "ServiceManager.GetAllInstruments",
+};
+const GetAllInstrumentTypes = {
   RequestMethod: "ServiceManager.GetAllInstrumentTypes",
 };
-
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -227,4 +229,5 @@ export {
   RoleList,
   GetCounterPartyNames,
   GetAllInstruments,
+  GetAllInstrumentTypes,
 };

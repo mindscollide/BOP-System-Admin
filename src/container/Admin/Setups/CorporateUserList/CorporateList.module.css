@@ -157,9 +157,7 @@
 .InactiveStatus {
   color: #cf5b5b !important;
 }
-.react-select-field {
-  z-index: 101;
-}
+
 .export-options {
   display: flex; /* Ensures items stay in a row */
   gap: 15px; /* Adjust space between buttons */

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CorporateList.module.css";
 import { Col, Row } from "react-bootstrap";
 import {

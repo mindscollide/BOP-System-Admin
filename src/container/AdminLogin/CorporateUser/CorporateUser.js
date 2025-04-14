@@ -59,10 +59,6 @@ const CorporateUser = () => {
     ...addCorporateUserSchema,
   });
 
-  // // States for dropdown
-  // // const [companyName, setCompanyName] = useState("");
-  // const [category, setCategory] = useState("");
-
   //companyRoles
   const [companyRoleID, setCompanyRole] = useState({
     value: 0,
@@ -294,8 +290,6 @@ const CorporateUser = () => {
 
   const handleCancelButton = () => {
     setCompanyNameOptions("");
-    // setCategory("");
-    // setIsActive(false);
     setCorporateUser({
       ...corporateUser,
       firstName: {
@@ -367,17 +361,7 @@ const CorporateUser = () => {
       }
     }
   }, [GetAllCorporates]);
-  /*   setCompanyRole(selectedCompany);
 
-    setCorporateUser((prevState) => ({
-      ...prevState,
-      companyID: selectedCompany.value,
-      categoryName: selectedCompany.category.categoryName,
-      natureOfClient: selectedCompany.natureofBusiness.name,
-      rfqTreasury: `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
-      rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
-
-    }));*/
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -410,7 +394,7 @@ const CorporateUser = () => {
                         <TextField
                           labelClass="d-none"
                           name={"firstName"}
-                          value={corporateUser.firstName.value}
+                          value={corporateUser.firstName?.value || ""}
                           onChange={addCorporateUserValidateHandler}
                           maxLength={50}
                         />
@@ -433,7 +417,7 @@ const CorporateUser = () => {
                         <TextField
                           labelClass="d-none"
                           name={"email"}
-                          value={corporateUser.email.value}
+                          value={corporateUser.email?.value || ""}
                           onChange={addCorporateUserValidateHandler}
                         />
                         {/* <Row>
@@ -478,13 +462,12 @@ const CorporateUser = () => {
                       </Col>
                       <Col lg={5} md={5} sm={12} className="position-relative">
                         <Select
-                          name="companyName"
+                          // name="companyName"
                           options={companyNameOptions}
                           isSearchable={true}
-                          classNamePrefix={"companyName"}
                           value={companyRoleID}
                           onChange={CompanySelectHandler}
-                          className={styles["react-select-field"]}
+                          classNamePrefix={"selectCateogyCorporateList"}
                         />
                         <Button
                           className={styles["PlusButton"]}
@@ -503,29 +486,11 @@ const CorporateUser = () => {
                       <Col lg={5} md={5} sm={12}>
                         <TextField
                           labelClass="d-none"
-                          name={"category"}
-                          value={corporateUser.categoryName}
-                          // onChange={addCorporateUserValidateHandler}
+                          // name={"category"}
+                          value={corporateUser.categoryName || ""}
                           maxLength={50}
                           disable={true}
                         />
-                        {/* <Select
-                          name="category"
-                          isSearchable={true}
-                          classNamePrefix={"category"}
-                          options={categoryOptions}
-                          value={category}
-                          isDisabled
-                          onChange={(e) =>
-                            handleDropdownChange(
-                              "category",
-                              e,
-                              setCategory,
-                              corporateUser.category
-                            )
-                          }
-                          className={styles["react-select-field"]}
-                        /> */}
                       </Col>
                     </Row>
 
@@ -566,7 +531,7 @@ const CorporateUser = () => {
                             </span>
                             <TextField
                               labelClass="d-none"
-                              value={corporateUser.rfqTreasury}
+                              value={corporateUser.rfqTreasury || ""}
                               disable={true}
                             />
                           </Col>
@@ -579,7 +544,7 @@ const CorporateUser = () => {
                             </span>
                             <TextField
                               labelClass="d-none"
-                              value={corporateUser.rfqCorporate}
+                              value={corporateUser.rfqCorporate || ""}
                               disable={true}
                             />
                           </Col>
@@ -597,7 +562,7 @@ const CorporateUser = () => {
                       <Col lg={5} md={5} sm={12}>
                         <TextField
                           labelClass="d-none"
-                          value={corporateUser.natureOfClient}
+                          value={corporateUser.natureOfClient || ""}
                           disable={true}
                         />
                       </Col>

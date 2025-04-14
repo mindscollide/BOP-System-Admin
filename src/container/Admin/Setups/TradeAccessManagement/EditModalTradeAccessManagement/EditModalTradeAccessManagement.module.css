@@ -65,7 +65,3 @@
   align-items: center !important;
   border: none !important;
 }
-
-.react-select-field {
-  z-index: 10000 !important;
-}

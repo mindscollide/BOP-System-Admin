@@ -26,49 +26,47 @@ const Header = () => {
   }
   return (
     <>
-      <Container fluid className="container-header-2">
-        <Navbar>
-          <Container fluid>
-            <Navbar.Brand>
-              <img
-                src={BOPLogo}
-                width={200}
-                alt=""
-                className="BopLogoClass"
-                onClick={onClickLogo}
-              />
-            </Navbar.Brand>
-            <Dropdown className="WholeDropDown">
-              <Dropdown.Toggle className="dropdown-toggle-header2">
-                <p className="user-name-header2">Owais Wajid</p>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown_menu-Header2">
-                <Dropdown.Item className="dropdown_menu-Item">
-                  <Nav.Link>
-                    <i className="icon-settings me-1"></i>
-                    <label
-                      className="dropdown-select-labels"
-                      onClick={onClickSetting}
-                    >
-                      Setting
-                    </label>
-                  </Nav.Link>
-                </Dropdown.Item>
-                <Dropdown.Item onClick={handelLogout}>
-                  <i className="icon-logout me-1"></i>
-                  <label className="dropdown-select-labels">Logout</label>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Container>
+      <section className="bop_systemHeader">
+        <Navbar className="d-flex justify-content-between">
+          <Navbar.Brand>
+            <img
+              src={BOPLogo}
+              width={200}
+              alt=""
+              className="BopLogoClass"
+              onClick={onClickLogo}
+            />
+          </Navbar.Brand>
+          <Dropdown>
+            <Dropdown.Toggle className="dropdown-toggle-header2">
+              <p className="user-name-header2">Owais Wajid</p>
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="dropdown_menu-Header2">
+              <Dropdown.Item className="dropdown_menu-Item">
+                <Nav.Link>
+                  <i className="icon-settings me-1"></i>
+                  <label
+                    className="dropdown-select-labels"
+                    onClick={onClickSetting}
+                  >
+                    Setting
+                  </label>
+                </Nav.Link>
+              </Dropdown.Item>
+              <Dropdown.Item onClick={handelLogout}>
+                <i className="icon-logout me-1"></i>
+                <label className="dropdown-select-labels">Logout</label>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Navbar>
-        {SettingModalState ? (
-          <SettingModal
-            SettingModalState={SettingModalState}
-            setSettingModalState={setSettingModalState}
-          />
-        ) : null}
-      </Container>
+      </section>
+      {SettingModalState ? (
+        <SettingModal
+          SettingModalState={SettingModalState}
+          setSettingModalState={setSettingModalState}
+        />
+      ) : null}
     </>
   );
 };

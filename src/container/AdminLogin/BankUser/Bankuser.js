@@ -44,10 +44,8 @@ const Bankuser = () => {
   );
 
   console.log("SearchBankUserSearchBankUser", SearchBankUsers);
-  // const getAllCategories = useSelector((state) => state.auth.getAllCategories);
 
   console.log(getALlBranches, "getALlBranches");
-  // console.log("getAllCategories", getAllCategories.categories);
 
   // const { BOPSystemAdminModal } = useSelector((state) => state);
   //Dummy employee ID
@@ -62,7 +60,6 @@ const Bankuser = () => {
   // );
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
-  // const [categoryOptions, setCategoryOptions] = useState([]);
 
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
@@ -89,7 +86,6 @@ const Bankuser = () => {
     label: "Dealer",
     value: 7,
   });
-  // const [category, setCategory] = useState("");
 
   //state for save button
   const [saveClicked, setSaveClicked] = useState(false);
@@ -316,13 +312,12 @@ const Bankuser = () => {
 
     setAddBankUser((prevState) => ({
       ...prevState,
-      category: selectedBranch.categoryName,
+      // category: selectedBranch.categoryName,
       branchID: { BranchID: selectedBranch.value },
     }));
   };
 
   const handleCancelButton = () => {
-    // console.log("addBankUser", addBankUser);
     setCancelClicked(true);
     dispatch(ConfirmationModalSystemAdmin(true));
   };
@@ -363,7 +358,6 @@ const Bankuser = () => {
   };
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    console.log("addBankUser", addBankUser);
     setSaveClicked(true);
     if (validateBopEmail(addBankUser.email.value)) {
       setErrorShow(false);
@@ -539,12 +533,11 @@ const Bankuser = () => {
                       </Col>
                       <Col lg={5} md={5} sm={12}>
                         <Select
-                          // name="roleID"
                           options={roleOptions}
                           value={roles}
                           onChange={bankSelectRoleHandler}
                           isSearchable={true}
-                          className={styles["react-select-field"]}
+                          classNamePrefix={"selectCateogyCorporateList"}
                         />
 
                         {/* <Row>
@@ -580,10 +573,10 @@ const Bankuser = () => {
                               name="branchName"
                               options={branchOptions}
                               placeholder="Select Branch"
-                              value={branchRole}
+                              value={branchRole.value !== 0 ? branchRole : null}
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
-                              className={styles["react-select-field"]}
+                              classNamePrefix="selectCateogyCorporateList"
                               menuPortalTarget={document.body}
                             />
                           </Col>
@@ -625,20 +618,6 @@ const Bankuser = () => {
                               labelClass="d-none"
                             />
                           </Col>
-
-                          {/* <Col lg={5} md={5} sm={12}>
-                            <Select
-                              name="cateogry"
-                              // options={categoryOptions}
-                              isDisabled
-                              // value={addBankUser.category}
-                              // value={category}
-                              // onChange={bankSelectRoleHandler}
-
-                              isSearchable={true}
-                              className={styles["react-select-field"]}
-                            />
-                          </Col> */}
                         </Row>
                       </>
                     )}

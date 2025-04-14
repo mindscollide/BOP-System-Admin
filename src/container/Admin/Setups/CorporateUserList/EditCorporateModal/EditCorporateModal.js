@@ -46,12 +46,16 @@ const EditCorporateModal = () => {
   ];
 
   //State for RFQ Timer Treasury
-  const [RFQTimerTreasury, setRFQTimerTreasury] = useState(null);
-  //State for RFQ Timer Corporate
-  const [RFQTimerCorporate, setRFQTimerCorporate] = useState(null);
+  const [RFQTimerTreasury, setRFQTimerTreasury] = useState({
+    label: "3 Minutes",
+    value: 3,
+  });
 
-  //Set Activate Button
-  const [isActive, setIsActive] = useState(false);
+  //State for RFQ Timer Corporate
+  const [RFQTimerCorporate, setRFQTimerCorporate] = useState({
+    label: "3 Minutes",
+    value: 3,
+  });
 
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
@@ -60,8 +64,8 @@ const EditCorporateModal = () => {
     //Validation rules
     const validateInput = {
       firstName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
-      email: (val) => val.replace(/\s+/g, ""),
-      corporateName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
+      // email: (val) => val.replace(/\s+/g, ""),
+      // corporateName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
     };
 
     const isFieldEmpty = (val) => val === "";
@@ -88,11 +92,30 @@ const EditCorporateModal = () => {
     updateField(name, value);
   };
 
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
+  //Handle Select RFQTreasury
+  const handleRFQTimerTreasurySelect = (selectedTrasury) => {
+    setRFQTimerTreasury(selectedTrasury);
+    setUpdateCorporate((prevState) => ({
+      ...prevState,
+      RFQTimerTreasury: {
+        ...prevState.RFQTimerTreasury,
+        value: selectedTrasury.value,
+        label: selectedTrasury.label,
+      },
+    }));
+  };
+
+  //Handle Select RFQCorporate
+  const handleRFQTimerCorporateSelect = (selectedCorporate) => {
+    setRFQTimerCorporate(selectedCorporate);
+    setUpdateCorporate((prevState) => ({
+      ...prevState,
+      RFQTimerCorporate: {
+        ...prevState.RFQTimerCorporate,
+        value: selectedCorporate.value,
+        label: selectedCorporate.label,
+      },
+    }));
   };
   //Radio Buttons Management
   const handleRadioChange = (e) => {
@@ -105,7 +128,6 @@ const EditCorporateModal = () => {
     });
   };
 
-  //handle Active Button
   // show error message When user hit activate btn
   const handleUpdateButton = () => {
     if (
@@ -150,24 +172,6 @@ const EditCorporateModal = () => {
     dispatch(EditCorporateModalSystemAdmin(false));
   };
 
-  useEffect(() => {
-    if (
-      updateCorporate.firstName.value === "" ||
-      // updateCorporate.email.value === "" ||
-      // updateCorporate.corporateName.value === "" ||
-      updateCorporate.RFQTimerTreasury.value === "" ||
-      updateCorporate.RFQTimerCorporate.value === ""
-      // updateCorporate.activeUser.value === ""
-    ) {
-      setIsActive(false);
-    } else {
-      setIsActive(true);
-    }
-  }, [
-    updateCorporate,
-    updateCorporate.RFQTimerTreasury,
-    updateCorporate.RFQTimerCorporate,
-  ]);
   return (
     <Modal
       show={BOPSystemAdminModal.editCorporateModal}
@@ -261,19 +265,12 @@ const EditCorporateModal = () => {
                   </span>
                   <Select
                     className="RFQTimerTreasury"
-                    classNamePrefix={"ModalAbsoluteDropdown"}
+                    classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
                     value={RFQTimerTreasury}
-                    isSearchable="true"
+                    isSearchable={true}
                     menuPortalTarget={document.body}
-                    onChange={(e) =>
-                      handleDropdownChange(
-                        "RFQTimerTreasury",
-                        e,
-                        setRFQTimerTreasury,
-                        updateCorporate.RFQTimerTreasury
-                      )
-                    }
+                    onChange={handleRFQTimerTreasurySelect}
                   />
                 </Col>
 
@@ -285,19 +282,12 @@ const EditCorporateModal = () => {
 
                   <Select
                     className="RFQTimerCorporate"
-                    classNamePrefix={"ModalAbsoluteDropdown"}
+                    classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
                     value={RFQTimerCorporate}
-                    isSearchable="true"
+                    isSearchable={true}
                     menuPortalTarget={document.body}
-                    onChange={(e) =>
-                      handleDropdownChange(
-                        "RFQTimerCorporate",
-                        e,
-                        setRFQTimerCorporate,
-                        updateCorporate.RFQTimerCorporate
-                      )
-                    }
+                    onChange={handleRFQTimerCorporateSelect}
                   />
                 </Col>
               </Row>
@@ -359,7 +349,13 @@ const EditCorporateModal = () => {
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleUpdateButton}
-                disableBtn={isActive ? false : true}
+                disableBtn={
+                  updateCorporate.firstName.value !== "" &&
+                  updateCorporate.RFQTimerTreasury.value !== "" &&
+                  updateCorporate.RFQTimerCorporate.value !== ""
+                    ? false
+                    : true
+                }
               />
 
               <Button

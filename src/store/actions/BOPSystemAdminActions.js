@@ -22,12 +22,10 @@ import {
   UpdateVolMeterSettingByBankId,
   GetVolMeterSettingByBankId,
   UpdateCategory,
-  getallCoporatesSystem,
-  GetAllBankUsers,
-  GetAllCorporates,
   GetAllCorporateUsers,
   GetCorporateUserByUserID,
   GetCounterPartyNames,
+  GetAllInstruments,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -2664,6 +2662,81 @@ const GetCounterPartyNamesAPI = (navigate) => {
       });
   };
 };
+const GetAllInstrumentsInit = () => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_INIT,
+  };
+};
+const GetAllInstrumentsSuccess = (response, message) => {
+  console.log(response);
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllInstrumentsFail = (message) => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_FAIL,
+    message: message,
+  };
+};
+
+const GetAllInstrumentsAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllInstrumentsInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllInstruments.RequestMethod);
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllInstrumentsAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllInstruments_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllInstrumentsSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllInstruments_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllInstrumentsFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllInstrumentsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllInstrumentsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllInstrumentsFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -2692,4 +2765,5 @@ export {
   GetAllCorporateUsersAPI,
   GetCorporateUserByUserIDAPI,
   GetCounterPartyNamesAPI,
+  GetAllInstrumentsAPI,
 };

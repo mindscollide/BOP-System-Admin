@@ -29,12 +29,8 @@ const CorporatePlusIconModal = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [natureOptions, setNatureOptions] = useState([]);
 
-  // console.log("categoryOptions", categoryOptions);
   //State for add company
   const [addCompany, setAddCompnany] = useState({ ...addCompanySchema });
-
-  //State For Category dropdown
-  // const [category, setCategory] = useState(null);
 
   const [categoryID, setCategoryID] = useState({
     value: 0,
@@ -47,13 +43,16 @@ const CorporatePlusIconModal = () => {
   });
 
   //State for RFQ Timer Treasury
-  const [RFQTimerTreasury, setRFQTimerTreasury] = useState(null);
+  const [RFQTimerTreasury, setRFQTimerTreasury] = useState({
+    label: "3 Minutes",
+    value: 3,
+  });
 
   //State for RFQ Timer Corporate
-  const [RFQTimerCorporate, setRFQTimerCorporate] = useState(null);
-
-  //Activate Button
-  // const [isActive, setIsActive] = useState(false);
+  const [RFQTimerCorporate, setRFQTimerCorporate] = useState({
+    label: "3 Minutes",
+    value: 3,
+  });
 
   //Handle Cancel Button
   const handleCancelButton = () => {
@@ -93,13 +92,31 @@ const CorporatePlusIconModal = () => {
     updateField(name, value);
   };
 
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
+  //Handle Select RFQTreasury
+  const handleRFQTimerTreasurySelect = (selectedTrasury) => {
+    setRFQTimerTreasury(selectedTrasury);
+    setAddCompnany((prevState) => ({
+      ...prevState,
+      RFQTimerTreasury: {
+        ...prevState.RFQTimerTreasury,
+        value: selectedTrasury.value,
+        label: selectedTrasury.label,
+      },
+    }));
   };
 
+  //Handle Select RFQCorporate
+  const handleRFQTimerCorporateSelect = (selectedCorporate) => {
+    setRFQTimerCorporate(selectedCorporate);
+    setAddCompnany((prevState) => ({
+      ...prevState,
+      RFQTimerCorporate: {
+        ...prevState.RFQTimerCorporate,
+        value: selectedCorporate.value,
+        label: selectedCorporate.label,
+      },
+    }));
+  };
   const handleAddCorporateCompany = () => {
     let data = {
       FK_CategoryID: categoryID.categoryID,
@@ -107,10 +124,10 @@ const CorporatePlusIconModal = () => {
       RFQTreasuryExpiryTimer: addCompany.RFQTimerTreasury.value,
       RFQCorporateExpiryTimer: addCompany.RFQTimerCorporate.value,
       CorporateName: addCompany.companyName.value,
-      // NatureOfBusinessID: addCompany.natureOfClient.value,
       NatureOfBusinessID: natureID.pK_NatureOfBusiness,
       BankId: 1,
     };
+    // console.log("datadatadata", data);
     dispatch(CreateNewCorporateAPI(navigate, data));
     dispatch(corporatePlusIconModalSystemAdmin(false));
   };
@@ -132,6 +149,18 @@ const CorporatePlusIconModal = () => {
           };
         });
         setCategoryOptions(newCategoriesData);
+
+        // Set the first category as default if categories exist
+        if (newCategoriesData.length > 0) {
+          setCategoryID(newCategoriesData[0]);
+          setAddCompnany((prevState) => ({
+            ...prevState,
+            categoryID: {
+              ...prevState.category,
+              value: newCategoriesData[0].value,
+            },
+          }));
+        }
       } catch (error) {}
     }
 
@@ -147,6 +176,18 @@ const CorporatePlusIconModal = () => {
           }
         );
         setNatureOptions(newNatureOfBusiness);
+
+        // Set the first nature as default if Nature exist
+        if (newNatureOfBusiness.length > 0) {
+          setNatureID(newNatureOfBusiness[0]);
+          setAddCompnany((prevState) => ({
+            ...prevState,
+            natureOfClient: {
+              ...prevState.natureOfClient,
+              value: newNatureOfBusiness[0].value,
+            },
+          }));
+        }
       } catch (error) {}
     }
   }, [getAllCategories, getAllNatureOfBuisness]);
@@ -155,18 +196,18 @@ const CorporatePlusIconModal = () => {
   const handleSelectCategory = async (selectedCategory) => {
     setCategoryID(selectedCategory);
 
-    addCompanySchema((prevState) => ({
+    setAddCompnany((prevState) => ({
       ...prevState,
       categoryID: { ...prevState.categoryID, value: selectedCategory.value },
     }));
   };
 
-  //handle select categoryID
+  //handle select natureID
   const handleSelectNature = async (selectedNature) => {
     console.log(selectedNature.value, "selectedCategoryselectedCategory");
     setNatureID(selectedNature);
 
-    addCompanySchema((prevState) => ({
+    setAddCompnany((prevState) => ({
       ...prevState,
       natureOfClient: {
         ...prevState.natureOfClient,
@@ -224,14 +265,12 @@ const CorporatePlusIconModal = () => {
             </Col>
             <Col lg={8} md={8} sm={12}>
               <Select
-                placeholder="Select Category"
-                classNamePrefix={"ModalAbsoluteDropdown"}
-                isSearchable="true"
+                classNamePrefix={"selectCateogyCorporateList"}
+                isSearchable={true}
                 options={categoryOptions}
-                value={categoryID.value !== 0 ? categoryID : null}
+                value={categoryID}
                 menuPortalTarget={document.body}
                 onChange={handleSelectCategory}
-                className={styles["react-select-field"]}
               />
             </Col>
           </Row>
@@ -254,20 +293,13 @@ const CorporatePlusIconModal = () => {
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <Select
-                    className="RFQTimerTreasury"
-                    classNamePrefix={"ModalAbsoluteDropdown"}
+                    // className="RFQTimerTreasury"
+                    classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
                     value={RFQTimerTreasury}
-                    isSearchable="true"
+                    isSearchable={true}
                     menuPortalTarget={document.body}
-                    onChange={(e) =>
-                      handleDropdownChange(
-                        "RFQTimerTreasury",
-                        e,
-                        setRFQTimerTreasury,
-                        addCompany.RFQTimerTreasury
-                      )
-                    }
+                    onChange={handleRFQTimerTreasurySelect}
                   />
                 </Col>
 
@@ -278,20 +310,13 @@ const CorporatePlusIconModal = () => {
                   </span>
 
                   <Select
-                    className="RFQTimerCorporate"
-                    classNamePrefix={"ModalAbsoluteDropdown"}
+                    // className="RFQTimerCorporate"
+                    classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
                     value={RFQTimerCorporate}
-                    isSearchable="true"
+                    isSearchable={true}
                     menuPortalTarget={document.body}
-                    onChange={(e) =>
-                      handleDropdownChange(
-                        "RFQTimerCorporate",
-                        e,
-                        setRFQTimerCorporate,
-                        addCompany.RFQTimerCorporate
-                      )
-                    }
+                    onChange={handleRFQTimerCorporateSelect}
                   />
                 </Col>
               </Row>
@@ -306,11 +331,10 @@ const CorporatePlusIconModal = () => {
             </Col>
             <Col lg={8} md={8} sm={12}>
               <Select
-                placeholder
-                classNamePrefix="ModalAbsoluteDropdown"
+                classNamePrefix="selectCateogyCorporateList"
                 options={natureOptions}
-                value={natureID.value !== 0 ? natureID : null}
-                isSearchable="true"
+                value={natureID}
+                isSearchable={true}
                 menuPortalTarget={document.body}
                 onChange={handleSelectNature}
               />
@@ -335,8 +359,8 @@ const CorporatePlusIconModal = () => {
                 disableBtn={
                   categoryID.value !== 0 &&
                   categoryID.value !== 0 &&
-                  addCompany.RFQTimerTreasury.value !== "" &&
-                  addCompany.RFQTimerCorporate.value !== "" &&
+                  addCompany.RFQTimerTreasury.value !== 0 &&
+                  addCompany.RFQTimerCorporate.value !== 0 &&
                   addCompany.companyName.value !== "" &&
                   natureID.value !== 0
                     ? false

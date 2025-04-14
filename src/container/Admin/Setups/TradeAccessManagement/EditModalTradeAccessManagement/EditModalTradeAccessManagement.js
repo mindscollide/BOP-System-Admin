@@ -17,16 +17,29 @@ import {
   TextField,
 } from "../../../../../components/elements";
 import { updateCorporateDataSchema } from "../../../../../utils/schemas";
-import { instrumentType } from "../../../../../helpers/Dropdown";
 import DeleteConfirmationModal from "../../CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
 import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { useNavigate } from "react-router-dom";
+import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions";
 const EditModalTradeAccessManagement = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const GetAllInstruments = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllInstruments
+  );
+  console.log("GetAllInstruments", GetAllInstruments);
+
   const [updateCorporateData, setUpdateCorporateData] = useState({
     ...updateCorporateDataSchema,
   });
-  const [InstrumentType, setInstrumentType] = useState("");
+
+  const [instrumentOptions, setInstrumentOptions] = useState([]);
+  const [InstrumentID, setInstrumentID] = useState({
+    value: 0,
+    label: "",
+  });
+
   //state for error Message
   const [errorShow, setErrorShow] = useState(false);
   //Checking snakbar state
@@ -271,12 +284,6 @@ const EditModalTradeAccessManagement = () => {
     // Update the specific field
     updateField(name, value);
   };
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
-  };
 
   //Save Button
   const handleSaveChangesButton = () => {
@@ -391,6 +398,43 @@ const EditModalTradeAccessManagement = () => {
   // };
 
   useEffect(() => {
+    dispatch(GetAllInstrumentsAPI(navigate));
+  }, []);
+
+  useEffect(() => {
+    if (GetAllInstruments !== null) {
+      console.log("GetAllInstruments is: ", GetAllInstruments);
+      try {
+        let newInstrumentsData = GetAllInstruments.instruments.map(
+          (instrument) => {
+            return {
+              ...instrument,
+              value: { value: instrument.instrumentID },
+              label: instrument.instrumentName,
+            };
+          }
+        );
+        setInstrumentOptions(newInstrumentsData);
+      } catch (error) {
+        return error;
+      }
+    }
+  }, [GetAllInstruments]);
+
+  //handle select categoryID
+  const handleSelectInstrument = async (selectedInstrument) => {
+    setInstrumentID(selectedInstrument);
+
+    setUpdateCorporateData((prevState) => ({
+      ...prevState,
+      instrumentType: {
+        ...prevState.instrumentID,
+        value: selectedInstrument.value,
+      },
+    }));
+  };
+
+  useEffect(() => {
     console.log("writing in useEffect");
     const {
       InstrumentType,
@@ -435,7 +479,9 @@ const EditModalTradeAccessManagement = () => {
         <>
           <Row>
             <Col lg={12} md={12} sm={12}>
-              <span className={styles["HeaderNameLabel"]}>Gulahmed</span>
+              <span className={styles["HeaderNameLabel"]}>
+                Gulahmed (Trade Access Management)
+              </span>
             </Col>
           </Row>
           <Row>
@@ -463,19 +509,12 @@ const EditModalTradeAccessManagement = () => {
                   </span>
                   <Select
                     isMulti
-                    options={instrumentType}
+                    options={instrumentOptions}
                     placeholder={"Select Instrument"}
-                    name="InstrumentType"
+                    value={InstrumentID.value !== 0 ? InstrumentID : null}
                     isSearchable
-                    onChange={(e) =>
-                      handleDropdownChange(
-                        "InstrumentType",
-                        e,
-                        setInstrumentType,
-                        updateCorporateData.InstrumentType
-                      )
-                    }
-                    className={styles["react-select-field"]}
+                    onChange={handleSelectInstrument}
+                    classNamePrefix={"selectCateogyCorporateList"}
                   />
                 </Col>
               </Row>

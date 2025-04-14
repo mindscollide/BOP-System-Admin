@@ -10,7 +10,7 @@ import {
   GetAllCorporates,
   GetAllNatureOfBussiness,
   RoleList,
-  GetAllInstruments,
+  GetAllInstrumentTypes,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -1045,34 +1045,33 @@ const RoleListAPI = (navigate) => {
       });
   };
 };
-
-const GetAllInstrumentsInit = () => {
+const GetAllInstrumentTypesInit = () => {
   return {
-    type: actions.GET_ALL_INSTRUMENTS_INIT,
+    type: actions.GET_ALL_INSTRUMENT_TYPES_INIT,
   };
 };
-const GetAllInstrumentsSuccess = (response, message) => {
+const GetAllInstrumentTypesSuccess = (response, message) => {
   console.log(response);
   return {
-    type: actions.GET_ALL_INSTRUMENTS_SUCCESS,
+    type: actions.GET_ALL_INSTRUMENT_TYPES_SUCCESS,
     response: response,
     message: message,
   };
 };
 
-const GetAllInstrumentsFail = (message) => {
+const GetAllInstrumentTypesFail = (message) => {
   return {
-    type: actions.GET_ALL_INSTRUMENTS_FAIL,
+    type: actions.GET_ALL_INSTRUMENT_TYPES_FAIL,
     message: message,
   };
 };
 
-const GetAllInstrumentsAPI = (navigate) => {
+const GetAllInstrumentTypesAPI = (navigate) => {
   let token = localStorage.getItem("token");
   return async (dispatch) => {
-    dispatch(GetAllInstrumentsInit());
+    dispatch(GetAllInstrumentTypesInit());
     let form = new FormData();
-    form.append("RequestMethod", GetAllInstruments.RequestMethod);
+    form.append("RequestMethod", GetAllInstrumentTypes.RequestMethod);
     axios({
       method: "POST",
       url: authenticationAPI,
@@ -1084,7 +1083,7 @@ const GetAllInstrumentsAPI = (navigate) => {
       .then(async (response) => {
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(GetAllInstrumentsAPI(navigate));
+          dispatch(GetAllInstrumentTypesInit(navigate));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -1095,7 +1094,7 @@ const GetAllInstrumentsAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllInstrumentsSuccess(
+                GetAllInstrumentTypesSuccess(
                   response.data.responseResult,
                   "Data Available"
                 )
@@ -1104,7 +1103,7 @@ const GetAllInstrumentsAPI = (navigate) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllInstrumentTypes_02".toLowerCase()
             ) {
-              dispatch(GetAllInstrumentsFail("No Data Available"));
+              dispatch(GetAllInstrumentTypesFail("No Data Available"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1112,17 +1111,17 @@ const GetAllInstrumentsAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllInstrumentTypes_03".toLowerCase()
                 )
             ) {
-              dispatch(GetAllInstrumentsFail("Exception"));
+              dispatch(GetAllInstrumentTypesFail("Exception"));
             }
           } else {
-            dispatch(GetAllInstrumentsFail("Something went wrong"));
+            dispatch(GetAllInstrumentTypesFail("Something went wrong"));
           }
         } else {
-          dispatch(GetAllInstrumentsFail("Something went wrong"));
+          dispatch(GetAllInstrumentTypesFail("Something went wrong"));
         }
       })
       .catch((response) => {
-        dispatch(GetAllInstrumentsFail("something went wrong"));
+        dispatch(GetAllInstrumentTypesFail("something went wrong"));
       });
   };
 };
@@ -1139,5 +1138,5 @@ export {
   GetAllCategoriesAPI,
   GetAllNatureAPI,
   RoleListAPI,
-  GetAllInstrumentsAPI,
+  GetAllInstrumentTypesAPI,
 };

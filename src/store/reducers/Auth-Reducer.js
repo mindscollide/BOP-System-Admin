@@ -29,7 +29,7 @@ const initialState = {
   GetAllCorporatesData: null,
   getAllNatureOfBuisness: null,
   RoleList: null,
-  GetAllInstruments: null,
+  GetAllInstrumentTypes: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -387,25 +387,25 @@ const authReducer = (state = initialState, action) => {
       };
 
     //GetAllInstruments Reducer
-    case actions.GET_ALL_INSTRUMENTS_INIT:
+    case actions.GET_ALL_INSTRUMENT_TYPES_INIT:
       return {
         ...state,
         Loading: true,
       };
 
-    case actions.GET_ALL_INSTRUMENTS_SUCCESS:
+    case actions.GET_ALL_INSTRUMENT_TYPES_SUCCESS:
       return {
         ...state,
         Loading: false,
-        GetAllInstruments: action.response,
+        GetAllInstrumentTypes: action.response,
         ResponseMessage: action.message,
       };
 
-    case actions.GET_ALL_INSTRUMENTS_FAIL:
+    case actions.GET_ALL_INSTRUMENT_TYPES_FAIL:
       return {
         ...state,
         Loading: false,
-        GetAllInstruments: [],
+        GetAllInstrumentTypes: [],
         ResponseMessage: action.message,
       };
 

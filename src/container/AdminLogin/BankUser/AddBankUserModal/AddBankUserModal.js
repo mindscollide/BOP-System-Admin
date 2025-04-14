@@ -239,12 +239,11 @@ const AddBankUserModal = () => {
                   name="categoryID"
                   options={categoryOptions}
                   placeholder="Select Category"
-                  classNamePrefix={"ModalAbsoluteDropdown"}
+                  classNamePrefix={"selectCateogyCorporateList"}
                   value={categoryID.value !== 0 ? categoryID : null}
                   onChange={handleSelectCategory}
                   menuPortalTarget={document.body}
                   isSearchable={true}
-                  className={styles["react-select-field"]}
                 />
               </Col>
             </Row>

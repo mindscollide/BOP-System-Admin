@@ -98,17 +98,6 @@
   color: #cf5b5b !important;
 }
 
-.react-select-field {
-  width: 100% !important;
-  border-top-right-radius: 0px !important;
-  border-bottom-right-radius: 0px !important;
-}
-
-.react-select-field .css-13cymwt-control {
-  border-top-right-radius: 0px !important;
-  border-bottom-right-radius: 0px !important;
-}
-
 .select-clickable-icon {
   height: 38px !important;
   max-height: 38px;

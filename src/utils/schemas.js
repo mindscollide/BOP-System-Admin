@@ -287,6 +287,10 @@ export const addCorporateUserSchema = {
     errorMessage: "",
     errorStatus: false,
   },
+  categoryName: { value: "", errorMessage: "", errorStatus: false },
+  natureOfClient: { value: "", errorMessage: "", errorStatus: false },
+  rfqTreasury: { value: "", errorMessage: "", errorStatus: false },
+  rfqCorporate: { value: "", errorMessage: "", errorStatus: false },
 };
 
 export const addCompanySchema = {
@@ -300,18 +304,22 @@ export const addCompanySchema = {
     errorMessage: "",
     errorStatus: false,
   },
+
   RFQTimerTreasury: {
-    value: "",
+    value: 3,
+    label: "3 Minutes",
     errorMessage: "",
     errorStatus: false,
   },
+
   RFQTimerCorporate: {
-    value: "",
+    value: 3,
+    label: "3 Minutes",
     errorMessage: "",
     errorStatus: false,
   },
   natureOfClient: {
-    value: "",
+    value: 0,
     errorMessage: "",
     errorStatus: false,
   },
@@ -330,12 +338,14 @@ export const updateCorporateUserSchema = {
     errorStatus: false,
   },
   RFQTimerTreasury: {
-    value: "",
+    value: 3,
+    label: "3 Minutes",
     errorMessage: "",
     errorStatus: false,
   },
   RFQTimerCorporate: {
-    value: "",
+    value: 3,
+    label: "3 Minutes",
     errorMessage: "",
     errorStatus: false,
   },
@@ -455,11 +465,6 @@ export const tradeCountSchema = {
     errorMessage: "",
     errorStatus: false,
   },
-  Nature: {
-    value: "",
-    errorMessage: "",
-    errorStatus: false,
-  },
   Amount: {
     value: "",
     errorMessage: "",
@@ -485,6 +490,11 @@ export const tradeCountSchema = {
     errorMessage: "",
     errorStatus: false,
   },
+  natureOfClient: {
+    value: 0,
+    errorMessage: "",
+    errorStatus: false,
+  },
 };
 export const updateCorporateDataSchema = {
   TotalLimit: {
@@ -493,7 +503,8 @@ export const updateCorporateDataSchema = {
     errorStatus: false,
   },
   InstrumentType: {
-    value: "",
+    value: 0,
+    label: "",
     errorMessage: "",
     errorStatus: false,
   },
@@ -526,12 +537,6 @@ export const addCategroyModalSchema = {
     errorStatus: false,
   },
 };
-
-// export const categorySpreadManagementSchema = {
-//   Category: {
-//     value: "",
-//   },
-// };
 
 export const settingSchema = {
   chatPannalOverlap: true,

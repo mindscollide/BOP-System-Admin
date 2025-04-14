@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./LoginHistory.module.css";
 import DatePicker from "react-multi-date-picker";
 import Select from "react-select";
@@ -19,6 +19,8 @@ import { Popover } from "antd";
 import pdfIcon from "../../../../assets/images/pdf.png";
 import excelIcon from "../../../../assets/images/excel.png";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RoleListAPI } from "../../../../store/actions/Auth-Actions";
 const LoginHistory = () => {
   //Login History States
   const [loginHistory, setLoginHistory] = useState({
@@ -26,19 +28,21 @@ const LoginHistory = () => {
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
   console.log("getAllCategories", getAllCategories);
 
-  //State for category and role dropdown
-  const [Role, setRole] = useState("");
+  //Role List
+  const RoleList = useSelector((state) => state.auth.RoleList);
 
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  //State for dropdown
-  const [categoryID, setCategoryID] = useState({
+  //Select Role Handling
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [roleID, setRoleID] = useState({
     value: 0,
     label: "",
   });
+
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
@@ -118,82 +122,91 @@ const LoginHistory = () => {
       });
     }
   };
+  //handle select CategoryID
+  const handleSelectRole = async (selectedRole) => {
+    setRoleID(selectedRole);
+
+    setLoginHistory((prevState) => ({
+      ...prevState,
+      roleID: { ...prevState.roleID, value: selectedRole.value },
+    }));
+  };
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="bottom-table-header">Email</label>,
+      title: <label className="px-3">Email</label>,
       dataIndex: "Email",
       key: "Email",
       width: "220px",
       ellipsis: true,
-      align: "center",
+      align: "left",
     },
     {
-      title: <label className="bottom-table-header">Name</label>,
+      title: <label className="px-3">Name</label>,
       dataIndex: "Name",
       key: "Name",
       width: "200px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
 
     {
-      title: <label className="bottom-table-header">Counter party Name</label>,
+      title: <label className="px-3">Counter party Name</label>,
       dataIndex: "CounterPartyName",
       key: "CounterPartyName",
       width: "200px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
 
     {
-      title: <label className="bottom-table-header">Role</label>,
+      title: <label className="px-3">Role</label>,
       dataIndex: "Role",
       key: "Role",
       width: "100px",
       ellipsis: true,
-      align: "center",
+      align: "left",
     },
 
     {
-      title: <label className="bottom-table-header">Branch</label>,
+      title: <label className="px-3">Branch</label>,
       dataIndex: "BranchName",
       key: "BranchName",
       width: "100px",
       ellipsis: true,
-      align: "center",
+      align: "left",
     },
 
     {
-      title: <label className="bottom-table-header">IP Address</label>,
+      title: <label className="px-3">IP Address</label>,
       dataIndex: "IPAddress",
       key: "IPAddress",
       width: "150px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Logged In Time</label>,
+      title: <label className="px-3">Logged In Time</label>,
       dataIndex: "LastPassowrdChange",
       key: "LastPassowrdChange",
-      align: "center",
+      align: "left",
       width: "180px",
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Logged Out Time</label>,
+      title: <label className="px-3">Logged Out Time</label>,
       dataIndex: "creationDateTime",
       key: "creationDateTime",
-      align: "center",
+      align: "left",
       width: "180px",
       ellipsis: true,
     },
 
     {
-      title: <label className="bottom-table-header">Total Span</label>,
+      title: <label className="px-3">Total Span</label>,
       dataIndex: "creationDateTime",
       key: "creationDateTime",
-      align: "center",
+      align: "left",
       width: "180px",
       ellipsis: true,
     },
@@ -277,14 +290,7 @@ const LoginHistory = () => {
       category: { value: "", errorMessage: "", errorStatus: false },
       Role: { value: "", errorMessage: "", errorStatus: false },
     });
-    setRole("");
-  };
-
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
+    setRoleID("");
   };
 
   //Handle Date Change method
@@ -349,6 +355,24 @@ const LoginHistory = () => {
       </div>
     );
   };
+  useEffect(() => {
+    dispatch(RoleListAPI(navigate));
+  }, []);
+  //Role list:
+  useEffect(() => {
+    if (RoleList !== null) {
+      try {
+        let newRolesData = RoleList.roles.map((role) => {
+          return {
+            ...role,
+            value: role.roleID,
+            label: role.roleName,
+          };
+        });
+        setRoleOptions(newRolesData);
+      } catch (error) {}
+    }
+  }, [RoleList]);
 
   return (
     <section className={styles["SectionContainer"]}>
@@ -392,35 +416,15 @@ const LoginHistory = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <Select
-                  name="Role"
                   isSearchable={true}
                   placeholder={"Select Role"}
-                  // options={roleOptions}
-                  value={Role}
-                  onChange={(e) =>
-                    handleDropdownChange("Role", e, setRole, loginHistory.Role)
-                  }
+                  options={roleOptions}
+                  value={roleID.value ? roleID : null}
+                  onChange={handleSelectRole}
                   classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
-              {/* <Col lg={2} md={2} sm={12}>
-                <Select
-                  name="category"
-                  isSearchable={true}
-                  placeholder={"Select Category"}
-                  options={categoryOptions}
-                  value={category}
-                  onChange={(e) =>
-                    handleDropdownChange(
-                      "category",
-                      e,
-                      setCategory,
-                      loginHistory.category
-                    )
-                  }
-                  classNamePrefix="selectCateogyCorporateList"
-                />
-              </Col> */}
+
               <Col
                 lg={4}
                 md={4}
