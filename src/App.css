@@ -60,6 +60,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 /* Bank Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
 .BankUserList-table {
   max-height: 45vh !important;
+  height: 45vh;
   max-width: 76vw;
   width: 100%;
   box-sizing: border-box !important;
@@ -74,7 +75,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  top: 0 !important;
+  /* top: 0 !important; */
   z-index: 10;
   background: #f26522 !important;
 }
@@ -417,11 +418,23 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 }
 
 .selectCateogyCorporateList__menu.css-1nmdiq5-menu {
-  z-index: 20 !important;
+  z-index: 999999 !important;
+  /* max-height: 30vh; */
+  /*height: auto;
+  overflow: visible; */
 }
-
+.selectCateogyCorporateList__menu-portal {
+  z-index: 999999 !important;
+}
 .selectCateogyCorporateList__placeholder {
   font-family: "Roboto", sans-serif !important;
+}
+.selectCateogyCorporateList__menu {
+  max-height: 30vh !important; /* Your desired height */
+}
+
+.selectCateogyCorporateList__menu-list {
+  max-height: 25vh !important; /* Slightly less than container height */
 }
 
 .TradeCountSelect__placeholder {
@@ -652,10 +665,6 @@ input.form-control {
   width: 70px !important;
 }
 
-/*  */
-.ModalAbsoluteDropdown__menu-portal {
-  z-index: 999999 !important;
-}
 .companyName {
   position: relative !important;
 }
