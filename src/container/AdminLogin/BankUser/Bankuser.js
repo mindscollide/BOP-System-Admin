@@ -568,7 +568,12 @@ const Bankuser = () => {
                             </span>
                           </Col>
 
-                          <Col lg={5} md={5} sm={12}>
+                          <Col
+                            lg={5}
+                            md={5}
+                            sm={12}
+                            className="position-relative"
+                          >
                             <Select
                               name="branchName"
                               options={branchOptions}
@@ -579,8 +584,6 @@ const Bankuser = () => {
                               classNamePrefix="selectCateogyCorporateList"
                               menuPortalTarget={document.body}
                             />
-                          </Col>
-                          <Col lg={1} md={1} sm={12}>
                             <Button
                               className={styles["PlusButton"]}
                               icon={

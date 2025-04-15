@@ -462,10 +462,11 @@ const CorporateUser = () => {
                       </Col>
                       <Col lg={5} md={5} sm={12} className="position-relative">
                         <Select
-                          // name="companyName"
                           options={companyNameOptions}
                           isSearchable={true}
-                          value={companyRoleID}
+                          value={
+                            companyRoleID.value !== 0 ? companyRoleID : null
+                          }
                           onChange={CompanySelectHandler}
                           classNamePrefix={"selectCateogyCorporateList"}
                         />
