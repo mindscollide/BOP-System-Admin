@@ -434,13 +434,6 @@ input[type="number"] {
   -o-box-shadow: 10px 10px 40px rgb(0 0 0 / 10%);
   -webkit-box-shadow: 10px 10px 40px rgb(0 0 0 / 10%);
 }
-.modal-header {
-  border-bottom: 0px;
-}
-.modal-body {
-  padding-top: 5px;
-  max-height: 60vh;
-}
 .form-control {
   font-size: 11px;
 }

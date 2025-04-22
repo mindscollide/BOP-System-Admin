@@ -434,7 +434,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 }
 
 .selectCateogyCorporateList__menu-list {
-  max-height: 25vh !important; /* Slightly less than container height */
+  max-height: 30vh !important; /* Slightly less than container height */
 }
 
 .TradeCountSelect__placeholder {

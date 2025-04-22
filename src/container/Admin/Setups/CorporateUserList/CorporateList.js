@@ -432,7 +432,9 @@ const CorporateList = () => {
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
         <Col lg={12} md={12} sm={12}>
-          <span className={styles["customer-List-label"]}>Corporate List</span>
+          <span className={styles["customer-List-label"]}>
+            Corporate Users List
+          </span>
         </Col>
       </Row>
       <Row className="mt-2">

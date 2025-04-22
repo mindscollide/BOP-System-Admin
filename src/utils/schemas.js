@@ -410,7 +410,13 @@ export const updateBankUserSchema = {
     errorMessage: "",
     errorStatus: false,
   },
+  BranchID: {
+    value: 0,
+    errorMessage: "",
+    errorStatus: false,
+  },
 };
+
 export const loginHistorySchema = {
   Name: {
     value: "",

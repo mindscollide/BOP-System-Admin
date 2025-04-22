@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   Button,
-  CustomRadio,
+  // CustomRadio,
   Modal,
   Notification,
   TextField,
@@ -14,7 +14,10 @@ import { editBankUserModalSystemAdmin } from "../../../../../store/actions/BOPSy
 import Select from "react-select";
 import { updateBankUserSchema } from "../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
-import { UpdateBankUserByUserIdAPI } from "../../../../../store/actions/BOPSystemAdminActions";
+import {
+  GetAllBranchesAPI,
+  UpdateBankUserByUserIdAPI,
+} from "../../../../../store/actions/BOPSystemAdminActions";
 import { RoleListAPI } from "../../../../../store/actions/Auth-Actions";
 
 // import { UpdateCorporateUsersAPI } from "../../../../../store/actions/BOPSystemAdminActions";
@@ -23,11 +26,6 @@ const EditBankerModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
-  //Notification state
-  const [open, setOpen] = useState({
-    open: false,
-    message: "",
-  });
   // const { auth } = useSelector((state) => state);
   // console.log("this is the user", auth);
   //States
@@ -35,11 +33,6 @@ const EditBankerModal = () => {
 
   //state for error Message
   // const [errorShow, setErrorShow] = useState(false);
-  const [roleOptions, setRoleOptions] = useState([]);
-  const [roleID, setRoleID] = useState({
-    value: 0,
-    label: "",
-  });
   // GetBankUserbyUserID
   const GetBankUserbyUserID = useSelector(
     (state) => state.BOPSystemAdminReducer.GetBankUserbyUserIDData
@@ -54,26 +47,51 @@ const EditBankerModal = () => {
 
   //Role List
   const RoleList = useSelector((state) => state.auth.RoleList);
+  console.log("RoleList is: ", RoleList);
+
+  //getAllBranch
+  const getAllBranches = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllBranchesData
+  );
   //Dummy User for handlin UI change bansed on the user Secuity admiin or system admin
-  let user = "System Admin";
+  // let user = "System Admin";
   //Checking snakbar state
 
-  //State for add company
-  const [updateBankUser, setUpdateBankUser] = useState({
-    ...updateBankUserSchema,
-  });
-  console.log(updateBankUser);
   // //State for add company
   // const [updateCorporate, setUpdateCorporate] = useState({
   //   ...updateCorporateUserSchema,
   // });
 
-  //Options for radio
-  const radioOptions = [
-    { label: "Active", value: "Active" },
-    { label: "Inactive", value: "Inactive" },
-  ];
+  // //Options for radio
+  // const radioOptions = [
+  //   { label: "Active", value: "Active" },
+  //   { label: "Inactive", value: "Inactive" },
+  // ];
 
+  const [branchOptions, setBranchOptions] = useState([]);
+  const [branchRole, setBranchRole] = useState({
+    value: 0,
+    label: "",
+  });
+  //state for role
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [roleID, setRoleID] = useState({
+    value: 0,
+    label: "",
+  });
+
+  //Notification state
+  const [open, setOpen] = useState({
+    open: false,
+    message: "",
+  });
+
+  //State for add company
+  const [updateBankUser, setUpdateBankUser] = useState({
+    ...updateBankUserSchema,
+  });
+
+  console.log(updateBankUser, "updateBankUserupdateBankUser");
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
     const { name, value } = e.target;
@@ -125,18 +143,40 @@ const EditBankerModal = () => {
   //handle select CategoryID
   const handleSelectRole = async (selectedRole) => {
     setRoleID(selectedRole);
+    console.log("roleID is", roleID.value);
 
-    updateBankUserSchema((prevState) => ({
+    setUpdateBankUser((prevState) => ({
       ...prevState,
-      roleID: { ...prevState.roleID, value: selectedRole.value },
+      roleID: {
+        value: selectedRole.value,
+      },
+      branchID: {
+        value: 0,
+      },
+    }));
+    setBranchRole({
+      value: 0,
+      label: "",
+    });
+  };
+
+  const branchSelectRoleHandler = async (selectedBranch) => {
+    console.log(selectedBranch.value, "selectroleselectroleselectrole");
+    setBranchRole(selectedBranch);
+
+    setUpdateBankUser((prevState) => ({
+      ...prevState,
+      // category: selectedBranch.categoryName,
+      BranchID: { ...prevState.BranchID, value: selectedBranch.value },
     }));
   };
   //handle Active Button
   // show error message When user hit activate btn
   const handleUpdateButton = () => {
+    // console.log("updateBankUser data is: ", updateBankUser);
     if (
       updateBankUser.firstName.value !== "" &&
-      updateBankUser.role.value !== "" &&
+      updateBankUser.roleID.value !== 0 &&
       updateBankUser.ContactNumber.value !== "" &&
       updateBankUser.activeUser.value !== ""
     ) {
@@ -145,13 +185,14 @@ const EditBankerModal = () => {
         UserID: updateBankUser.userID.value, // temporary for state management
         FirstName: updateBankUser.firstName.value,
         ContactNumber: updateBankUser.ContactNumber.value,
-        UserRoleID: updateBankUser.role.value,
+        UserRoleID: updateBankUser.roleID.value,
         // ActiveUser: updateBankUser.activeUser.value,
-        BranchID: 1,
+        BranchID: branchRole.value,
       };
       console.log("newData", newData);
       dispatch(UpdateBankUserByUserIdAPI(navigate, newData));
     } else {
+      console.log("Error Encoutered");
       // setTimeout();
       // setErrorShow(true);
     }
@@ -164,6 +205,7 @@ const EditBankerModal = () => {
 
   useEffect(() => {
     dispatch(RoleListAPI(navigate));
+    dispatch(GetAllBranchesAPI(navigate));
   }, []);
 
   useEffect(() => {
@@ -187,8 +229,13 @@ const EditBankerModal = () => {
             errorMessage: "",
             errorStatus: false,
           },
-          role: {
-            value: bankUser.userRoleID || "",
+          roleID: {
+            value: bankUser.userRoleID || 0,
+            errorMessage: "",
+            errorStatus: false,
+          },
+          branchID: {
+            value: bankUser.branch || 0,
             errorMessage: "",
             errorStatus: false,
           },
@@ -224,6 +271,18 @@ const EditBankerModal = () => {
         setRoleOptions(newRolesData);
       } catch (error) {}
     }
+    if (getAllBranches !== null) {
+      try {
+        let newBranchesData = getAllBranches.branches.map((branch) => {
+          return {
+            ...branch,
+            value: branch.branchID,
+            label: branch.branchName,
+          };
+        });
+        setBranchOptions(newBranchesData);
+      } catch (error) {}
+    }
   }, [GetBankUserbyUserID, RoleList]);
   return (
     <>
@@ -242,7 +301,6 @@ const EditBankerModal = () => {
                 <span className={styles["AddBranchLabel"]}>Edit Bank</span>
               </Col>
             </Row>
-
             <Row className="mt-3">
               <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>
@@ -266,11 +324,9 @@ const EditBankerModal = () => {
                   labelClass="d-none"
                   name="email"
                   value={updateBankUser.email.value}
-                  // onChange={handleValueChangeAndValidation}
                 />
               </Col>
             </Row>
-
             <Row className="mt-3">
               <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>
@@ -287,6 +343,40 @@ const EditBankerModal = () => {
                 />
               </Col>
             </Row>
+            {roleID?.value === 9 && (
+              <>
+                <Row className="mt-3">
+                  <Col
+                    lg={12}
+                    md={12}
+                    sm={12}
+                    className="flex-column flex-wrap"
+                  >
+                    <span className={styles["labels-add-bank"]}>
+                      Select Branch
+                      <span className={styles["aesterick-color"]}>*</span>
+                    </span>
+                    <Select
+                      options={branchOptions}
+                      placeholder="Select Branch"
+                      value={branchRole.value !== 0 ? branchRole : null}
+                      onChange={branchSelectRoleHandler}
+                      isSearchable={true}
+                      classNamePrefix="selectCateogyCorporateList"
+                      menuPortalTarget={document.body}
+                    />
+                  </Col>
+
+                  <Col
+                    lg={5}
+                    md={5}
+                    sm={12}
+                    className="position-relative"
+                  ></Col>
+                </Row>
+              </>
+            )}
+
             <Row className="mt-3">
               <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>
@@ -302,15 +392,13 @@ const EditBankerModal = () => {
                 />
               </Col>
             </Row>
-
             <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
                 <span className={styles["labels-add-bank"]}>Status</span>
                 <span className={styles["aesterick-color"]}>*</span>
               </Col>
             </Row>
-
-            {user === "Security Admin" && (
+            {/* {user === "Security Admin" && (
               <>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
@@ -325,25 +413,24 @@ const EditBankerModal = () => {
                   </Col>
                 </Row>
               </>
-            )}
-
-            {user === "System Admin" && (
-              <>
-                <Row>
-                  <Col lg={12} md={12} sm={12}>
-                    {updateBankUser.activeUser?.value === "Active" ? (
-                      <span className={styles["ActiveStatus"]}>Active</span>
-                    ) : (
-                      <span className={styles["InactiveStatus"]}>Inactive</span>
-                    )}
-                  </Col>
-                </Row>
-              </>
-            )}
+            )} */}
+            {/* {user === "System Admin" && (
+              <> */}
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                {updateBankUser.activeUser?.value === "Active" ? (
+                  <span className={styles["ActiveStatus"]}>Active</span>
+                ) : (
+                  <span className={styles["InactiveStatus"]}>Inactive</span>
+                )}
+              </Col>
+            </Row>
+            {/* </>
+            )} */}
           </>
         }
         ModalFooter={
-          <Row className="mt-5">
+          <Row className="mt-3 mb-3">
             <Col
               lg={12}
               md={12}
@@ -351,23 +438,25 @@ const EditBankerModal = () => {
               className="d-flex justify-content-center gap-2"
             >
               <Button
-                icon={<i class="icon-refresh"></i>}
+                icon={<i className="icon-refresh"></i>}
                 text={"Update"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleUpdateButton}
                 disableBtn={
                   updateBankUser.firstName.value !== "" &&
-                  // updateBankUser.role.value !== "" &&
-                  updateBankUser.ContactNumber.value !== ""
-                    ? // updateBankUser.activeUser.value !== ""
-                      false
+                  updateBankUser.ContactNumber.value !== "" &&
+                  updateBankUser.roleID.value !== 9
+                    ? false
+                    : updateBankUser.roleID.value === 9 &&
+                      updateBankUser.BranchID.value !== 0
+                    ? false
                     : true
                 }
               />
 
               <Button
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Discard"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

@@ -45,8 +45,6 @@ const Bankuser = () => {
 
   console.log("SearchBankUserSearchBankUser", SearchBankUsers);
 
-  console.log(getALlBranches, "getALlBranches");
-
   // const { BOPSystemAdminModal } = useSelector((state) => state);
   //Dummy employee ID
   const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
@@ -440,6 +438,7 @@ const Bankuser = () => {
       alert("Invalid type");
     }
   };
+
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -575,7 +574,6 @@ const Bankuser = () => {
                             className="position-relative"
                           >
                             <Select
-                              name="branchName"
                               options={branchOptions}
                               placeholder="Select Branch"
                               value={branchRole.value !== 0 ? branchRole : null}

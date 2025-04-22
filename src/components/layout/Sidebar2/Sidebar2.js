@@ -115,7 +115,7 @@ const Sidebar2 = () => {
           key="8"
           onClick={navigateToCorporateList}
         >
-          Corporate List
+          Corporate Users List
         </Menu.Item>
         <Menu.Item
           className="menu-items-sidebar"

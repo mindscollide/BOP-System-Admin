@@ -38,10 +38,10 @@ const CorporateUserDetailsModal = () => {
         value: "Muhammad Ahmed",
       },
       company: {
-        value: "Shield",
+        value: "Company Name",
       },
       category: {
-        value: "Corporate",
+        value: "Category",
       },
       ipAddress: {
         value: "192.168.0.1",
@@ -208,14 +208,14 @@ const CorporateUserDetailsModal = () => {
                     User Detail
                   </span>
                 </Col>
-                <Col lg={1} md={1} sm={12}>
+                {/* <Col lg={1} md={1} sm={12}>
                   <Button
                     icon={<i className="icon-edit"></i>}
                     className={styles["EditIconClass"]}
                     iconClass={styles["EditIconClassCross"]}
                     onClick={() => setIsDropdownEnabled(true)}
                   />
-                </Col>
+                </Col> */}
               </Row>
               <Row className="mt-3">
                 <Col lg={12} md={12} sm={12}>
@@ -236,14 +236,10 @@ const CorporateUserDetailsModal = () => {
                   />
                 </Col>
                 <Col lg={6} md={6} sm={12}>
-                  <Select
-                    className="basic-single"
-                    classNamePrefix="select"
-                    options={companyOptions}
-                    defaultValue={companyOptions[0]}
-                    isDisabled={isDropdownEnabled ? false : true}
-                    isSearchable={true}
-                    placeholder={"Select Category"}
+                  <TextField
+                    labelClass={"d-none"}
+                    value={userData.userDetails.company.value}
+                    disable={true}
                   />
                 </Col>
               </Row>
@@ -252,7 +248,11 @@ const CorporateUserDetailsModal = () => {
                   <TextField
                     labelClass={"d-none"}
                     placeholder={"Category 1"}
-                    value={userData.userDetails.category.value}
+                    value={
+                      userData.userDetails.category.value !== ""
+                        ? userData.userDetails.category.value
+                        : ""
+                    }
                     disable={true}
                   />
                 </Col>

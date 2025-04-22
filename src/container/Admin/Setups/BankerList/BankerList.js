@@ -313,7 +313,9 @@ const BankerList = () => {
       align: "left",
       render: (userRoleID) => {
         // Find the role name from the roles array based on userRoleID
-        const role = RoleList.roles.find((role) => role.roleID === userRoleID);
+        const role =
+          RoleList?.roles?.length > 0 &&
+          RoleList.roles.find((role) => role.roleID === userRoleID);
         return role ? role.roleName : ""; // Default if role not found
       },
     },

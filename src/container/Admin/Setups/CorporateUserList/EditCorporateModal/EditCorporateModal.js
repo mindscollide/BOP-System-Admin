@@ -263,7 +263,7 @@ const EditCorporateModal = () => {
                     Treasury
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
-                  <Select
+                  {/* <Select
                     className="RFQTimerTreasury"
                     classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
@@ -271,6 +271,12 @@ const EditCorporateModal = () => {
                     isSearchable={true}
                     menuPortalTarget={document.body}
                     onChange={handleRFQTimerTreasurySelect}
+                    isDisabled
+                  /> */}
+                  <TextField
+                    labelClass="d-none"
+                    value={`${RFQTimerTreasury.value} Minutes`}
+                    disable={true}
                   />
                 </Col>
 
@@ -280,7 +286,7 @@ const EditCorporateModal = () => {
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
 
-                  <Select
+                  {/* <Select
                     className="RFQTimerCorporate"
                     classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
@@ -288,6 +294,12 @@ const EditCorporateModal = () => {
                     isSearchable={true}
                     menuPortalTarget={document.body}
                     onChange={handleRFQTimerCorporateSelect}
+                    isDisabled
+                  /> */}
+                  <TextField
+                    labelClass="d-none"
+                    value={`${RFQTimerCorporate.value} Minutes`}
+                    disable={true}
                   />
                 </Col>
               </Row>
@@ -333,10 +345,7 @@ const EditCorporateModal = () => {
       }
       ModalFooter={
         <>
-          <Row className="mt-5"></Row>
-          <Row className="mt-4"></Row>
-
-          <Row className="mt-3">
+          <Row className="mt-3 mb-3">
             <Col
               lg={12}
               md={12}
