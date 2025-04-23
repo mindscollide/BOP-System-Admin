@@ -19,7 +19,7 @@ const Header = () => {
   };
   //HandleClick on logo
   const onClickLogo = () => {
-    navigate("/SystemAdmin/AddBankUser");
+    navigate("/BOP/AddBankUser");
   };
   function handelLogout() {
     dispatch(signOut(navigate, message));

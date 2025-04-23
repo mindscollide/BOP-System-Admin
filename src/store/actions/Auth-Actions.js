@@ -504,7 +504,7 @@ const loginSystemAdminAPI = (navigate, data) => {
                 "userName",
                 response.data.responseResult.userName
               );
-              navigate("/SystemAdmin/AddBankUser");
+              navigate("/BOP/");
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -821,11 +821,10 @@ const getAllCorporatesCategory = (navigate, data) => {
       },
     })
       .then(async (response) => {
-        // if (response.data?.responseCode === 417) {
-        //   await dispatch(RefreshToken(navigate));
-        //   dispatch(GetAllBranchesAPI(navigate));
-        // } else
-        if (response.data.responseCode === 200) {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(getAllCorporatesCategory(navigate, data));
+        } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage

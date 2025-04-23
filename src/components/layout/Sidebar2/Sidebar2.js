@@ -22,35 +22,35 @@ const Sidebar2 = () => {
   const navigateToAddaBankUser = () => {
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "6");
-    navigate("/SystemAdmin/AddBankUser");
+    navigate("/BOP/AddBankUser");
   };
 
   const navigateToCorporateUser = () => {
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "7");
-    navigate("/SystemAdmin/CorporateUser");
+    navigate("/BOP/CorporateUser");
   };
 
   const navigateToCorporateList = () => {
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "8");
-    navigate("/SystemAdmin/CorporateList");
+    navigate("/BOP/CorporateList");
   };
 
   const navigateToBankerList = () => {
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "9");
-    navigate("/SystemAdmin/BankerList");
+    navigate("/BOP/BankerList");
   };
 
   const navigateToLoginHistory = () => {
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "10");
-    navigate("/SystemAdmin/LoginHistory");
+    navigate("/BOP/LoginHistory");
   };
 
   const navigateToTradeCount = () => {
-    navigate("/SystemAdmin/tradeCount");
+    navigate("/BOP/tradeCount");
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "11");
   };
@@ -58,25 +58,25 @@ const Sidebar2 = () => {
   const navigateToVolMeter = () => {
     localStorage.setItem("defaultOpenKey", "sub1");
     localStorage.setItem("defaultSelectedKey", "13");
-    navigate("/SystemAdmin/volMeter");
+    navigate("/BOP/volMeter");
   };
 
   const navigateToCategoryManagement = () => {
     localStorage.setItem("defaultOpenKey", "sub2");
     localStorage.setItem("defaultSelectedKey", "14");
-    navigate("/SystemAdmin/categorymanagement");
+    navigate("/BOP/categorymanagement");
   };
 
   const navigateToTradeAccessManagement = () => {
     localStorage.setItem("defaultOpenKey", "sub2");
     localStorage.setItem("defaultSelectedKey", "15");
-    navigate("/SystemAdmin/TradeAccessManagement");
+    navigate("/BOP/TradeAccessManagement");
   };
 
   const navigateToSpreadManagement = () => {
     localStorage.setItem("defaultOpenKey", "sub2");
     localStorage.setItem("defaultSelectedKey", "16");
-    navigate("/SystemAdmin/SpreadManagement");
+    navigate("/BOP/SpreadManagement");
   };
 
   return (
@@ -97,6 +97,7 @@ const Sidebar2 = () => {
         <Menu.Item
           className="menu-items-sidebar"
           key="6"
+          
           onClick={navigateToAddaBankUser}
         >
           Add a Bank User

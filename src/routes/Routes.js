@@ -2,6 +2,7 @@ import {
   Route,
   createRoutesFromElements,
   createHashRouter,
+  createBrowserRouter,
 } from "react-router-dom";
 
 import TradeCount from "../container/Admin/Setups/TradeCount/Tradecount";
@@ -22,7 +23,7 @@ import ResetPassword from "../container/AdminLogin/System Login/ResetPassword/Re
 import TwoFaVerification from "../container/AdminLogin/System Login/2faVerificationScreen/TwoFaVerification";
 import AdminDashboard from "../container/Admin/AdminDashboard/AdminDashboard";
 
-export const router = createHashRouter(
+export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route exact path="/" element={<SystemLogin />} />
@@ -31,7 +32,7 @@ export const router = createHashRouter(
       <Route exact path="ResetPassword" element={<ResetPassword />} />
       <Route exact path="2FAVerfication" element={<TwoFaVerification />} />
       {/* <Route element={<PrivateRoutes />}> */}
-      <Route exact path="/SystemAdmin/" element={<AdminDashboard />}>
+      <Route exact path="/BOP/" element={<AdminDashboard />}>
         <Route path="" element={<Bankuser />} />
         {/* <Route path="" element={<PropertyType />} /> */}
         {/* <Route path="" element={<AssetsBanking />} /> */}
