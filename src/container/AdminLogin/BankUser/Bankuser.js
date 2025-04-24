@@ -29,7 +29,12 @@ import { useNavigate } from "react-router-dom";
 import { validateBopEmail } from "../../../utils/regexUtil";
 import { roleOptions } from "../../../helpers/Dropdown";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import { GetAllCategoriesAPI } from "../../../store/actions/Auth-Actions";
+import {
+  GetAllCategoriesAPI,
+  RoleListAPI,
+} from "../../../store/actions/Auth-Actions";
+
+// import {  } from "../../../../store/actions/Auth-Actions";
 // import ResponseMessage from "../../../utils/ResponseMessage";
 // import ActivateConfirmationModal from "./ActivateConfirmationModal/ActivateConfirmationModal";
 const Bankuser = () => {
@@ -72,17 +77,23 @@ const Bankuser = () => {
     (state) => state.BOPSystemAdminModal.editBankUserModal
   );
 
+  //Role List
+  const RoleList = useSelector((state) => state.auth.RoleList);
+
   //state for error Message
   const [errorShow, setErrorShow] = useState(false);
+  const [rolesOptions, setRolesOptions] = useState([]);
+
+  console.log(rolesOptions, "rolesroles");
 
   //State for Roles
   const [branchRole, setBranchRole] = useState({
     value: 0,
     label: "",
   });
-  const [roles, setRoles] = useState({
-    label: "Dealer",
-    value: 7,
+  const [role, setRole] = useState({
+    label: "",
+    value: 0,
   });
 
   //state for save button
@@ -111,6 +122,7 @@ const Bankuser = () => {
   useEffect(() => {
     dispatch(GetAllBranchesAPI(navigate));
     dispatch(GetAllCategoriesAPI(navigate));
+    dispatch(RoleListAPI(navigate));
   }, []);
 
   useEffect(() => {
@@ -127,6 +139,22 @@ const Bankuser = () => {
       } catch (error) {}
     }
   }, [getALlBranches]);
+
+  //Role list:
+  useEffect(() => {
+    if (RoleList !== null) {
+      try {
+        let newRolesData = RoleList.roles.map((role) => {
+          return {
+            ...role,
+            value: role.roleID,
+            label: role.roleName,
+          };
+        });
+        setRolesOptions(newRolesData);
+      } catch (error) {}
+    }
+  }, [RoleList]);
 
   //add bank user security admin validate handler
   const addBankUserValidateHandler = (e) => {
@@ -281,7 +309,7 @@ const Bankuser = () => {
   };
 
   const bankSelectRoleHandler = async (selectedRole) => {
-    setRoles(selectedRole);
+    setRole(selectedRole);
     setAddBankUser((prevState) => ({
       ...prevState,
       roleID: {
@@ -322,7 +350,7 @@ const Bankuser = () => {
 
   const handleCancelYes = () => {
     setBranchRole("");
-    setRoles("");
+    setRole(null);
     setAddBankUser({
       ...addBankUser,
 
@@ -448,17 +476,16 @@ const Bankuser = () => {
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-start m-0 p-0"
-            >
+              className='d-flex justify-content-start m-0 p-0'>
               <span className={styles["bank-user-label"]}>Add a Bank user</span>
             </Col>
           </Row>
-          <Row className="mt-1">
-            <Col lg={12} md={12} sm={12} className="m-0 p-0">
+          <Row className='mt-1'>
+            <Col lg={12} md={12} sm={12} className='m-0 p-0'>
               <Paper className={styles["bankuser-paper"]}>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
-                    <Row className="mt-3">
+                    <Row className='mt-3'>
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Employee ID
@@ -469,14 +496,14 @@ const Bankuser = () => {
                       <Col lg={5} md={5} sm={12}>
                         <TextField
                           name={"EmployeeID"}
-                          labelClass="d-none"
+                          labelClass='d-none'
                           value={addBankUser.EmployeeID.value}
                           maxLength={4}
                           onChange={addBankUserValidateHandler}
                         />
                         {addBankUser.EmployeeID.errorStatus && (
                           <Row>
-                            <Col className="d-flex justify-content-start">
+                            <Col className='d-flex justify-content-start'>
                               <p className={styles["bankErrorMessage"]}>
                                 {addBankUser.EmployeeID.errorMessage}
                               </p>
@@ -505,7 +532,7 @@ const Bankuser = () => {
                       </Col>
                     </Row>
 
-                    <Row className="mt-3">
+                    <Row className='mt-3'>
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Treasury Person Name
@@ -518,12 +545,12 @@ const Bankuser = () => {
                           value={addBankUser.firstName.value}
                           maxLength={50}
                           onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
+                          labelClass='d-none'
                         />
                       </Col>
                     </Row>
 
-                    <Row className="mt-3">
+                    <Row className='mt-3'>
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           User Role
@@ -532,8 +559,8 @@ const Bankuser = () => {
                       </Col>
                       <Col lg={5} md={5} sm={12}>
                         <Select
-                          options={roleOptions}
-                          value={roles}
+                          options={rolesOptions}
+                          value={role}
                           onChange={bankSelectRoleHandler}
                           isSearchable={true}
                           classNamePrefix={"selectCateogyCorporateList"}
@@ -555,9 +582,9 @@ const Bankuser = () => {
                       </Col>
                     </Row>
 
-                    {roles.value === 9 && (
+                    {role.value === 9 && (
                       <>
-                        <Row className="mt-3 position-relative">
+                        <Row className='mt-3 position-relative'>
                           <Col lg={2} md={2} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Select Branch
@@ -571,15 +598,14 @@ const Bankuser = () => {
                             lg={5}
                             md={5}
                             sm={12}
-                            className="position-relative"
-                          >
+                            className='position-relative'>
                             <Select
                               options={branchOptions}
-                              placeholder="Select Branch"
+                              placeholder='Select Branch'
                               value={branchRole.value !== 0 ? branchRole : null}
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
-                              classNamePrefix="selectCateogyCorporateList"
+                              classNamePrefix='selectCateogyCorporateList'
                               menuPortalTarget={document.body}
                             />
                             <Button
@@ -600,7 +626,7 @@ const Bankuser = () => {
                           {/* <Row className="mt-3"></Row> */}
                         </Row>
 
-                        <Row className="mt-3">
+                        <Row className='mt-3'>
                           <Col lg={2} md={2} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Category
@@ -616,14 +642,14 @@ const Bankuser = () => {
                               maxLength={50}
                               disable
                               // onChange={addBankUserValidateHandler}
-                              labelClass="d-none"
+                              labelClass='d-none'
                             />
                           </Col>
                         </Row>
                       </>
                     )}
 
-                    <Row className="mt-3">
+                    <Row className='mt-3'>
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Email
@@ -635,7 +661,7 @@ const Bankuser = () => {
                           name={"email"}
                           value={addBankUser.email.value}
                           onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
+                          labelClass='d-none'
                           // maxLength={50}
                         />
                         {errorShow &&
@@ -643,7 +669,7 @@ const Bankuser = () => {
                           addBankUser.email.value
                         ) ? (
                           <Row>
-                            <Col className="d-flex justify-content-start">
+                            <Col className='d-flex justify-content-start'>
                               <p className={styles["bankErrorMessage"]}>
                                 Email address with domain of bop is required
                               </p>
@@ -653,7 +679,7 @@ const Bankuser = () => {
                       </Col>
                     </Row>
 
-                    <Row className="mt-3">
+                    <Row className='mt-3'>
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Contact
@@ -665,22 +691,21 @@ const Bankuser = () => {
                           name={"Contact"}
                           value={addBankUser.Contact.value}
                           onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
+                          labelClass='d-none'
                           maxLength={20}
                         />
                       </Col>
                     </Row>
 
-                    <Row className="mt-3 mb-5">
+                    <Row className='mt-3 mb-5'>
                       <Col
                         lg={9}
                         md={9}
                         sm={12}
-                        className="d-flex justify-content-center gap-2"
-                      >
+                        className='d-flex justify-content-center gap-2'>
                         <Button
-                          icon={<i className="icon-check icon-check-space"></i>}
-                          text="Activate"
+                          icon={<i className='icon-check icon-check-space'></i>}
+                          text='Activate'
                           onClick={handleActivateButton}
                           className={styles["Active-btn"]}
                           disableBtn={
@@ -694,8 +719,8 @@ const Bankuser = () => {
                           }
                         />
                         <Button
-                          icon={<i className="icon-close icon-check-space"></i>}
-                          text="Cancel"
+                          icon={<i className='icon-close icon-check-space'></i>}
+                          text='Cancel'
                           onClick={handleCancelButton}
                           className={styles["Cancel-btn-AddBankUser"]}
                         />

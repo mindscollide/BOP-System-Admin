@@ -423,13 +423,13 @@ const GetAllBranchesFail = (message) => {
   };
 };
 
-const GetAllBranchesAPI = (navigate, data) => {
+const GetAllBranchesAPI = (navigate) => {
   let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(GetAllBranchesInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllBranches.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
+    // form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
       url: systemAdminAPI,
@@ -445,11 +445,10 @@ const GetAllBranchesAPI = (navigate, data) => {
           response.data.responseResult.responseMessage,
           response.data.responseCode
         );
-        // if (response.data?.responseCode === 417) {
-        //   await dispatch(RefreshToken(navigate));
-        //   dispatch(GetAllBranchesAPI(navigate));
-        // } else
-        if (response.data.responseCode === 200) {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllBranchesAPI(navigate));
+        } else if (response.data.responseCode === 200) {
           console.log(
             response,
             response.data,
