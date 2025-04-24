@@ -81,101 +81,90 @@ const Sidebar2 = () => {
 
   return (
     <Menu
-      theme="dark"
+      theme='dark'
       openKeys={openKeys}
       onOpenChange={onOpenChange}
       defaultSelectedKeys={[localStorage.getItem("defaultSelectedKey")]}
-      mode="inline"
-      className="Menu-sidebar-class"
-    >
+      mode='inline'
+      className='Menu-sidebar-class'>
       <SubMenu
-        key="sub1"
-        icon={<i className="icon-user menu-icons"></i>}
-        title="User Management"
-        className="submenu-sidebar-icons"
-      >
+        key='sub1'
+        icon={<i className='icon-user menu-icons'></i>}
+        
+        title='User Management'
+        className='submenu-sidebar-icons'
+        theme="light"
+        style={{ background: "#4d4946" }}>
         <Menu.Item
-          className="menu-items-sidebar"
-          key="6"
-          
-          onClick={navigateToAddaBankUser}
-        >
+          className='menu-items-sidebar'
+          key='6'
+          onClick={navigateToAddaBankUser}>
           Add a Bank User
         </Menu.Item>
 
         <Menu.Item
-          className="menu-items-sidebar"
-          key="7"
-          onClick={navigateToCorporateUser}
-        >
+          className='menu-items-sidebar'
+          key='7'
+          onClick={navigateToCorporateUser}>
           Add a Corporate User
         </Menu.Item>
 
         <Menu.Item
-          className="menu-items-sidebar"
-          key="8"
-          onClick={navigateToCorporateList}
-        >
+          className='menu-items-sidebar'
+          key='8'
+          onClick={navigateToCorporateList}>
           Corporate Users List
         </Menu.Item>
         <Menu.Item
-          className="menu-items-sidebar"
-          key="9"
-          onClick={navigateToBankerList}
-        >
+          className='menu-items-sidebar'
+          key='9'
+          onClick={navigateToBankerList}>
           Banker List
         </Menu.Item>
 
         <Menu.Item
-          className="menu-items-sidebar"
-          key="10"
-          onClick={navigateToLoginHistory}
-        >
+          className='menu-items-sidebar'
+          key='10'
+          onClick={navigateToLoginHistory}>
           Login History
         </Menu.Item>
         <Menu.Item
-          className="menu-items-sidebar"
-          key="11"
-          onClick={navigateToTradeCount}
-        >
+          className='menu-items-sidebar'
+          key='11'
+          onClick={navigateToTradeCount}>
           Trade Count
         </Menu.Item>
       </SubMenu>
 
       <SubMenu
-        key="sub2"
-        icon={<i className="icon-settings menu-icons"></i>}
-        title="Setup"
-        className="submenu-sidebar-icons"
-      >
+        key='sub2'
+        icon={<i className='icon-settings menu-icons'></i>}
+        title='Setup'
+        className='submenu-sidebar-icons'>
         <Menu.Item
-          className="menu-items-sidebar"
-          key="14"
-          onClick={navigateToTradeAccessManagement}
-        >
+          className='menu-items-sidebar'
+          key='14'
+          onClick={navigateToTradeAccessManagement}>
           Trade Access Management
         </Menu.Item>
 
         <Menu.Item
-          className="menu-items-sidebar"
-          key="15"
-          onClick={navigateToCategoryManagement}
-        >
+          className='menu-items-sidebar'
+          key='15'
+          onClick={navigateToCategoryManagement}>
           Category Management FX
         </Menu.Item>
 
         <Menu.Item
-          className="menu-items-sidebar"
-          key="16"
-          onClick={navigateToSpreadManagement}
-        >
+          className='menu-items-sidebar'
+          key='16'
+          onClick={navigateToSpreadManagement}>
           Spread Management
         </Menu.Item>
         <Menu.Item
-          className="menu-items-sidebar"
-          key="17"
-          onClick={navigateToVolMeter}
-        >
+          className='menu-items-sidebar'
+          key='17'
+          onClick={navigateToVolMeter}>
           Vol Meter
         </Menu.Item>
       </SubMenu>
