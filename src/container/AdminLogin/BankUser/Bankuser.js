@@ -310,15 +310,32 @@ const Bankuser = () => {
 
   const bankSelectRoleHandler = async (selectedRole) => {
     setRole(selectedRole);
-    setAddBankUser((prevState) => ({
-      ...prevState,
-      roleID: {
-        ...prevState.roleID,
-        value: selectedRole.value,
-        label: selectedRole.label,
-      },
-      branchID: { value: 0 },
-    }));
+    if (selectedRole.value === 9 && branchOptions.length > 0) {
+      const firstBranchOption = branchOptions[0];
+      console.log("firstBranchOption", firstBranchOption);
+      setBranchRole(firstBranchOption);
+      setAddBankUser((prevState) => ({
+        ...prevState,
+        branchID: { ...prevState.branchID, value: firstBranchOption.value },
+        category: firstBranchOption.categoryName,
+        roleID: {
+          ...prevState.roleID,
+          value: selectedRole.value,
+          label: selectedRole.label,
+        },
+      }));
+    } else {
+      setAddBankUser((prevState) => ({
+        ...prevState,
+        roleID: {
+          ...prevState.roleID,
+          value: selectedRole.value,
+          label: selectedRole.label,
+        },
+        branchID: { value: 0 },
+      }));
+    }
+
     // Automatically select the first branch option if the role is "Branch"
     if (selectedRole.value === 9 && branchOptions.length > 0) {
       const firstBranchOption = branchOptions[0];
