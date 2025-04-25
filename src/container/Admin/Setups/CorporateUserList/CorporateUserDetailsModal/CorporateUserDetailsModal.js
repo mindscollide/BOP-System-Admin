@@ -14,7 +14,7 @@ import { Col, Row } from "react-bootstrap";
 import { UserDetailsCorporateModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
 import Select from "react-select";
 import { formatDate } from "../../../../../helpers/reusableMethods";
-const CorporateUserDetailsModal = () => {
+const CorporateUserDetailsModal = ({ corporateUserId, setCorproateUserId }) => {
   const dispatch = useDispatch();
 
   //State for Enabling Dropdown
@@ -74,7 +74,7 @@ const CorporateUserDetailsModal = () => {
   //Table columns for customer List
   const TableColumn = [
     {
-      title: <label className="bottom-table-header">Email</label>,
+      title: <label className='bottom-table-header'>Email</label>,
       dataIndex: "Email",
       key: "Email",
       width: "100px",
@@ -82,7 +82,7 @@ const CorporateUserDetailsModal = () => {
       align: "center",
     },
     {
-      title: <label className="bottom-table-header">Name</label>,
+      title: <label className='bottom-table-header'>Name</label>,
       dataIndex: "Name",
       key: "Name",
       width: "120px",
@@ -91,7 +91,7 @@ const CorporateUserDetailsModal = () => {
     },
 
     {
-      title: <label className="bottom-table-header">Company</label>,
+      title: <label className='bottom-table-header'>Company</label>,
       dataIndex: "Company",
       key: "Company",
       width: "60px",
@@ -99,7 +99,7 @@ const CorporateUserDetailsModal = () => {
       align: "center",
     },
     {
-      title: <label className="bottom-table-header">IP Address</label>,
+      title: <label className='bottom-table-header'>IP Address</label>,
       dataIndex: "ipAddress",
       key: "ipAddress",
       width: "120px",
@@ -107,7 +107,7 @@ const CorporateUserDetailsModal = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Logged In Time</label>,
+      title: <label className='bottom-table-header'>Logged In Time</label>,
       dataIndex: "loginTime",
       key: "loginTime",
       align: "center",
@@ -115,7 +115,7 @@ const CorporateUserDetailsModal = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Logged Out Time</label>,
+      title: <label className='bottom-table-header'>Logged Out Time</label>,
       dataIndex: "logoutTime",
       key: "logoutTime",
       align: "center",
@@ -124,7 +124,7 @@ const CorporateUserDetailsModal = () => {
     },
 
     {
-      title: <label className="bottom-table-header">Total span</label>,
+      title: <label className='bottom-table-header'>Total span</label>,
       dataIndex: "Totalspan",
       key: "Totalspan",
       align: "center",
@@ -132,7 +132,7 @@ const CorporateUserDetailsModal = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Interface</label>,
+      title: <label className='bottom-table-header'>Interface</label>,
       dataIndex: "Interface",
       key: "Interface",
       align: "center",
@@ -179,22 +179,22 @@ const CorporateUserDetailsModal = () => {
     <Modal
       show={BOPSystemAdminModal.userDetailsCorporateModal}
       setShow={(value) => dispatch(UserDetailsCorporateModalSystemAdmin(value))}
-      className="userDetailsCorporateList"
+      className='userDetailsCorporateList'
       modalHeaderClassName={"d-none"}
-      modalFooterClassName="UniversalBOPModalStylesfooter"
-      size="xl"
+      modalFooterClassName='UniversalBOPModalStylesfooter'
+      size='xl'
       onHide={() => dispatch(UserDetailsCorporateModalSystemAdmin(false))}
       ModalBody={
         <>
           <Row>
-            <Col lg={11} md={11} sm={12} className="d-flex gap-1">
+            <Col lg={11} md={11} sm={12} className='d-flex gap-1'>
               <span className={styles["NameLabel"]}>Muhammad Ahmed</span>
               <span className={styles["ActiveLabel"]}>Active</span>
             </Col>
             <Col lg={1} md={1} sm={1}>
               <Button
                 className={styles["CrossButton"]}
-                icon={<i className="icon-close"></i>}
+                icon={<i className='icon-close'></i>}
                 iconClass={styles["crossIconClass"]}
                 onClick={handleCrossIcon}
               />
@@ -202,7 +202,7 @@ const CorporateUserDetailsModal = () => {
           </Row>
           <Row>
             <Col lg={8} md={8} sm={12}>
-              <Row className="mt-3">
+              <Row className='mt-3'>
                 <Col lg={11} md={11} sm={12}>
                   <span className={styles["UserDetails_label"]}>
                     User Detail
@@ -217,7 +217,7 @@ const CorporateUserDetailsModal = () => {
                   />
                 </Col> */}
               </Row>
-              <Row className="mt-3">
+              <Row className='mt-3'>
                 <Col lg={12} md={12} sm={12}>
                   <TextField
                     labelClass={"d-none"}
@@ -226,7 +226,7 @@ const CorporateUserDetailsModal = () => {
                   />
                 </Col>
               </Row>
-              <Row className="mt-3">
+              <Row className='mt-3'>
                 <Col lg={6} md={6} sm={12}>
                   <TextField
                     labelClass={"d-none"}
@@ -243,7 +243,7 @@ const CorporateUserDetailsModal = () => {
                   />
                 </Col>
               </Row>
-              <Row className="mt-3">
+              <Row className='mt-3'>
                 <Col lg={6} md={6} sm={12}>
                   <TextField
                     labelClass={"d-none"}
@@ -270,21 +270,19 @@ const CorporateUserDetailsModal = () => {
               lg={4}
               md={4}
               sm={12}
-              className="d-flex align-items-center mt-3"
-            >
+              className='d-flex align-items-center mt-3'>
               <span className={styles["OuterBoxUserDetailsRights"]}>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
                     <span className={styles["RightsLabel"]}>Rights</span>
                   </Col>
                 </Row>
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col
                     lg={12}
                     md={12}
                     sm={12}
-                    className="flex-column flex-wrap"
-                  >
+                    className='flex-column flex-wrap'>
                     <span className={styles["RightsLabels"]}>Timer</span>
                     <TextField
                       labelClass={"d-none"}
@@ -294,13 +292,12 @@ const CorporateUserDetailsModal = () => {
                     />
                   </Col>
                 </Row>
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col
                     lg={12}
                     md={12}
                     sm={12}
-                    className="flex-column flex-wrap mb-2"
-                  >
+                    className='flex-column flex-wrap mb-2'>
                     <span className={styles["RightsLabels"]}>
                       Nature of busniess
                     </span>
@@ -315,7 +312,7 @@ const CorporateUserDetailsModal = () => {
               </span>
             </Col>
           </Row>
-          <Row className="mt-4">
+          <Row className='mt-4'>
             <Col lg={12} md={12} sm={12}>
               <CustomPaper className={styles["CustomPaperUserDetailsStyles"]}>
                 <Row>
@@ -323,11 +320,10 @@ const CorporateUserDetailsModal = () => {
                     lg={5}
                     md={5}
                     sm={12}
-                    className="d-flex align-items-center  pe-4"
-                  >
+                    className='d-flex align-items-center  pe-4'>
                     <DatePicker
-                      name="startDate"
-                      placeholder="Start date"
+                      name='startDate'
+                      placeholder='Start date'
                       showOtherDays={true}
                       inputClass={styles["Tradecount-Datepicker-left"]}
                       value={searchUserRecord.startDate.value}
@@ -338,7 +334,7 @@ const CorporateUserDetailsModal = () => {
                     <label className={styles["Tradecount-date-to"]}>to</label>
 
                     <DatePicker
-                      placeholder="End Date"
+                      placeholder='End Date'
                       showOtherDays={true}
                       inputClass={styles["Tradecount-Datepicker-right"]}
                       value={searchUserRecord.endDate.value}
@@ -353,22 +349,21 @@ const CorporateUserDetailsModal = () => {
                     lg={4}
                     md={4}
                     sm={12}
-                    className="d-flex gap-1 align-items-center  ps-0"
-                  >
+                    className='d-flex gap-1 align-items-center  ps-0'>
                     <Button
-                      icon={<i className="icon-search icon-check-space"></i>}
+                      icon={<i className='icon-search icon-check-space'></i>}
                       className={styles["Search-btn-BankList"]}
-                      text="Search"
+                      text='Search'
                       onClick={handleSearchRecord}
                     />
                     <Button
-                      icon={<i className="icon-download-excel"></i>}
+                      icon={<i className='icon-download-excel'></i>}
                       className={styles["Download-btn-Corporate"]}
-                      text="Download Excel"
+                      text='Download Excel'
                     />
                   </Col>
                 </Row>
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={12} md={12} sm={12}>
                     <Table
                       column={TableColumn}
@@ -380,21 +375,20 @@ const CorporateUserDetailsModal = () => {
               </CustomPaper>
             </Col>
           </Row>
-          <Row className="mt-3">
+          <Row className='mt-3'>
             <Col
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-center gap-3"
-            >
+              className='d-flex justify-content-center gap-3'>
               <Button
                 text={"Update"}
                 className={styles["UpdateButton"]}
-                icon={<i className="icon-refresh"></i>}
+                icon={<i className='icon-refresh'></i>}
               />
               <Button
                 text={"Discard"}
-                icon={<i className="icon-close"></i>}
+                icon={<i className='icon-close'></i>}
                 className={styles["DiscardButton"]}
               />
             </Col>

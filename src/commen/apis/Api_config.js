@@ -186,6 +186,7 @@ const GetAllInstruments = {
 const GetAllInstrumentTypes = {
   RequestMethod: "ServiceManager.GetAllInstrumentTypes",
 };
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,

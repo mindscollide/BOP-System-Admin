@@ -27,9 +27,6 @@ const initialState = {
   UpdateVolMeterSettingByBankId: null,
   GetVolMeterSettingByBankId: null,
   GetAllBankUsers: null,
-  // GetAllCorporates: null,
-  GetAllCorporateUsers: null,
-  GetCorporateUserByUserID: null,
   GetVolmeterByBankID: null,
   GetCounterPartyNamesData: null,
   GetAllInstruments: null,
@@ -271,26 +268,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         CorporateUsersBulkListData: action.response,
         ResponseMessage: action.message,
       };
-    //Search Corporate Users
-    case actions.SEARCH_CORPORATE_USERS_INIT:
-      return {
-        ...state,
-        Loading: true,
-      };
-    case actions.SEARCH_CORPORATE_USERS_SUCCESS:
-      return {
-        ...state,
-        Loading: false,
-        SearchCorporateUsersData: action.response,
-        ResponseMessage: action.message,
-      };
-    case actions.SEARCH_CORPORATE_USERS_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        SearchCorporateUsersData: null,
-        ResponseMessage: action.message,
-      };
+   
     //Search Bank Users
     case actions.SEARCH_BANK_USERS_INIT:
       return {
@@ -496,52 +474,6 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetVolMeterSettingByBankId: null,
-        ResponseMessage: action.message,
-      };
-
-    //GetAllCorporateUsers Reducer
-    case actions.GET_ALL_CORPORATE_USER_INIT:
-      return {
-        ...state,
-        Loading: true,
-      };
-
-    case actions.GET_ALL_CORPORATE_USER_SUCCESS:
-      return {
-        ...state,
-        Loading: false,
-        GetAllCorporateUsers: action.response,
-        ResponseMessage: action.message,
-      };
-
-    case actions.GET_ALL_CORPORATE_USER_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        GetAllCorporateUsers: [],
-        ResponseMessage: action.message,
-      };
-
-    //GetCorporateUserByUserID Reducer
-    case actions.GET_CORPORATE_USER_BY_USERID_INIT:
-      return {
-        ...state,
-        Loading: true,
-      };
-
-    case actions.GET_CORPORATE_USER_BY_USERID_SUCCESS:
-      return {
-        ...state,
-        Loading: false,
-        GetCorporateUserByUserID: action.response,
-        ResponseMessage: action.message,
-      };
-
-    case actions.GET_CORPORATE_USER_BY_USERID_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        GetCorporateUserByUserID: "",
         ResponseMessage: action.message,
       };
 

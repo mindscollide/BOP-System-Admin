@@ -12,6 +12,7 @@ import {
   AddCategory,
   BOPSystemAdminModal,
   BOPSystemAdminReducer,
+  CorporateUsersReducer,
 } from "./reducers";
 
 const AppReducer = combineReducers({
@@ -21,6 +22,7 @@ const AppReducer = combineReducers({
   AddCategory: AddCategory,
   BOPSystemAdminModal: BOPSystemAdminModal,
   BOPSystemAdminReducer: BOPSystemAdminReducer,
+  CorporateUsersReducer: CorporateUsersReducer,
 });
 
 const rootReducer = (state, action) => {

@@ -15,11 +15,15 @@ import { RFQTimerOptions } from "../../../../../helpers/Dropdown";
 import { updateCorporateUserSchema } from "../../../../../utils/schemas";
 import { validateBopEmail } from "../../../../../utils/regexUtil";
 import { useNavigate } from "react-router-dom";
-import { UpdateCorporateUsersAPI } from "../../../../../store/actions/BOPSystemAdminActions";
-const EditCorporateModal = () => {
+import { UpdateCorporateUsersAPI } from "../../../../../store/actions/CorporateUsersAction";
+const EditCorporateModal = ({ corporateUserId ,setCorproateUserId}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const GetCorporateUserByUserID = useSelector(
+    (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
+  );
+  console.log(GetCorporateUserByUserID, "useSelectoruseSelectoruseSelector");
   // const { auth } = useSelector((state) => state);
   // console.log("this is the user", auth);
   //States
@@ -56,6 +60,47 @@ const EditCorporateModal = () => {
     label: "3 Minutes",
     value: 3,
   });
+
+  useEffect(() => {
+    if (GetCorporateUserByUserID !== null) {
+      try {
+        const {
+          firstName,
+          lastName,
+          email,
+          natureOfBusinessID,
+          corporateName,
+          statusId,
+          rfqTimers,
+          categoryID,
+        } = GetCorporateUserByUserID.user;
+
+        console.log(rfqTimers, "rfqTimersrfqTimers");
+        setUpdateCorporate({
+          ...updateCorporate,
+          corporateName: {
+            value: corporateName,
+            categoryID: categoryID,
+          },
+          firstName: {
+            value: firstName,
+          },
+          RFQTimerCorporate: {
+            value: rfqTimers.corporateRFQTimer,
+          },
+          RFQTimerTreasury: {
+            value: rfqTimers.treasuryRFQTimer,
+          },
+          email: {
+            value: email,
+          },
+          activeUser: {
+            value: statusId,
+          },
+        });
+      } catch (error) {}
+    }
+  }, [GetCorporateUserByUserID]);
 
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
@@ -134,28 +179,19 @@ const EditCorporateModal = () => {
       updateCorporate.firstName.value !== "" &&
       updateCorporate.email.value !== "" &&
       updateCorporate.corporateName.value !== "" &&
-      updateCorporate.RFQTimerTreasury.value !== "" &&
-      updateCorporate.RFQTimerCorporate.value !== "" &&
-      updateCorporate.activeUser.value !== ""
+      updateCorporate.RFQTimerTreasury.value !== 0 &&
+      updateCorporate.RFQTimerCorporate.value !== 0 &&
+      updateCorporate.activeUser.value !== 0
     ) {
-      if (validateBopEmail(updateCorporate.email.value)) {
-        // setErrorShow(false);
-        let newData = {
-          User: {
-            FirstName: updateCorporate.firstName.value,
-            Email: updateCorporate.email.value,
-            CorporateName: updateCorporate.corporateName.value,
-            RFQTimerTreasury: updateCorporate.RFQTimerTreasury.value,
-            RFQTimerCorporate: updateCorporate.RFQTimerCorporate.value,
-            ActiveUser: updateCorporate.activeUser.value,
-          },
-        };
-        console.log("newData", newData);
-        dispatch(UpdateCorporateUsersAPI(navigate, newData));
-      } else {
-        console.log("updateCorporateUser Dispatched");
-        // setErrorShow(true);
-      }
+      // setErrorShow(false);
+      let newData = {
+        FirstName: updateCorporate.firstName.value,
+        UserStatusId: updateCorporate.activeUser.value,
+        CorporateID: updateCorporate.corporateName.categoryID,
+        UserId: corporateUserId,
+      };
+      console.log("newData", newData);
+      dispatch(UpdateCorporateUsersAPI(navigate, newData,setCorproateUserId));
     } else {
       // setTimeout();
 
@@ -176,10 +212,10 @@ const EditCorporateModal = () => {
     <Modal
       show={BOPSystemAdminModal.editCorporateModal}
       setShow={(value) => dispatch(EditCorporateModalSystemAdmin(value))}
-      className="UniversalBOPModalStyles"
+      className='UniversalBOPModalStyles'
       modalHeaderClassName={"d-none"}
-      modalFooterClassName="UniversalBOPModalStylesfooter"
-      size="md"
+      modalFooterClassName='UniversalBOPModalStylesfooter'
+      size='md'
       onHide={() => dispatch(EditCorporateModalSystemAdmin(false))}
       ModalBody={
         <>
@@ -189,14 +225,14 @@ const EditCorporateModal = () => {
             </Col>
           </Row>
 
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+          <Row className='mt-3'>
+            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
               <span className={styles["labels-add-bank"]}>
                 Name
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
-                labelClass="d-none"
+                labelClass='d-none'
                 name={"firstName"}
                 value={updateCorporate.firstName.value}
                 onChange={handleValueChangeAndValidation}
@@ -204,15 +240,15 @@ const EditCorporateModal = () => {
               />
             </Col>
           </Row>
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+          <Row className='mt-3'>
+            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
               <span className={styles["labels-add-bank"]}>
                 Email
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
-                labelClass="d-none"
-                name="email"
+                labelClass='d-none'
+                name='email'
                 value={updateCorporate.email.value}
                 onChange={handleValueChangeAndValidation}
                 disable
@@ -235,14 +271,14 @@ const EditCorporateModal = () => {
             </Col> */}
           </Row>
 
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+          <Row className='mt-3'>
+            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
               <span className={styles["labels-add-bank"]}>
                 Corporate Name
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
-                labelClass="d-none"
+                labelClass='d-none'
                 name={"corporateName"}
                 value={updateCorporate.corporateName.value}
                 onChange={handleValueChangeAndValidation}
@@ -251,14 +287,14 @@ const EditCorporateModal = () => {
             </Col>
           </Row>
 
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+          <Row className='mt-3'>
+            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
               <span className={styles["labels-add-bank"]}>
                 RFQ Timer
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <Row>
-                <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
+                <Col lg={6} md={6} sm={12} className='flex-column flex-wrap'>
                   <span className={styles["labels-add-bank"]}>
                     Treasury
                     <span className={styles["aesterick-color"]}>*</span>
@@ -274,8 +310,8 @@ const EditCorporateModal = () => {
                     isDisabled
                   /> */}
                   <TextField
-                    labelClass="d-none"
-                    value={`${RFQTimerTreasury.value} Minutes`}
+                    labelClass='d-none'
+                    value={`${updateCorporate.RFQTimerTreasury.value} Minutes`}
                     disable={true}
                   />
                 </Col>
@@ -297,78 +333,79 @@ const EditCorporateModal = () => {
                     isDisabled
                   /> */}
                   <TextField
-                    labelClass="d-none"
-                    value={`${RFQTimerCorporate.value} Minutes`}
+                    labelClass='d-none'
+                    value={`${updateCorporate.RFQTimerCorporate.value} Minutes`}
                     disable={true}
                   />
                 </Col>
               </Row>
             </Col>
           </Row>
-          <Row className="mt-3">
+          <Row className='mt-3'>
             <Col lg={12} md={12} sm={12}>
               <span className={styles["labels-add-bank"]}>Status</span>
               <span className={styles["aesterick-color"]}>*</span>
             </Col>
           </Row>
-          {user === "Security Admin" && (
+          {/* {user === "Security Admin" && (
             <>
               <Row>
                 <Col lg={12} md={12} sm={12}>
                   <CustomRadio
-                    name="customRadio"
+                    name='customRadio'
                     options={radioOptions}
                     onChange={handleRadioChange}
                     value={updateCorporate.activeUser?.value || ""}
-                    size="default"
-                    className="custom-radio-group"
+                    size='default'
+                    className='custom-radio-group'
                   />
                 </Col>
               </Row>
             </>
-          )}
+          )} */}
 
-          {user === "System Admin" && (
-            <>
-              <Row>
-                <Col lg={12} md={12} sm={12}>
-                  {updateCorporate.activeUser?.value === "Active" ? (
-                    <span className={styles["ActiveStatus"]}>Active</span>
-                  ) : (
-                    <span className={styles["InactiveStatus"]}>Inactive</span>
-                  )}
-                </Col>
-              </Row>
-            </>
-          )}
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              {Number(updateCorporate.activeUser?.value) === 1 ? (
+                <span className={styles["ActiveStatus"]}>Active</span>
+              ) : Number(updateCorporate.activeUser?.value) === 2 ? (
+                <span className={styles["InactiveStatus"]}>Inactive</span>
+              ) : Number(updateCorporate.activeUser?.value) === 3 ? (
+                <span className={styles["InactiveStatus"]}>Inactive</span>
+              ) : Number(updateCorporate.activeUser?.value) === 4 ? (
+                <span className={styles["InactiveStatus"]}>Inactive</span>
+              ) : (
+                <span className={styles["InactiveStatus"]}>Inactive</span>
+              )}
+            </Col>
+          </Row>
         </>
       }
       ModalFooter={
         <>
-          <Row className="mt-3 mb-3">
+          <Row className='mt-3 mb-3'>
             <Col
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-center gap-2"
-            >
+              className='d-flex justify-content-center gap-2'>
               <Button
-                icon={<i className="icon-refresh"></i>}
+                icon={<i className='icon-refresh'></i>}
                 text={"Update"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleUpdateButton}
                 disableBtn={
                   updateCorporate.firstName.value !== "" &&
-                  updateCorporate.RFQTimerTreasury.value !== "" &&
-                  updateCorporate.RFQTimerCorporate.value !== ""
+                  updateCorporate.RFQTimerTreasury.value !== 0 &&
+                  updateCorporate.RFQTimerCorporate.value !== 0
                     ? false
                     : true
                 }
               />
 
               <Button
-                icon={<i className="icon-close"></i>}
+                icon={<i className='icon-close'></i>}
                 text={"Discard"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

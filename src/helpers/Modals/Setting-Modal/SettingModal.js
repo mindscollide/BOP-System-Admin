@@ -7,9 +7,9 @@ import {
   Button,
   Table,
   Modal,
-} from "../../../../components/elements";
+} from "../../../components/elements";
 import { Checkbox, Switch } from "antd";
-import { settingSchema } from "../../../../utils/schemas";
+import { settingSchema } from "../../../utils/schemas";
 import Password from "antd/es/input/Password";
 
 const SettingModal = ({ SettingModalState, setSettingModalState }) => {
