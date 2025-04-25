@@ -220,19 +220,12 @@ const BankerList = () => {
       Role: "",
       StatusID: 0,
       PageNumber: 1,
-      Length: 100,
+      Length: 50,
     };
 
     console.log("Data to Search", data);
     dispatch(SearchBankUsersAPI(navigate, data));
   }, []);
-
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
-  };
 
   // show error message When user hit activate btn
   const handleReset = () => {
@@ -569,7 +562,7 @@ const BankerList = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{y: 300, x: "scroll"}}
+                  scroll={{ y: 300, x: "scroll" }}
                   className={"BankUserList-table"}
                 />
               </Col>

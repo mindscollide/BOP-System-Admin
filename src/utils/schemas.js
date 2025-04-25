@@ -411,11 +411,7 @@ export const updateBankUserSchema = {
     errorMessage: "",
     errorStatus: false,
   },
-  BranchID: {
-    value: 0,
-    errorMessage: "",
-    errorStatus: false,
-  },
+  branch: null,
 };
 
 export const loginHistorySchema = {

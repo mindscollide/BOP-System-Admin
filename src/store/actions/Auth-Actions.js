@@ -504,7 +504,7 @@ const loginSystemAdminAPI = (navigate, data) => {
                 "userName",
                 response.data.responseResult.userName
               );
-              navigate("/BOP/");
+              navigate("/BOP/AddBankUser");
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

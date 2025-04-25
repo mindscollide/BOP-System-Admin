@@ -1626,7 +1626,16 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
                 )
               );
               dispatch(editBankUserModalSystemAdmin(false));
-              dispatch(SearchBankUsersAPI(navigate, data));
+              let newData = {
+                EmployeeID: "",
+                FirstName: "",
+                Email: "",
+                Role: "",
+                StatusID: 0,
+                PageNumber: 1,
+                Length: 50,
+              };
+              dispatch(SearchBankUsersAPI(navigate, newData));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
