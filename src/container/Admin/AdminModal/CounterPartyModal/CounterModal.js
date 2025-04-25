@@ -17,12 +17,10 @@ const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { systemReducer, uploadReducer } = useSelector((state) => state);
-  console.log(systemReducer, "systemReducersystemReducer");
   // state for CounterModal edit user
   const [counterModalField, setCounterModalField] = useState({
     ...counterModalFieldSchema,
   });
-  console.log(counterModalField, "counterModalField");
   // onchange handler for counterModal
   const counterValidationHandler = (e) => {
     let name = e.target.name;
@@ -30,7 +28,6 @@ const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
 
     if (name === "corporateName" && value !== "") {
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setCounterModalField({
           ...counterModalField,
@@ -50,7 +47,6 @@ const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
 
     if (name === "avaliableLimit" && value !== "") {
       let valueCheck = value.replace(/[^\d]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setCounterModalField({
           ...counterModalField,

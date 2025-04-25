@@ -19,11 +19,9 @@ const CounterLimit = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
-  console.log(file, "filefile");
   const { systemReducer, uploadReducer, downloadReducer } = useSelector(
     (state) => state
   );
-  console.log(systemReducer, "systemReducersystemReducer");
 
   //get bankID from local storage
   let CounterPartyModalBankId =
@@ -99,7 +97,6 @@ const CounterLimit = () => {
       align: "center",
       width: "180px",
       render: (text, record) => {
-        console.log(record, "recordrecordrecord");
         return (
           <label
             className="icon-eye eyeicon-counter"

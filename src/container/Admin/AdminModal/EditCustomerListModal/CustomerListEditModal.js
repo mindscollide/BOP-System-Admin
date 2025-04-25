@@ -18,7 +18,6 @@ const CustomerListEditModal = ({
     setEditCustomerModal(false);
   };
 
-  console.log("editCustomerList", editCustomerList);
 
   return (
     <Fragment>

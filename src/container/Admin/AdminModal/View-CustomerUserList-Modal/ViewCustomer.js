@@ -26,7 +26,6 @@ const ViewCustomer = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { systemReducer } = useSelector((state) => state);
-  console.log(systemReducer, "systemAdminsystemAdmin");
 
   const FirstName = useRef(null);
   const LastName = useRef(null);
@@ -55,10 +54,7 @@ const ViewCustomer = ({
     });
     setViewCustomerModal(false);
   };
-  console.log(
-    modalViewCustomerList,
-    "modalViewCustomerListmodalViewCustomerList"
-  );
+
 
   // for enable Name field
   const nameEnableHandler = () => {
@@ -69,7 +65,6 @@ const ViewCustomer = ({
     LastName.current.focus();
     corporateID.current.focus();
   };
-  console.log(modalViewCustomerList, "hahhahhahah");
   return (
     <Fragment>
       <Row>

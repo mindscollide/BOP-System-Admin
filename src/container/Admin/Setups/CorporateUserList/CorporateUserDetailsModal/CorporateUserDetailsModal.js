@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CorporateUserDetails.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -16,18 +16,10 @@ import Select from "react-select";
 import { formatDate } from "../../../../../helpers/reusableMethods";
 const CorporateUserDetailsModal = ({ corporateUserId, setCorproateUserId }) => {
   const dispatch = useDispatch();
-
-  //State for Enabling Dropdown
-  const [isDropdownEnabled, setIsDropdownEnabled] = useState(false);
-  const { BOPSystemAdminModal } = useSelector((state) => state);
-
-  //company drpdown options
-  const companyOptions = [
-    { value: "Shield", label: "Shield" },
-    { value: "Gulahmed", label: "Gulahmed" },
-    { value: "Nestle", label: "Nestle" },
-  ];
-
+  const GetCorporateUserByUserID = useSelector(
+    (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
+  );
+  console.log(GetCorporateUserByUserID, "useSelectoruseSelectoruseSelector");
   //state for user data
   const [userData, setUserData] = useState({
     userDetails: {
@@ -56,6 +48,18 @@ const CorporateUserDetailsModal = ({ corporateUserId, setCorproateUserId }) => {
       },
     },
   });
+
+  //State for Enabling Dropdown
+  const [isDropdownEnabled, setIsDropdownEnabled] = useState(false);
+  const { BOPSystemAdminModal } = useSelector((state) => state);
+
+  //company drpdown options
+  const companyOptions = [
+    { value: "Shield", label: "Shield" },
+    { value: "Gulahmed", label: "Gulahmed" },
+    { value: "Nestle", label: "Nestle" },
+  ];
+
   //state for date picker
   const [searchUserRecord, setSearchUserRecord] = useState({
     startDate: {
@@ -66,6 +70,37 @@ const CorporateUserDetailsModal = ({ corporateUserId, setCorproateUserId }) => {
       value: "",
     },
   });
+
+  useEffect(() => {
+    if (GetCorporateUserByUserID !== null) {
+      try {
+        const {
+          firstName,
+          lastName,
+          email,
+          natureOfBussinessID,
+          corporateName,
+          statusId,
+          rfqTimers,
+          categoryID,
+        } = GetCorporateUserByUserID.user;
+        console.log(
+          {
+            firstName,
+            lastName,
+            email,
+            natureOfBussinessID,
+            corporateName,
+            statusId,
+            rfqTimers,
+            categoryID,
+          },
+          "GetCorporateUserByUserIDGetCorporateUserByUserID"
+        );
+      } catch (error) {}
+    }
+  }, [GetCorporateUserByUserID]);
+
   //handle Cross Icon
   const handleCrossIcon = () => {
     dispatch(UserDetailsCorporateModalSystemAdmin(false));
