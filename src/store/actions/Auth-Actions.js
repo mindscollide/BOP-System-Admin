@@ -10,6 +10,7 @@ import {
   GetAllCorporates,
   GetAllNatureOfBussiness,
   RoleList,
+  GetBankUserRoles,
   GetAllInstrumentTypes,
 } from "../../commen/apis/Api_config";
 import {
@@ -1044,6 +1045,87 @@ const RoleListAPI = (navigate) => {
       });
   };
 };
+
+const GetBankUserRolesInit = () => {
+  return {
+    type: actions.GET_BANK_USER_ROLES_INIT,
+  };
+};
+
+const GetBankUserRolesSuccess = (response, message) => {
+  return {
+    type: actions.GET_BANK_USER_ROLES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetBankUserRolesFail = (message) => {
+  return {
+    type: actions.GET_BANK_USER_ROLES_FAIL,
+    message: message,
+  };
+};
+
+const GetBankUserRolesAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetBankUserRolesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetBankUserRoles.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetBankUserRolesAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetBankUserRoles_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetBankUserRolesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetBankUserRoles_02".toLowerCase()
+            ) {
+              dispatch(GetBankUserRolesFail("Data UnAvailable"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetBankUserRoles_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetBankUserRolesFail("Exception"));
+            }
+          } else {
+            dispatch(GetBankUserRolesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetBankUserRolesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetBankUserRolesFail("something went wrong"));
+      });
+  };
+};
 const GetAllInstrumentTypesInit = () => {
   return {
     type: actions.GET_ALL_INSTRUMENT_TYPES_INIT,
@@ -1137,5 +1219,6 @@ export {
   GetAllCategoriesAPI,
   GetAllNatureAPI,
   RoleListAPI,
+  GetBankUserRolesAPI,
   GetAllInstrumentTypesAPI,
 };

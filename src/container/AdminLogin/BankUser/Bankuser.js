@@ -27,11 +27,11 @@ import {
 } from "../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { validateBopEmail } from "../../../utils/regexUtil";
-import { roleOptions } from "../../../helpers/Dropdown";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import {
   GetAllCategoriesAPI,
   RoleListAPI,
+  GetBankUserRolesAPI,
 } from "../../../store/actions/Auth-Actions";
 
 // import {  } from "../../../../store/actions/Auth-Actions";
@@ -78,7 +78,7 @@ const Bankuser = () => {
   );
 
   //Role List
-  const RoleList = useSelector((state) => state.auth.RoleList);
+  const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
 
   //state for error Message
   const [errorShow, setErrorShow] = useState(false);
@@ -96,6 +96,7 @@ const Bankuser = () => {
     value: 0,
   });
 
+  console.log({ branchRole, role }, "branchRolebranchRole");
   //state for save button
   const [saveClicked, setSaveClicked] = useState(false);
 
@@ -116,13 +117,13 @@ const Bankuser = () => {
   const [addBankUser, setAddBankUser] = useState({
     ...addBankUserSchema,
   });
-  console.log(addBankUser);
+  console.log(addBankUser, "addBankUseraddBankUser");
 
   // Fetch branches on component mount
   useEffect(() => {
     dispatch(GetAllBranchesAPI(navigate));
     dispatch(GetAllCategoriesAPI(navigate));
-    dispatch(RoleListAPI(navigate));
+    dispatch(GetBankUserRolesAPI(navigate));
   }, []);
 
   useEffect(() => {
@@ -312,52 +313,45 @@ const Bankuser = () => {
     setRole(selectedRole);
     if (selectedRole.value === 9 && branchOptions.length > 0) {
       const firstBranchOption = branchOptions[0];
-      console.log("firstBranchOption", firstBranchOption);
-      setBranchRole(firstBranchOption);
-      setAddBankUser((prevState) => ({
-        ...prevState,
-        branchID: { ...prevState.branchID, value: firstBranchOption.value },
-        category: firstBranchOption.categoryName,
-        roleID: {
-          ...prevState.roleID,
-          value: selectedRole.value,
-          label: selectedRole.label,
+      console.log(firstBranchOption, "firstBranchOptionfirstBranchOption");
+      setBranchRole({
+        label: firstBranchOption.label,
+        value: firstBranchOption.value,
+      });
+      setAddBankUser({
+        ...addBankUser,
+        category: {
+          value: firstBranchOption.categoryName,
         },
-      }));
+      });
     } else {
-      setAddBankUser((prevState) => ({
-        ...prevState,
-        roleID: {
-          ...prevState.roleID,
-          value: selectedRole.value,
-          label: selectedRole.label,
+      setBranchRole({
+        label: "",
+        value: 0,
+      });
+      setAddBankUser({
+        ...addBankUser,
+        category: {
+          value: "",
         },
-        branchID: { value: 0 },
-      }));
-    }
-
-    // Automatically select the first branch option if the role is "Branch"
-    if (selectedRole.value === 9 && branchOptions.length > 0) {
-      const firstBranchOption = branchOptions[0];
-      console.log("firstBranchOption", firstBranchOption);
-      setBranchRole(firstBranchOption);
-      setAddBankUser((prevState) => ({
-        ...prevState,
-        branchID: { ...prevState.branchID, value: firstBranchOption.value },
-        category: firstBranchOption.categoryName,
-      }));
+      });
     }
   };
 
   const branchSelectRoleHandler = async (selectedBranch) => {
-    console.log(selectedBranch.value, "selectroleselectroleselectrole");
-    setBranchRole(selectedBranch);
-
-    setAddBankUser((prevState) => ({
-      ...prevState,
-      // category: selectedBranch.categoryName,
-      branchID: { BranchID: selectedBranch.value },
-    }));
+    console.log(selectedBranch, "selectroleselectroleselectrole");
+    setBranchRole({ value: selectedBranch.value, label: selectedBranch.label });
+    setAddBankUser({
+      ...addBankUser,
+      category: {
+        value: selectedBranch.categoryName,
+      },
+    });
+    // setAddBankUser((prevState) => ({
+    //   ...prevState,
+    //   // category: selectedBranch.categoryName,
+    //   branchID: { BranchID: selectedBranch.value },
+    // }));
   };
 
   const handleCancelButton = () => {
@@ -366,8 +360,14 @@ const Bankuser = () => {
   };
 
   const handleCancelYes = () => {
-    setBranchRole("");
-    setRole(null);
+    setBranchRole({
+      value: 0,
+      label: "",
+    });
+    setRole({
+      value: 0,
+      label: "",
+    });
     setAddBankUser({
       ...addBankUser,
 
@@ -429,17 +429,20 @@ const Bankuser = () => {
         User: {
           UserID: 0, // Assuming this is a new user
           FirstName: addBankUser.firstName.value,
-          Lastname: "Branch User", // Default value
+          Lastname: "", // Default value
           Email: addBankUser.email.value,
           ContactNumber: addBankUser.Contact.value,
           LDAPAccount: ldapAccountValue, // Use the extracted LDAPAccount
           FailedAttemptCount: 0, // Default value
-          // UserRoleID: addBankUser.roleID.value, // Role ID from the form
-          UserRoleID: 9,
+          UserRoleID: role.value, // Role ID from the form
+          // UserRoleID: 9,
           EmployeeID: addBankUser.EmployeeID.value,
-          Branch: {
-            BranchID: addBankUser.branchID.value, // Include BranchID inside a Branch object
-          },
+          Branch:
+            role.value === 9
+              ? {
+                  BranchID: branchRole.value, // Include BranchID inside a Branch object
+                }
+              : null,
         },
       };
 
@@ -493,16 +496,17 @@ const Bankuser = () => {
               lg={12}
               md={12}
               sm={12}
-              className='d-flex justify-content-start m-0 p-0'>
+              className="d-flex justify-content-start m-0 p-0"
+            >
               <span className={styles["bank-user-label"]}>Add a Bank user</span>
             </Col>
           </Row>
-          <Row className='mt-1'>
-            <Col lg={12} md={12} sm={12} className='m-0 p-0'>
+          <Row className="mt-1">
+            <Col lg={12} md={12} sm={12} className="m-0 p-0">
               <Paper className={styles["bankuser-paper"]}>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
-                    <Row className='mt-3'>
+                    <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Employee ID
@@ -513,14 +517,14 @@ const Bankuser = () => {
                       <Col lg={5} md={5} sm={12}>
                         <TextField
                           name={"EmployeeID"}
-                          labelClass='d-none'
+                          labelClass="d-none"
                           value={addBankUser.EmployeeID.value}
                           maxLength={4}
                           onChange={addBankUserValidateHandler}
                         />
                         {addBankUser.EmployeeID.errorStatus && (
                           <Row>
-                            <Col className='d-flex justify-content-start'>
+                            <Col className="d-flex justify-content-start">
                               <p className={styles["bankErrorMessage"]}>
                                 {addBankUser.EmployeeID.errorMessage}
                               </p>
@@ -549,7 +553,7 @@ const Bankuser = () => {
                       </Col>
                     </Row>
 
-                    <Row className='mt-3'>
+                    <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Treasury Person Name
@@ -562,12 +566,12 @@ const Bankuser = () => {
                           value={addBankUser.firstName.value}
                           maxLength={50}
                           onChange={addBankUserValidateHandler}
-                          labelClass='d-none'
+                          labelClass="d-none"
                         />
                       </Col>
                     </Row>
 
-                    <Row className='mt-3'>
+                    <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           User Role
@@ -601,7 +605,7 @@ const Bankuser = () => {
 
                     {role.value === 9 && (
                       <>
-                        <Row className='mt-3 position-relative'>
+                        <Row className="mt-3 position-relative">
                           <Col lg={2} md={2} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Select Branch
@@ -615,14 +619,15 @@ const Bankuser = () => {
                             lg={5}
                             md={5}
                             sm={12}
-                            className='position-relative'>
+                            className="position-relative"
+                          >
                             <Select
                               options={branchOptions}
-                              placeholder='Select Branch'
+                              placeholder="Select Branch"
                               value={branchRole.value !== 0 ? branchRole : null}
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
-                              classNamePrefix='selectCateogyCorporateList'
+                              classNamePrefix="selectCateogyCorporateList"
                               menuPortalTarget={document.body}
                             />
                             <Button
@@ -643,7 +648,7 @@ const Bankuser = () => {
                           {/* <Row className="mt-3"></Row> */}
                         </Row>
 
-                        <Row className='mt-3'>
+                        <Row className="mt-3">
                           <Col lg={2} md={2} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Category
@@ -655,18 +660,18 @@ const Bankuser = () => {
                           <Col lg={5} md={5} sm={12}>
                             <TextField
                               name={"cateogry"}
-                              value={addBankUser.category}
+                              value={addBankUser.category.value}
                               maxLength={50}
                               disable
                               // onChange={addBankUserValidateHandler}
-                              labelClass='d-none'
+                              labelClass="d-none"
                             />
                           </Col>
                         </Row>
                       </>
                     )}
 
-                    <Row className='mt-3'>
+                    <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Email
@@ -678,7 +683,7 @@ const Bankuser = () => {
                           name={"email"}
                           value={addBankUser.email.value}
                           onChange={addBankUserValidateHandler}
-                          labelClass='d-none'
+                          labelClass="d-none"
                           // maxLength={50}
                         />
                         {errorShow &&
@@ -686,7 +691,7 @@ const Bankuser = () => {
                           addBankUser.email.value
                         ) ? (
                           <Row>
-                            <Col className='d-flex justify-content-start'>
+                            <Col className="d-flex justify-content-start">
                               <p className={styles["bankErrorMessage"]}>
                                 Email address with domain of bop is required
                               </p>
@@ -696,7 +701,7 @@ const Bankuser = () => {
                       </Col>
                     </Row>
 
-                    <Row className='mt-3'>
+                    <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Contact
@@ -708,21 +713,22 @@ const Bankuser = () => {
                           name={"Contact"}
                           value={addBankUser.Contact.value}
                           onChange={addBankUserValidateHandler}
-                          labelClass='d-none'
+                          labelClass="d-none"
                           maxLength={20}
                         />
                       </Col>
                     </Row>
 
-                    <Row className='mt-3 mb-5'>
+                    <Row className="mt-3 mb-5">
                       <Col
                         lg={9}
                         md={9}
                         sm={12}
-                        className='d-flex justify-content-center gap-2'>
+                        className="d-flex justify-content-center gap-2"
+                      >
                         <Button
-                          icon={<i className='icon-check icon-check-space'></i>}
-                          text='Activate'
+                          icon={<i className="icon-check icon-check-space"></i>}
+                          text="Activate"
                           onClick={handleActivateButton}
                           className={styles["Active-btn"]}
                           disableBtn={
@@ -736,8 +742,8 @@ const Bankuser = () => {
                           }
                         />
                         <Button
-                          icon={<i className='icon-close icon-check-space'></i>}
-                          text='Cancel'
+                          icon={<i className="icon-close icon-check-space"></i>}
+                          text="Cancel"
                           onClick={handleCancelButton}
                           className={styles["Cancel-btn-AddBankUser"]}
                         />

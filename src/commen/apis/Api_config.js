@@ -177,6 +177,10 @@ const RoleList = {
   RequestMethod: "ServiceManager.RoleList",
 };
 
+const GetBankUserRoles = {
+  RequestMethod: "ServiceManager.GetBankUserRoles",
+};
+
 const GetCounterPartyNames = {
   RequestMethod: "ServiceManager.GetCounterPartyNames",
 };
@@ -228,6 +232,7 @@ export {
   GetAllCorporateUsers,
   GetCorporateUserByUserID,
   RoleList,
+  GetBankUserRoles,
   GetCounterPartyNames,
   GetAllInstruments,
   GetAllInstrumentTypes,

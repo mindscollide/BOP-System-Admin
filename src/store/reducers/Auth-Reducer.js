@@ -29,6 +29,7 @@ const initialState = {
   GetAllCorporatesData: null,
   getAllNatureOfBuisness: null,
   RoleList: null,
+  GetBankUserRoles: null,
   GetAllInstrumentTypes: null,
 };
 
@@ -380,6 +381,30 @@ const authReducer = (state = initialState, action) => {
         RoleList: [],
         ResponseMessage: action.message,
       };
+
+    //GetBankUserRoles Reducer
+    case actions.GET_BANK_USER_ROLES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_BANK_USER_ROLES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetBankUserRoles: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_BANK_USER_ROLES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetBankUserRoles: [],
+        ResponseMessage: action.message,
+      };
+
     case actions.CLEARE_MESSAGE:
       return {
         ...state,
