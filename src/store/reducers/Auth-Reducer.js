@@ -31,6 +31,7 @@ const initialState = {
   RoleList: null,
   GetBankUserRoles: null,
   GetAllInstrumentTypes: null,
+  GetAllBranchesData: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -431,6 +432,29 @@ const authReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetAllInstrumentTypes: [],
+        ResponseMessage: action.message,
+      };
+
+    //Get All Branches
+    case actions.GET_ALL_BRANCHES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_BRANCHES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBranchesData: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_BRANCHES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBranchesData: null,
         ResponseMessage: action.message,
       };
 

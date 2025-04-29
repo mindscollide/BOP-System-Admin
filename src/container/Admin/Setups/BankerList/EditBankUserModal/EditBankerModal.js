@@ -14,11 +14,11 @@ import { editBankUserModalSystemAdmin } from "../../../../../store/actions/BOPSy
 import Select from "react-select";
 import { updateBankUserSchema } from "../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
+import { UpdateBankUserByUserIdAPI } from "../../../../../store/actions/BOPSystemAdminActions";
 import {
+  RoleListAPI,
   GetAllBranchesAPI,
-  UpdateBankUserByUserIdAPI,
-} from "../../../../../store/actions/BOPSystemAdminActions";
-import { RoleListAPI } from "../../../../../store/actions/Auth-Actions";
+} from "../../../../../store/actions/Auth-Actions";
 
 // import { UpdateCorporateUsersAPI } from "../../../../../store/actions/BOPSystemAdminActions";
 
@@ -46,13 +46,11 @@ const EditBankerModal = () => {
   console.log("UpdateBankUserbyUserID", UpdateBankUserbyUserID);
 
   //Role List
-  const RoleList = useSelector((state) => state.auth.RoleList);
+  const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
   console.log("RoleList is: ", RoleList);
 
   //getAllBranch
-  const getAllBranches = useSelector(
-    (state) => state.BOPSystemAdminReducer.GetAllBranchesData
-  );
+  const getAllBranches = useSelector((state) => state.auth.GetAllBranchesData);
   //Dummy User for handlin UI change bansed on the user Secuity admiin or system admin
   // let user = "System Admin";
   //Checking snakbar state
@@ -294,10 +292,10 @@ const EditBankerModal = () => {
       <Modal
         show={BOPSystemAdminModal.editBankUserModal}
         setShow={(value) => dispatch(editBankUserModalSystemAdmin(value))}
-        className='UniversalBOPModalStyles'
+        className="UniversalBOPModalStyles"
         modalHeaderClassName={"d-none"}
-        modalFooterClassName='UniversalBOPModalStylesfooter'
-        size='md'
+        modalFooterClassName="UniversalBOPModalStylesfooter"
+        size="md"
         onHide={() => dispatch(editBankUserModalSystemAdmin(false))}
         ModalBody={
           <>
@@ -306,14 +304,14 @@ const EditBankerModal = () => {
                 <span className={styles["AddBranchLabel"]}>Edit Bank</span>
               </Col>
             </Row>
-            <Row className='mt-3'>
-              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>
                   Name
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <TextField
-                  labelClass='d-none'
+                  labelClass="d-none"
                   name={"firstName"}
                   value={updateBankUser.firstName.value}
                   onChange={handleValueChangeAndValidation}
@@ -321,19 +319,19 @@ const EditBankerModal = () => {
                 />
               </Col>
             </Row>
-            <Row className='mt-3'>
-              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>Email</span>
                 <TextField
                   disable={true}
-                  labelClass='d-none'
-                  name='email'
+                  labelClass="d-none"
+                  name="email"
                   value={updateBankUser.email.value}
                 />
               </Col>
             </Row>
-            <Row className='mt-3'>
-              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>
                   Select Role
                   <span className={styles["aesterick-color"]}>*</span>
@@ -342,7 +340,7 @@ const EditBankerModal = () => {
                   classNamePrefix={"selectCateogyCorporateList"}
                   options={roleOptions}
                   value={roleID}
-                  isSearchable='true'
+                  isSearchable="true"
                   menuPortalTarget={document.body}
                   onChange={handleSelectRole}
                 />
@@ -350,23 +348,24 @@ const EditBankerModal = () => {
             </Row>
             {roleID?.value === 9 && (
               <>
-                <Row className='mt-3'>
+                <Row className="mt-3">
                   <Col
                     lg={12}
                     md={12}
                     sm={12}
-                    className='flex-column flex-wrap'>
+                    className="flex-column flex-wrap"
+                  >
                     <span className={styles["labels-add-bank"]}>
                       Select Branch
                       <span className={styles["aesterick-color"]}>*</span>
                     </span>
                     <Select
                       options={branchOptions}
-                      placeholder='Select Branch'
+                      placeholder="Select Branch"
                       value={branchRole.value !== 0 ? branchRole : null}
                       onChange={branchSelectRoleHandler}
                       isSearchable={true}
-                      classNamePrefix='selectCateogyCorporateList'
+                      classNamePrefix="selectCateogyCorporateList"
                       menuPortalTarget={document.body}
                     />
                   </Col>
@@ -375,19 +374,20 @@ const EditBankerModal = () => {
                     lg={5}
                     md={5}
                     sm={12}
-                    className='position-relative'></Col>
+                    className="position-relative"
+                  ></Col>
                 </Row>
               </>
             )}
 
-            <Row className='mt-3'>
-              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+            <Row className="mt-3">
+              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>
                   Contact
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <TextField
-                  labelClass='d-none'
+                  labelClass="d-none"
                   name={"ContactNumber"}
                   value={updateBankUser.ContactNumber.value}
                   onChange={handleValueChangeAndValidation}
@@ -395,7 +395,7 @@ const EditBankerModal = () => {
                 />
               </Col>
             </Row>
-            <Row className='mt-3'>
+            <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
                 <span className={styles["labels-add-bank"]}>Status</span>
                 <span className={styles["aesterick-color"]}>*</span>
@@ -433,14 +433,15 @@ const EditBankerModal = () => {
           </>
         }
         ModalFooter={
-          <Row className='mt-3 mb-3'>
+          <Row className="mt-3 mb-3">
             <Col
               lg={12}
               md={12}
               sm={12}
-              className='d-flex justify-content-center gap-2'>
+              className="d-flex justify-content-center gap-2"
+            >
               <Button
-                icon={<i className='icon-refresh'></i>}
+                icon={<i className="icon-refresh"></i>}
                 text={"Update"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
@@ -459,7 +460,7 @@ const EditBankerModal = () => {
               />
 
               <Button
-                icon={<i className='icon-close'></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Discard"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

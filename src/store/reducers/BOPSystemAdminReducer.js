@@ -110,7 +110,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.UPDATE_BRANCH_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         UpdateBranchData: action.response,
         ResponseMessage: action.response,
       };
@@ -118,33 +118,11 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.UPDATE_BRANCH_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         UpdateBranchData: null,
         ResponseMessage: action.response,
       };
-    //Get All Branches
-    case actions.GET_ALL_BRANCHES_INIT:
-      return {
-        ...state,
-        Loading: true,
-      };
 
-    case actions.GET_ALL_BRANCHES_SUCCESS:
-      // console.log(action);
-      return {
-        ...state,
-        Loading: false,
-        GetAllBranchesData: action.response,
-        ResponseMessage: action.message,
-      };
-
-    case actions.GET_ALL_BRANCHES_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        GetAllBranchesData: null,
-        ResponseMessage: action.message,
-      };
     //Create  Bank User Request
     case actions.CREATE_BANK_USER_REQUEST_INIT:
       return {
@@ -268,7 +246,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         CorporateUsersBulkListData: action.response,
         ResponseMessage: action.message,
       };
-   
+
     //Search Bank Users
     case actions.SEARCH_BANK_USERS_INIT:
       return {

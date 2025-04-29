@@ -174,7 +174,8 @@
 .EditButton {
   width: 40px;
   position: absolute !important;
-  right: 45.5% !important;
+  top: 0px;
+  right: 185px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -183,10 +184,9 @@
 }
 
 .EditButton:is(:hover, :focus, :focus-visible, :active) {
-  width: 45px;
   width: 40px;
   position: absolute !important;
-  right: 45.5% !important;
+  right: 141px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;

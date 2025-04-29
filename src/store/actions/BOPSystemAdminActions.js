@@ -29,7 +29,11 @@ import {
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
-import { getAllCorporatesCategory, RefreshToken } from "./Auth-Actions";
+import {
+  GetAllBranchesAPI,
+  getAllCorporatesCategory,
+  RefreshToken,
+} from "./Auth-Actions";
 import {
   editBankUserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
@@ -396,105 +400,6 @@ const UpdateBranchAPI = (navigate, data) => {
       })
       .catch((response) => {
         dispatch(UpdateBranchFail("something went wrong"));
-      });
-  };
-};
-
-//Get All Branches
-const GetAllBranchesInit = () => {
-  return {
-    type: actions.GET_ALL_BRANCHES_INIT,
-  };
-};
-
-const GetAllBranchesSuccess = (response, message) => {
-  // console.log(response);
-  return {
-    type: actions.GET_ALL_BRANCHES_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const GetAllBranchesFail = (message) => {
-  return {
-    type: actions.GET_ALL_BRANCHES_FAIL,
-    message: message,
-  };
-};
-
-const GetAllBranchesAPI = (navigate) => {
-  let token = localStorage.getItem("token");
-  return async (dispatch) => {
-    dispatch(GetAllBranchesInit());
-    let form = new FormData();
-    form.append("RequestMethod", GetAllBranches.RequestMethod);
-    // form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        _token: token,
-      },
-    })
-      .then(async (response) => {
-        console.log(
-          response,
-          response.data,
-          response.data.responseResult.responseMessage,
-          response.data.responseCode
-        );
-        if (response.data?.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(GetAllBranchesAPI(navigate));
-        } else if (response.data.responseCode === 200) {
-          console.log(
-            response,
-            response.data,
-            response.data.responseResult.responseMessage,
-            response.data.responseCode,
-            response.data.responseResult.isExecuted
-          );
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllBranches_01".toLowerCase()
-                )
-            ) {
-              console.log(response);
-
-              dispatch(
-                GetAllBranchesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllBranches_02".toLowerCase()
-            ) {
-              dispatch(GetAllBranchesFail("No Data Available"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllBranches_03".toLowerCase()
-                )
-            ) {
-              dispatch(GetAllBranchesFail("Exception"));
-            }
-          } else {
-            dispatch(GetAllBranchesFail("Something went wrong"));
-          }
-        } else {
-          dispatch(GetAllBranchesFail("Something went wrong"));
-        }
-      })
-      .catch((response) => {
-        dispatch(GetAllBranchesFail("something went wrong"));
       });
   };
 };
@@ -1485,8 +1390,6 @@ const SearchBankUsersAPI = (navigate, data) => {
   };
 };
 
-
-
 //Get Bank User by UserID
 const GetBankUserByUserIDInit = () => {
   return {
@@ -2413,7 +2316,6 @@ export {
   UpdateCorporateByCorporateIDAPI,
   AddBranchAPI,
   UpdateBranchAPI,
-  GetAllBranchesAPI,
   CreateBankUserRequestAPI,
   CreateBulkBankUserRequestAPI,
   CreateCorporateUserRequestAPI,

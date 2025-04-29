@@ -17,20 +17,18 @@ import {
   // AddBankUserConfirmationModalSystemAdmin,
   // editBankUserModalSystemAdmin,
   ConfirmationModalSystemAdmin,
+  editBankUserModalSystemAdmin,
 } from "../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
 import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
 import { addBankUserSchema } from "../../../utils/schemas";
-import {
-  CreateBankUserRequestAPI,
-  GetAllBranchesAPI,
-} from "../../../store/actions/BOPSystemAdminActions";
+import { CreateBankUserRequestAPI } from "../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { validateBopEmail } from "../../../utils/regexUtil";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import {
   GetAllCategoriesAPI,
-  RoleListAPI,
+  GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../store/actions/Auth-Actions";
 
@@ -40,9 +38,7 @@ import {
 const Bankuser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const getALlBranches = useSelector(
-    (state) => state.BOPSystemAdminReducer.GetAllBranchesData
-  );
+  const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
   //Search all corporate Users
   const SearchBankUsers = useSelector(
     (state) => state.BOPSystemAdminReducer.SearchBankUsersData
@@ -108,10 +104,10 @@ const Bankuser = () => {
     dispatch(AdduserModalSystemAdmin(true));
   };
 
-  // //handle Edit AddBankUser Modal
-  // const handleOpenEditBankUserModal = () => {
-  //   dispatch(editBankUserModalSystemAdmin(true));
-  // };
+  //handle Edit AddBankUser Modal
+  const handleOpenEditBankUserModal = () => {
+    dispatch(editBankUserModalSystemAdmin(true));
+  };
 
   //state for Add Bank User
   const [addBankUser, setAddBankUser] = useState({
@@ -137,9 +133,12 @@ const Bankuser = () => {
           };
         });
         setBranchOptions(newBranchesData);
-      } catch (error) {}
+      } catch (error) {
+        console.log("Error in mapping Branches", error);
+      }
     }
-  }, [getALlBranches]);
+    console.log("branchOptionsare", branchOptions);
+  }, [getALlBranches, branchOptions]);
 
   //Role list:
   useEffect(() => {
@@ -638,10 +637,15 @@ const Bankuser = () => {
                               onClick={handleOpenAddBankUserModal}
                             />
                           </Col>
-                          {/* <Col lg={1} md={1} sm={12}>
+                          {/* <Col
+                            lg={1}
+                            md={1}
+                            sm={12}
+                            className="position-relative"
+                          >
                             <Button
                               className={styles["EditButton"]}
-                              icon={<i className="icon-edit color-blue"></i>}
+                              icon={<i className={"icon-edit color-blue"}></i>}
                               onClick={handleOpenEditBankUserModal}
                             />
                           </Col> */}
