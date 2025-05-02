@@ -18,6 +18,7 @@ import { UpdateBankUserByUserIdAPI } from "../../../../../store/actions/BOPSyste
 import {
   RoleListAPI,
   GetAllBranchesAPI,
+  GetBankUserRolesAPI,
 } from "../../../../../store/actions/Auth-Actions";
 
 // import { UpdateCorporateUsersAPI } from "../../../../../store/actions/BOPSystemAdminActions";
@@ -89,7 +90,12 @@ const EditBankerModal = () => {
     ...updateBankUserSchema,
   });
 
-  console.log(updateBankUser, branchRole, "updateBankUserupdateBankUser");
+  console.log(
+    updateBankUser,
+    branchRole,
+    roleID,
+    "updateBankUserupdateBankUser"
+  );
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
     const { name, value } = e.target;
@@ -160,15 +166,15 @@ const EditBankerModal = () => {
     console.log(selectedBranch, "selectroleselectroleselectrole");
     setBranchRole(selectedBranch);
 
-    setUpdateBankUser((prevState) => ({
-      ...prevState,
-      // category: selectedBranch.categoryName,
-      branch: {
-        branchCode: "BOP002",
-        branchID: 2,
-        branchName: "Gulshan Branch",
-      },
-    }));
+    // setUpdateBankUser((prevState) => ({
+    //   ...prevState,
+    //   // category: selectedBranch.categoryName,
+    //   branch: {
+    //     branchCode: "BOP002",
+    //     branchID: 2,
+    //     branchName: "Gulshan Branch",
+    //   },
+    // }));
   };
   //handle Active Button
   // show error message When user hit activate btn
@@ -204,7 +210,7 @@ const EditBankerModal = () => {
   };
 
   useEffect(() => {
-    dispatch(RoleListAPI(navigate));
+    dispatch(GetBankUserRolesAPI(navigate));
     dispatch(GetAllBranchesAPI(navigate));
   }, []);
 
@@ -253,15 +259,19 @@ const EditBankerModal = () => {
           };
           setBranchRole(branch);
         }
-
-        // Set the role in the Select dropdown
-        const selectedRole = roleOptions.find(
-          (option) => option.value === bankUser.userRoleID
-        );
-        setRoleID(selectedRole);
+        if (roleOptions.length > 0) {
+          let fingRoleName = roleOptions.find(
+            (roleIDData, index) => roleIDData.value === bankUser.userRoleID
+          );
+          setRoleID(fingRoleName);
+          console.log(fingRoleName, "fingRoleNamefingRoleName");
+        }
       } catch (error) {
         console.log("error: ", error);
       }
+  }, [GetBankUserbyUserID, roleOptions]);
+
+  useEffect(() => {
     if (RoleList !== null) {
       try {
         let newRolesData = RoleList.roles.map((role) => {
@@ -274,6 +284,9 @@ const EditBankerModal = () => {
         setRoleOptions(newRolesData);
       } catch (error) {}
     }
+  }, [RoleList]);
+
+  useEffect(() => {
     if (getAllBranches !== null) {
       try {
         let newBranchesData = getAllBranches.branches.map((branch) => {
@@ -286,7 +299,8 @@ const EditBankerModal = () => {
         setBranchOptions(newBranchesData);
       } catch (error) {}
     }
-  }, [GetBankUserbyUserID, RoleList]);
+  }, [getAllBranches]);
+
   return (
     <>
       <Modal

@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import "./SettingModal.css";
 import { Row, Col } from "react-bootstrap";
 
-import {
-  TextField,
-  Button,
-  Table,
-  Modal,
-} from "../../../components/elements";
+import { TextField, Button, Table, Modal } from "../../../components/elements";
 import { Checkbox, Switch } from "antd";
 import { settingSchema } from "../../../utils/schemas";
 import Password from "antd/es/input/Password";

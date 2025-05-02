@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./EditCompanyModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -8,27 +8,114 @@ import { Button, Modal, TextField } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import { UpdateCorporateByCorporateIDAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
-const EditCompanyModal = () => {
+import { RFQTimerOptions } from "../../../../helpers/Dropdown";
+import { GetAllNatureAPI } from "../../../../store/actions/Auth-Actions";
+const EditCompanyModal = ({ editCompanyData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const [updateCompany, setUpdateCompany] = useState({ ...editCompanyData });
 
   //handle Cancel Button
   const handleCancelButton = () => {
     dispatch(editCompanyModalSystemAdmin(false));
   };
 
+  const [natureOptions, setNatureOptions] = useState([]);
+  const getAllNatureOfBuisness = useSelector(
+    (state) => state.auth.getAllNatureOfBuisness
+  );
+
+  //RFQTreasuryRoles
+  const [treasuryOptionsID, setTreasuryOptionsID] = useState(
+    updateCompany.rfqTimers
+      ? {
+          value: updateCompany.rfqTimers[0].treasuryRFQExpiryInMin,
+          label: `${updateCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+        }
+      : null
+  );
+
+  //RFQTreasuryRoles
+  const [corporateOptionsID, setCorporateOptionsID] = useState(
+    updateCompany.rfqTimers
+      ? {
+          value: updateCompany.rfqTimers[0].corporateRFQExpiryInMin,
+          label: `${updateCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+        }
+      : null
+  );
+
+  //companyRoles
+  const [natureOptionsID, setNatureOptionsID] = useState(
+    updateCompany.natureofBusiness
+      ? {
+          value: updateCompany.natureofBusiness.pK_NatureOfBusiness,
+          label: updateCompany.natureofBusiness.name,
+        }
+      : null
+  );
+
   const handleUpdateEditCompany = () => {
-    let data = {
-      RFQTreasuryExpiryTimer: 30,
-      RFQCorporateExpiryTimer: 40,
-      CorporateName: "Stonk Technologies",
-      NatureOfBusinessId: 2,
-      CorporateId: 33,
-    };
-    //  dispatch(UpdateCorporateUsersAPI(navigate, data));
-    dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
+    try {
+      let data = {
+        CorporateId: updateCompany.corporateID, //done
+        CorporateName: updateCompany.corporateName, //done
+        RFQTreasuryExpiryTimer: treasuryOptionsID.value,
+        RFQCorporateExpiryTimer: corporateOptionsID.value,
+        NatureOfBusinessId: natureOptionsID.value,
+      };
+
+      console.log("UpdateCorporateByCorporateID", data);
+      dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
+
+  useEffect(() => {
+    dispatch(GetAllNatureAPI(navigate));
+  }, []);
+
+  useEffect(() => {
+    if (getAllNatureOfBuisness !== null) {
+      try {
+        let newNatureOfBusiness = getAllNatureOfBuisness.natureofBusinesses.map(
+          (natureOfBusiness) => {
+            return {
+              ...natureOfBusiness,
+              value: natureOfBusiness.pK_NatureOfBusiness,
+              label: natureOfBusiness.name,
+            };
+          }
+        );
+        setNatureOptions(newNatureOfBusiness);
+      } catch (err) {
+        console.log("Error: ", err);
+      }
+    }
+  }, [getAllNatureOfBuisness]);
+
+  const updateCompanyValidateHandler = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
+    if (name === "companyName" && value !== "") {
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
+      if (valueCheck !== "") {
+        setUpdateCompany({
+          ...updateCompany,
+          corporateName: valueCheck,
+        });
+      }
+    } else if (name === "companyName" && value === "") {
+      setUpdateCompany({
+        ...updateCompany,
+        corporateName: "",
+      });
+    }
+  };
+
   return (
     <Modal
       show={BOPSystemAdminModal.editCompanyModal}
@@ -61,7 +148,13 @@ const EditCompanyModal = () => {
               </span>
             </Col>
             <Col lg={8} md={8} sm={12}>
-              <TextField labelClass="d-none" name={"firstName"} />
+              <TextField
+                labelClass="d-none"
+                name={"companyName"}
+                value={updateCompany.corporateName}
+                maxLength={50}
+                onChange={updateCompanyValidateHandler}
+              />
             </Col>
           </Row>
 
@@ -84,6 +177,10 @@ const EditCompanyModal = () => {
                   <Select
                     classNamePrefix="selectCateogyCorporateList"
                     placeholder={"3 Minutes"}
+                    options={RFQTimerOptions}
+                    value={treasuryOptionsID}
+                    menuPortalTarget={document.body}
+                    onChange={setTreasuryOptionsID}
                   />
                 </Col>
 
@@ -95,6 +192,10 @@ const EditCompanyModal = () => {
                   <Select
                     classNamePrefix="selectCateogyCorporateList"
                     placeholder={"3 Minutes"}
+                    options={RFQTimerOptions}
+                    value={corporateOptionsID}
+                    menuPortalTarget={document.body}
+                    onChange={setCorporateOptionsID}
                   />
                 </Col>
               </Row>
@@ -111,6 +212,10 @@ const EditCompanyModal = () => {
               <Select
                 classNamePrefix="selectCateogyCorporateList"
                 placeholder={"IMPORTANT PAYMENT"}
+                options={natureOptions}
+                value={natureOptionsID}
+                menuPortalTarget={document.body}
+                onChange={setNatureOptionsID}
               />
             </Col>
           </Row>
@@ -130,6 +235,7 @@ const EditCompanyModal = () => {
                 icon={<i className="icon-refresh"></i>}
                 className={styles["AddButton"]}
                 onClick={handleUpdateEditCompany}
+                disableBtn={updateCompany.corporateName !== "" ? false : true}
               />
               <Button
                 text={"Cancel"}

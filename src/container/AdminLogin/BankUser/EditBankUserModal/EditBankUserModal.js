@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./EditBankUserModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -13,16 +13,16 @@ import {
 import { Col, Row } from "react-bootstrap";
 import { UpdateBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
-import { updateBranchSchema } from "../../../../utils/schemas";
-const EditBankUserModal = () => {
+const EditBankUserModal = ({ editBranchData }) => {
+  console.log("data in modal ", editBranchData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
-  const [updateBranch, setUpdateBranch] = useState({ ...updateBranchSchema });
+  const [updateBranch, setUpdateBranch] = useState({ ...editBranchData });
+  console.log("updateBranch", updateBranch);
 
   //State to activate the edit button
-  const [isActive, setIsActive] = useState(false);
   //States
   const [open, setOpen] = useState(false);
 
@@ -41,21 +41,13 @@ const EditBankUserModal = () => {
       if (valueCheck !== "") {
         setUpdateBranch({
           ...updateBranch,
-          branchCode: {
-            value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
-          },
+          branchCode: valueCheck,
         });
       }
     } else if (name === "branchCode" && value === "") {
       setUpdateBranch({
         ...updateBranch,
-        branchCode: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
+        branchCode: "",
       });
     }
     if (name === "branchName" && value !== "") {
@@ -63,21 +55,13 @@ const EditBankUserModal = () => {
       if (valueCheck !== "") {
         setUpdateBranch({
           ...updateBranch,
-          branchName: {
-            value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
-          },
+          branchName: valueCheck,
         });
       }
     } else if (name === "branchName" && value === "") {
       setUpdateBranch({
         ...updateBranch,
-        branchName: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
+        branchName: "",
       });
     }
 
@@ -86,46 +70,33 @@ const EditBankUserModal = () => {
       if (valueCheck !== "") {
         setUpdateBranch({
           ...updateBranch,
-          branchContact: {
-            value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
-          },
+          branchContact: valueCheck,
         });
       }
     } else if (name === "branchContact" && value === "") {
       setUpdateBranch({
         ...updateBranch,
-        branchContact: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
+        branchContact: "",
       });
     }
   };
   // Handle Update Branch
   const handleUpdateBranch = () => {
-    let data = {
-      BranchID: 1,
-      BranchName: updateBranch.branchName.value,
-      BranchCode: updateBranch.branchCode.value,
-      BranchContact: updateBranch.branchContact.value,
-    };
-    console.log("data", data);
-    dispatch(UpdateBranchAPI(navigate, data));
-  };
-  useEffect(() => {
-    if (
-      updateBranch.branchName.value === "" ||
-      updateBranch.branchCode.value === "" ||
-      updateBranch.branchContact.value === ""
-    ) {
-      setIsActive(false);
-    } else {
-      setIsActive(true);
+    console.log("updateBranchupdateBranch", updateBranch);
+    try {
+      let data = {
+        BranchID: updateBranch.branchID,
+        BranchName: updateBranch.branchName,
+        BranchCode: updateBranch.branchCode,
+        BranchContact: updateBranch.branchContact,
+      };
+      console.log("data", data);
+      dispatch(UpdateBranchAPI(navigate, data));
+    } catch (err) {
+      console.log("error: ", err);
     }
-  }, [updateBranch]);
+  };
+
   return (
     <>
       <Modal
@@ -153,7 +124,7 @@ const EditBankUserModal = () => {
               <Col lg={8} md={8} sm={12}>
                 <TextField
                   name={"branchName"}
-                  value={updateBranch.branchName.value}
+                  value={updateBranch.branchName}
                   maxLength={50}
                   onChange={updateBranchUserValidateHandler}
                   labelClass="d-none"
@@ -170,7 +141,8 @@ const EditBankUserModal = () => {
               <Col lg={8} md={8} sm={12}>
                 <TextField
                   name={"branchCode"}
-                  value={updateBranch.branchCode.value}
+                  maxLength={25}
+                  value={updateBranch.branchCode}
                   onChange={updateBranchUserValidateHandler}
                   labelClass="d-none"
                 />
@@ -186,7 +158,7 @@ const EditBankUserModal = () => {
               <Col lg={8} md={8} sm={12}>
                 <TextField
                   name={"branchContact"}
-                  value={updateBranch.branchContact.value}
+                  value={updateBranch.branchContact}
                   maxLength={20}
                   onChange={updateBranchUserValidateHandler}
                   labelClass="d-none"
@@ -204,16 +176,22 @@ const EditBankUserModal = () => {
               className="d-flex justify-content-center gap-2"
             >
               <Button
-                icon={<i class="icon-refresh"></i>}
+                icon={<i className="icon-refresh"></i>}
                 text={"Update"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleUpdateBranch}
-                disableBtn={isActive ? false : true}
+                disableBtn={
+                  updateBranch.branchName !== "" &&
+                  updateBranch.branchCode !== "" &&
+                  updateBranch.branchContact !== ""
+                    ? false
+                    : true
+                }
               />
 
               <Button
-                icon={<i class="icon-close"></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Cancel"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

@@ -277,6 +277,18 @@ export const addCorporateUserSchema = {
     errorStatus: false,
   },
 
+  isFEActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  isNonFEActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
   corporateID: {
     value: "",
     errorMessage: "",

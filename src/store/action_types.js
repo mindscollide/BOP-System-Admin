@@ -188,6 +188,8 @@ export const CONFIRMATION_MODAL = "CONFIRMATION_MODAL";
 
 export const TRADE_COUNT_COMMENT_MODAL = "TRADE_COUNT_COMMENT_MODAL";
 
+export const BULK_UPLOAD_BANK_MODAL = "BULK_UPLOAD_BANK_MODAL";
+
 // *******************************     END      ********************************************
 
 //Send Email For Reset Password

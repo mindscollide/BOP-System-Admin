@@ -41,7 +41,20 @@
   display: flex !important;
   align-items: center !important;
 }
-
+.AddBranch_modal-crossIcon {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex;
+  justify-content: flex-end;
+}
+.AddBranch_modal-crossIcon:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
 .CancelButton {
   display: flex !important;
   gap: 10px !important;

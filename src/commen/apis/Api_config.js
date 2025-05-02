@@ -94,7 +94,7 @@ const CreateBulkCorporateUserRequest = {
 };
 
 //Bank Users BankUserList
-const BankUsersBankList = {
+const BankUsersBulkList = {
   RequestMethod: "ServiceManager.BankUsersBulkList",
 };
 //Corporate Users Bulk List
@@ -213,7 +213,7 @@ export {
   CreateBulkBankUserRequest,
   CreateCorporateUserRequest,
   CreateBulkCorporateUserRequest,
-  BankUsersBankList,
+  BankUsersBulkList,
   CorporateUsersBulkList,
   SearchCorporateUsers,
   SearchBankUsers,

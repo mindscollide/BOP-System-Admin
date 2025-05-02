@@ -15,6 +15,7 @@ const initialState = {
   addBankUserConfirmationModal: false,
   confirmationModal: false,
   tradeCountCommentModal: false,
+  BankBulkUploadModal: false,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -101,6 +102,13 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         tradeCountCommentModal: action.response,
+      };
+    }
+
+    case action.BULK_UPLOAD_BANK_MODAL: {
+      return {
+        ...state,
+        BankBulkUploadModal: action.response,
       };
     }
 

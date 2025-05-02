@@ -31,7 +31,7 @@ const uploadReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
         uploadValidCorporates: null,
       };
 

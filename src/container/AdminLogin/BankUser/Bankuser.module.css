@@ -138,7 +138,7 @@
   width: 40px;
   position: absolute !important;
   top: 0px;
-  right: 10px !important;
+  right: 12px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -152,7 +152,7 @@
 .PlusButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
-  right: 10px !important;
+  right: 12px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -175,7 +175,7 @@
   width: 40px;
   position: absolute !important;
   top: 0px;
-  right: 185px !important;
+  right: 52px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -186,7 +186,7 @@
 .EditButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
-  right: 141px !important;
+  right: 52px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;

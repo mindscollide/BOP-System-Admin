@@ -151,7 +151,7 @@
   width: 40px;
   position: absolute !important;
   top: 0;
-  right: 10px !important;
+  right: 12px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -166,7 +166,7 @@
   width: 40px;
   position: absolute !important;
   top: 0;
-  right: 10px !important;
+  right: 12px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -188,7 +188,8 @@
 .EditButton {
   width: 40px;
   position: absolute !important;
-  right: 37.3% !important;
+  top: 0px;
+  right: 52px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -197,10 +198,9 @@
 }
 
 .EditButton:is(:hover, :focus, :focus-visible, :active) {
-  width: 45px;
   width: 40px;
   position: absolute !important;
-  right: 37.3% !important;
+  right: 52px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;

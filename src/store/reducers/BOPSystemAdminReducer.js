@@ -112,7 +112,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         UpdateBranchData: action.response,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
 
     case actions.UPDATE_BRANCH_FAIL:
@@ -120,7 +120,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         UpdateBranchData: null,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
 
     //Create  Bank User Request

@@ -28,7 +28,7 @@ import pdfIcon from "../../../../assets/images/pdf.png";
 import excelIcon from "../../../../assets/images/excel.png";
 import {
   GetAllBranchesAPI,
-  RoleListAPI,
+  GetBankUserRolesAPI,
 } from "../../../../store/actions/Auth-Actions";
 import { formatDateAndTimeFromString } from "../../../../helpers/reusableMethods";
 import moment from "moment";
@@ -103,27 +103,27 @@ const BankerList = () => {
   }, [RoleList]);
 
   //Metod to perform action of Export options
-  const ExportOptions = ({ onClose }) => {
-    return (
-      <div className={styles["export-options"]}>
-        <button
-          onClick={() => {
-            /* Handle CSV export */
-          }}
-        >
-          Export as CSV
-        </button>
-        <button
-          onClick={() => {
-            /* Handle PDF export */
-          }}
-        >
-          Export as PDF
-        </button>
-        <button onClick={onClose}>Close</button>
-      </div>
-    );
-  };
+  // const ExportOptions = ({ onClose }) => {
+  //   return (
+  //     <div className={styles["export-options"]}>
+  //       <button
+  //         onClick={() => {
+  //           /* Handle CSV export */
+  //         }}
+  //       >
+  //         Export as CSV
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           /* Handle PDF export */
+  //         }}
+  //       >
+  //         Export as PDF
+  //       </button>
+  //       <button onClick={onClose}>Close</button>
+  //     </div>
+  //   );
+  // };
 
   //Banker List validate handler
   const BankerListValidateHandler = (e) => {
@@ -200,28 +200,25 @@ const BankerList = () => {
   //handle Search Button event
   const handleSearchEventButton = () => {
     let data = {
-      FirstName: bankList.Name.value,
-      LastName: "",
-      RoleID: roleID.roleID ? roleID.roleID : "",
-      StatusID: 0,
+      EmployeeID: "",
+      Name: bankList.Name.value,
       Email: bankList.Email.value,
-      LDAPAccount: "",
-      // EmployeeID: bankList.EmployeeID.value,
+      RoleID: roleID.roleID ? roleID.roleID : 0,
       PageNumber: 1,
-      Length: 10,
+      Length: 50,
     };
+
     console.log("Data to Search", data);
     dispatch(SearchBankUsersAPI(navigate, data));
   };
 
   useEffect(() => {
-    dispatch(RoleListAPI(navigate));
+    dispatch(GetBankUserRolesAPI(navigate));
     let data = {
       EmployeeID: "",
-      FirstName: "",
+      Name: "",
       Email: "",
-      Role: "",
-      StatusID: 0,
+      RoleID: 0,
       PageNumber: 1,
       Length: 50,
     };
@@ -249,12 +246,11 @@ const BankerList = () => {
 
     let data = {
       EmployeeID: "",
-      FirstName: "",
+      Name: "",
       Email: "",
-      Role: "",
-      StatusID: 0,
+      RoleID: 0,
       PageNumber: 1,
-      Length: 10,
+      Length: 50,
     };
 
     // Call API to fetch all records after reset

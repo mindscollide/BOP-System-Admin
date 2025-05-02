@@ -22,7 +22,10 @@ import {
 import { useDispatch } from "react-redux";
 import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
 import { addBankUserSchema } from "../../../utils/schemas";
-import { CreateBankUserRequestAPI } from "../../../store/actions/BOPSystemAdminActions";
+import {
+  BankUsersBulkListAPI,
+  CreateBankUserRequestAPI,
+} from "../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { validateBopEmail } from "../../../utils/regexUtil";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
@@ -31,6 +34,7 @@ import {
   GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../store/actions/Auth-Actions";
+import BankBulkUploadModal from "./BankBulkUploadModal/BankBulkUploadModal";
 
 // import {  } from "../../../../store/actions/Auth-Actions";
 // import ResponseMessage from "../../../utils/ResponseMessage";
@@ -57,8 +61,10 @@ const Bankuser = () => {
   // const AddBankUserConfirmationModal = useSelector(
   //   (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
   // );
+
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
+  console.log("branchOptionsbranchOptions", branchOptions);
 
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
@@ -67,6 +73,8 @@ const Bankuser = () => {
   const AddBankUserModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addBankUserModal
   );
+
+  //
 
   //Edit Bank  Use Modal Calling
   const EditBankUserModalGobalState = useSelector(
@@ -83,18 +91,19 @@ const Bankuser = () => {
   console.log(rolesOptions, "rolesroles");
 
   //State for Roles
-  const [branchRole, setBranchRole] = useState({
-    value: 0,
-    label: "",
-  });
+  const [branchRole, setBranchRole] = useState(null);
   const [role, setRole] = useState({
     label: "",
     value: 0,
   });
 
+  const [editBranchData, setEditBranchData] = useState();
+
   console.log({ branchRole, role }, "branchRolebranchRole");
   //state for save button
   const [saveClicked, setSaveClicked] = useState(false);
+
+  const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
 
   //state for cancel button
   const [cancelClicked, setCancelClicked] = useState(false);
@@ -105,8 +114,10 @@ const Bankuser = () => {
   };
 
   //handle Edit AddBankUser Modal
-  const handleOpenEditBankUserModal = () => {
+  const handleOpenEditBankUserModal = (branchData) => {
     dispatch(editBankUserModalSystemAdmin(true));
+    console.log("branchData", branchData);
+    setEditBranchData(branchData);
   };
 
   //state for Add Bank User
@@ -123,38 +134,71 @@ const Bankuser = () => {
   }, []);
 
   useEffect(() => {
+    // Check if branch data is available before proceeding
     if (getALlBranches !== null) {
       try {
+        // Transform raw branch data into a format suitable for dropdown options (with `value` and `label`)
         let newBranchesData = getALlBranches.branches.map((branch) => {
           return {
-            ...branch,
-            value: branch.branchID,
-            label: branch.branchName,
+            ...branch, // Spread original branch data to retain all properties
+            value: branch.branchID, // Assign `branchID` to `value` for dropdown use
+            label: branch.branchName, // Assign `branchName` to `label` for dropdown display
           };
         });
+
+        // Update local state with formatted branch options
         setBranchOptions(newBranchesData);
+
+        // If the user role is "Admin" (value === 9) and a branch role is already set (not 0)
+        if (role.value === 9 && branchRole.value !== 0) {
+          console.log(
+            { role, branchRole, newBranchesData },
+            "findSelectDatafindSelectData"
+          );
+
+          // Proceed only if we have at least one branch option
+          if (newBranchesData.length > 0) {
+            // Attempt to find the branch option that matches the current `branchRole.value`
+            let findSelectData = newBranchesData.find(
+              (data) => data.value === branchRole.value
+            );
+
+            console.log(findSelectData, "findSelectDatafindSelectData");
+
+            // If a matching branch is found, update `branchRole` with the full branch object
+            if (findSelectData !== undefined) {
+              setBranchRole(findSelectData);
+            }
+          }
+        }
       } catch (error) {
+        // Log any error that occurs while processing branches
         console.log("Error in mapping Branches", error);
       }
     }
-    console.log("branchOptionsare", branchOptions);
-  }, [getALlBranches, branchOptions]);
 
-  //Role list:
-  useEffect(() => {
+    console.log("branchOptionsare", branchOptions);
+
+    // Check if role list data is available before proceeding
     if (RoleList !== null) {
       try {
+        // Transform raw roles into format suitable for dropdown options
         let newRolesData = RoleList.roles.map((role) => {
           return {
-            ...role,
-            value: role.roleID,
-            label: role.roleName,
+            ...role, // Spread original role data
+            value: role.roleID, // Assign `roleID` to `value` for dropdown use
+            label: role.roleName, // Assign `roleName` to `label` for display
           };
         });
+
+        // Update local state with formatted role options
         setRolesOptions(newRolesData);
-      } catch (error) {}
+      } catch (error) {
+        // Handle any errors in role mapping
+        console.error("Error in mapping Roles", error);
+      }
     }
-  }, [RoleList]);
+  }, [getALlBranches, RoleList]); // Dependency array: re-run effect when branches or roles change
 
   //add bank user security admin validate handler
   const addBankUserValidateHandler = (e) => {
@@ -313,10 +357,7 @@ const Bankuser = () => {
     if (selectedRole.value === 9 && branchOptions.length > 0) {
       const firstBranchOption = branchOptions[0];
       console.log(firstBranchOption, "firstBranchOptionfirstBranchOption");
-      setBranchRole({
-        label: firstBranchOption.label,
-        value: firstBranchOption.value,
-      });
+      setBranchRole(firstBranchOption);
       setAddBankUser({
         ...addBankUser,
         category: {
@@ -324,10 +365,7 @@ const Bankuser = () => {
         },
       });
     } else {
-      setBranchRole({
-        label: "",
-        value: 0,
-      });
+      setBranchRole(null);
       setAddBankUser({
         ...addBankUser,
         category: {
@@ -339,7 +377,7 @@ const Bankuser = () => {
 
   const branchSelectRoleHandler = async (selectedBranch) => {
     console.log(selectedBranch, "selectroleselectroleselectrole");
-    setBranchRole({ value: selectedBranch.value, label: selectedBranch.label });
+    setBranchRole(selectedBranch);
     setAddBankUser({
       ...addBankUser,
       category: {
@@ -359,10 +397,7 @@ const Bankuser = () => {
   };
 
   const handleCancelYes = () => {
-    setBranchRole({
-      value: 0,
-      label: "",
-    });
+    setBranchRole(null);
     setRole({
       value: 0,
       label: "",
@@ -472,18 +507,31 @@ const Bankuser = () => {
   }, [addBankUser]);
 
   // Handle File upload
-  const HandleFileUpload = (data) => {
-    const UploadFile = data.target.value;
-    const uploadedFile = data.target.files[0];
-    console.log("UploadFileUploadFile", UploadFile);
-    console.log("uploadedFileuploadedFile", uploadedFile);
-    var ext = uploadedFile.name.split(".").pop();
-    if (ext === "xls" || ext === "xlsx") {
-      // dispatch(BankUsersBankListAPI(navigate, data));
-      // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
-    } else {
-      alert("Invalid type");
+  const HandleFileUpload = (event) => {
+    // setBulkUploadClicked(true);
+    console.log(event, "datadata");
+    const { files } = event.target;
+    console.log(files, "filesfiles");
+    if (files !== undefined && files.length > 0) {
+      let ext = files[0].name.split(".").pop();
+      console.log("uploadedFileuploadedFile", ext);
+      if (ext === "xls" || ext === "xlsx") {
+        let fileData = files[0];
+        dispatch(
+          BankUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
+        );
+        // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
+      } else {
+        alert("Invalid type");
+      }
+
+      event.target.value = null;
     }
+    // // const UploadFile = data.target;
+    // const uploadedFile = data.target.files[0];
+    // // console.log("UploadFileUploadFile", UploadFile);
+    // console.log("uploadedFileuploadedFile", uploadedFile);
+    // var ext = uploadedFile.name.split(".").pop();
   };
 
   return (
@@ -548,7 +596,8 @@ const Bankuser = () => {
                       </Col>
 
                       <Col lg={4} md={4} sm={4}>
-                        <CustomUpload />
+                        <CustomUpload change={HandleFileUpload} />
+                        {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
                       </Col>
                     </Row>
 
@@ -636,20 +685,14 @@ const Bankuser = () => {
                               }
                               onClick={handleOpenAddBankUserModal}
                             />
-                          </Col>
-                          {/* <Col
-                            lg={1}
-                            md={1}
-                            sm={12}
-                            className="position-relative"
-                          >
                             <Button
                               className={styles["EditButton"]}
                               icon={<i className={"icon-edit color-blue"}></i>}
-                              onClick={handleOpenEditBankUserModal}
+                              onClick={() =>
+                                handleOpenEditBankUserModal(branchRole)
+                              }
                             />
-                          </Col> */}
-                          {/* <Row className="mt-3"></Row> */}
+                          </Col>
                         </Row>
 
                         <Row className="mt-3">
@@ -761,8 +804,16 @@ const Bankuser = () => {
         </Col>
       </Row>
 
+      {BulkUploadClicked && (
+        <BankBulkUploadModal
+          setBulkUploadClicked={setBulkUploadClicked}
+          BulkUploadClicked={BulkUploadClicked}
+        />
+      )}
       {AddBankUserModalGobalState && <AddBankUserModal />}
-      {EditBankUserModalGobalState && <EditBankUserModal />}
+      {EditBankUserModalGobalState && (
+        <EditBankUserModal editBranchData={editBranchData} />
+      )}
       {
         // AddBankUserConfirmationModal && (
         saveClicked === true && (

@@ -138,7 +138,6 @@ const AddBankUserModal = () => {
       BranchContact: addBranch.branchContact.value,
       CategoryID: 59,
     };
-    console.log("datadatadatadata", data);
     dispatch(AddBranchAPI(navigate, data));
     dispatch(AdduserModalSystemAdmin(false));
   };
@@ -189,8 +188,19 @@ const AddBankUserModal = () => {
         ModalBody={
           <>
             <Row>
-              <Col lg={12} md={12} sm={12}>
+              <Col lg={6} md={6} sm={6}>
                 <span className={styles["AddBranchLabel"]}>Add Branch</span>
+              </Col>
+              <Col
+                sm={6}
+                md={6}
+                lg={6}
+                className={styles["AddBranch_modal-crossIcon"]}
+              >
+                <i
+                  className="icon-close cursor-pointer"
+                  onClick={() => dispatch(AdduserModalSystemAdmin(false))}
+                />
               </Col>
             </Row>
             <Row className="mt-3">
@@ -239,7 +249,7 @@ const AddBankUserModal = () => {
                   name="categoryID"
                   options={categoryOptions}
                   placeholder="Select Category"
-                  classNamePrefix={"selectCateogyCorporateList"}
+                  // classNamePrefix={"selectCateogyCorporateList"}
                   value={categoryID.value !== 0 ? categoryID : null}
                   onChange={handleSelectCategory}
                   menuPortalTarget={document.body}

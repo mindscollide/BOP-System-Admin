@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Corporateuser.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -24,9 +24,13 @@ import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
 import { addCorporateUserSchema } from "../../../utils/schemas";
 import { validateEmail } from "../../../utils/regexUtil";
 import { useNavigate } from "react-router-dom";
-import { CreateCorporateUserRequestAPI } from "../../../store/actions/BOPSystemAdminActions";
+import {
+  CorporateUsersBulkListAPI,
+  CreateCorporateUserRequestAPI,
+} from "../../../store/actions/BOPSystemAdminActions";
 import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { getAllCorporatesCategory } from "../../../store/actions/Auth-Actions";
+import CorporateBulkUploadModal from "./CorporateBulkUploadModal/CorporateBulkUploadModal";
 const CorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,11 +64,8 @@ const CorporateUser = () => {
   });
 
   //companyRoles
-  const [companyRoleID, setCompanyRole] = useState({
-    value: 0,
-    label: "",
-  });
-
+  const [companyRoleID, setCompanyRole] = useState(null);
+  const [editCompanyData, setEditCompanyData] = useState();
   //Global State
   const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
@@ -77,6 +78,10 @@ const CorporateUser = () => {
   //Checking snakbar state
   const [open, setOpen] = useState(false);
 
+  //state for cancel button
+  const [cancelClicked, setCancelClicked] = useState(false);
+
+  const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
   //add bank user security admin validate handler
   // const addCorporateUserValidateHandler = (e) => {
   //   let name = e.target.name;
@@ -273,12 +278,14 @@ const CorporateUser = () => {
     dispatch(corporatePlusIconModalSystemAdmin(true));
   };
 
-  // //Edit Button
-  // const handleEditButton = () => {
-  //   dispatch(editCompanyModalSystemAdmin(true));
-  // };
+  //Edit Button
+  const handleEditButton = (companyRoleID) => {
+    console.log("companyRoleIDcompanyRoleID", companyRoleID);
+    dispatch(editCompanyModalSystemAdmin(true));
+    setEditCompanyData(companyRoleID);
+  };
 
-  const changeTick = () => {
+  const changeActiveTick = () => {
     let opposeTick = !corporateUser.isChatActive.value;
     setCorporateUser((prevState) => ({
       ...prevState,
@@ -288,8 +295,32 @@ const CorporateUser = () => {
     }));
   };
 
+  const changeFETick = () => {
+    let opposeTick = !corporateUser.isFEActive.value;
+    setCorporateUser((prevState) => ({
+      ...prevState,
+      isFEActive: {
+        value: opposeTick,
+      },
+    }));
+  };
+
+  const changeNonFETick = () => {
+    let opposeTick = !corporateUser.isNonFEActive.value;
+    setCorporateUser((prevState) => ({
+      ...prevState,
+      isNonFEActive: {
+        value: opposeTick,
+      },
+    }));
+  };
+
   const handleCancelButton = () => {
-    setCompanyNameOptions("");
+    setCancelClicked(true);
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
+  const handleCancelButtonYes = () => {
+    setCompanyRole(null);
     setCorporateUser({
       ...corporateUser,
       firstName: {
@@ -298,13 +329,14 @@ const CorporateUser = () => {
       email: {
         value: "",
       },
-      companyName: {
-        value: "",
-      },
-      category: {
-        value: "",
-      },
+      // companyName: {
+      //   value: "",
+      // },
+      // category: {
+      //   value: "",
+      // },
     });
+    setCancelClicked(false);
   };
 
   const CompanySelectHandler = async (selectedCompany) => {
@@ -330,38 +362,66 @@ const CorporateUser = () => {
   }, []);
 
   useEffect(() => {
-    if (GetAllCorporates !== null) {
-      try {
-        let newCorporateData = GetAllCorporates.corporates.map((corporate) => {
-          return {
-            ...corporate,
-            value: corporate.corporateID,
-            label: corporate.corporateName,
-          };
-        });
-        setCompanyNameOptions(newCorporateData);
-        console.log("newCorporateData", newCorporateData[0]);
-        if (newCorporateData.length > 0) {
-          console.log("im here");
-          setCompanyRole(newCorporateData[0]);
-          console.log("companyRoleID", companyRoleID);
-          setCorporateUser((prevState) => ({
-            ...prevState,
-            companyID: newCorporateData[0].value,
-            categoryName: newCorporateData[0].category.categoryName,
-            natureOfClient: newCorporateData[0].natureofBusiness.name,
-            rfqTreasury: `${newCorporateData[0].rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
-            rfqCorporate: `${newCorporateData[0].rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
-            // isChatActive: newCorporateData[0].isChatActive.value,
-            //needs to be cleared
-          }));
+    if (companyRoleID === null) {
+      if (GetAllCorporates !== null) {
+        try {
+          let newCorporateData = GetAllCorporates.corporates.map(
+            (corporate) => {
+              return {
+                ...corporate,
+                value: corporate.corporateID,
+                label: corporate.corporateName,
+              };
+            }
+          );
+
+          // Update local state with with formatted Company options
+          setCompanyNameOptions(newCorporateData);
+
+          if (newCorporateData.length > 0) {
+            setCompanyRole(newCorporateData[0]);
+            setCorporateUser((prevState) => ({
+              ...prevState,
+              companyID: newCorporateData[0].value,
+              categoryName: newCorporateData[0].category.categoryName,
+              natureOfClient: newCorporateData[0].natureofBusiness.name,
+              rfqTreasury: `${newCorporateData[0].rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+              rfqCorporate: `${newCorporateData[0].rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+            }));
+          }
+        } catch (error) {
+          console.log("Encounred an Error: ", error);
         }
-      } catch (error) {
-        console.log("Encounred an Error: ", error);
       }
     }
-  }, [GetAllCorporates]);
+  }, [GetAllCorporates, cancelClicked]);
 
+  // Handle File upload
+  const HandleFileUpload = (event) => {
+    // setBulkUploadClicked(true);
+    console.log(event, "datadata");
+    const { files } = event.target;
+    console.log(files, "filesfiles");
+    if (files !== undefined && files.length > 0) {
+      let ext = files[0].name.split(".").pop();
+      console.log("uploadedFileuploadedFile", ext);
+      if (ext === "xls" || ext === "xlsx") {
+        let fileData = files[0];
+        dispatch(
+          CorporateUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
+        );
+        // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
+      } else {
+        alert("Invalid type");
+      }
+      event.target.value = null;
+    }
+    // // const UploadFile = data.target;
+    // const uploadedFile = data.target.files[0];
+    // // console.log("UploadFileUploadFile", UploadFile);
+    // console.log("uploadedFileuploadedFile", uploadedFile);
+    // var ext = uploadedFile.name.split(".").pop();
+  };
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -401,7 +461,7 @@ const CorporateUser = () => {
                       </Col>
 
                       <Col lg={4} md={4} sm={4}>
-                        <CustomUpload />
+                        <CustomUpload change={HandleFileUpload} />
                       </Col>
                     </Row>
                     {/* <Row className="mt-3"></Row> */}
@@ -464,9 +524,7 @@ const CorporateUser = () => {
                         <Select
                           options={companyNameOptions}
                           isSearchable={true}
-                          value={
-                            companyRoleID.value !== 0 ? companyRoleID : null
-                          }
+                          value={companyRoleID !== 0 ? companyRoleID : null}
                           onChange={CompanySelectHandler}
                           classNamePrefix={"selectCateogyCorporateList"}
                         />
@@ -474,6 +532,12 @@ const CorporateUser = () => {
                           className={styles["PlusButton"]}
                           icon={<span className={styles["PlusIcon"]}>+</span>}
                           onClick={handlePlusButton}
+                        />
+                        <Button
+                          className={styles["EditButton"]}
+                          icon={<i className={"icon-edit color-blue"}></i>}
+                          // onClick={handleEditButton}
+                          onClick={() => handleEditButton(companyRoleID)}
                         />
                       </Col>
                     </Row>
@@ -497,18 +561,43 @@ const CorporateUser = () => {
 
                     <Row className="mt-3">
                       <Col lg={2} md={2} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          Chat
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
+                        <span className={styles["labels-add-bank"]}>Chat</span>
                       </Col>
                       <Col lg={6} md={6} sm={12} className="m-0 p-0">
                         <Checkbox
                           label2="Active"
                           classNameDiv={styles["CheckboxActive"]}
-                          onChange={changeTick}
+                          onChange={changeActiveTick}
                           checked={
                             corporateUser.isChatActive.value ? true : false
+                          }
+                        />
+                      </Col>
+                    </Row>
+
+                    <Row className="mt-3">
+                      <Col lg={2} md={2} sm={12}>
+                        <span className={styles["labels-add-bank"]}>
+                          FE / Non-FE
+                        </span>
+                      </Col>
+                      <Col lg={1} md={1} sm={12} className="m-0 p-0">
+                        <Checkbox
+                          label2="FE"
+                          classNameDiv={styles["CheckboxActive"]}
+                          onChange={changeFETick}
+                          checked={
+                            corporateUser.isFEActive.value ? true : false
+                          }
+                        />
+                      </Col>
+                      <Col lg={1} md={1} sm={12} className="m-0 p-0">
+                        <Checkbox
+                          label2="Non-FE"
+                          classNameDiv={styles["CheckboxActive"]}
+                          onChange={changeNonFETick}
+                          checked={
+                            corporateUser.isNonFEActive.value ? true : false
                           }
                         />
                       </Col>
@@ -603,12 +692,26 @@ const CorporateUser = () => {
           </Row>
         </Col>
       </Row>
-
+      {BulkUploadClicked && (
+        <CorporateBulkUploadModal
+          setBulkUploadClicked={setBulkUploadClicked}
+          BulkUploadClicked={BulkUploadClicked}
+        />
+      )}
       {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
-      {editCompanyModalGobalState && <EditCompanyModal />}
+      {editCompanyModalGobalState && (
+        <EditCompanyModal editCompanyData={editCompanyData} />
+      )}
       {
         // AddBankUserConfirmationModal && (
         <ActivateConfirmationModal onConfirm={handleActivateButtonYes} />
+        // )
+      }
+      {
+        //
+        cancelClicked === true && (
+          <ActivateConfirmationModal onConfirm={handleCancelButtonYes} />
+        )
         // )
       }
       {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null}

@@ -1,19 +1,15 @@
 import axios from "axios";
 import {
   AddBranch,
-  BankUsersBankList,
   CorporateUsersBulkList,
   CreateBankUserRequest,
   CreateBulkBankUserRequest,
   CreateBulkCorporateUserRequest,
   CreateCorporateUserRequest,
   CreateNewCorporate,
-  GetAllBranches,
   UpdateBranch,
   UpdateCorporateByCorporateID,
-  SearchCorporateUsers,
   SearchBankUsers,
-  UpdateCorporateUsers,
   GetBankUserByUserID,
   UpdateBankUserByUserID,
   GetVolmeterByBankID,
@@ -22,10 +18,9 @@ import {
   UpdateVolMeterSettingByBankId,
   GetVolMeterSettingByBankId,
   UpdateCategory,
-  GetAllCorporateUsers,
-  GetCorporateUserByUserID,
   GetCounterPartyNames,
   GetAllInstruments,
+  BankUsersBulkList,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -36,7 +31,7 @@ import {
 } from "./Auth-Actions";
 import {
   editBankUserModalSystemAdmin,
-  EditCorporateModalSystemAdmin,
+  editCompanyModalSystemAdmin,
 } from "./BOPSystemAdminModalsActions";
 
 //Create New Corporate API
@@ -150,7 +145,7 @@ const UpdateCorporateByCorporateIDInit = () => {
 
 const UpdateCorporateByCorporateIDSuccess = (response, message) => {
   return {
-    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_INIT,
+    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_SUCCESS,
     response: response,
     message: message,
   };
@@ -158,13 +153,13 @@ const UpdateCorporateByCorporateIDSuccess = (response, message) => {
 
 const UpdateCorporateByCorporateIDFail = (message) => {
   return {
-    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_INIT,
+    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_FAIL,
     message: message,
   };
 };
 
 const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateCorporateByCorporateIDInit());
     let form = new FormData();
@@ -194,6 +189,8 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
                   "Record Updated"
                 )
               );
+              dispatch(getAllCorporatesCategory(navigate));
+              dispatch(editCompanyModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -342,9 +339,7 @@ const UpdateBranchFail = (message) => {
 };
 
 const UpdateBranchAPI = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
   let token = localStorage.getItem("token");
-
   return (dispatch) => {
     dispatch(UpdateBranchInit());
     let form = new FormData();
@@ -374,6 +369,8 @@ const UpdateBranchAPI = (navigate, data) => {
                   "branch updated successfully"
                 )
               );
+              dispatch(editBankUserModalSystemAdmin(false));
+              dispatch(GetAllBranchesAPI(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -546,8 +543,8 @@ const CreateBulkBankUserRequestFail = (message) => {
   };
 };
 
-const CreateBulkBankUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateBulkBankUserRequestAPI = (navigate, data, setBulkUploadClicked) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(CreateBulkBankUserRequestInit());
     let form = new FormData();
@@ -564,7 +561,9 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateBulkBankUserRequestAPI(navigate, data));
+          dispatch(
+            CreateBulkBankUserRequestAPI(navigate, data, setBulkUploadClicked)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -577,6 +576,7 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
                   "bank user request/s created"
                 )
               );
+              setBulkUploadClicked(false);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -726,7 +726,6 @@ const CreateCorporateUserRequestFail = (message) => {
 };
 
 const CreateCorporateUserRequestAPI = (navigate, data) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
   let token = localStorage.getItem("token");
 
   return (dispatch) => {
@@ -848,8 +847,12 @@ const CreateBulkCorporateUserRequestFail = (message) => {
   };
 };
 
-const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateBulkCorporateUserRequestAPI = (
+  navigate,
+  data,
+  setBulkUploadClicked
+) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(CreateBulkCorporateUserRequestInit());
     let form = new FormData();
@@ -871,7 +874,7 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_01".toLowerCase()
+              "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_01".toLowerCase()
             ) {
               dispatch(
                 CreateBulkCorporateUserRequestSuccess(
@@ -879,11 +882,12 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
                   "Corporate User Request Created"
                 )
               );
+              setBulkUploadClicked(false);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_02".toLowerCase()
                 )
             ) {
               dispatch(
@@ -895,7 +899,7 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_03".toLowerCase()
                 )
             ) {
               dispatch(CreateBulkCorporateUserRequestFail("Not A Valid Role"));
@@ -903,7 +907,7 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_04".toLowerCase()
                 )
             ) {
               dispatch(
@@ -915,7 +919,7 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_05".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_05".toLowerCase()
                 )
             ) {
               dispatch(
@@ -927,7 +931,7 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_06".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_06".toLowerCase()
                 )
             ) {
               dispatch(CreateBulkCorporateUserRequestFail("not a valid role"));
@@ -935,7 +939,7 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_07".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_07".toLowerCase()
                 )
             ) {
               dispatch(CreateBulkCorporateUserRequestFail("exception"));
@@ -1118,13 +1122,13 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
 // };
 
 //Bank Users BankUserList
-const BankUsersBankListInit = () => {
+const BankUsersBulkListInit = () => {
   return {
     type: actions.BANK_USERS_BANK_LIST_INIT,
   };
 };
 
-const BankUsersBankListSuccess = (response, message) => {
+const BankUsersBulkListSuccess = (response, message) => {
   return {
     type: actions.BANK_USERS_BANK_LIST_SUCCESS,
     response: response,
@@ -1132,20 +1136,20 @@ const BankUsersBankListSuccess = (response, message) => {
   };
 };
 
-const BankUsersBankListFail = (message) => {
+const BankUsersBulkListFail = (message) => {
   return {
     type: actions.BANK_USERS_BANK_LIST_FAIL,
     message: message,
   };
 };
 
-const BankUsersBankListAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const BankUsersBulkListAPI = (navigate, data, setBulkUploadClicked) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
-    dispatch(BankUsersBankListInit());
+    dispatch(BankUsersBulkListInit());
     let form = new FormData();
-    form.append("RequestMethod", BankUsersBankList.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
+    form.append("RequestMethod", BankUsersBulkList.RequestMethod);
+    form.append("Files", data);
     axios({
       method: "POST",
       url: systemAdminAPI,
@@ -1157,7 +1161,7 @@ const BankUsersBankListAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(BankUsersBankListAPI(navigate, data));
+          dispatch(BankUsersBulkListAPI(navigate, data, setBulkUploadClicked));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -1165,11 +1169,12 @@ const BankUsersBankListAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_BankUsersBulkList_01".toLowerCase()
             ) {
               dispatch(
-                BankUsersBankListSuccess(
+                BankUsersBulkListSuccess(
                   response.data.responseResult,
                   "file Uploaded SuccessFully"
                 )
               );
+              setBulkUploadClicked(true);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1177,7 +1182,7 @@ const BankUsersBankListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_BankUsersBulkList_02".toLowerCase()
                 )
             ) {
-              dispatch(BankUsersBankListFail("Invalid File"));
+              dispatch(BankUsersBulkListFail("Invalid File"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1185,7 +1190,7 @@ const BankUsersBankListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_BankUsersBulkList_03".toLowerCase()
                 )
             ) {
-              dispatch(BankUsersBankListFail("Invalid Request Data"));
+              dispatch(BankUsersBulkListFail("Invalid Request Data"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1193,17 +1198,17 @@ const BankUsersBankListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_BankUsersBulkList_05".toLowerCase()
                 )
             ) {
-              dispatch(BankUsersBankListFail("Exception"));
+              dispatch(BankUsersBulkListFail("Exception"));
             }
           } else {
-            dispatch(BankUsersBankListFail("Something went wrong"));
+            dispatch(BankUsersBulkListFail("Something went wrong"));
           }
         } else {
-          dispatch(CreateBulkCorporateUserRequestFail("Something went wrong"));
+          dispatch(BankUsersBulkListFail("Something went wrong"));
         }
       })
       .catch((response) => {
-        dispatch(BankUsersBankListFail("something went wrong"));
+        dispatch(BankUsersBulkListFail("something went wrong"));
       });
   };
 };
@@ -1211,7 +1216,7 @@ const BankUsersBankListAPI = (navigate, data) => {
 //Corporate Users Bulk List
 const CorporateUsersBulkListInit = () => {
   return {
-    type: actions.BANK_USERS_BANK_LIST_INIT,
+    type: actions.CORPORATE_USERS_BULK_LIST_INIT,
   };
 };
 
@@ -1230,13 +1235,14 @@ const CorporateUsersBulkListFail = (message) => {
   };
 };
 
-const CorporateUsersBulkListAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CorporateUsersBulkListAPI = (navigate, data, setBulkUploadClicked) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(CorporateUsersBulkListInit());
     let form = new FormData();
     form.append("RequestMethod", CorporateUsersBulkList.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
+    form.append("Files", data);
+
     axios({
       method: "POST",
       url: systemAdminAPI,
@@ -1248,7 +1254,9 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CorporateUsersBulkListAPI(navigate, data));
+          dispatch(
+            CorporateUsersBulkListAPI(navigate, data, setBulkUploadClicked)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -1261,6 +1269,7 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
                   "file Uploaded SuccessFully"
                 )
               );
+              setBulkUploadClicked(true);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2320,7 +2329,7 @@ export {
   CreateBulkBankUserRequestAPI,
   CreateCorporateUserRequestAPI,
   CreateBulkCorporateUserRequestAPI,
-  BankUsersBankListAPI,
+  BankUsersBulkListAPI,
   CorporateUsersBulkListAPI,
   SearchBankUsersAPI,
   // getAllCorporatesCategory,
