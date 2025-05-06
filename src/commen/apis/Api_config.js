@@ -191,6 +191,14 @@ const GetAllInstrumentTypes = {
   RequestMethod: "ServiceManager.GetAllInstrumentTypes",
 };
 
+const GetUserSettings = {
+  RequestMethod: "ServiceManager.GetUserSettings",
+};
+
+const UpdateUserSettings = {
+  RequestMethod: "ServiceManager.UpdateUserSettings",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -236,4 +244,6 @@ export {
   GetCounterPartyNames,
   GetAllInstruments,
   GetAllInstrumentTypes,
+  GetUserSettings,
+  UpdateUserSettings,
 };

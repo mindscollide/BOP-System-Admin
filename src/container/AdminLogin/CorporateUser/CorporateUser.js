@@ -551,7 +551,6 @@ const CorporateUser = () => {
                       <Col lg={5} md={5} sm={12}>
                         <TextField
                           labelClass="d-none"
-                          // name={"category"}
                           value={corporateUser.categoryName || ""}
                           maxLength={50}
                           disable={true}

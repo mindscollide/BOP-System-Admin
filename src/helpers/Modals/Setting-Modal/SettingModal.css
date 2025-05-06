@@ -1,6 +1,7 @@
 .modal-setting-styles .modal-content {
   height: 500px !important;
-  width: 650px !important;
+  /* width: 650px !important; */
+  width: 100%;
   background-color: rgb(255, 255, 255) !important;
   border-radius: 8px !important;
   margin: 0px 70px;

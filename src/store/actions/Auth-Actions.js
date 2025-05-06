@@ -94,6 +94,11 @@ const RefreshToken = (navigate) => {
                   "Refresh Token Update Successfully"
                 )
               );
+              localStorage.setItem("token", response.data.responseResult.token);
+              localStorage.setItem(
+                "refreshToken",
+                response.data.responseResult.refreshToken
+              );
             } else if (
               response.data.responseResult.responseMessage.includes.toLowerCase(
                 "ERM_AuthService_AuthManager_RefreshToken_02".toLowerCase()

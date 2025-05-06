@@ -6,3 +6,4 @@ export { default as AddCategory } from "./AddCategory";
 export { default as BOPSystemAdminModal } from "./BOPSystemAdminModalReducer";
 export { default as BOPSystemAdminReducer } from "./BOPSystemAdminReducer";
 export { default as CorporateUsersReducer } from "./CorporateUsersReducer";
+export { default as SettingsReducer } from "./SettingsReducer";

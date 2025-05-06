@@ -6,16 +6,19 @@ const authenticationPort = ":13000/ERM_Auth";
 const systemAdminPort = ":13009/SystemAdmin";
 const securityAdminPort = ":12001/SecurityAdmin";
 const downloadReportPort = ":12004/ExcelReport";
+const settingsPort = ":13008/Setting";
 
 //our Final Api
 const authenticationAPI = baseURL + authenticationPort;
 const systemAdminAPI = baseURL + systemAdminPort;
 const securityAdminAPI = baseURL + securityAdminPort;
 const downloadReportAPI = baseURL + downloadReportPort;
+const settingsAPI = baseURL + settingsPort;
 
 export {
   authenticationAPI,
   systemAdminAPI,
   securityAdminAPI,
   downloadReportAPI,
+  settingsAPI,
 };
