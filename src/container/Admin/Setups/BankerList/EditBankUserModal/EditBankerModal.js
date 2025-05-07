@@ -16,7 +16,6 @@ import { updateBankUserSchema } from "../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
 import { UpdateBankUserByUserIdAPI } from "../../../../../store/actions/BOPSystemAdminActions";
 import {
-  RoleListAPI,
   GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../../../store/actions/Auth-Actions";
@@ -27,13 +26,7 @@ const EditBankerModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
-  // const { auth } = useSelector((state) => state);
-  // console.log("this is the user", auth);
-  //States
-  // const [value, setValue] = useState("Corporate");
 
-  //state for error Message
-  // const [errorShow, setErrorShow] = useState(false);
   // GetBankUserbyUserID
   const GetBankUserbyUserID = useSelector(
     (state) => state.BOPSystemAdminReducer.GetBankUserbyUserIDData
@@ -91,9 +84,7 @@ const EditBankerModal = () => {
   });
 
   console.log(
-    updateBankUser,
-    branchRole,
-    roleID,
+    { updateBankUser, branchRole, roleID },
     "updateBankUserupdateBankUser"
   );
   //Handle Value Change and Validation
@@ -165,16 +156,6 @@ const EditBankerModal = () => {
   const branchSelectRoleHandler = async (selectedBranch) => {
     console.log(selectedBranch, "selectroleselectroleselectrole");
     setBranchRole(selectedBranch);
-
-    // setUpdateBankUser((prevState) => ({
-    //   ...prevState,
-    //   // category: selectedBranch.categoryName,
-    //   branch: {
-    //     branchCode: "BOP002",
-    //     branchID: 2,
-    //     branchName: "Gulshan Branch",
-    //   },
-    // }));
   };
   //handle Active Button
   // show error message When user hit activate btn
@@ -195,7 +176,7 @@ const EditBankerModal = () => {
         // ActiveUser: updateBankUser.activeUser.value,
         BranchID: branchRole.value,
       };
-      console.log("newData", newData);
+      console.log("newDatanewData", newData);
       dispatch(UpdateBankUserByUserIdAPI(navigate, newData));
     } else {
       console.log("Error Encoutered");
@@ -263,7 +244,9 @@ const EditBankerModal = () => {
           let fingRoleName = roleOptions.find(
             (roleIDData, index) => roleIDData.value === bankUser.userRoleID
           );
-          setRoleID(fingRoleName);
+          if (fingRoleName !== undefined) {
+            setRoleID(fingRoleName);
+          }
           console.log(fingRoleName, "fingRoleNamefingRoleName");
         }
       } catch (error) {
@@ -415,24 +398,7 @@ const EditBankerModal = () => {
                 <span className={styles["aesterick-color"]}>*</span>
               </Col>
             </Row>
-            {/* {user === "Security Admin" && (
-              <>
-                <Row>
-                  <Col lg={12} md={12} sm={12}>
-                    <CustomRadio
-                      name="customRadio"
-                      options={radioOptions}
-                      onChange={handleRadioChange}
-                      value={updateBankUser.activeUser?.value || ""}
-                      size="default"
-                      className="custom-radio-group"
-                    />
-                  </Col>
-                </Row>
-              </>
-            )} */}
-            {/* {user === "System Admin" && (
-              <> */}
+
             <Row>
               <Col lg={12} md={12} sm={12}>
                 {updateBankUser.activeUser?.value === "Active" ? (
@@ -463,11 +429,12 @@ const EditBankerModal = () => {
                 disableBtn={
                   updateBankUser.firstName.value !== "" &&
                   updateBankUser.ContactNumber.value !== "" &&
-                  updateBankUser.roleID.value !== 9
+                  roleID.value !== 9
                     ? false
-                    : updateBankUser.roleID.value === 9 &&
-                      updateBankUser.branch !== null &&
-                      updateBankUser.branch.branchID !== 0
+                    : updateBankUser.firstName.value !== "" &&
+                      updateBankUser.ContactNumber.value !== "" &&
+                      roleID.value === 9 &&
+                      branchRole.value !== 0
                     ? false
                     : true
                 }
