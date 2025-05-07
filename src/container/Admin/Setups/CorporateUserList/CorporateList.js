@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./CorporateList.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -54,7 +54,11 @@ const CorporateList = () => {
   //   (state) => state.BOPSystemAdminReducer.GetAllCorporateUsers
   // );
   // console.log("GetAllCorporateUsers", GetAllCorporateUsers);
-
+  //state for save and cancel button
+  const showActivationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.confirmationModal
+  );
+  const [modalState, setModalState] = useState(0);
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
@@ -246,38 +250,52 @@ const CorporateList = () => {
     dispatch(SearchCorporateUsersAPI(navigate, data));
   };
 
+  //Table columns for customer List
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    } else if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    }
+  }, [modalState]);
+
   // show error message When user hit activate btn
   const handleReset = () => {
     // dispatch(AddBankUserConfirmationModalSystemAdmin(true));
     dispatch(ConfirmationModalSystemAdmin(true));
+    setModalState(2);
   };
 
-  //Table columns for customer List
-
   const handleResetYes = () => {
-    setCorporateList({
-      Name: { value: "", errorMessage: "", errorStatus: false },
-      CorporateName: { value: "", errorMessage: "", errorStatus: false },
-      Email: { value: "", errorMessage: "", errorStatus: false },
-      category: { value: "", errorMessage: "", errorStatus: false },
-    });
-    setCategoryID("");
+    if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+      setCorporateList({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+        CorporateName: { value: "", errorMessage: "", errorStatus: false },
+        Email: { value: "", errorMessage: "", errorStatus: false },
+        category: { value: "", errorMessage: "", errorStatus: false },
+      });
+      setCategoryID("");
 
-    let data = {
-      FirstName: "",
-      CompanyName: "",
-      CategoryID: 0,
-      Email: "",
-      PageNumber: 1,
-      Length: 10,
-    };
+      let data = {
+        FirstName: "",
+        CompanyName: "",
+        CategoryID: 0,
+        Email: "",
+        PageNumber: 1,
+        Length: 10,
+      };
 
-    console.log("Data to Search", data);
-    dispatch(SearchCorporateUsersAPI(navigate, data));
+      console.log("Data to Search", data);
+      dispatch(SearchCorporateUsersAPI(navigate, data));
+    }
   };
   const columns = [
     {
-      title: <label className='px-3'>Email</label>,
+      title: <label className="px-3">Email</label>,
       dataIndex: "email",
       key: "email",
       width: "220px",
@@ -286,13 +304,14 @@ const CorporateList = () => {
       render: (email, record) => (
         <span
           style={{ cursor: "pointer" }}
-          onClick={() => handleOnClickEmail(record)}>
+          onClick={() => handleOnClickEmail(record)}
+        >
           {email}
         </span>
       ),
     },
     {
-      title: <label className='px-3'>Name</label>,
+      title: <label className="px-3">Name</label>,
       dataIndex: "firstName",
       key: "firstName",
       width: "150px",
@@ -300,7 +319,7 @@ const CorporateList = () => {
       align: "left",
     },
     {
-      title: <label className='px-3'>Corporate Name</label>,
+      title: <label className="px-3">Corporate Name</label>,
       dataIndex: "corporateName",
       key: "corporateName",
       width: "150px",
@@ -315,7 +334,8 @@ const CorporateList = () => {
         <span
           className={
             statusId === 1 ? styles.ActiveStatus : styles.InactiveStatus
-          }>
+          }
+        >
           {statusId === 1 ? "Active" : "Inactive"}
         </span>
       ),
@@ -374,7 +394,7 @@ const CorporateList = () => {
               >
                 <Button
                   className={styles["EditButton"]}
-                  icon={<i className='icon-edit color-blue'></i>}
+                  icon={<i className="icon-edit color-blue"></i>}
                   onClick={() => handleEditCorporate(record)}
                 />
                 {/* <Button
@@ -444,20 +464,20 @@ const CorporateList = () => {
 
   return (
     <section className={styles["SectionContainer"]}>
-      <Row className='mt-4'>
+      <Row className="mt-4">
         <Col lg={12} md={12} sm={12}>
           <span className={styles["customer-List-label"]}>
             Corporate Users List
           </span>
         </Col>
       </Row>
-      <Row className='mt-2'>
+      <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className='mt-2 g-2'>
+            <Row className="mt-2 g-2">
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder='Name'
+                  placeholder="Name"
                   labelClass={"d-none"}
                   name={"Name"}
                   value={corporateList.Name.value}
@@ -467,7 +487,7 @@ const CorporateList = () => {
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   labelClass={"d-none"}
-                  placeholder='Corporate Name'
+                  placeholder="Corporate Name"
                   name={"corporateName"}
                   value={corporateList.CorporateName.value}
                   onChange={CorporateListValidateHandler}
@@ -475,7 +495,7 @@ const CorporateList = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder='Email'
+                  placeholder="Email"
                   labelClass={"d-none"}
                   name={"email"}
                   value={corporateList.Email.value}
@@ -486,28 +506,29 @@ const CorporateList = () => {
                 <Select
                   // isClearable={true}
                   // isSearchable={true}
-                  placeholder='Select Category'
+                  placeholder="Select Category"
                   options={categoryOptions}
                   value={categoryID.value !== 0 ? categoryID : null}
                   onChange={handleSelectCategory}
-                  classNamePrefix='selectCateogyCorporateList'
+                  classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
               <Col
                 lg={4}
                 md={4}
                 sm={12}
-                className='d-flex justify-content-center gap-1'>
+                className="d-flex justify-content-center gap-1"
+              >
                 <Button
-                  icon={<i className='icon-search icon-check-space'></i>}
+                  icon={<i className="icon-search icon-check-space"></i>}
                   className={styles["CorporateList-btn-Search"]}
-                  text='Search'
+                  text="Search"
                   onClick={handleSearchEventButton}
                 />
                 <Button
-                  icon={<i className='icon-refresh icon-check-space'></i>}
+                  icon={<i className="icon-refresh icon-check-space"></i>}
                   className={styles["Corporatelist-Reset-btn"]}
-                  text='Reset'
+                  text="Reset"
                   iconClass={styles["resetIconClass"]}
                   onClick={handleReset}
                 />
@@ -515,27 +536,28 @@ const CorporateList = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<img src={pdfIcon} alt='PDF Icon' />}
+                        icon={<img src={pdfIcon} alt="PDF Icon" />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        icon={<img src={excelIcon} alt='Excel Icon' />}
+                        icon={<img src={excelIcon} alt="Excel Icon" />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                     </div>
                   }
                   // title="Title"
-                  trigger='click'
+                  trigger="click"
                   open={open}
                   onOpenChange={handleOpenChange}
-                  placement='bottomRight'
-                  arrow={false}>
+                  placement="bottomRight"
+                  arrow={false}
+                >
                   <Button
-                    icon={<i className='icon-download'></i>}
+                    icon={<i className="icon-download"></i>}
                     className={styles["Export_Button"]}
-                    text='Export'
+                    text="Export"
                     iconClass={styles["resetIconClass"]}
                     onClick={toggleExportOptions}
                   />
@@ -569,19 +591,19 @@ const CorporateList = () => {
               </Row>
             )} */}
 
-            <Row className='mt-1'>
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
             </Row>
 
-            <Row className='mt-1'>
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 400, x: "auto" }}
+                  scroll={{ y: 300, x: "scroll" }}
                   className={"BankUserList-table"}
                 />
               </Col>
@@ -598,12 +620,21 @@ const CorporateList = () => {
         />
       )}
       {DeleteCorporateModalGobalState && <DeleteConfirmationModal />}
-      {UserDetailsCorporateModalGobalState && <CorporateUserDetailsModal     setCorproateUserId={setCorproateUserId}
-          corporateUserId={corporateUserId} />}
+      {UserDetailsCorporateModalGobalState && (
+        <CorporateUserDetailsModal
+          setCorproateUserId={setCorproateUserId}
+          corporateUserId={corporateUserId}
+        />
+      )}
       {/* {UserDetailsCorporateModalGobalState && <CorporatePlusIconModal />}
        */}
 
-      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
+      {showActivationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleResetYes}
+          handleNoButton={handleNoButton}
+        />
+      )}
     </section>
   );
 };

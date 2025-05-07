@@ -1,30 +1,20 @@
 import React from "react";
 import styles from "./ActivateConfirmationModal.module.css";
-import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
-import { ConfirmationModalSystemAdmin } from "../../../store/actions/BOPSystemAdminModalsActions";
 import { Button, Modal } from "../../../components/elements";
 
-const ActivateConfirmationModal = ({ onConfirm }) => {
-  const dispatch = useDispatch();
-  const { BOPSystemAdminModal } = useSelector((state) => state);
+const ActivateConfirmationModal = ({ handleYesButton, handleNoButton }) => {
+  console.log(handleYesButton, "onConfirmonConfirm");
 
   const showActivationMOdal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
-
-  //handle No Button
-  const handleNoButton = () => {
-    dispatch(ConfirmationModalSystemAdmin(false));
-  };
-
-  const handleYesButton = () => {
-    if (onConfirm) {
-      onConfirm();
-    }
-    dispatch(ConfirmationModalSystemAdmin(false));
-  };
+  console.log(showActivationMOdal, "showActivationMOdal");
+  // //handle No Button
+  // const handleNoButton = () => {
+  //   dispatch(ConfirmationModalSystemAdmin(false));
+  // };
 
   return (
     <Modal
@@ -33,7 +23,7 @@ const ActivateConfirmationModal = ({ onConfirm }) => {
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
       size="md"
-      onHide={() => dispatch(ConfirmationModalSystemAdmin(false))}
+      onHide={handleNoButton}
       ModalBody={
         <>
           <Row>

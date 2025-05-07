@@ -50,6 +50,8 @@ const Bankuser = () => {
 
   console.log("SearchBankUserSearchBankUser", SearchBankUsers);
 
+  const [modalState, setModalState] = useState(0);
+
   // const { BOPSystemAdminModal } = useSelector((state) => state);
   //Dummy employee ID
   const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
@@ -85,7 +87,7 @@ const Bankuser = () => {
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
 
   //state for error Message
-  const [errorShow, setErrorShow] = useState(false);
+  // const [errorShow, setErrorShow] = useState(false);
   const [rolesOptions, setRolesOptions] = useState([]);
 
   console.log(rolesOptions, "rolesroles");
@@ -100,13 +102,12 @@ const Bankuser = () => {
   const [editBranchData, setEditBranchData] = useState();
 
   console.log({ branchRole, role }, "branchRolebranchRole");
-  //state for save button
-  const [saveClicked, setSaveClicked] = useState(false);
+  //state for save and cancel button
+  const showActivationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.confirmationModal
+  );
 
   const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
-
-  //state for cancel button
-  const [cancelClicked, setCancelClicked] = useState(false);
 
   //handle Open AddBankUser Modal
   const handleOpenAddBankUserModal = () => {
@@ -392,8 +393,8 @@ const Bankuser = () => {
   };
 
   const handleCancelButton = () => {
-    setCancelClicked(true);
     dispatch(ConfirmationModalSystemAdmin(true));
+    setModalState(2);
   };
 
   const handleCancelYes = () => {
@@ -404,107 +405,140 @@ const Bankuser = () => {
     });
     setAddBankUser({
       ...addBankUser,
-
-      EmployeeID: {
+      Name: {
         value: "",
+        errorMessage: "",
+        errorStatus: false,
       },
       firstName: {
         value: "",
+        errorMessage: "",
+        errorStatus: false,
       },
-
-      ldapAccount: {
+      lastName: {
         value: "",
+        errorMessage: "",
+        errorStatus: false,
       },
 
       email: {
         value: "",
+        errorMessage: "",
+        errorStatus: false,
       },
-
       Contact: {
         value: "",
+        errorMessage: "",
+        errorStatus: false,
       },
-
-      roleID: {
+      ldapAccount: {
         value: "",
+        errorMessage: "",
+        errorStatus: false,
+      },
+      roleID: {
+        value: 0,
+        label: "",
+        errorMessage: "",
+        errorStatus: false,
       },
       branchID: {
         value: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
+      EmployeeID: {
+        value: "",
+        errorMessage: "",
+        errorStatus: false,
+      },
+      category: {
+        value: "",
+        errorMessage: "",
+        errorStatus: false,
       },
     });
-    setCancelClicked(false);
   };
+
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    setSaveClicked(true);
     if (validateBopEmail(addBankUser.email.value)) {
-      setErrorShow(false);
       dispatch(ConfirmationModalSystemAdmin(true));
+      setModalState(1);
     } else {
-      setErrorShow(true);
+      setAddBankUser((prevState) => {
+        return {
+          ...prevState,
+          email: {
+            ...prevState.email,
+            errorMessage: "Email should be in email format",
+            errorStatus: true,
+          },
+        };
+      });
     }
   };
 
   const handleConfirmationYes = useCallback(() => {
-    let employeeID = addBankUser.EmployeeID.value;
+    // Extract LDAPAccount from email (part before "@")
+    console.log("newData");
+    try {
+      if (modalState === 1) {
+        const ldapAccountValue = addBankUser.email.value.split("@")[0];
 
-    // Check if EmployeeID is unique and greater than the last dummy ID
-    if (
-      parseInt(employeeID) >
-      parseInt(dummyEmployeeIDs[dummyEmployeeIDs.length - 1])
-    ) {
-      setErrorShow(false);
-
-      // Extract LDAPAccount from email (part before "@")
-      const ldapAccountValue = addBankUser.email.value.split("@")[0];
-
-      // Prepare the data for API request
-      let newData = {
-        BankId: 1, // Default bank ID
-        User: {
-          UserID: 0, // Assuming this is a new user
-          FirstName: addBankUser.firstName.value,
-          Lastname: "", // Default value
-          Email: addBankUser.email.value,
-          ContactNumber: addBankUser.Contact.value,
-          LDAPAccount: ldapAccountValue, // Use the extracted LDAPAccount
-          FailedAttemptCount: 0, // Default value
-          UserRoleID: role.value, // Role ID from the form
-          // UserRoleID: 9,
-          EmployeeID: addBankUser.EmployeeID.value,
-          Branch:
-            role.value === 9
-              ? {
-                  BranchID: branchRole.value, // Include BranchID inside a Branch object
-                }
-              : null,
-        },
-      };
-
-      // Add branchID only if the role is "Branch" (roleID === 7)
-      // if (addBankUser.roleID.value === 7) {
-      //   newData.User.branchID = addBankUser.branchID.value;
-      // }
-
-      console.log("newData", newData);
-
-      // Dispatch API request to create the bank user
-      dispatch(CreateBankUserRequestAPI(navigate, newData));
-    } else {
-      // Show error if EmployeeID is not unique
-      setErrorShow(true);
-      setAddBankUser({
-        ...addBankUser,
-        EmployeeID: {
-          ...addBankUser.EmployeeID,
-          errorStatus: true,
-        },
-      });
-      // }
+        // Prepare the data for API request
+        let newData = {
+          BankId: 1, // Default bank ID
+          User: {
+            UserID: 0, // Assuming this is a new user
+            FirstName: addBankUser.firstName.value,
+            Lastname: "", // Default value
+            Email: addBankUser.email.value,
+            ContactNumber: addBankUser.Contact.value,
+            LDAPAccount: ldapAccountValue, // Use the extracted LDAPAccount
+            FailedAttemptCount: 0, // Default value
+            UserRoleID: role.value, // Role ID from the form
+            // UserRoleID: 9,
+            EmployeeID: addBankUser.EmployeeID.value,
+            Branch:
+              role.value === 9
+                ? {
+                    BranchID: branchRole.value, // Include BranchID inside a Branch object
+                  }
+                : null,
+          },
+        };
+        dispatch(
+          CreateBankUserRequestAPI(
+            navigate,
+            newData,
+            handleCancelYes,
+            setAddBankUser
+          )
+        );
+      } else if (modalState === 2) {
+        dispatch(ConfirmationModalSystemAdmin(false));
+        setModalState(0);
+        handleCancelYes();
+      }
+    } catch (error) {
+      console.log("newData", error);
     }
 
+    // Dispatch API request to create the bank user
+
     // Reset saveClicked state
-    setSaveClicked(false);
-  }, [addBankUser]);
+  }, [addBankUser, modalState]);
+
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    } else if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    }
+  }, [modalState]);
 
   // Handle File upload
   const HandleFileUpload = (event) => {
@@ -567,6 +601,12 @@ const Bankuser = () => {
                           labelClass="d-none"
                           value={addBankUser.EmployeeID.value}
                           maxLength={4}
+                          onBlur={(event) =>
+                            console.log(
+                              "addBankUserValidateHandleraddBankUserValidateHandler",
+                              event.target.value
+                            )
+                          }
                           onChange={addBankUserValidateHandler}
                         />
                         {addBankUser.EmployeeID.errorStatus && (
@@ -733,7 +773,16 @@ const Bankuser = () => {
                           labelClass="d-none"
                           // maxLength={50}
                         />
-                        {errorShow &&
+                        {addBankUser.email.errorStatus && (
+                          <Row>
+                            <Col className="d-flex justify-content-start">
+                              <p className={styles["bankErrorMessage"]}>
+                                {addBankUser.email.errorMessage}
+                              </p>
+                            </Col>
+                          </Row>
+                        )}
+                        {/* {errorShow &&
                         !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
                           addBankUser.email.value
                         ) ? (
@@ -744,7 +793,7 @@ const Bankuser = () => {
                               </p>
                             </Col>
                           </Row>
-                        ) : null}
+                        ) : null} */}
                       </Col>
                     </Row>
 
@@ -779,9 +828,9 @@ const Bankuser = () => {
                           onClick={handleActivateButton}
                           className={styles["Active-btn"]}
                           disableBtn={
-                            addBankUser.EmployeeID.errorStatus !== true &&
+                            role.value !== 0 &&
+                            addBankUser.EmployeeID.value !== "" &&
                             addBankUser.firstName.value !== "" &&
-                            addBankUser.roleID.value !== "" &&
                             addBankUser.email.value !== "" &&
                             addBankUser.Contact.value !== ""
                               ? false
@@ -814,21 +863,12 @@ const Bankuser = () => {
       {EditBankUserModalGobalState && (
         <EditBankUserModal editBranchData={editBranchData} />
       )}
-      {
-        // AddBankUserConfirmationModal && (
-        saveClicked === true && (
-          <ActivateConfirmationModal onConfirm={handleConfirmationYes} />
-        )
-        // )
-      }
-      {
-        //
-        cancelClicked === true && (
-          <ActivateConfirmationModal onConfirm={handleCancelYes} />
-        )
-        // )
-      }
-
+      {showActivationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleConfirmationYes}
+          handleNoButton={handleNoButton}
+        />
+      )}
       {BOPSystemAdminReducer.Loading && <Loader />}
     </section>
   );

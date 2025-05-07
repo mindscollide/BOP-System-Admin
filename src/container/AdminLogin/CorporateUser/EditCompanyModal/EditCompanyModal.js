@@ -16,6 +16,13 @@ const EditCompanyModal = ({ editCompanyData }) => {
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const [updateCompany, setUpdateCompany] = useState({ ...editCompanyData });
 
+  const [companyEditError, setCompanyEditError] = useState({
+    corporateName: {
+      errorStatus: false,
+      errorMessage: "",
+    },
+  });
+
   //handle Cancel Button
   const handleCancelButton = () => {
     dispatch(editCompanyModalSystemAdmin(false));
@@ -67,7 +74,9 @@ const EditCompanyModal = ({ editCompanyData }) => {
       };
 
       console.log("UpdateCorporateByCorporateID", data);
-      dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
+      dispatch(
+        UpdateCorporateByCorporateIDAPI(navigate, data, setCompanyEditError)
+      );
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -124,7 +133,10 @@ const EditCompanyModal = ({ editCompanyData }) => {
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
       size="md"
-      onHide={() => dispatch(editCompanyModalSystemAdmin(false))}
+      onHide={
+        () => dispatch(editCompanyModalSystemAdmin(false))
+        // setCompanyRole(false)
+      }
       ModalBody={
         <>
           <Row>
@@ -155,6 +167,15 @@ const EditCompanyModal = ({ editCompanyData }) => {
                 maxLength={50}
                 onChange={updateCompanyValidateHandler}
               />
+              {companyEditError.corporateName.errorStatus && (
+                <Row>
+                  <Col className="d-flex justify-content-start">
+                    <p className={styles["companyErrorMessage"]}>
+                      {companyEditError.corporateName.errorMessage}
+                    </p>
+                  </Col>
+                </Row>
+              )}
             </Col>
           </Row>
 

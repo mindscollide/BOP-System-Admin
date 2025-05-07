@@ -138,8 +138,8 @@ const AddBankUserModal = () => {
       BranchContact: addBranch.branchContact.value,
       CategoryID: 59,
     };
-    dispatch(AddBranchAPI(navigate, data));
-    dispatch(AdduserModalSystemAdmin(false));
+    dispatch(AddBranchAPI(navigate, data, setAddBranch));
+    // dispatch(AdduserModalSystemAdmin(false));
   };
 
   // Fetch categories on component mount
@@ -218,6 +218,15 @@ const AddBankUserModal = () => {
                   onChange={handleChangeAddBranch}
                   maxLength={50}
                 />
+                {addBranch.branchName.errorStatus && (
+                  <Row>
+                    <Col className="d-flex justify-content-start">
+                      <p className={styles["branchErrorMessage"]}>
+                        {addBranch.branchName.errorMessage}
+                      </p>
+                    </Col>
+                  </Row>
+                )}
               </Col>
             </Row>
             <Row className="mt-3">
@@ -235,6 +244,15 @@ const AddBankUserModal = () => {
                   onChange={handleChangeAddBranch}
                   maxLength={4}
                 />
+                {addBranch.branchCode.errorStatus && (
+                  <Row>
+                    <Col className="d-flex justify-content-start">
+                      <p className={styles["branchErrorMessage"]}>
+                        {addBranch.branchCode.errorMessage}
+                      </p>
+                    </Col>
+                  </Row>
+                )}
               </Col>
             </Row>
             <Row className="mt-3">
@@ -249,7 +267,7 @@ const AddBankUserModal = () => {
                   name="categoryID"
                   options={categoryOptions}
                   placeholder="Select Category"
-                  // classNamePrefix={"selectCateogyCorporateList"}
+                  classNamePrefix={"selectCateogyCorporateList"}
                   value={categoryID.value !== 0 ? categoryID : null}
                   onChange={handleSelectCategory}
                   menuPortalTarget={document.body}

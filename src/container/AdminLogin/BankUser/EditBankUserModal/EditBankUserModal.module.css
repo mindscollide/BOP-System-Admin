@@ -65,3 +65,18 @@
   cursor: pointer;
   align-items: center !important;
 }
+.branchErrorMessage {
+  height: 0px;
+  margin-top: 0px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #f16b6b;
+  visibility: visible !important;
+}
+
+.branchErrorMessage_hidden {
+  visibility: hidden;
+  margin: 0;
+  height: 16px;
+  color: #f16b6b !important;
+}

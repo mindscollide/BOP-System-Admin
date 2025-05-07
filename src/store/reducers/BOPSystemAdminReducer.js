@@ -30,6 +30,7 @@ const initialState = {
   GetVolmeterByBankID: null,
   GetCounterPartyNamesData: null,
   GetAllInstruments: null,
+  SearchAllUserLoginHistory: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -519,7 +520,27 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        GetAllInstruments: [],
+        GetAllInstruments: null,
+        ResponseMessage: action.message,
+      };
+    //Search Bank Users
+    case actions.SEARCH_ALL_USER_LOGIN_HISTORY_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.SEARCH_ALL_USER_LOGIN_HISTORY_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        SearchAllUserLoginHistory: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.SEARCH_ALL_USER_LOGIN_HISTORY_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        SearchAllUserLoginHistory: null,
         ResponseMessage: action.message,
       };
     default:

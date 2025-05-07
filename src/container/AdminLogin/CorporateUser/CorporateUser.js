@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./Corporateuser.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -37,6 +37,7 @@ const CorporateUser = () => {
 
   //Global Staate
   // const { BOPSystemAdminReducer } = useSelector((state) => state);
+  const [modalState, setModalState] = useState(0);
 
   // get all corporates (company name)
   const GetAllCorporates = useSelector(
@@ -79,7 +80,6 @@ const CorporateUser = () => {
   const [open, setOpen] = useState(false);
 
   //state for cancel button
-  const [cancelClicked, setCancelClicked] = useState(false);
 
   const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
   //add bank user security admin validate handler
@@ -180,7 +180,10 @@ const CorporateUser = () => {
   //     });
   //   }
   // };
-
+  //state for save and cancel button
+  const showActivationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.confirmationModal
+  );
   const addCorporateUserValidateHandler = (e) => {
     const { name, value } = e.target;
 
@@ -220,58 +223,86 @@ const CorporateUser = () => {
   const handleActivateButton = () => {
     if (validateEmail(corporateUser.email.value)) {
       dispatch(ConfirmationModalSystemAdmin(true));
+      setModalState(1);
     } else {
       setErrorShow(true);
     }
   };
   //handle Active Button
   // show error message When user hit activate btn
-  const handleActivateButtonYes = () => {
-    if (
-      corporateUser.firstName.value !== "" &&
-      corporateUser.email.value !== "" &&
-      corporateUser.companyName !== ""
-    ) {
-      console.log(
-        "corporateUser.firstName.value",
-        corporateUser.firstName.value
-      );
-      console.log("corporateUser.email.value", corporateUser.email.value);
-      console.log(
-        "corporateUser.companyName.value",
-        corporateUser.companyName.value
-      );
+  const handleConfirmationYes = useCallback(() => {
+    console.log(modalState, "modalState");
+    try {
+      if (modalState === 1) {
+        if (
+          corporateUser.firstName.value !== "" &&
+          corporateUser.email.value !== "" &&
+          corporateUser.companyName !== ""
+        ) {
+          console.log(
+            "corporateUser.firstName.value",
+            corporateUser.firstName.value
+          );
+          console.log("corporateUser.email.value", corporateUser.email.value);
+          console.log(
+            "corporateUser.companyName.value",
+            corporateUser.companyName.value
+          );
 
-      if (validateEmail(corporateUser.email.value)) {
-        setErrorShow(false);
-        let newData = {
-          User: {
-            FirstName: corporateUser.firstName.value,
-            Email: corporateUser.email.value,
-            ContactNumber: "03909090909",
-          },
-          // BankId: 1,
-          CorporateID: 1,
-          // CategoryID: corporateUser.category.value,
-          // CompanyName: corporateUser.companyName.value,
-          IsChatActive: corporateUser.isChatActive.value,
-        };
+          if (validateEmail(corporateUser.email.value)) {
+            setErrorShow(false);
+            let newData = {
+              User: {
+                FirstName: corporateUser.firstName.value,
+                Email: corporateUser.email.value,
+                ContactNumber: "03909090909",
+              },
+              // BankId: 1,
+              CorporateID: 1,
+              // CategoryID: corporateUser.category.value,
+              // CompanyName: corporateUser.companyName.value,
+              IsChatActive: corporateUser.isChatActive.value,
+            };
 
-        dispatch(CreateCorporateUserRequestAPI(navigate, newData));
-      } else {
-        console.log("corporateUsercorporateUser");
-        setErrorShow(true);
+            dispatch(
+              CreateCorporateUserRequestAPI(
+                navigate,
+                newData,
+                handleCancelButtonYes
+              )
+            );
+          } else {
+            console.log("corporateUsercorporateUser");
+            setErrorShow(true);
+          }
+        } else {
+          // setTimeout();
+
+          setOpen({
+            open: true,
+            message: "Fill All Required Fields",
+          });
+          setErrorShow(true);
+        }
+      } else if (modalState === 2) {
+        dispatch(ConfirmationModalSystemAdmin(false));
+        setModalState(0);
+        handleCancelButtonYes();
       }
-    } else {
-      // setTimeout();
-
-      setOpen({
-        open: true,
-        message: "Fill All Required Fields",
-      });
-      setErrorShow(true);
+    } catch (error) {
+      console.log("newData", error);
     }
-  };
+  }, [modalState, corporateUser]);
+
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    } else if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    }
+  }, [modalState]);
 
   //handle Plus Button
   const handlePlusButton = () => {
@@ -316,27 +347,27 @@ const CorporateUser = () => {
   };
 
   const handleCancelButton = () => {
-    setCancelClicked(true);
     dispatch(ConfirmationModalSystemAdmin(true));
+    setModalState(2);
   };
   const handleCancelButtonYes = () => {
-    setCompanyRole(null);
-    setCorporateUser({
-      ...corporateUser,
+    setCompanyRole(companyNameOptions[0]);
+
+    console.log(companyNameOptions, "companyNameOptions");
+    setCorporateUser((prevState) => ({
+      ...prevState,
+      companyID: companyNameOptions[0].value,
+      categoryName: companyNameOptions[0].category.categoryName,
+      natureOfClient: companyNameOptions[0].natureofBusiness.name,
+      rfqTreasury: `${companyNameOptions[0].rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+      rfqCorporate: `${companyNameOptions[0].rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
       firstName: {
         value: "",
       },
       email: {
         value: "",
       },
-      // companyName: {
-      //   value: "",
-      // },
-      // category: {
-      //   value: "",
-      // },
-    });
-    setCancelClicked(false);
+    }));
   };
 
   const CompanySelectHandler = async (selectedCompany) => {
@@ -358,27 +389,40 @@ const CorporateUser = () => {
   console.log("corporateUser.corporateID", corporateUser);
 
   useEffect(() => {
-    dispatch(getAllCorporatesCategory(navigate));
+    dispatch(getAllCorporatesCategory(navigate, null));
   }, []);
 
   useEffect(() => {
-    if (companyRoleID === null) {
-      if (GetAllCorporates !== null) {
-        try {
-          let newCorporateData = GetAllCorporates.corporates.map(
-            (corporate) => {
-              return {
-                ...corporate,
-                value: corporate.corporateID,
-                label: corporate.corporateName,
-              };
+    if (GetAllCorporates !== null) {
+      try {
+        let newCorporateData = GetAllCorporates.corporates.map((corporate) => {
+          return {
+            ...corporate,
+            value: corporate.corporateID,
+            label: corporate.corporateName,
+          };
+        });
+
+        // Update local state with with formatted Company options
+        setCompanyNameOptions(newCorporateData);
+
+        if (newCorporateData.length > 0) {
+          if (companyRoleID !== null) {
+            let getCompanyData = newCorporateData.find(
+              (data, index) => data.value === companyRoleID.value
+            );
+            if (getCompanyData !== undefined) {
+              setCompanyRole(getCompanyData);
+              setCorporateUser((prevState) => ({
+                ...prevState,
+                companyID: getCompanyData.value,
+                categoryName: getCompanyData.category.categoryName,
+                natureOfClient: getCompanyData.natureofBusiness.name,
+                rfqTreasury: `${getCompanyData.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
+                rfqCorporate: `${getCompanyData.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+              }));
             }
-          );
-
-          // Update local state with with formatted Company options
-          setCompanyNameOptions(newCorporateData);
-
-          if (newCorporateData.length > 0) {
+          } else {
             setCompanyRole(newCorporateData[0]);
             setCorporateUser((prevState) => ({
               ...prevState,
@@ -389,12 +433,12 @@ const CorporateUser = () => {
               rfqCorporate: `${newCorporateData[0].rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
             }));
           }
-        } catch (error) {
-          console.log("Encounred an Error: ", error);
         }
+      } catch (error) {
+        console.log("Encounred an Error: ", error);
       }
     }
-  }, [GetAllCorporates, cancelClicked]);
+  }, [GetAllCorporates]);
 
   // Handle File upload
   const HandleFileUpload = (event) => {
@@ -701,18 +745,12 @@ const CorporateUser = () => {
       {editCompanyModalGobalState && (
         <EditCompanyModal editCompanyData={editCompanyData} />
       )}
-      {
-        // AddBankUserConfirmationModal && (
-        <ActivateConfirmationModal onConfirm={handleActivateButtonYes} />
-        // )
-      }
-      {
-        //
-        cancelClicked === true && (
-          <ActivateConfirmationModal onConfirm={handleCancelButtonYes} />
-        )
-        // )
-      }
+      {showActivationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleConfirmationYes}
+          handleNoButton={handleNoButton}
+        />
+      )}
       {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>

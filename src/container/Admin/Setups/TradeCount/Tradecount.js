@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./Tradecount.module.css";
 import { Col, Row } from "react-bootstrap";
 import {
@@ -42,6 +42,11 @@ const TradeCount = () => {
   //Trade Count States
   const [tradeCount, setTradeCount] = useState({ ...tradeCountSchema });
 
+  //state for save and cancel button
+  const showActivationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.confirmationModal
+  );
+  const [modalState, setModalState] = useState(0);
   //Sate For Side
   const [side, setSide] = useState("");
   const [natureOptions, setNatureOptions] = useState([]);
@@ -345,30 +350,44 @@ const TradeCount = () => {
 
     console.log("searchData is", searchData);
   };
-
+  //Table columns for customer List
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    } else if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    }
+  }, [modalState]);
   // show error message When user hit activate btn
   const handleResetEventButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
+    setModalState(2);
   };
 
   const handleResetYes = () => {
-    setTradeCount({
-      ...tradeCountSchema,
-      side: {
-        value: "",
-      },
-      Nature: {
-        value: "",
-      },
-      dateFrom: {
-        value: "",
-      },
-      dateTo: {
-        value: "",
-      },
-    });
-    setSide("");
-    setNatureID("");
+    if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+      setTradeCount({
+        ...tradeCountSchema,
+        side: {
+          value: "",
+        },
+        Nature: {
+          value: "",
+        },
+        dateFrom: {
+          value: "",
+        },
+        dateTo: {
+          value: "",
+        },
+      });
+      setSide("");
+      setNatureID("");
+    }
   };
 
   //Handle Select Change
@@ -634,7 +653,12 @@ const TradeCount = () => {
         </Col>
       </Row>
       {TradeCountCommentModalGobalState && <CommentModal />}
-      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
+      {showActivationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleResetYes}
+          handleNoButton={handleNoButton}
+        />
+      )}
     </section>
   );
 };

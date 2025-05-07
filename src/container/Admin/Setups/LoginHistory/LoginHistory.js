@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./LoginHistory.module.css";
 import DatePicker from "react-multi-date-picker";
 import Select from "react-select";
@@ -8,10 +8,15 @@ import {
   TextField,
   Button,
   Table,
+  Loader,
 } from "../../../../components/elements";
 import ExportShowComponent from "../BankerList/ExportShowComponent";
 import { loginHistorySchema } from "../../../../utils/schemas";
-import { formatDate } from "../../../../helpers/reusableMethods";
+import {
+  formatDate,
+  formatDateAndTimeFromString,
+  formatTimeSpan,
+} from "../../../../helpers/reusableMethods";
 import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { ConfirmationModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
@@ -21,15 +26,31 @@ import excelIcon from "../../../../assets/images/excel.png";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RoleListAPI } from "../../../../store/actions/Auth-Actions";
+import { SearchAllUserLoginHistoryAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import moment from "moment";
 const LoginHistory = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   //Login History States
   const [loginHistory, setLoginHistory] = useState({
     ...loginHistorySchema,
   });
+  //Global State
+  const { BOPSystemAdminReducer } = useSelector((state) => state);
+  // Search All User Login History
+  const SearchAllUserLoginHistory = useSelector(
+    (state) => state.BOPSystemAdminReducer.SearchAllUserLoginHistory
+  );
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  console.log("SearchAllUserLoginHistory", SearchAllUserLoginHistory);
+  //state for save and cancel button
+  const showActivationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.confirmationModal
+  );
 
+  const [tableData, setTableData] = useState([]);
+  const [modalState, setModalState] = useState(0);
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
   console.log("getAllCategories", getAllCategories);
 
@@ -135,162 +156,163 @@ const LoginHistory = () => {
   const columns = [
     {
       title: <label className="px-3">Email</label>,
-      dataIndex: "Email",
-      key: "Email",
+      dataIndex: "email",
+      key: "email",
       width: "220px",
-      ellipsis: true,
       align: "left",
+      ellipsis: true,
     },
     {
       title: <label className="px-3">Name</label>,
-      dataIndex: "Name",
-      key: "Name",
+      dataIndex: "userName",
+      key: "userName",
       width: "200px",
       align: "left",
       ellipsis: true,
     },
 
     {
-      title: <label className="px-3">Counter party Name</label>,
-      dataIndex: "CounterPartyName",
-      key: "CounterPartyName",
-      width: "200px",
+      title: <label className="px-3">Counter Party</label>,
+      dataIndex: "counterPartyName",
+      key: "counterPartyName",
+      width: "150px",
       align: "left",
       ellipsis: true,
     },
 
     {
       title: <label className="px-3">Role</label>,
-      dataIndex: "Role",
-      key: "Role",
+      dataIndex: "roleID",
+      key: "roleID",
       width: "100px",
       ellipsis: true,
       align: "left",
-    },
-
-    {
-      title: <label className="px-3">Branch</label>,
-      dataIndex: "BranchName",
-      key: "BranchName",
-      width: "100px",
-      ellipsis: true,
-      align: "left",
+      render: (roleID) => {
+        // Find the role name from the roles array based on userRoleID
+        const role =
+          RoleList?.roles?.length > 0 &&
+          RoleList.roles.find((role) => role.roleID === roleID);
+        return role ? role.roleName : ""; // Default if role not found
+      },
     },
 
     {
       title: <label className="px-3">IP Address</label>,
-      dataIndex: "IPAddress",
-      key: "IPAddress",
-      width: "150px",
+      dataIndex: "ipAddress",
+      key: "ipAddress",
+      width: "130px",
       align: "left",
       ellipsis: true,
     },
     {
       title: <label className="px-3">Logged In Time</label>,
-      dataIndex: "LastPassowrdChange",
-      key: "LastPassowrdChange",
+      dataIndex: "logInDateTime",
+      key: "logInDateTime",
       align: "left",
-      width: "180px",
+      width: "160px",
       ellipsis: true,
+      render: (logInDateTime) => {
+        // Format the date and time
+        return logInDateTime !== "-"
+          ? moment(formatDateAndTimeFromString(logInDateTime)).format(
+              "DD/MM/YYYY HH:mm:ss"
+            )
+          : "-";
+      },
     },
     {
       title: <label className="px-3">Logged Out Time</label>,
-      dataIndex: "creationDateTime",
-      key: "creationDateTime",
+      dataIndex: "logOutDateTime",
+      key: "logOutDateTime",
       align: "left",
-      width: "180px",
+      width: "160px",
       ellipsis: true,
+      render: (logOutDateTime) => {
+        // Format the date and time
+        return logOutDateTime !== "-"
+          ? moment(formatDateAndTimeFromString(logOutDateTime)).format(
+              "DD/MM/YYYY HH:mm:ss"
+            )
+          : "-";
+      },
     },
 
     {
       title: <label className="px-3">Total Span</label>,
-      dataIndex: "creationDateTime",
-      key: "creationDateTime",
+      dataIndex: "totalSpan",
+      key: "totalSpan",
       align: "left",
-      width: "180px",
+      width: "150px",
       ellipsis: true,
+      render: (duration) => {
+        return formatTimeSpan(duration);
+      },
     },
   ];
-  //Dummy Data
-  const data = [
-    {
-      key: "1",
-      EmployeeID: "0123",
-      Email: "john.doe@example.com",
-      Name: "John Doe",
-      Role: "Branch",
-      BranchName: "Saddar",
-      IPAddress: "225.225.225.225",
-      CounterPartyName: "Zohair Zanzibarwala",
-      ContactNumber: "03909090909",
-      Status: "Active",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i className="icon-edit color-blue"></i>
-            {/* <i className="icon-trash color-red"></i> */}
-          </Col>
-        </Row>
-      ),
-    },
-    {
-      key: "2",
-      EmployeeID: "0654",
-      Email: "yunus@bop.com",
-      Name: "Tom Cruise",
-      Role: "Dealer",
-      BranchName: "Clifton",
-      IPAddress: "192.168.121.111",
-      CounterPartyName: "Yunus Zanzibarwala",
-      ContactNumber: "01234567890",
-      Status: "Active",
-      LastPassowrdChange: "13/05/2023 01:15:10",
-      creationDateTime: "13/05/2023 01:15:10",
-      Edit: (
-        <Row>
-          <Col lg={12} md={12} sm={12} className="d-flex gap-2">
-            <i className="icon-edit color-blue"></i>
-            {/* <i className="icon-trash color-red"></i> */}
-          </Col>
-        </Row>
-      ),
-    },
-  ];
+
   //Handle search Button even
   const handleSearchEventButton = () => {
     let data = {
-      FirstName: loginHistory?.Name?.value,
+      UserName: loginHistory.Name.value,
       CounterPartyName: loginHistory?.CounterPartyName?.value,
-      Email: loginHistory?.Email?.value,
-      Role: loginHistory?.Role?.value,
-      CategoryID: loginHistory?.category?.value,
-      From: formatDate(loginHistory.dateFrom.value),
-      To: formatDate(loginHistory.dateTo.value),
+      Email: loginHistory.Email.value,
+      RoleID: roleID.value,
+
+      StartDateTime: formatDate(loginHistory.dateFrom.value),
+      EndDateTime: formatDate(loginHistory.dateTo.value),
       PageNumber: 1,
       Length: 10,
     };
     console.log("Search Customer:", data);
+    dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
   };
-
+  //Table columns for customer List
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    } else if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    }
+  }, [modalState]);
   // show error message When user hit activate btn
   const handleResetEventButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
+    setModalState(2);
   };
 
   //Handle Resest Button
   const handleResetYes = () => {
-    // Reset the form
-    setLoginHistory({
-      ...loginHistorySchema,
+    if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
 
-      dateFrom: { value: "", errorMessage: "", errorStatus: false },
-      dateTo: { value: "", errorMessage: "", errorStatus: false },
-      category: { value: "", errorMessage: "", errorStatus: false },
-      Role: { value: "", errorMessage: "", errorStatus: false },
-    });
-    setRoleID("");
+      // Reset the form
+      setLoginHistory({
+        ...loginHistorySchema,
+
+        dateFrom: { value: "", errorMessage: "", errorStatus: false },
+        dateTo: { value: "", errorMessage: "", errorStatus: false },
+        category: { value: "", errorMessage: "", errorStatus: false },
+        Role: { value: "", errorMessage: "", errorStatus: false },
+      });
+      setRoleID({
+        value: 0,
+        label: "",
+      });
+    }
+    let data = {
+      Email: "",
+      CounterPartyName: "",
+      UserName: "",
+      RoleID: 0,
+      StartDateTime: "",
+      EndDateTime: "",
+      PageNumber: 1,
+      Length: 10,
+    };
+    dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
   };
 
   //Handle Date Change method
@@ -355,7 +377,19 @@ const LoginHistory = () => {
       </div>
     );
   };
+
   useEffect(() => {
+    let data = {
+      Email: "",
+      CounterPartyName: "",
+      UserName: "",
+      RoleID: 0,
+      StartDateTime: "",
+      EndDateTime: "",
+      PageNumber: 1,
+      Length: 10,
+    };
+    dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
     dispatch(RoleListAPI(navigate));
   }, []);
   //Role list:
@@ -372,7 +406,21 @@ const LoginHistory = () => {
         setRoleOptions(newRolesData);
       } catch (error) {}
     }
-  }, [RoleList]);
+
+    if (SearchAllUserLoginHistory !== null) {
+      console.log(
+        "SearchAllUserLoginHistorySearchAllUserLoginHistory",
+        SearchAllUserLoginHistory
+      );
+      try {
+        const { userLoginHistory } = SearchAllUserLoginHistory;
+        if (userLoginHistory.length > 0) {
+          console.log("userLoginHistoryuserLoginHistory", userLoginHistory);
+          setTableData(userLoginHistory);
+        }
+      } catch (error) {}
+    }
+  }, [RoleList, SearchAllUserLoginHistory]);
 
   return (
     <section className={styles["SectionContainer"]}>
@@ -522,7 +570,8 @@ const LoginHistory = () => {
                 <Table
                   column={columns}
                   pagination={false}
-                  rows={data}
+                  rows={tableData}
+                  scroll={{ y: 250, x: "scroll" }}
                   className={"BankUserList-table"}
                 />
               </Col>
@@ -530,7 +579,14 @@ const LoginHistory = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {BOPSystemAdminReducer.Loading && <Loader />}
       {<ActivateConfirmationModal onConfirm={handleResetYes} />}
+      {showActivationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleResetYes}
+          handleNoButton={handleNoButton}
+        />
+      )}
     </section>
   );
 };

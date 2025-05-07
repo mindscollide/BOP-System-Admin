@@ -199,6 +199,13 @@ const UpdateUserSettings = {
   RequestMethod: "ServiceManager.UpdateUserSettings",
 };
 
+const IsEmployeeIDExists = {
+  RequestMethod: "ServiceManager.IsEmployeeIDExists",
+};
+const SearchAllUserLoginHistory = {
+  RequestMethod: "ServiceManager.SearchAllUserLoginHistory",
+};
+
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -246,4 +253,6 @@ export {
   GetAllInstrumentTypes,
   GetUserSettings,
   UpdateUserSettings,
+  IsEmployeeIDExists,
+  SearchAllUserLoginHistory,
 };

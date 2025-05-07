@@ -97,3 +97,18 @@
   align-items: center !important;
   gap: 4px !important;
 }
+.companyErrorMessage {
+  height: 0px;
+  margin-top: 0px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #f16b6b;
+  visibility: visible !important;
+}
+
+.companyErrorMessage_hidden {
+  visibility: hidden;
+  margin: 0;
+  height: 16px;
+  color: #f16b6b !important;
+}

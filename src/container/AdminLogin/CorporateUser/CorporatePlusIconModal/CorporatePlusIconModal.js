@@ -128,8 +128,7 @@ const CorporatePlusIconModal = () => {
       BankId: 1,
     };
     // console.log("datadatadata", data);
-    dispatch(CreateNewCorporateAPI(navigate, data));
-    dispatch(corporatePlusIconModalSystemAdmin(false));
+    dispatch(CreateNewCorporateAPI(navigate, data, setAddCompnany));
   };
 
   // Fetch categories on component mount
@@ -254,6 +253,15 @@ const CorporatePlusIconModal = () => {
                 onChange={handleValueChangeAndValidation}
                 maxLength={50}
               />
+              {addCompany.companyName.errorStatus && (
+                <Row>
+                  <Col className="d-flex justify-content-start">
+                    <p className={styles["companyErrorMessage"]}>
+                      {addCompany.companyName.errorMessage}
+                    </p>
+                  </Col>
+                </Row>
+              )}
             </Col>
           </Row>
           <Row className="mt-3">

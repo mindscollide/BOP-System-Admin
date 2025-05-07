@@ -50,6 +50,12 @@ export const formatDateAndTimeFromString = (date) => {
   return new Date(dateString);
 };
 
+export const formatTimeSpan = (timeString) => {
+  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+
+  return `${hours} hrs ${minutes} mins ${seconds} secs`;
+};
+
 export const formatCurrencyInput = (value) => {
   if (!value) return ""; // Return empty string if no value
 

@@ -18,6 +18,16 @@ const EditBankUserModal = ({ editBranchData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const [branchEditError, setBranchEditError] = useState({
+    branchName: {
+      errorStatus: false,
+      errorMessage: "",
+    },
+    branchCode: {
+      errorStatus: false,
+      errorMessage: "",
+    },
+  });
 
   const [updateBranch, setUpdateBranch] = useState({ ...editBranchData });
   console.log("updateBranch", updateBranch);
@@ -91,7 +101,7 @@ const EditBankUserModal = ({ editBranchData }) => {
         BranchContact: updateBranch.branchContact,
       };
       console.log("data", data);
-      dispatch(UpdateBranchAPI(navigate, data));
+      dispatch(UpdateBranchAPI(navigate, data, setBranchEditError));
     } catch (err) {
       console.log("error: ", err);
     }
@@ -129,6 +139,16 @@ const EditBankUserModal = ({ editBranchData }) => {
                   onChange={updateBranchUserValidateHandler}
                   labelClass="d-none"
                 />
+
+                {branchEditError.branchName.errorStatus && (
+                  <Row>
+                    <Col className="d-flex justify-content-start">
+                      <p className={styles["branchErrorMessage"]}>
+                        {branchEditError.branchName.errorMessage}
+                      </p>
+                    </Col>
+                  </Row>
+                )}
               </Col>
             </Row>
             <Row className="mt-3">
@@ -146,6 +166,15 @@ const EditBankUserModal = ({ editBranchData }) => {
                   onChange={updateBranchUserValidateHandler}
                   labelClass="d-none"
                 />
+                {branchEditError.branchCode.errorStatus && (
+                  <Row>
+                    <Col className="d-flex justify-content-start">
+                      <p className={styles["branchErrorMessage"]}>
+                        {branchEditError.branchCode.errorMessage}
+                      </p>
+                    </Col>
+                  </Row>
+                )}
               </Col>
             </Row>
             <Row className="mt-3">

@@ -21,6 +21,7 @@ import {
   GetCounterPartyNames,
   GetAllInstruments,
   BankUsersBulkList,
+  SearchAllUserLoginHistory,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -30,6 +31,9 @@ import {
   RefreshToken,
 } from "./Auth-Actions";
 import {
+  AdduserModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
+  corporatePlusIconModalSystemAdmin,
   editBankUserModalSystemAdmin,
   editCompanyModalSystemAdmin,
 } from "./BOPSystemAdminModalsActions";
@@ -56,7 +60,7 @@ const CreateNewCorporateFail = (message) => {
   };
 };
 
-const CreateNewCorporateAPI = (navigate, data) => {
+const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
   let token = localStorage.getItem("token");
 
   return (dispatch) => {
@@ -76,7 +80,7 @@ const CreateNewCorporateAPI = (navigate, data) => {
         if (response.data.responseCode === 417) {
           console.log("response", response);
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateNewCorporateAPI(navigate, data));
+          dispatch(CreateNewCorporateAPI(navigate, data, setAddCompnany));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -90,6 +94,7 @@ const CreateNewCorporateAPI = (navigate, data) => {
                 )
               );
               dispatch(getAllCorporatesCategory(navigate));
+              dispatch(corporatePlusIconModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -114,6 +119,25 @@ const CreateNewCorporateAPI = (navigate, data) => {
                 )
             ) {
               dispatch(CreateNewCorporateFail("Corporate Not Saved"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateNewCorporate_05".toLowerCase()
+                )
+            ) {
+              dispatch(CreateNewCorporateFail("Corporate Already Exists"));
+
+              setAddCompnany((prevState) => {
+                return {
+                  ...prevState,
+                  companyName: {
+                    ...prevState.companyName,
+                    errorMessage: "Corporate Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -158,7 +182,11 @@ const UpdateCorporateByCorporateIDFail = (message) => {
   };
 };
 
-const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
+const UpdateCorporateByCorporateIDAPI = (
+  navigate,
+  data,
+  setCompanyEditError
+) => {
   let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateCorporateByCorporateIDInit());
@@ -176,7 +204,9 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
+          dispatch(
+            UpdateCorporateByCorporateIDAPI(navigate, data, setCompanyEditError)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -190,6 +220,7 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
                 )
               );
               dispatch(getAllCorporatesCategory(navigate));
+
               dispatch(editCompanyModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
@@ -199,6 +230,25 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
                 )
             ) {
               dispatch(UpdateCorporateByCorporateIDFail("No Record Updated "));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateByCorporateID_03".toLowerCase()
+                )
+            ) {
+              dispatch(
+                UpdateCorporateByCorporateIDFail("Corporate Already Exists")
+              );
+              setCompanyEditError((prevState) => {
+                return {
+                  ...prevState,
+                  corporateName: {
+                    errorMessage: "Corporate Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -244,7 +294,7 @@ const AddBranchFail = (message) => {
   };
 };
 
-const AddBranchAPI = (navigate, data) => {
+const AddBranchAPI = (navigate, data, setAddBranch) => {
   let token = localStorage.getItem("token");
   console.log(typeof token, token, "tokentoken");
   return (dispatch) => {
@@ -267,7 +317,7 @@ const AddBranchAPI = (navigate, data) => {
           console.log("response.data.responseCode", response.data.responseCode);
 
           await dispatch(RefreshToken(navigate));
-          dispatch(AddBranchAPI(navigate, data));
+          dispatch(AddBranchAPI(navigate, data, setAddBranch));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -281,6 +331,7 @@ const AddBranchAPI = (navigate, data) => {
                 )
               );
               dispatch(GetAllBranchesAPI(navigate));
+              dispatch(AdduserModalSystemAdmin(false));
 
               // dispatch(GetAllBranchesAPI());
             } else if (
@@ -299,6 +350,42 @@ const AddBranchAPI = (navigate, data) => {
                 )
             ) {
               dispatch(AddBranchFail("Exception"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddBranch_04".toLowerCase()
+                )
+            ) {
+              dispatch(AddBranchFail("Branch Name Already Exists"));
+              setAddBranch((prevState) => {
+                return {
+                  ...prevState,
+                  branchName: {
+                    ...prevState.branchName,
+                    errorMessage: "Branch Name Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddBranch_05".toLowerCase()
+                )
+            ) {
+              dispatch(AddBranchFail("Branch Code Already Exists"));
+              setAddBranch((prevState) => {
+                return {
+                  ...prevState,
+                  branchCode: {
+                    ...prevState.branchCode,
+                    errorMessage: "Branch Code Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             }
           } else {
             dispatch(AddBranchFail("Something went wrong"));
@@ -338,7 +425,7 @@ const UpdateBranchFail = (message) => {
   };
 };
 
-const UpdateBranchAPI = (navigate, data) => {
+const UpdateBranchAPI = (navigate, data, setBranchEditError) => {
   let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateBranchInit());
@@ -356,7 +443,7 @@ const UpdateBranchAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(UpdateBranchAPI(navigate, data));
+          dispatch(UpdateBranchAPI(navigate, data, setBranchEditError));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -369,6 +456,7 @@ const UpdateBranchAPI = (navigate, data) => {
                   "branch updated successfully"
                 )
               );
+
               dispatch(editBankUserModalSystemAdmin(false));
               dispatch(GetAllBranchesAPI(navigate));
             } else if (
@@ -387,6 +475,41 @@ const UpdateBranchAPI = (navigate, data) => {
                 )
             ) {
               dispatch(UpdateBranchFail("Exception"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranch_04".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateBranchFail("Branch Name Already Exists"));
+
+              setBranchEditError((prevState) => {
+                return {
+                  ...prevState,
+                  branchName: {
+                    errorMessage: "Branch Name Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranch_05".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateBranchFail("Branch Code Already Exists"));
+              setBranchEditError((prevState) => {
+                return {
+                  ...prevState,
+                  branchCode: {
+                    errorMessage: "Branch Code Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             }
           } else {
             dispatch(UpdateBranchFail("Something went wrong"));
@@ -423,7 +546,12 @@ const CreateBankUserRequestFail = (message) => {
   };
 };
 
-const CreateBankUserRequestAPI = (navigate, data) => {
+const CreateBankUserRequestAPI = (
+  navigate,
+  data,
+  handleCancelYes,
+  setAddBankUser
+) => {
   // console.log(data);
   // let token = JSON.parse(localStorage.getItem("token"));
   let token = localStorage.getItem("token");
@@ -447,19 +575,28 @@ const CreateBankUserRequestAPI = (navigate, data) => {
         console.log("response", response);
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateBankUserRequestAPI(navigate, data));
+          dispatch(
+            CreateBankUserRequestAPI(
+              navigate,
+              data,
+              handleCancelYes,
+              setAddBankUser
+            )
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_CreateBankUserRequest_01".toLowerCase()
             ) {
-              dispatch(
+              await dispatch(
                 CreateBankUserRequestSuccess(
                   response.data.responseResult,
                   "bank user request created"
                 )
               );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+              handleCancelYes();
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -495,9 +632,41 @@ const CreateBankUserRequestAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateBankUserRequest_06".toLowerCase()
                 )
             ) {
-              dispatch(
+              await dispatch(
                 CreateBankUserRequestFail("user's email already exists")
               );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+
+              setAddBankUser((prevState) => {
+                return {
+                  ...prevState,
+                  email: {
+                    ...prevState.email,
+                    errorMessage: "Email Already Exist",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBankUserRequest_07".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBankUserRequestFail("Employee ID Already Exists"));
+              dispatch(ConfirmationModalSystemAdmin(false));
+
+              setAddBankUser((prevState) => {
+                return {
+                  ...prevState,
+                  EmployeeID: {
+                    ...prevState.EmployeeID,
+                    errorMessage: "Employee ID Already Exist",
+                    errorStatus: true,
+                  },
+                };
+              });
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -725,7 +894,11 @@ const CreateCorporateUserRequestFail = (message) => {
   };
 };
 
-const CreateCorporateUserRequestAPI = (navigate, data) => {
+const CreateCorporateUserRequestAPI = (
+  navigate,
+  data,
+  handleCancelButtonYes
+) => {
   let token = localStorage.getItem("token");
 
   return (dispatch) => {
@@ -744,19 +917,23 @@ const CreateCorporateUserRequestAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateCorporateUserRequestAPI(navigate, data));
+          dispatch(
+            CreateCorporateUserRequestAPI(navigate, data, handleCancelButtonYes)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_01".toLowerCase()
             ) {
-              dispatch(
+              await dispatch(
                 CreateCorporateUserRequestSuccess(
                   response.data.responseResult,
                   "Corporate user request created"
                 )
               );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+              handleCancelButtonYes();
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2320,6 +2497,89 @@ const GetAllInstrumentsAPI = (navigate) => {
       });
   };
 };
+
+//SearchAllUserLoginHistoryAPI Actions
+const SearchAllUserLoginHistoryInit = () => {
+  return {
+    type: actions.SEARCH_ALL_USER_LOGIN_HISTORY_INIT,
+  };
+};
+
+const SearchAllUserLoginHistorySuccess = (response, message) => {
+  return {
+    type: actions.SEARCH_ALL_USER_LOGIN_HISTORY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SearchAllUserLoginHistoryFail = (message) => {
+  return {
+    type: actions.SEARCH_ALL_USER_LOGIN_HISTORY_FAIL,
+    message: message,
+  };
+};
+
+const SearchAllUserLoginHistoryAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(SearchAllUserLoginHistoryInit());
+    let form = new FormData();
+    form.append("RequestMethod", SearchAllUserLoginHistory.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_01".toLowerCase()
+            ) {
+              dispatch(
+                SearchAllUserLoginHistorySuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_02".toLowerCase()
+                )
+            ) {
+              dispatch(SearchAllUserLoginHistoryFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_03".toLowerCase()
+                )
+            ) {
+              dispatch(SearchAllUserLoginHistoryFail("Exception"));
+            }
+          } else {
+            dispatch(SearchAllUserLoginHistoryFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SearchAllUserLoginHistoryFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SearchAllUserLoginHistoryFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -2343,4 +2603,5 @@ export {
   UpdateCategoryAPI,
   GetCounterPartyNamesAPI,
   GetAllInstrumentsAPI,
+  SearchAllUserLoginHistoryAPI,
 };

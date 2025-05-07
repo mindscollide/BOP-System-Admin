@@ -244,6 +244,7 @@ const SpreadManagement = () => {
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                   onClick={handleResetParityAndCross}
+                  disableBtn={true}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
@@ -278,6 +279,7 @@ const SpreadManagement = () => {
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                   onClick={handleResetForward}
+                  disableBtn={true}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
@@ -311,6 +313,7 @@ const SpreadManagement = () => {
                   text="Reset"
                   // onClick={() => setDiscountingData(resetDiscountingState)}
                   onClick={handleResetDiscounting}
+                  disableBtn={true}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}

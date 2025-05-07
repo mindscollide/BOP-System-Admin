@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./BankerList.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
@@ -39,6 +39,11 @@ const BankerList = () => {
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
 
+  //state for save and cancel button
+  const showActivationModal = useSelector(
+    (state) => state.BOPSystemAdminModal.confirmationModal
+  );
+  const [modalState, setModalState] = useState(0);
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
     setShowExportOptions(!showExportOptions);
@@ -75,10 +80,10 @@ const BankerList = () => {
   //Global State
   const { BOPSystemAdminReducer } = useSelector((state) => state);
 
-  //Get All Branches
-  useEffect(() => {
-    dispatch(GetAllBranchesAPI(navigate));
-  }, []);
+  // //Get All Branches
+  // useEffect(() => {
+  //   dispatch(GetAllBranchesAPI(navigate));
+  // }, []);
 
   //State BankList
   const [bankList, setBankList] = useState({ ...bankListSchema });
@@ -213,6 +218,7 @@ const BankerList = () => {
   };
 
   useEffect(() => {
+    dispatch(GetAllBranchesAPI(navigate));
     dispatch(GetBankUserRolesAPI(navigate));
     let data = {
       EmployeeID: "",
@@ -227,34 +233,48 @@ const BankerList = () => {
     dispatch(SearchBankUsersAPI(navigate, data));
   }, []);
 
+  //Table columns for customer List
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    } else if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+    }
+  }, [modalState]);
   // show error message When user hit activate btn
   const handleReset = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
+    setModalState(2);
   };
 
   //Handle Reset
   const handleResetYes = () => {
-    // dispatch(AddBankUserConfirmationModalSystemAdmin(false));
-    // Reset all form fields, including the dropdown
-    setBankList({
-      EmployeeID: { value: "" },
-      Name: { value: "" },
-      Email: { value: "" },
-      roleID: { value: "" }, // Ensure role is cleared
-    });
-    setRoleID(""); // Reset dropdown value
+    if (modalState === 2) {
+      dispatch(ConfirmationModalSystemAdmin(false));
+      setModalState(0);
+      // Reset all form fields, including the dropdown
+      setBankList({
+        EmployeeID: { value: "" },
+        Name: { value: "" },
+        Email: { value: "" },
+        roleID: { value: "" }, // Ensure role is cleared
+      });
+      setRoleID(""); // Reset dropdown value
 
-    let data = {
-      EmployeeID: "",
-      Name: "",
-      Email: "",
-      RoleID: 0,
-      PageNumber: 1,
-      Length: 50,
-    };
+      let data = {
+        EmployeeID: "",
+        Name: "",
+        Email: "",
+        RoleID: 0,
+        PageNumber: 1,
+        Length: 50,
+      };
 
-    // Call API to fetch all records after reset
-    dispatch(SearchBankUsersAPI(navigate, data));
+      // Call API to fetch all records after reset
+      dispatch(SearchBankUsersAPI(navigate, data));
+    }
   };
 
   //handle Edit Corporate
@@ -581,6 +601,12 @@ const BankerList = () => {
       {/* {showExportOptions && (
         <ExportOptions onClose={() => setShowExportOptions(false)} />
       )} */}
+      {showActivationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleResetYes}
+          handleNoButton={handleNoButton}
+        />
+      )}
     </section>
   );
 };
