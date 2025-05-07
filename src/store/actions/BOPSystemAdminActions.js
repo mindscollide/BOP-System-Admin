@@ -897,7 +897,8 @@ const CreateCorporateUserRequestFail = (message) => {
 const CreateCorporateUserRequestAPI = (
   navigate,
   data,
-  handleCancelButtonYes
+  handleCancelButtonYes,
+  setCorporateUser
 ) => {
   let token = localStorage.getItem("token");
 
@@ -918,7 +919,12 @@ const CreateCorporateUserRequestAPI = (
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
-            CreateCorporateUserRequestAPI(navigate, data, handleCancelButtonYes)
+            CreateCorporateUserRequestAPI(
+              navigate,
+              data,
+              handleCancelButtonYes,
+              setCorporateUser
+            )
           );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
@@ -954,8 +960,18 @@ const CreateCorporateUserRequestAPI = (
                 )
             ) {
               dispatch(
-                CreateCorporateUserRequestFail("user's email already exists")
+                CreateCorporateUserRequestFail("User's email already exists")
               );
+              setCorporateUser((prevState) => {
+                return {
+                  ...prevState,
+                  email: {
+                    ...prevState.email,
+                    errorMessage: "User's email already exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

@@ -268,9 +268,11 @@ const CorporateUser = () => {
               CreateCorporateUserRequestAPI(
                 navigate,
                 newData,
-                handleCancelButtonYes
+                handleCancelButtonYes,
+                setCorporateUser
               )
             );
+            dispatch(ConfirmationModalSystemAdmin(false));
           } else {
             console.log("corporateUsercorporateUser");
             setErrorShow(true);
@@ -521,9 +523,18 @@ const CorporateUser = () => {
                         <TextField
                           labelClass="d-none"
                           name={"email"}
-                          value={corporateUser.email?.value || ""}
+                          value={corporateUser.email.value || ""}
                           onChange={addCorporateUserValidateHandler}
                         />
+                        {corporateUser.email.errorStatus && (
+                          <Row>
+                            <Col className="d-flex justify-content-start">
+                              <p className={styles["bankErrorMessage"]}>
+                                {corporateUser.email.errorMessage}
+                              </p>
+                            </Col>
+                          </Row>
+                        )}
                         {/* <Row>
                             <Col className="d-flex justify-content-start">
                               <p

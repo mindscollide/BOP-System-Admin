@@ -645,6 +645,7 @@ const TradeCount = () => {
                   column={tradeColumns}
                   pagination={false}
                   rows={data}
+                  scroll={{ x: "scroll" }}
                   className={"BankUserList-table"}
                 />
               </Col>
