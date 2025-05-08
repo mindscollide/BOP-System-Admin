@@ -40,13 +40,13 @@ import {
   GetCorporateUserByUserIDApi,
   SearchCorporateUsersAPI,
 } from "../../../../store/actions/CorporateUsersAction";
-
+import { useTableScrollBottom } from "../../../../helpers/useTableScrollBottom";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   //Global State
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
+  // const { BOPSystemAdminReducer } = useSelector((state) => state);
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
   console.log("getAllCategories", getAllCategories);
 
@@ -68,7 +68,9 @@ const CorporateList = () => {
 
   //States Corporate List
   const [corporateUserId, setCorproateUserId] = useState(0);
-  const [corporateList, setCorporateList] = useState(corporateListSchema);
+  const [corporateList, setCorporateList] = useState({
+    ...corporateListSchema,
+  });
   const [tableData, setTableData] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   //State for dropdown
@@ -76,7 +78,14 @@ const CorporateList = () => {
     value: 0,
     label: "",
   });
+
+  //row length on scroll
+  const [sRow, setSRow] = useState(0);
+  const [recordsLength, setRecordLength] = useState(0);
   console.log(tableData, "tableData");
+  const loadingState = useSelector(
+    (state) => state.CorporateUsersReducer.Loading
+  );
   //Search all  corporate Users
   const SearchCorporateUsers = useSelector(
     (state) => state.CorporateUsersReducer.SearchCorporateUsersData
@@ -97,6 +106,23 @@ const CorporateList = () => {
     (state) => state.BOPSystemAdminModal.userDetailsCorporateModal
   );
 
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (recordsLength !== tableData.length) {
+      let Data = {
+        FirstName: corporateList.Name.value,
+        CompanyName: corporateList.CorporateName.value,
+        CategoryID: categoryID.categoryID ? categoryID.categoryID : 0,
+        Email: corporateList.Email.value,
+        sRow: sRow,
+        Length: 10,
+      };
+      dispatch(SearchCorporateUsersAPI(navigate, Data));
+    }
+  });
+
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
     let data = {
@@ -104,7 +130,7 @@ const CorporateList = () => {
       CompanyName: "",
       CategoryID: 0,
       Email: "",
-      PageNumber: 1,
+      sRow: 0,
       Length: 10,
     };
 
@@ -235,14 +261,19 @@ const CorporateList = () => {
     dispatch(DeleteCorporateModalSystemAdmin(false));
   };
 
+  //handelled states for scrolling here (2)
   //Handle search Button even
   const handleSearchEventButton = () => {
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
     let data = {
       FirstName: corporateList.Name.value,
       CompanyName: corporateList.CorporateName.value,
-      CategoryID: categoryID.categoryID,
       Email: corporateList.Email.value,
-      PageNumber: 1,
+      CategoryID: categoryID.categoryID ? categoryID.categoryID : 0,
+      sRow: 0,
       Length: 10,
     };
 
@@ -267,8 +298,12 @@ const CorporateList = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
     setModalState(2);
   };
-
+  //handeled states for scrolling here (3)
   const handleResetYes = () => {
+    setHasReachedBottom(false);
+    setRecordLength(0);
+    setSRow(0);
+    setTableData([]);
     if (modalState === 2) {
       dispatch(ConfirmationModalSystemAdmin(false));
       setModalState(0);
@@ -285,7 +320,7 @@ const CorporateList = () => {
         CompanyName: "",
         CategoryID: 0,
         Email: "",
-        PageNumber: 1,
+        sRow: 0,
         Length: 10,
       };
 
@@ -410,14 +445,34 @@ const CorporateList = () => {
       },
     },
   ];
+
+  //handelled scrolling here (4)
   useEffect(() => {
     if (SearchCorporateUsers !== null) {
       try {
-        const { corporateUsers } = SearchCorporateUsers;
-        if (corporateUsers.length > 0) {
-          setTableData(SearchCorporateUsers.corporateUsers);
+        const { corporateUsers, totalRecords } = SearchCorporateUsers;
+        if (hasReachedBottom) {
+          setHasReachedBottom(false);
+          setRecordLength(totalRecords);
+          setTableData([...tableData, ...corporateUsers]);
+          setSRow(tableData.length + corporateUsers.length);
+        } else {
+          setHasReachedBottom(false);
+          setTableData(corporateUsers);
+          setRecordLength(totalRecords);
+          setSRow(corporateUsers.length);
         }
+        // if (corporateUsers.length > 0) {
+        //   setTableData(SearchCorporateUsers.corporateUsers);
+        // }
       } catch (error) {}
+    } else if (SearchCorporateUsers === null) {
+      if (!hasReachedBottom) {
+        setHasReachedBottom(false);
+        setTableData([]);
+        setRecordLength(0);
+        setSRow(0);
+      }
     }
   }, [SearchCorporateUsers]);
 
@@ -611,7 +666,7 @@ const CorporateList = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {loadingState && <Loader />}
 
       {EditCorporateModalGobalState && (
         <EditCorporateModal

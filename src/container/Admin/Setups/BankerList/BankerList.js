@@ -32,6 +32,7 @@ import {
 } from "../../../../store/actions/Auth-Actions";
 import { formatDateAndTimeFromString } from "../../../../helpers/reusableMethods";
 import moment from "moment";
+import { useTableScrollBottom } from "../../../../helpers/useTableScrollBottom";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,6 +59,9 @@ const BankerList = () => {
     label: "",
   });
 
+  //row length on scroll
+  const [sRow, setSRow] = useState(0);
+  const [recordsLength, setRecordLength] = useState(0);
   // //Sate for handling export options
   // const [showExportOptions, setShowExportOptions] = useState(false);
 
@@ -79,11 +83,6 @@ const BankerList = () => {
 
   //Global State
   const { BOPSystemAdminReducer } = useSelector((state) => state);
-
-  // //Get All Branches
-  // useEffect(() => {
-  //   dispatch(GetAllBranchesAPI(navigate));
-  // }, []);
 
   //State BankList
   const [bankList, setBankList] = useState({ ...bankListSchema });
@@ -202,20 +201,22 @@ const BankerList = () => {
     }
   };
 
-  //handle Search Button event
-  const handleSearchEventButton = () => {
-    let data = {
-      EmployeeID: "",
-      Name: bankList.Name.value,
-      Email: bankList.Email.value,
-      RoleID: roleID.roleID ? roleID.roleID : 0,
-      PageNumber: 1,
-      Length: 50,
-    };
-
-    console.log("Data to Search", data);
-    dispatch(SearchBankUsersAPI(navigate, data));
-  };
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (recordsLength !== tableData.length) {
+      let Data = {
+        EmployeeID: bankList.EmployeeID.value,
+        Name: bankList.Name.value,
+        Email: bankList.Email.value,
+        RoleID: roleID.roleID ? roleID.roleID : 0,
+        sRow: sRow,
+        Length: 10,
+      };
+      dispatch(SearchBankUsersAPI(navigate, Data));
+    }
+  });
 
   useEffect(() => {
     dispatch(GetAllBranchesAPI(navigate));
@@ -225,13 +226,34 @@ const BankerList = () => {
       Name: "",
       Email: "",
       RoleID: 0,
-      PageNumber: 1,
-      Length: 50,
+      sRow: 0,
+      Length: 10,
     };
 
     console.log("Data to Search", data);
     dispatch(SearchBankUsersAPI(navigate, data));
   }, []);
+
+  //handelled states for scrolling here (2)
+  //handle Search Button event
+  const handleSearchEventButton = () => {
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
+
+    let data = {
+      EmployeeID: bankList.EmployeeID.value,
+      Name: bankList.Name.value,
+      Email: bankList.Email.value,
+      RoleID: roleID.roleID ? roleID.roleID : 0,
+      sRow: 0,
+      Length: 10,
+    };
+
+    console.log("Data to Search", data);
+    dispatch(SearchBankUsersAPI(navigate, data));
+  };
 
   //Table columns for customer List
   const handleNoButton = useCallback(() => {
@@ -249,8 +271,13 @@ const BankerList = () => {
     setModalState(2);
   };
 
+  //handeled states for scrolling here (3)
   //Handle Reset
   const handleResetYes = () => {
+    setHasReachedBottom(false);
+    setRecordLength(0);
+    setSRow(0);
+    setTableData([]);
     if (modalState === 2) {
       dispatch(ConfirmationModalSystemAdmin(false));
       setModalState(0);
@@ -268,8 +295,8 @@ const BankerList = () => {
         Name: "",
         Email: "",
         RoleID: 0,
-        PageNumber: 1,
-        Length: 50,
+        sRow: 0,
+        Length: 10,
       };
 
       // Call API to fetch all records after reset
@@ -419,15 +446,40 @@ const BankerList = () => {
     },
   ];
 
+  //handelled scrolling here (4)
   useEffect(() => {
     if (SearchBankUsers !== null) {
+      console.log("here now", SearchBankUsers);
       console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
       try {
-        const { bankUsers } = SearchBankUsers;
-        if (bankUsers.length > 0) {
-          setTableData(SearchBankUsers.bankUsers);
+        const { bankUsers, totalRecords } = SearchBankUsers;
+        if (hasReachedBottom) {
+          console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
+
+          setHasReachedBottom(false);
+          setRecordLength(totalRecords);
+          setTableData([...tableData, ...bankUsers]);
+          setSRow(tableData.length + bankUsers.length);
+        } else {
+          console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
+
+          setHasReachedBottom(false);
+          setTableData(bankUsers);
+          setRecordLength(totalRecords);
+          setSRow(bankUsers.length);
         }
       } catch (error) {}
+    } else if (SearchBankUsers === null) {
+      console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
+
+      if (!hasReachedBottom) {
+        console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
+
+        setHasReachedBottom(false);
+        setTableData([]);
+        setRecordLength(0);
+        setSRow(0);
+      }
     }
   }, [SearchBankUsers]);
 
@@ -467,6 +519,7 @@ const BankerList = () => {
     // doc.save("CorporateList.pdf");
     console.log("doc saved as pdf");
   };
+
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">

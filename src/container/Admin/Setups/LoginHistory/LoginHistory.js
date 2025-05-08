@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { RoleListAPI } from "../../../../store/actions/Auth-Actions";
 import { SearchAllUserLoginHistoryAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import moment from "moment";
+import { useTableScrollBottom } from "../../../../helpers/useTableScrollBottom";
 const LoginHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -63,6 +64,10 @@ const LoginHistory = () => {
     value: 0,
     label: "",
   });
+
+  //row length on scroll
+  const [sRow, setSRow] = useState(0);
+  const [recordsLength, setRecordLength] = useState(0);
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -143,6 +148,7 @@ const LoginHistory = () => {
       });
     }
   };
+
   //handle select CategoryID
   const handleSelectRole = async (selectedRole) => {
     setRoleID(selectedRole);
@@ -249,9 +255,33 @@ const LoginHistory = () => {
       },
     },
   ];
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (recordsLength !== tableData.length) {
+      let Data = {
+        UserName: loginHistory.Name.value,
+        CounterPartyName: loginHistory?.CounterPartyName?.value,
+        Email: loginHistory.Email.value,
+        RoleID: roleID.value,
 
+        StartDateTime: formatDate(loginHistory.dateFrom.value),
+        EndDateTime: formatDate(loginHistory.dateTo.value),
+        sRow: sRow,
+        Length: 10,
+      };
+      dispatch(SearchAllUserLoginHistoryAPI(navigate, Data));
+    }
+  });
+
+  //handelled states for scrolling here (2)
   //Handle search Button even
   const handleSearchEventButton = () => {
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
     let data = {
       UserName: loginHistory.Name.value,
       CounterPartyName: loginHistory?.CounterPartyName?.value,
@@ -260,7 +290,7 @@ const LoginHistory = () => {
 
       StartDateTime: formatDate(loginHistory.dateFrom.value),
       EndDateTime: formatDate(loginHistory.dateTo.value),
-      PageNumber: 1,
+      sRow: 0,
       Length: 10,
     };
     console.log("Search Customer:", data);
@@ -282,8 +312,13 @@ const LoginHistory = () => {
     setModalState(2);
   };
 
+  //handeled states for scrolling here (3)
   //Handle Resest Button
   const handleResetYes = () => {
+    setHasReachedBottom(false);
+    setRecordLength(0);
+    setSRow(0);
+    setTableData([]);
     if (modalState === 2) {
       dispatch(ConfirmationModalSystemAdmin(false));
       setModalState(0);
@@ -309,7 +344,7 @@ const LoginHistory = () => {
       RoleID: 0,
       StartDateTime: "",
       EndDateTime: "",
-      PageNumber: 1,
+      sRow: 0,
       Length: 10,
     };
     dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
@@ -386,12 +421,13 @@ const LoginHistory = () => {
       RoleID: 0,
       StartDateTime: "",
       EndDateTime: "",
-      PageNumber: 1,
+      sRow: 0,
       Length: 10,
     };
     dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
     dispatch(RoleListAPI(navigate));
   }, []);
+
   //Role list:
   useEffect(() => {
     if (RoleList !== null) {
@@ -413,12 +449,36 @@ const LoginHistory = () => {
         SearchAllUserLoginHistory
       );
       try {
-        const { userLoginHistory } = SearchAllUserLoginHistory;
-        if (userLoginHistory.length > 0) {
-          console.log("userLoginHistoryuserLoginHistory", userLoginHistory);
+        const { userLoginHistory, totalRecords } = SearchAllUserLoginHistory;
+        if (hasReachedBottom) {
+          setHasReachedBottom(false);
+          setRecordLength(totalRecords);
+          setTableData([...tableData, ...userLoginHistory]);
+          setSRow(tableData.length + userLoginHistory.length);
+        } else {
+          setHasReachedBottom(false);
           setTableData(userLoginHistory);
+          setRecordLength(totalRecords);
+          setSRow(userLoginHistory.length);
         }
+
+        // if (userLoginHistory.length > 0) {
+        //   console.log("userLoginHistoryuserLoginHistory", userLoginHistory);
+        //   setTableData(userLoginHistory);
+        // }
       } catch (error) {}
+    } else if (SearchAllUserLoginHistory === null) {
+      if (!hasReachedBottom) {
+        console.log(
+          "SearchBankUsersSearchBankUsers",
+          SearchAllUserLoginHistory
+        );
+
+        setHasReachedBottom(false);
+        setTableData([]);
+        setRecordLength(0);
+        setSRow(0);
+      }
     }
   }, [RoleList, SearchAllUserLoginHistory]);
 
