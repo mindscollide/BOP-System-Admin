@@ -17,17 +17,18 @@ import "@fontsource/roboto/400-italic.css";
 import "@fontsource/poppins";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/400-italic.css";
-import { Header } from "./components/layout";
-import { Sidebar2 } from "./components/layout";
-import PropertyType from "./container/Admin/Setups/PropertyType/PropertyType";
-import ResponseMessage from "./utils/ResponseMessage";
+
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/Routes";
+import { useMqtt } from "./context/MQTTContext";
 
 function App() {
+  const { isConnected, lastMessages } = useMqtt();
+  console.log(lastMessages, isConnected, "lastMessageslastMessages");
+  console.log("App component rendered", isConnected);
   return (
     <>
-      <Sidebar2 />
-      <Header />
-      <PropertyType />
+      <RouterProvider router={router} />
     </>
   );
 }
