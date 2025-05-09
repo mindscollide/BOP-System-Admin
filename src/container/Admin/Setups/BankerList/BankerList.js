@@ -44,6 +44,7 @@ const BankerList = () => {
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
+  console.log("showActivationModalshowActivationModal", showActivationModal);
   const [modalState, setModalState] = useState(0);
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
@@ -649,7 +650,7 @@ const BankerList = () => {
       {EditBankerModalGobalState && <EditBankerModal />}
 
       {BOPSystemAdminReducer.Loading && <Loader />}
-      {<ActivateConfirmationModal onConfirm={handleResetYes} />}
+      {/* {<ActivateConfirmationModal onConfirm={handleResetYes} />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
       {/* {showExportOptions && (
         <ExportOptions onClose={() => setShowExportOptions(false)} />
