@@ -33,9 +33,11 @@ import {
 import { formatDateAndTimeFromString } from "../../../../helpers/reusableMethods";
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../helpers/useTableScrollBottom";
+import { useMqtt } from "../../../../context/MQTTContext";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { bankUserCreated, bankUserRoleStatusChange } = useMqtt();
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -318,7 +320,7 @@ const BankerList = () => {
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="px-3">EmployeeID</label>,
+      title: <label className='px-3'>EmployeeID</label>,
       dataIndex: "employeeID",
       key: "employeeID",
       width: "100px",
@@ -326,7 +328,7 @@ const BankerList = () => {
       align: "left",
     },
     {
-      title: <label className="px-3">Email</label>,
+      title: <label className='px-3'>Email</label>,
       dataIndex: "email",
       key: "email",
       width: "220px",
@@ -334,7 +336,7 @@ const BankerList = () => {
       ellipsis: true,
     },
     {
-      title: <label className="px-3">Name</label>,
+      title: <label className='px-3'>Name</label>,
       dataIndex: "firstName",
       key: "firstName",
       width: "150px",
@@ -343,7 +345,7 @@ const BankerList = () => {
     },
     // Column definition for Role
     {
-      title: <label className="px-3">Role</label>,
+      title: <label className='px-3'>Role</label>,
       dataIndex: "userRoleID",
       key: "userRoleID",
       width: "100px",
@@ -358,7 +360,7 @@ const BankerList = () => {
       },
     },
     {
-      title: <label className="px-3">Branch Name</label>,
+      title: <label className='px-3'>Branch Name</label>,
       dataIndex: "branch",
       key: "branch",
       width: "150px",
@@ -371,7 +373,7 @@ const BankerList = () => {
       },
     },
     {
-      title: <label className="px-3">Contact</label>,
+      title: <label className='px-3'>Contact</label>,
       dataIndex: "contactNumber",
       key: "contactNumber",
       width: "120px",
@@ -389,14 +391,13 @@ const BankerList = () => {
         <span
           className={
             userStatusID === 1 ? styles.ActiveStatus : styles.InactiveStatus
-          }
-        >
+          }>
           {userStatusID === 1 ? "Active" : "Inactive"}
         </span>
       ),
     },
     {
-      title: <label className="px-3">Creation Date Time</label>,
+      title: <label className='px-3'>Creation Date Time</label>,
       dataIndex: "creationDateTime",
       key: "creationDateTime",
       align: "center",
@@ -412,7 +413,7 @@ const BankerList = () => {
       },
     },
     {
-      title: <label className="px-3"></label>,
+      title: <label className='px-3'></label>,
       dataIndex: "Edit",
       key: "Edit",
       align: "center",
@@ -426,11 +427,10 @@ const BankerList = () => {
                 lg={12}
                 md={12}
                 sm={12}
-                className="d-flex gap-2 justify-content-center align-items-center"
-              >
+                className='d-flex gap-2 justify-content-center align-items-center'>
                 <Button
                   className={styles["EditButton"]}
-                  icon={<i className="icon-edit color-blue"></i>}
+                  icon={<i className='icon-edit color-blue'></i>}
                   onClick={() => handleEditBanker(record)}
                 />
                 {/* <Button
@@ -484,6 +484,59 @@ const BankerList = () => {
     }
   }, [SearchBankUsers]);
 
+  useEffect(() => {
+    if (bankUserCreated !== null) {
+      try {
+        const { user, createdDateTime, createdUserID } = bankUserCreated;
+        let findIsExist = tableData.find(
+          (tableRow, index) => tableRow.employeeID === user.employeeID
+        );
+        if (findIsExist === undefined) {
+          let userData = {
+            branch: null,
+            employeeID: user.employeeID,
+            ldapAccount: user.loginID,
+            userID: createdUserID,
+            firstName: user.firstname,
+            email: user.email,
+            contactNumber: user.contactnumber,
+            failedAttemptCount: 0,
+            userRoleID: user.fK_UserRoleID,
+            userStatusID: user.fK_UserStatusID,
+            creationDateTime: createdDateTime,
+          };
+          setTableData((prevState) => [userData, ...prevState]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [bankUserCreated]);
+
+  useEffect(() => {
+    if (bankUserRoleStatusChange !== null) {
+      const { updatedUser } = bankUserRoleStatusChange;
+
+      try {
+        setTableData((prevTableData) => {
+          return prevTableData.map((data2, index) => {
+            if (data2.employeeID === updatedUser.employeeID) {
+              return {
+                ...data2,
+                userRoleID: updatedUser.userRoleID,
+                userStatusID: updatedUser.userStatusID,
+                branch: updatedUser.branch,
+              };
+            }
+            return data2;
+          });
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [bankUserRoleStatusChange]);
+
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
@@ -523,19 +576,19 @@ const BankerList = () => {
 
   return (
     <section className={styles["SectionContainer"]}>
-      <Row className="mt-4">
+      <Row className='mt-4'>
         <Col lg={12} md={12} sm={12}>
           <span className={styles["customer-List-label"]}>Banker List</span>
         </Col>
       </Row>
-      <Row className="mt-2">
+      <Row className='mt-2'>
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-2 g-2">
+            <Row className='mt-2 g-2'>
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"EmployeeID"}
-                  placeholder="Employee ID"
+                  placeholder='Employee ID'
                   labelClass={"d-none"}
                   value={bankList.EmployeeID.value}
                   onChange={BankerListValidateHandler}
@@ -543,7 +596,7 @@ const BankerList = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder="Name"
+                  placeholder='Name'
                   labelClass={"d-none"}
                   name={"Name"}
                   value={bankList.Name.value}
@@ -552,7 +605,7 @@ const BankerList = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder="Email"
+                  placeholder='Email'
                   labelClass={"d-none"}
                   name={"email"}
                   value={bankList.Email.value}
@@ -566,25 +619,24 @@ const BankerList = () => {
                   options={roleOptions}
                   value={roleID.value ? roleID : null}
                   onChange={handleSelectRole}
-                  classNamePrefix="selectCateogyCorporateList"
+                  classNamePrefix='selectCateogyCorporateList'
                 />
               </Col>
               <Col
                 lg={4}
                 md={4}
                 sm={12}
-                className="d-flex justify-content-center gap-1"
-              >
+                className='d-flex justify-content-center gap-1'>
                 <Button
-                  icon={<i className="icon-search icon-check-space"></i>}
+                  icon={<i className='icon-search icon-check-space'></i>}
                   className={styles["Search-btn-BankList"]}
-                  text="Search"
+                  text='Search'
                   onClick={handleSearchEventButton}
                 />
                 <Button
-                  icon={<i className="icon-refresh icon-check-space"></i>}
+                  icon={<i className='icon-refresh icon-check-space'></i>}
                   className={styles["Banklist-Reset-btn"]}
-                  text="Reset"
+                  text='Reset'
                   onClick={handleReset}
                 />
                 {/* <Button
@@ -598,27 +650,26 @@ const BankerList = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<img src={excelIcon} alt="Excel Icon" />}
+                        icon={<img src={excelIcon} alt='Excel Icon' />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        icon={<img src={pdfIcon} alt="PDF Icon" />}
+                        icon={<img src={pdfIcon} alt='PDF Icon' />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                     </div>
                   }
-                  trigger="click"
+                  trigger='click'
                   open={open}
                   onOpenChange={handleOpenChange}
-                  placement="bottomLeft"
-                  arrow={false}
-                >
+                  placement='bottomLeft'
+                  arrow={false}>
                   <Button
-                    icon={<i className="icon-download"></i>}
+                    icon={<i className='icon-download'></i>}
                     className={styles["Export_Button"]}
-                    text="Export"
+                    text='Export'
                     iconClass={styles["resetIconClass"]}
                     onClick={toggleExportOptions}
                   />
@@ -627,13 +678,13 @@ const BankerList = () => {
             </Row>
 
             {/* <Row className="mt-3"></Row> */}
-            <Row className="mt-1">
+            <Row className='mt-1'>
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
             </Row>
 
-            <Row className="mt-1">
+            <Row className='mt-1'>
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}

@@ -86,6 +86,7 @@ const Sidebar2 = () => {
       onOpenChange={onOpenChange}
       defaultSelectedKeys={[localStorage.getItem("defaultSelectedKey")]}
       mode='inline'
+      activeKey="6"
       className='Menu-sidebar-class'>
       <SubMenu
         key='sub1'
@@ -94,10 +95,12 @@ const Sidebar2 = () => {
         title='User Management'
         className='submenu-sidebar-icons'
         theme="light"
+        
         style={{ background: "#4d4946" }}>
         <Menu.Item
           className='menu-items-sidebar'
           key='6'
+        
           onClick={navigateToAddaBankUser}>
           Add a Bank User
         </Menu.Item>

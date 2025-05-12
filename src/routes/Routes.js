@@ -26,31 +26,31 @@ import AdminDashboard from "../container/Admin/AdminDashboard/AdminDashboard";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route exact path="/" element={<SystemLogin />} />
-      <Route exact path="CreatePassword" element={<CreatePassword />} />
-      <Route exact path="ChangePassword" element={<ChangePassword />} />
-      <Route exact path="ResetPassword" element={<ResetPassword />} />
-      <Route exact path="2FAVerfication" element={<TwoFaVerification />} />
+      <Route path='/' element={<SystemLogin />} />
+      <Route path='CreatePassword' element={<CreatePassword />} />
+      <Route path='ChangePassword' element={<ChangePassword />} />
+      <Route path='ResetPassword' element={<ResetPassword />} />
+      <Route path='2FAVerfication' element={<TwoFaVerification />} />
       {/* <Route element={<PrivateRoutes />}> */}
-      <Route exact path="/BOP/" element={<AdminDashboard />}>
-        <Route path="" element={<Bankuser />} />
+      <Route path='/BOP/' element={<AdminDashboard />}>
+        <Route index path='' element={<Bankuser />} />
         {/* <Route path="" element={<PropertyType />} /> */}
         {/* <Route path="" element={<AssetsBanking />} /> */}
-        <Route path="AddBankUser" element={<Bankuser />} />
-        <Route path="tradeCount" element={<TradeCount />} />
-        <Route path="counterLimit" element={<CounterLimit />} />
-        <Route path="volMeter" element={<VolMeter />} />
-        <Route path="categorymanagement" element={<CategoryManagement />} />
-        <Route path="CorporateUser" element={<CorporateUser />} />
-        <Route path="CorporateList" element={<CorporateList />} />
-        <Route path="BankerList" element={<BankerList />} />
-        <Route path="LoginHistory" element={<LoginHistory />} />
+        <Route path='AddBankUser' element={<Bankuser />} />
+        <Route path='tradeCount' element={<TradeCount />} />
+        <Route path='counterLimit' element={<CounterLimit />} />
+        <Route path='volMeter' element={<VolMeter />} />
+        <Route path='categorymanagement' element={<CategoryManagement />} />
+        <Route path='CorporateUser' element={<CorporateUser />} />
+        <Route path='CorporateList' element={<CorporateList />} />
+        <Route path='BankerList' element={<BankerList />} />
+        <Route path='LoginHistory' element={<LoginHistory />} />
         <Route
-          path="TradeAccessManagement"
+          path='TradeAccessManagement'
           element={<TradeAccessManagement />}
         />
 
-        <Route path="SpreadManagement" element={<SpreadManagement />} />
+        <Route path='SpreadManagement' element={<SpreadManagement />} />
       </Route>
       {/* </Route> */}
     </>
