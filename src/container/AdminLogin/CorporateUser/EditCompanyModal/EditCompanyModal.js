@@ -140,19 +140,22 @@ const EditCompanyModal = ({ editCompanyData }) => {
       ModalBody={
         <>
           <Row>
-            <Col lg={6} md={6} sm={6} className={styles["AddCompanyLabel"]}>
-              Edit Company
-            </Col>
             <Col
               lg={6}
               md={6}
               sm={6}
-              className={styles["BulkUpload_modal-crossIcon"]}
+              className={styles["EditCompany_modal-title"]}
             >
-              <Button
-                className={styles["CrossButton"]}
-                icon={<i className="icon-close"></i>}
-                iconClass={styles["crossIconClass"]}
+              Edit Company
+            </Col>
+            <Col
+              sm={6}
+              md={6}
+              lg={6}
+              className={styles["EditCompany_modal-crossIcon"]}
+            >
+              <i
+                className="icon-close cursor-pointer"
                 onClick={handleCancelButton}
               />
             </Col>

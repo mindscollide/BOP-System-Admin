@@ -1,6 +1,13 @@
-.AddBranchLabel {
+.EditCorporate_modal-title {
   color: #f26522 !important;
-  font-size: 1.25rem !important;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+.EditCorporate_modal-crossIcon {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .labels-add-bank {

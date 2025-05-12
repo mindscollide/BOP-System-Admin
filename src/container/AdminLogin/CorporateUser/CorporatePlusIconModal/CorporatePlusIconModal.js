@@ -226,14 +226,22 @@ const CorporatePlusIconModal = () => {
       ModalBody={
         <>
           <Row>
-            <Col lg={11} md={11} sm={12}>
-              <span className={styles["AddCompanyLabel"]}>Add Company</span>
+            <Col
+              lg={6}
+              md={6}
+              sm={6}
+              className={styles["AddCompany_modal-title"]}
+            >
+              Add Company
             </Col>
-            <Col lg={1} md={1} sm={12}>
-              <Button
-                className={styles["CrossButton"]}
-                icon={<i className="icon-close"></i>}
-                iconClass={styles["crossIconClass"]}
+            <Col
+              sm={6}
+              md={6}
+              lg={6}
+              className={styles["AddCompany_modal-crossIcon"]}
+            >
+              <i
+                className="icon-close cursor-pointer"
                 onClick={handleCancelButton}
               />
             </Col>

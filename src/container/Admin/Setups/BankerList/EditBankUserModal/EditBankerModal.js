@@ -45,20 +45,6 @@ const EditBankerModal = () => {
 
   //getAllBranch
   const getAllBranches = useSelector((state) => state.auth.GetAllBranchesData);
-  //Dummy User for handlin UI change bansed on the user Secuity admiin or system admin
-  // let user = "System Admin";
-  //Checking snakbar state
-
-  // //State for add company
-  // const [updateCorporate, setUpdateCorporate] = useState({
-  //   ...updateCorporateUserSchema,
-  // });
-
-  // //Options for radio
-  // const radioOptions = [
-  //   { label: "Active", value: "Active" },
-  //   { label: "Inactive", value: "Inactive" },
-  // ];
 
   const [branchOptions, setBranchOptions] = useState([]);
   const [branchRole, setBranchRole] = useState({
@@ -297,8 +283,24 @@ const EditBankerModal = () => {
         ModalBody={
           <>
             <Row>
-              <Col lg={12} md={12} sm={12}>
-                <span className={styles["AddBranchLabel"]}>Edit Bank</span>
+              <Col
+                lg={6}
+                md={6}
+                sm={6}
+                className={styles["EditBank_modal-title"]}
+              >
+                Edit Bank
+              </Col>
+              <Col
+                sm={6}
+                md={6}
+                lg={6}
+                className={styles["EditBank_modal-crossIcon"]}
+              >
+                <i
+                  className="icon-close cursor-pointer"
+                  onClick={handleDiscardButton}
+                />
               </Col>
             </Row>
             <Row className="mt-3">

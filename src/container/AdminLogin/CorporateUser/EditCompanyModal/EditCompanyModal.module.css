@@ -7,6 +7,18 @@
   font-family: "Roboto", sans-serif;
 }
 
+.EditCompany_modal-title {
+  color: #f26522 !important;
+  font-size: 1.25rem;
+  /* line-height: ; */
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+.EditCompany_modal-crossIcon {
+  display: flex;
+  justify-content: flex-end;
+}
 .labels-add-bank {
   font-size: 12px !important;
   color: #004990 !important;
@@ -16,26 +28,6 @@
 
 .aesterick-color {
   color: #cf5b5b !important;
-}
-
-.crossIconClass {
-  color: black;
-}
-
-.CrossButton {
-  background: none !important;
-  border: none !important;
-  color: black;
-  display: flex !important;
-  justify-content: flex-end !important;
-}
-
-.CrossButton:is(:hover, :active, :focus, :focus-visible) {
-  background: none !important;
-  border: none !important;
-  color: black;
-  display: flex !important;
-  justify-content: flex-end !important;
 }
 
 .AddButton {
