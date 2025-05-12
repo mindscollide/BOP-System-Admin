@@ -115,13 +115,24 @@ const EditBankUserModal = ({ editBranchData }) => {
         className="UniversalBOPModalStyles"
         modalHeaderClassName={"d-none"}
         modalFooterClassName="UniversalBOPModalStylesfooter"
-        size="md"
+        size="lg"
         onHide={() => dispatch(editBankUserModalSystemAdmin(false))}
         ModalBody={
           <>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <span className={styles["AddBranchLabel"]}>Edit Branch</span>
+            <Row className={styles["EditBranchHeader"]}>
+              <Col lg={6} md={6} sm={6} className={styles["EditBranchLabel"]}>
+                Edit Branch
+              </Col>
+              <Col
+                sm={6}
+                md={6}
+                lg={6}
+                className={styles["EditBranch_modal-crossIcon"]}
+              >
+                <i
+                  className="icon-close cursor-pointer"
+                  onClick={() => dispatch(editBankUserModalSystemAdmin(false))}
+                />
               </Col>
             </Row>
             <Row className="mt-3">

@@ -205,7 +205,13 @@ const IsEmployeeIDExists = {
 const SearchAllUserLoginHistory = {
   RequestMethod: "ServiceManager.SearchAllUserLoginHistory",
 };
+const GetMarketTimeSettings = {
+  RequestMethod: "ServiceManager.GetMarketTimeSettings",
+};
 
+const SaveMarketTimeSettings = {
+  RequestMethod: "ServiceManager.SaveMarketTimeSettings",
+};
 export {
   authenticationRefreshToken,
   UpdateCorporateMapping,
@@ -255,4 +261,6 @@ export {
   UpdateUserSettings,
   IsEmployeeIDExists,
   SearchAllUserLoginHistory,
+  GetMarketTimeSettings,
+  SaveMarketTimeSettings,
 };

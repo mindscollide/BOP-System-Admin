@@ -1,6 +1,9 @@
 .AddBranchLabel {
   color: #f26522 !important;
-  font-size: 1.25rem !important;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .labels-add-bank {

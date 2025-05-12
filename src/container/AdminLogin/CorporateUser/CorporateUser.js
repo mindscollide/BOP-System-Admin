@@ -257,10 +257,7 @@ const CorporateUser = () => {
                 Email: corporateUser.email.value,
                 ContactNumber: "03909090909",
               },
-              // BankId: 1,
-              CorporateID: 1,
-              // CategoryID: corporateUser.category.value,
-              // CompanyName: corporateUser.companyName.value,
+              CorporateID: companyRoleID.corporateID,
               IsChatActive: corporateUser.isChatActive.value,
             };
 
@@ -368,6 +365,9 @@ const CorporateUser = () => {
       },
       email: {
         value: "",
+      },
+      isChatActive: {
+        value: false,
       },
     }));
   };

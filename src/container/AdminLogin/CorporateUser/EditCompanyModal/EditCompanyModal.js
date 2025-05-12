@@ -140,10 +140,15 @@ const EditCompanyModal = ({ editCompanyData }) => {
       ModalBody={
         <>
           <Row>
-            <Col lg={11} md={11} sm={12}>
-              <span className={styles["AddCompanyLabel"]}>Edit Company</span>
+            <Col lg={6} md={6} sm={6} className={styles["AddCompanyLabel"]}>
+              Edit Company
             </Col>
-            <Col lg={1} md={1} sm={12}>
+            <Col
+              lg={6}
+              md={6}
+              sm={6}
+              className={styles["BulkUpload_modal-crossIcon"]}
+            >
               <Button
                 className={styles["CrossButton"]}
                 icon={<i className="icon-close"></i>}

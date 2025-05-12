@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { signOut } from "../../../store/actions/Auth-Actions";
 import { message } from "antd";
 import { useState } from "react";
-import SettingModal from "../../../helpers/Modals/Setting-Modal/SettingModal";
+import SettingModal from "./Settings/Setting";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -39,18 +39,18 @@ const Header = () => {
           </Navbar.Brand>
           <Dropdown>
             <Dropdown.Toggle className="dropdown-toggle-header2">
-              <p className="user-name-header2">{localStorage.getItem("userName")}</p>
+              <p className="user-name-header2">
+                {localStorage.getItem("userName")}
+              </p>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown_menu-Header2">
-              <Dropdown.Item className="dropdown_menu-Item">
+              <Dropdown.Item
+                className="dropdown_menu-Item"
+                onClick={onClickSetting}
+              >
                 <Nav.Link>
                   <i className="icon-settings me-1"></i>
-                  <label
-                    className="dropdown-select-labels"
-                    onClick={onClickSetting}
-                  >
-                    Setting
-                  </label>
+                  <label className="dropdown-select-labels">Setting</label>
                 </Nav.Link>
               </Dropdown.Item>
               <Dropdown.Item onClick={handelLogout}>

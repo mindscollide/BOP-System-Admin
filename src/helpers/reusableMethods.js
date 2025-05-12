@@ -71,3 +71,21 @@ export const formatCurrencyInput = (value) => {
 
   return cleanVal;
 };
+
+export const formatTimeInput = (value) => {
+  if (!value) return "";
+
+  // Remove non-numeric characters
+  let cleanVal = value.replace(/[^0-9]/g, "");
+
+  // Limit to 4 digits
+  cleanVal = cleanVal.slice(0, 4);
+
+  // Pad with zeros to make it exactly 4 digits
+  while (cleanVal.length < 4) {
+    cleanVal += "0";
+  }
+
+  // Format to HH:MM
+  return `${cleanVal.slice(0, 2)}:${cleanVal.slice(2)}`;
+};
