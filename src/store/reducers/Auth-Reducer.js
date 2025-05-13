@@ -32,6 +32,7 @@ const initialState = {
   GetBankUserRoles: null,
   GetAllInstrumentTypes: null,
   GetAllBranchesData: null,
+  userLogout: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -58,6 +59,28 @@ const authReducer = (state = initialState, action) => {
         Token: "",
         Refresh: "",
       };
+    case actions.USER_LOGOUT_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.USER_LOGOUT_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        userLogout: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.USER_LOGOUT_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        userLogout: null,
+        ResponseMessage: action.message,
+      };
+    }
 
     case actions.SIGN_UP_INIT:
       return { ...state, Loading: true };

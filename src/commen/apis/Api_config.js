@@ -212,7 +212,12 @@ const GetMarketTimeSettings = {
 const SaveMarketTimeSettings = {
   RequestMethod: "ServiceManager.SaveMarketTimeSettings",
 };
+
+const LogoutRM = {
+  RequestMethod: "ServiceManager.LogOut",
+};
 export {
+  LogoutRM,
   authenticationRefreshToken,
   UpdateCorporateMapping,
   Addcateogry,

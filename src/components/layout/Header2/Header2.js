@@ -4,7 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import BOPLogo from "../../../assets/images/logo-white.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { signOut } from "../../../store/actions/Auth-Actions";
+import { logOutApi, signOut } from "../../../store/actions/Auth-Actions";
 import { message } from "antd";
 import { useState } from "react";
 import SettingModal from "./Settings/Setting";
@@ -22,7 +22,8 @@ const Header = () => {
     navigate("/BOP/AddBankUser");
   };
   function handelLogout() {
-    dispatch(signOut(navigate, message));
+    dispatch(logOutApi(navigate))
+
   }
   return (
     <>

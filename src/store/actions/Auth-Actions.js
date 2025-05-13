@@ -13,6 +13,7 @@ import {
   GetBankUserRoles,
   GetAllInstrumentTypes,
   GetAllBranches,
+  LogoutRM,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -26,19 +27,13 @@ const cleareMessage = (response) => {
   };
 };
 
-const signOut = (navigate, message) => {
+const signOut = (navigate) => {
   localStorage.clear();
   navigate("/");
-  if (message !== "") {
-    return {
-      type: actions.SIGN_OUT,
-      message: message,
-    };
-  } else {
-    return {
-      type: actions.SIGN_OUT,
-    };
-  }
+
+  return {
+    type: actions.SIGN_OUT,
+  };
 };
 
 // REFRESH TOKEN
@@ -1310,8 +1305,77 @@ const GetAllBranchesAPI = (navigate) => {
       });
   };
 };
+const logOut_init = () => {
+  return {
+    type: actions.USER_LOGOUT_INIT,
+  };
+};
 
+const logOut_success = (response, message) => {
+  return {
+    type: actions.USER_LOGOUT_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const logOut_failed = (message) => {
+  return {
+    type: actions.USER_LOGOUT_FAIL,
+    message: message,
+  };
+};
+
+const logOutApi = (navigate) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(logOut_init());
+    let form = new FormData();
+    form.append("RequestMethod", LogoutRM.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        console.log("logOutApi", response);
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(logOutApi(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (
+            response.data.responseResult.responseMessage ===
+            "ERM_AuthService_AuthManager_LogOut_01"
+          ) {
+            dispatch(logOut_success(response.data.responseResult, "Logout"));
+            dispatch(signOut(navigate));
+          } else if (
+            response.data.responseResult.responseMessage ===
+            "ERM_AuthService_AuthManager_LogOut_02"
+          ) {
+            dispatch(logOut_failed("Data unavailable"));
+          } else if (
+            response.data.responseResult.responseMessage ===
+            "ERM_AuthService_AuthManager_LogOut_03"
+          ) {
+            dispatch(logOut_failed("something went wrong"));
+          } else {
+            dispatch(logOut_failed("something went wrong"));
+          }
+        } else {
+          dispatch(logOut_failed("something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(logOut_failed("something went wrong"));
+      });
+  };
+};
 export {
+  logOutApi,
   signOut,
   RefreshToken,
   getAllCorporatesCategory,

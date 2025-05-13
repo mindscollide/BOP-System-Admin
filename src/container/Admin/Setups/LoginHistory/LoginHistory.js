@@ -230,7 +230,7 @@ const LoginHistory = () => {
       title: <label className="px-3">Logged Out Time</label>,
       dataIndex: "logOutDateTime",
       key: "logOutDateTime",
-      align: "left",
+      align: "center",
       width: "160px",
       ellipsis: true,
       render: (logOutDateTime) => {
