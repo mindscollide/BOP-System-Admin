@@ -5,15 +5,16 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, Table } from "../../../../components/elements";
-import { CreateBulkCorporateUserRequestAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import { CreateBulkCorporateUserRequestAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { Button, Modal, Table } from "../../../../../../components/elements";
+import { useCorporateUser } from "../utils/CorporateUserContext";
+// import { Button, Modal, Table } from "../../../../components/elements";
+// import { CreateBulkCorporateUserRequestAPI } from "../../../../store/actions/BOPSystemAdminActions";
 
-const CorporateBulkUploadModal = ({
-  BulkUploadClicked,
-  setBulkUploadClicked,
-}) => {
+const CorporateBulkUploadModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { BulkUploadClicked, setBulkUploadClicked } = useCorporateUser();
 
   const [usersToBeAdded, setUsersToBeAdded] = useState([]);
   const [usersToBeUpdated, setUsersToBeUpdated] = useState([]);

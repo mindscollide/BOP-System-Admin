@@ -26,11 +26,7 @@ function App() {
   const { isConnected, lastMessages } = useMqtt();
   console.log(lastMessages, isConnected, "lastMessageslastMessages");
   console.log("App component rendered", isConnected);
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <>{/* <RouterProvider router={router} /> */}</>;
 }
 
 export default App;

@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CorporatePlusIconModal.module.css";
-import { Button, Modal, TextField } from "../../../../components/elements";
+// import { Button, Modal, TextField } from "../../../../components/elements";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import { corporatePlusIconModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+// import { corporatePlusIconModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Col, Row } from "react-bootstrap";
-import { CreateNewCorporateAPI } from "../../../../store/actions/BOPSystemAdminActions";
+// import { CreateNewCorporateAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
-import { addCompanySchema } from "../../../../utils/schemas";
-import { RFQTimerOptions } from "../../../../helpers/Dropdown";
+import { addCompanySchema } from "../../../../../../utils/schemas";
+import { corporatePlusIconModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { CreateNewCorporateAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import {
   GetAllCategoriesAPI,
   GetAllNatureAPI,
-} from "../../../../store/actions/Auth-Actions";
+} from "../../../../../../store/actions/Auth-Actions";
+import {
+  Button,
+  Modal,
+  TextField,
+} from "../../../../../../components/elements";
+import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
+
 const CorporatePlusIconModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

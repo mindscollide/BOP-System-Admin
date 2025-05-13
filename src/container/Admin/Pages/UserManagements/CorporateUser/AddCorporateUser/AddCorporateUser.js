@@ -1,6 +1,40 @@
 import React, { useCallback, useEffect, useState } from "react";
-import styles from "./Corporateuser.module.css";
+import styles from "./AddCoporateUser.module.css";
 import { Col, Row } from "react-bootstrap";
+// import {
+//   Button,
+//   Checkbox,
+//   CustomUpload,
+//   Loader,
+//   Notification,
+//   Paper,
+//   TextField,
+// } from "../../../components/elements";
+import Select from "react-select";
+import { useSelector } from "react-redux";
+// import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
+// import {
+//   // AddBankUserConfirmationModalSystemAdmin,
+//   ConfirmationModalSystemAdmin,
+//   corporatePlusIconModalSystemAdmin,
+//   editCompanyModalSystemAdmin,
+// } from "../../../store/actions/BOPSystemAdminModalsActions";
+import { useDispatch } from "react-redux";
+// import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
+// import { addCorporateUserSchema } from "../../../utils/schemas";
+// import { validateEmail } from "../../../utils/regexUtil";
+import { useNavigate } from "react-router-dom";
+import { validateEmail } from "../../../../../../utils/regexUtil";
+import {
+  ConfirmationModalSystemAdmin,
+  corporatePlusIconModalSystemAdmin,
+  editCompanyModalSystemAdmin,
+} from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  CorporateUsersBulkListAPI,
+  CreateCorporateUserRequestAPI,
+} from "../../../../../../store/actions/BOPSystemAdminActions";
+import { getAllCorporatesCategory } from "../../../../../../store/actions/Auth-Actions";
 import {
   Button,
   Checkbox,
@@ -9,31 +43,26 @@ import {
   Notification,
   Paper,
   TextField,
-} from "../../../components/elements";
-import Select from "react-select";
-import { useSelector } from "react-redux";
-import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
-import {
-  // AddBankUserConfirmationModalSystemAdmin,
-  ConfirmationModalSystemAdmin,
-  corporatePlusIconModalSystemAdmin,
-  editCompanyModalSystemAdmin,
-} from "../../../store/actions/BOPSystemAdminModalsActions";
-import { useDispatch } from "react-redux";
-import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
-import { addCorporateUserSchema } from "../../../utils/schemas";
-import { validateEmail } from "../../../utils/regexUtil";
-import { useNavigate } from "react-router-dom";
-import {
-  CorporateUsersBulkListAPI,
-  CreateCorporateUserRequestAPI,
-} from "../../../store/actions/BOPSystemAdminActions";
-import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import { getAllCorporatesCategory } from "../../../store/actions/Auth-Actions";
-import CorporateBulkUploadModal from "./CorporateBulkUploadModal/CorporateBulkUploadModal";
-const CorporateUser = () => {
+} from "../../../../../../components/elements";
+import { addCorporateUserSchema } from "../../../../../../utils/schemas";
+import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+// import CorporateBulkUploadModal from "../CorporateBulkUploadModal/CorporateBulkUploadModal";
+import CorporatePlusIconModal from "../CorporatePlusIconModal/CorporatePlusIconModal";
+import EditCompanyModal from "../EditCompanyModal/EditCompanyModal";
+import { useCorporateUser } from "../utils/CorporateUserContext";
+
+// import {
+//   CorporateUsersBulkListAPI,
+//   CreateCorporateUserRequestAPI,
+// } from "../../../store/actions/BOPSystemAdminActions";
+// import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+// import { getAllCorporatesCategory } from "../../../store/actions/Auth-Actions";
+// import CorporateBulkUploadModal from "./CorporateBulkUploadModal/CorporateBulkUploadModal";
+const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { setBulkUploadClicked } = useCorporateUser();
 
   //Global Staate
   // const { BOPSystemAdminReducer } = useSelector((state) => state);
@@ -81,105 +110,8 @@ const CorporateUser = () => {
 
   //state for cancel button
 
-  const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
-  //add bank user security admin validate handler
-  // const addCorporateUserValidateHandler = (e) => {
-  //   let name = e.target.name;
-  //   let value = e.target.value;
+  // const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
 
-  //   if (name === "firstName" && value !== "") {
-  //     let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-  //     if (valueCheck !== "") {
-  //       setCorporateUser({
-  //         ...corporateUser,
-  //         firstName: {
-  //           value: valueCheck.trimStart(),
-  //           errorMessage: "",
-  //           errorStatus: false,
-  //         },
-  //       });
-  //     }
-  //   } else if (name === "firstName" && value === "") {
-  //     setCorporateUser({
-  //       ...corporateUser,
-  //       firstName: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: false,
-  //       },
-  //     });
-  //   }
-
-  //   if (name === "email" && value !== "") {
-  //     // console.log("valuevalueemailvaluevalueemail", value);
-  //     const trimmedValue = value.replace(/\s+/g, "");
-  //     if (trimmedValue !== "") {
-  //       setCorporateUser({
-  //         ...corporateUser,
-  //         email: {
-  //           value: trimmedValue,
-  //           errorMessage: "",
-  //           errorStatus: false,
-  //         },
-  //       });
-  //     }
-  //   } else if (name === "email" && value === "") {
-  //     setCorporateUser({
-  //       ...corporateUser,
-  //       email: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: true,
-  //       },
-  //     });
-  //   }
-
-  //   if (name === "companyName" && value !== "") {
-  //     // console.log("valuevalueemailvaluevalueemail", value);
-  //     // const trimmedValue = value.replace(/\s+/g, "");
-  //     if (value !== "") {
-  //       setCorporateUser({
-  //         ...corporateUser,
-  //         companyName: {
-  //           value: value,
-  //           errorMessage: "",
-  //           errorStatus: false,
-  //         },
-  //       });
-  //     }
-  //   } else if (name === "companyName" && value === "") {
-  //     setCorporateUser({
-  //       ...corporateUser,
-  //       companyName: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: true,
-  //       },
-  //     });
-  //   }
-
-  //   if (name === "category" && value !== "") {
-  //     if (value !== "") {
-  //       setCorporateUser({
-  //         ...corporateUser,
-  //         category: {
-  //           value: value,
-  //           errorMessage: "",
-  //           errorStatus: false,
-  //         },
-  //       });
-  //     }
-  //   } else if (name === "category" && value === "") {
-  //     setCorporateUser({
-  //       ...corporateUser,
-  //       category: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: true,
-  //       },
-  //     });
-  //   }
-  // };
   //state for save and cancel button
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
@@ -746,12 +678,12 @@ const CorporateUser = () => {
           </Row>
         </Col>
       </Row>
-      {BulkUploadClicked && (
+      {/* {BulkUploadClicked && (
         <CorporateBulkUploadModal
           setBulkUploadClicked={setBulkUploadClicked}
           BulkUploadClicked={BulkUploadClicked}
         />
-      )}
+      )} */}
       {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
       {editCompanyModalGobalState && (
         <EditCompanyModal editCompanyData={editCompanyData} />
@@ -768,4 +700,4 @@ const CorporateUser = () => {
   );
 };
 
-export default CorporateUser;
+export default AddCorporateUser;

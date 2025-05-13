@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from "react";
-import styles from "./AddBankUserModal.module.css";
+import styles from "./AddBranchModal.module.css";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { addBranchSchema } from "../../../../../../utils/schemas";
+import { AdduserModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { AddBranchAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { GetAllCategoriesAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
   Button,
   Modal,
   Notification,
   TextField,
-} from "../../../../components/elements";
-import Select from "react-select";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { AdduserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+} from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
-import { AddBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
-import { useNavigate } from "react-router-dom";
-import { addBranchSchema } from "../../../../utils/schemas";
-import { GetAllCategoriesAPI } from "../../../../store/actions/Auth-Actions";
-const AddBankUserModal = () => {
+import Select from "react-select";
+// import {
+//   Button,
+//   Modal,
+//   Notification,
+//   TextField,
+// } from "../../../../components/elements";
+// import Select from "react-select";
+// import { useDispatch } from "react-redux";
+// import { useSelector } from "react-redux";
+// import { AdduserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+// import { Col, Row } from "react-bootstrap";
+// import { AddBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
+// import { useNavigate } from "react-router-dom";
+// import { addBranchSchema } from "../../../../utils/schemas";
+// import { GetAllCategoriesAPI } from "../../../../store/actions/Auth-Actions";
+const AddBranchModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
@@ -335,4 +350,4 @@ const AddBankUserModal = () => {
   );
 };
 
-export default AddBankUserModal;
+export default AddBranchModal;

@@ -6,14 +6,24 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import reportWebVitals from "./reportWebVitals";
 import { MqttProvider } from "./context/MQTTContext";
+import { BankUserProvider } from "./container/Admin/Pages/UserManagements/BankUser/utils/BankUserContext";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/Routes";
+import { CorporateUserProvider } from "./container/Admin/Pages/UserManagements/CorporateUser/utils/CorporateUserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <Suspense>
-      <MqttProvider subscribeID={"BOP_SYSTEMADMIN"}>
-        <App  />
-      </MqttProvider>
+      <BankUserProvider>
+        <CorporateUserProvider>
+          <MqttProvider subscribeID={"BOP_SYSTEMADMIN"}>
+            <RouterProvider router={router}>
+              <App />
+            </RouterProvider>
+          </MqttProvider>
+        </CorporateUserProvider>
+      </BankUserProvider>
     </Suspense>
   </Provider>
 

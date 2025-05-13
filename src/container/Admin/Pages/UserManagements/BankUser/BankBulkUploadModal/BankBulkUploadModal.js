@@ -5,13 +5,16 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, Table } from "../../../../components/elements";
-import { CreateBulkBankUserRequestAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import { CreateBulkBankUserRequestAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { Button, Modal, Table } from "../../../../../../components/elements";
+import { useBankUser } from "../utils/BankUserContext";
+// import { Button, Modal, Table } from "../../../../components/elements";
+// import { CreateBulkBankUserRequestAPI } from "../../../../store/actions/BOPSystemAdminActions";
 
-const BankBulkUploadModal = ({ BulkUploadClicked, setBulkUploadClicked }) => {
+const BankBulkUploadModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { BulkUploadClicked, setBulkUploadClicked } = useBankUser();
   const [usersToBeAdded, setUsersToBeAdded] = useState([]);
   const [usersToBeUpdated, setUsersToBeUpdated] = useState([]);
   const [invalidUsers, setInvalidUsers] = useState([]);

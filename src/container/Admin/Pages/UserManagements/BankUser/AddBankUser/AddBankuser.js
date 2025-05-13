@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import styles from "./Bankuser.module.css";
+import styles from "./AddBankuser.module.css";
 import { Row, Col } from "react-bootstrap";
 import {
   Paper,
@@ -7,10 +7,10 @@ import {
   Button,
   CustomUpload,
   Loader,
-} from "../../../components/elements";
+} from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-import AddBankUserModal from "./AddBankUserModal/AddBankUserModal";
+// import AddBankUserModal from "../../../../../AdminLogin/BankUser/AddBankUserModal/AddBankUserModal";
 import {
   AdduserModalSystemAdmin,
   // DeleteCorporateModalSystemAdmin,
@@ -18,28 +18,25 @@ import {
   // editBankUserModalSystemAdmin,
   ConfirmationModalSystemAdmin,
   editBankUserModalSystemAdmin,
-} from "../../../store/actions/BOPSystemAdminModalsActions";
+} from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
-import EditBankUserModal from "./EditBankUserModal/EditBankUserModal";
-import { addBankUserSchema } from "../../../utils/schemas";
+// import EditBankUserModal from "../../../../../AdminLogin/BankUser/EditBankUserModal/EditBankUserModal";
+import { addBankUserSchema } from "../../../../../../utils/schemas";
 import {
   BankUsersBulkListAPI,
   CreateBankUserRequestAPI,
-} from "../../../store/actions/BOPSystemAdminActions";
+} from "../../../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
-import { validateBopEmail } from "../../../utils/regexUtil";
-import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { validateBopEmail } from "../../../../../../utils/regexUtil";
+import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import {
   GetAllCategoriesAPI,
   GetAllBranchesAPI,
   GetBankUserRolesAPI,
-} from "../../../store/actions/Auth-Actions";
-import BankBulkUploadModal from "./BankBulkUploadModal/BankBulkUploadModal";
+} from "../../../../../../store/actions/Auth-Actions";
+import { useBankUser } from "../utils/BankUserContext";
 
-// import {  } from "../../../../store/actions/Auth-Actions";
-// import ResponseMessage from "../../../utils/ResponseMessage";
-// import ActivateConfirmationModal from "./ActivateConfirmationModal/ActivateConfirmationModal";
-const Bankuser = () => {
+const AddBankUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
@@ -47,7 +44,7 @@ const Bankuser = () => {
   const SearchBankUsers = useSelector(
     (state) => state.BOPSystemAdminReducer.SearchBankUsersData
   );
-
+  const { setEditBranchData, setBulkUploadClicked } = useBankUser();
   console.log("SearchBankUserSearchBankUser", SearchBankUsers);
 
   const [modalState, setModalState] = useState(0);
@@ -71,18 +68,6 @@ const Bankuser = () => {
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
 
-  //Add Bank  Use Modal Calling
-  const AddBankUserModalGobalState = useSelector(
-    (state) => state.BOPSystemAdminModal.addBankUserModal
-  );
-
-  //
-
-  //Edit Bank  Use Modal Calling
-  const EditBankUserModalGobalState = useSelector(
-    (state) => state.BOPSystemAdminModal.editBankUserModal
-  );
-
   //Role List
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
 
@@ -99,15 +84,11 @@ const Bankuser = () => {
     value: 0,
   });
 
-  const [editBranchData, setEditBranchData] = useState();
-
   console.log({ branchRole, role }, "branchRolebranchRole");
   //state for save and cancel button
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
-
-  const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
 
   //handle Open AddBankUser Modal
   const handleOpenAddBankUserModal = () => {
@@ -125,7 +106,6 @@ const Bankuser = () => {
   const [addBankUser, setAddBankUser] = useState({
     ...addBankUserSchema,
   });
-  console.log(addBankUser, "addBankUseraddBankUser");
 
   // Fetch branches on component mount
   useEffect(() => {
@@ -853,16 +833,6 @@ const Bankuser = () => {
         </Col>
       </Row>
 
-      {BulkUploadClicked && (
-        <BankBulkUploadModal
-          setBulkUploadClicked={setBulkUploadClicked}
-          BulkUploadClicked={BulkUploadClicked}
-        />
-      )}
-      {AddBankUserModalGobalState && <AddBankUserModal />}
-      {EditBankUserModalGobalState && (
-        <EditBankUserModal editBranchData={editBranchData} />
-      )}
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleConfirmationYes}
@@ -874,4 +844,4 @@ const Bankuser = () => {
   );
 };
 
-export default Bankuser;
+export default AddBankUser;

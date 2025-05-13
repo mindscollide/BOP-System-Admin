@@ -1,19 +1,27 @@
 import React, { useState } from "react";
-import styles from "./EditBankUserModal.module.css";
+import styles from "./EditBranchModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 // import Select from "react-select";
-import { editBankUserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+// import { editBankUserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
+// import {
+//   Button,
+//   Modal,
+//   Notification,
+//   TextField,
+// } from "../../../../components/elements";
+import { Col, Row } from "react-bootstrap";
+// import { UpdateBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
+import { useNavigate } from "react-router-dom";
+import { editBankUserModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { UpdateBranchAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import {
   Button,
   Modal,
   Notification,
   TextField,
-} from "../../../../components/elements";
-import { Col, Row } from "react-bootstrap";
-import { UpdateBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
-import { useNavigate } from "react-router-dom";
-const EditBankUserModal = ({ editBranchData }) => {
+} from "../../../../../../components/elements";
+const EditBranchModal = ({ editBranchData }) => {
   console.log("data in modal ", editBranchData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -246,4 +254,4 @@ const EditBankUserModal = ({ editBranchData }) => {
   );
 };
 
-export default EditBankUserModal;
+export default EditBranchModal;
