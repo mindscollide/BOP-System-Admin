@@ -1,28 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./AddCoporateUser.module.css";
 import { Col, Row } from "react-bootstrap";
-// import {
-//   Button,
-//   Checkbox,
-//   CustomUpload,
-//   Loader,
-//   Notification,
-//   Paper,
-//   TextField,
-// } from "../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-// import CorporatePlusIconModal from "./CorporatePlusIconModal/CorporatePlusIconModal";
-// import {
-//   // AddBankUserConfirmationModalSystemAdmin,
-//   ConfirmationModalSystemAdmin,
-//   corporatePlusIconModalSystemAdmin,
-//   editCompanyModalSystemAdmin,
-// } from "../../../store/actions/BOPSystemAdminModalsActions";
+
 import { useDispatch } from "react-redux";
-// import EditCompanyModal from "./EditCompanyModal/EditCompanyModal";
-// import { addCorporateUserSchema } from "../../../utils/schemas";
-// import { validateEmail } from "../../../utils/regexUtil";
 import { useNavigate } from "react-router-dom";
 import { validateEmail } from "../../../../../../utils/regexUtil";
 import {
@@ -46,26 +28,16 @@ import {
 } from "../../../../../../components/elements";
 import { addCorporateUserSchema } from "../../../../../../utils/schemas";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-// import CorporateBulkUploadModal from "../CorporateBulkUploadModal/CorporateBulkUploadModal";
-import CorporatePlusIconModal from "../CorporatePlusIconModal/CorporatePlusIconModal";
-import EditCompanyModal from "../EditCompanyModal/EditCompanyModal";
+// import CorporatePlusIconModal from "../CorporatePlusIconModal/CorporatePlusIconModal";
+// import EditCompanyModal from "../EditCompanyModal/EditCompanyModal";
 import { useCorporateUser } from "../utils/CorporateUserContext";
 
-// import {
-//   CorporateUsersBulkListAPI,
-//   CreateCorporateUserRequestAPI,
-// } from "../../../store/actions/BOPSystemAdminActions";
-// import ActivateConfirmationModal from "../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-// import { getAllCorporatesCategory } from "../../../store/actions/Auth-Actions";
-// import CorporateBulkUploadModal from "./CorporateBulkUploadModal/CorporateBulkUploadModal";
 const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { setBulkUploadClicked } = useCorporateUser();
+  const { setBulkUploadClicked, setEditCompanyData } = useCorporateUser();
 
-  //Global Staate
-  // const { BOPSystemAdminReducer } = useSelector((state) => state);
   const [modalState, setModalState] = useState(0);
 
   // get all corporates (company name)
@@ -73,20 +45,15 @@ const AddCorporateUser = () => {
     (state) => state.auth.GetAllCorporatesData
   );
 
-  //  //Global Modal for confirmation
-  // const AddBankUserConfirmationModal = useSelector(
-  //   (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
+  // //Add Company Use Modal Calling
+  // const PlusIconCorporateModalGobalState = useSelector(
+  //   (state) => state.BOPSystemAdminModal.corporatePlusIconModal
   // );
 
-  //Add Company Use Modal Calling
-  const PlusIconCorporateModalGobalState = useSelector(
-    (state) => state.BOPSystemAdminModal.corporatePlusIconModal
-  );
-
-  //Edit Company Use Modal Calling
-  const editCompanyModalGobalState = useSelector(
-    (state) => state.BOPSystemAdminModal.editCompanyModal
-  );
+  // //Edit Company Use Modal Calling
+  // const editCompanyModalGobalState = useSelector(
+  //   (state) => state.BOPSystemAdminModal.editCompanyModal
+  // );
 
   //Corporate User State
   const [corporateUser, setCorporateUser] = useState({
@@ -95,7 +62,7 @@ const AddCorporateUser = () => {
 
   //companyRoles
   const [companyRoleID, setCompanyRole] = useState(null);
-  const [editCompanyData, setEditCompanyData] = useState();
+  // const [editCompanyData, setEditCompanyData] = useState();
   //Global State
   const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
@@ -109,9 +76,6 @@ const AddCorporateUser = () => {
   const [open, setOpen] = useState(false);
 
   //state for cancel button
-
-  // const [BulkUploadClicked, setBulkUploadClicked] = useState(false);
-
   //state for save and cancel button
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
@@ -678,16 +642,7 @@ const AddCorporateUser = () => {
           </Row>
         </Col>
       </Row>
-      {/* {BulkUploadClicked && (
-        <CorporateBulkUploadModal
-          setBulkUploadClicked={setBulkUploadClicked}
-          BulkUploadClicked={BulkUploadClicked}
-        />
-      )} */}
-      {PlusIconCorporateModalGobalState && <CorporatePlusIconModal />}
-      {editCompanyModalGobalState && (
-        <EditCompanyModal editCompanyData={editCompanyData} />
-      )}
+
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleConfirmationYes}

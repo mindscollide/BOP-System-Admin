@@ -10,17 +10,12 @@ import {
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-// import AddBankUserModal from "../../../../../AdminLogin/BankUser/AddBankUserModal/AddBankUserModal";
 import {
   AdduserModalSystemAdmin,
-  // DeleteCorporateModalSystemAdmin,
-  // AddBankUserConfirmationModalSystemAdmin,
-  // editBankUserModalSystemAdmin,
   ConfirmationModalSystemAdmin,
   editBankUserModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
-// import EditBankUserModal from "../../../../../AdminLogin/BankUser/EditBankUserModal/EditBankUserModal";
 import { addBankUserSchema } from "../../../../../../utils/schemas";
 import {
   BankUsersBulkListAPI,
@@ -49,17 +44,8 @@ const AddBankUser = () => {
 
   const [modalState, setModalState] = useState(0);
 
-  // const { BOPSystemAdminModal } = useSelector((state) => state);
   //Dummy employee ID
   const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
-
-  // const modalforactivationconfirmation = useSelector(
-  //   (state) => state.BOPSystemAdminModal.deleteCorporateModal
-  // );
-
-  // const AddBankUserConfirmationModal = useSelector(
-  //   (state) => state.BOPSystemAdminModal.addBankUserConfirmationModal
-  // );
 
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
