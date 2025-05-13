@@ -1,7 +1,6 @@
 import {
   Route,
   createRoutesFromElements,
-  createHashRouter,
   createBrowserRouter,
 } from "react-router-dom";
 
@@ -9,8 +8,6 @@ import TradeCount from "../container/Admin/Setups/TradeCount/Tradecount";
 import CounterLimit from "../container/Admin/Reports/CounterParty/CounterLimit";
 import VolMeter from "../container/Admin/Reports/VolMeter/VolMeter";
 import CategoryManagement from "../container/Admin/Setups/CategoryManagement/CategoryManagement";
-// import CorporateUser from "../container/Admin/Pages/UserManagements/CorporateUser/CorporateUser";
-// import CorporateList from "../container/Admin/Setups/CorporateUserList/CorporateList";
 import BankerList from "../container/Admin/Setups/BankerList/BankerList";
 import LoginHistory from "../container/Admin/Setups/LoginHistory/LoginHistory";
 import TradeAccessManagement from "../container/Admin/Setups/TradeAccessManagement/TradeAccessManagement";

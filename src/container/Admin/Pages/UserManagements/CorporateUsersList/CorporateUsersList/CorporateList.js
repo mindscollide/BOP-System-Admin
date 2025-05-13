@@ -10,7 +10,7 @@ import {
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-import EditCorporateModal from "../../../../Setups/CorporateUserList/EditCorporateModal/EditCorporateModal";
+import EditCorporateModal from "../EditCorporateModal/EditCorporateModal";
 import {
   ConfirmationModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
@@ -18,8 +18,8 @@ import {
   UserDetailsCorporateModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
-import DeleteConfirmationModal from "../../../../Setups/CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
-import CorporateUserDetailsModal from "../../../../Setups/CorporateUserList/CorporateUserDetailsModal/CorporateUserDetailsModal";
+// import DeleteConfirmationModal from "../../../../Setups/CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
+// import CorporateUserDetailsModal from "../../../../Setups/CorporateUserList/CorporateUserDetailsModal/CorporateUserDetailsModal";
 import { useNavigate } from "react-router-dom";
 import { corporateListSchema } from "../../../../../../utils/schemas";
 import ExportShowComponent from "../../../../Setups/BankerList/ExportShowComponent";
@@ -36,6 +36,8 @@ import {
 } from "../../../../../../store/actions/CorporateUsersAction";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
 import { useMqtt } from "../../../../../../context/MQTTContext";
+import CorporateUserDetailsModal from "../CorporateUserDetailsModal/CorporateUserDetailsModal";
+import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,10 +48,6 @@ const CorporateList = () => {
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
   console.log("getAllCategories", getAllCategories);
 
-  // const GetAllCorporateUsers = useSelector(
-  //   (state) => state.BOPSystemAdminReducer.GetAllCorporateUsers
-  // );
-  // console.log("GetAllCorporateUsers", GetAllCorporateUsers);
   //state for save and cancel button
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal

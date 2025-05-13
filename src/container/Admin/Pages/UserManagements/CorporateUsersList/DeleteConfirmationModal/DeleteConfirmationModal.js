@@ -2,9 +2,12 @@ import React from "react";
 import styles from "./DeleteConfirmationModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { Button, Modal } from "../../../../../components/elements";
+// import { Button, Modal } from "../../../../../components/elements";
+
 import { Col, Row } from "react-bootstrap";
-import { DeleteCorporateModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
+import { DeleteCorporateModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { Button, Modal } from "../../../../../../components/elements";
+// import { DeleteCorporateModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
 const DeleteConfirmationModal = () => {
   const dispatch = useDispatch();
   const { BOPSystemAdminModal } = useSelector((state) => state);

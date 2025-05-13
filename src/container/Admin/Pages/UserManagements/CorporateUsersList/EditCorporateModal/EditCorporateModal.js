@@ -4,18 +4,14 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   Button,
-  CustomRadio,
   Modal,
   TextField,
-} from "../../../../../components/elements";
+} from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
-import { EditCorporateModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
-import Select from "react-select";
-import { RFQTimerOptions } from "../../../../../helpers/Dropdown";
-import { updateCorporateUserSchema } from "../../../../../utils/schemas";
-import { validateBopEmail } from "../../../../../utils/regexUtil";
+import { EditCorporateModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { updateCorporateUserSchema } from "../../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
-import { UpdateCorporateUsersAPI } from "../../../../../store/actions/CorporateUsersAction";
+import { UpdateCorporateUsersAPI } from "../../../../../../store/actions/CorporateUsersAction";
 const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,41 +20,10 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
     (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
   );
   console.log(GetCorporateUserByUserID, "useSelectoruseSelectoruseSelector");
-  // const { auth } = useSelector((state) => state);
-  // console.log("this is the user", auth);
-  //States
-  // const [value, setValue] = useState("Corporate");
-
-  //state for error Message
-  // const [errorShow, setErrorShow] = useState(false);
-
-  //Dummy User for handlin UI change bansed on the user Secuity admiin or system admin
-  let user = "System Admin";
-
-  //Checking snakbar state
-  const [open, setOpen] = useState(false);
 
   //State for add company
   const [updateCorporate, setUpdateCorporate] = useState({
     ...updateCorporateUserSchema,
-  });
-
-  //Options for radio
-  const radioOptions = [
-    { label: "Active", value: "Active" },
-    { label: "Inactive", value: "Inactive" },
-  ];
-
-  //State for RFQ Timer Treasury
-  const [RFQTimerTreasury, setRFQTimerTreasury] = useState({
-    label: "3 Minutes",
-    value: 3,
-  });
-
-  //State for RFQ Timer Corporate
-  const [RFQTimerCorporate, setRFQTimerCorporate] = useState({
-    label: "3 Minutes",
-    value: 3,
   });
 
   useEffect(() => {
@@ -66,9 +31,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
       try {
         const {
           firstName,
-          lastName,
           email,
-          natureOfBusinessID,
           corporateName,
           statusId,
           rfqTimers,
@@ -109,8 +72,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
     //Validation rules
     const validateInput = {
       firstName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
-      // email: (val) => val.replace(/\s+/g, ""),
-      // corporateName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
     };
 
     const isFieldEmpty = (val) => val === "";
@@ -137,70 +98,29 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
     updateField(name, value);
   };
 
-  //Handle Select RFQTreasury
-  const handleRFQTimerTreasurySelect = (selectedTrasury) => {
-    setRFQTimerTreasury(selectedTrasury);
-    setUpdateCorporate((prevState) => ({
-      ...prevState,
-      RFQTimerTreasury: {
-        ...prevState.RFQTimerTreasury,
-        value: selectedTrasury.value,
-        label: selectedTrasury.label,
-      },
-    }));
-  };
-
-  //Handle Select RFQCorporate
-  const handleRFQTimerCorporateSelect = (selectedCorporate) => {
-    setRFQTimerCorporate(selectedCorporate);
-    setUpdateCorporate((prevState) => ({
-      ...prevState,
-      RFQTimerCorporate: {
-        ...prevState.RFQTimerCorporate,
-        value: selectedCorporate.value,
-        label: selectedCorporate.label,
-      },
-    }));
-  };
-  //Radio Buttons Management
-  const handleRadioChange = (e) => {
-    console.log("radio checked", e.target.value);
-    setUpdateCorporate({
-      ...updateCorporate,
-      activeUser: {
-        value: e.target.value,
-      },
-    });
-  };
-
   // show error message When user hit activate btn
   const handleUpdateButton = () => {
-    if (
-      updateCorporate.firstName.value !== "" &&
-      updateCorporate.email.value !== "" &&
-      updateCorporate.corporateName.value !== "" &&
-      updateCorporate.RFQTimerTreasury.value !== 0 &&
-      updateCorporate.RFQTimerCorporate.value !== 0 &&
-      updateCorporate.activeUser.value !== 0
-    ) {
-      // setErrorShow(false);
-      let newData = {
-        FirstName: updateCorporate.firstName.value,
-        UserStatusId: updateCorporate.activeUser.value,
-        CorporateID: updateCorporate.corporateName.categoryID,
-        UserId: corporateUserId,
-      };
-      console.log("newData", newData);
-      dispatch(UpdateCorporateUsersAPI(navigate, newData, setCorproateUserId));
-    } else {
-      // setTimeout();
-
-      setOpen({
-        open: true,
-        message: "Fill All Required Fields",
-      });
-      // setErrorShow(true);
-    }
+    try {
+      if (
+        updateCorporate.firstName.value !== "" &&
+        updateCorporate.email.value !== "" &&
+        updateCorporate.corporateName.value !== "" &&
+        updateCorporate.RFQTimerTreasury.value !== 0 &&
+        updateCorporate.RFQTimerCorporate.value !== 0 &&
+        updateCorporate.activeUser.value !== 0
+      ) {
+        let newData = {
+          FirstName: updateCorporate.firstName.value,
+          UserStatusId: updateCorporate.activeUser.value,
+          CorporateID: updateCorporate.corporateName.categoryID,
+          UserId: corporateUserId,
+        };
+        console.log("newData", newData);
+        dispatch(
+          UpdateCorporateUsersAPI(navigate, newData, setCorproateUserId)
+        );
+      }
+    } catch (err) {}
   };
 
   //handle Discard Button
@@ -270,21 +190,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                 disable
               />
             </Col>
-
-            {/* <Col className="d-flex justify-content-start">
-              <p
-                className={
-                  errorShow &&
-                  !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
-                    updateCorporate.email.value
-                  )
-                    ? styles["bankErrorMessage"]
-                    : styles["bankErrorMessage_hidden"]
-                }
-              >
-                Email address with domain of bop is required
-              </p>
-            </Col> */}
           </Row>
 
           <Row className="mt-3">
@@ -315,16 +220,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                     Treasury
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
-                  {/* <Select
-                    className="RFQTimerTreasury"
-                    classNamePrefix={"selectCateogyCorporateList"}
-                    options={RFQTimerOptions}
-                    value={RFQTimerTreasury}
-                    isSearchable={true}
-                    menuPortalTarget={document.body}
-                    onChange={handleRFQTimerTreasurySelect}
-                    isDisabled
-                  /> */}
+
                   <TextField
                     labelClass="d-none"
                     value={`${updateCorporate.RFQTimerTreasury.value} Minutes`}
@@ -338,16 +234,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
 
-                  {/* <Select
-                    className="RFQTimerCorporate"
-                    classNamePrefix={"selectCateogyCorporateList"}
-                    options={RFQTimerOptions}
-                    value={RFQTimerCorporate}
-                    isSearchable={true}
-                    menuPortalTarget={document.body}
-                    onChange={handleRFQTimerCorporateSelect}
-                    isDisabled
-                  /> */}
                   <TextField
                     labelClass="d-none"
                     value={`${updateCorporate.RFQTimerCorporate.value} Minutes`}
@@ -363,22 +249,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               <span className={styles["aesterick-color"]}>*</span>
             </Col>
           </Row>
-          {/* {user === "Security Admin" && (
-            <>
-              <Row>
-                <Col lg={12} md={12} sm={12}>
-                  <CustomRadio
-                    name='customRadio'
-                    options={radioOptions}
-                    onChange={handleRadioChange}
-                    value={updateCorporate.activeUser?.value || ""}
-                    size='default'
-                    className='custom-radio-group'
-                  />
-                </Col>
-              </Row>
-            </>
-          )} */}
 
           <Row>
             <Col lg={12} md={12} sm={12}>

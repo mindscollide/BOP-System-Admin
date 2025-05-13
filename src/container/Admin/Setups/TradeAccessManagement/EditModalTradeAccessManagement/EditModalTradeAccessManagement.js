@@ -17,7 +17,7 @@ import {
   TextField,
 } from "../../../../../components/elements";
 import { updateCorporateDataSchema } from "../../../../../utils/schemas";
-import DeleteConfirmationModal from "../../CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
+// import DeleteConfirmationModal from "../../CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
 import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions";
@@ -589,7 +589,7 @@ const EditModalTradeAccessManagement = () => {
               />
             </Col>
           </Row>
-          {saveChanges && <DeleteConfirmationModal />}
+          {/* {saveChanges && <DeleteConfirmationModal />} */}
           {<ActivateConfirmationModal onConfirm={handleSaveChangesButtonYes} />}
         </>
       }
