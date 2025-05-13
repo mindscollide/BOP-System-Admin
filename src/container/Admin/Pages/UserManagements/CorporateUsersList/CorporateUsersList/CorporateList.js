@@ -7,41 +7,35 @@ import {
   Button,
   Table,
   Loader,
-} from "../../../../components/elements";
+} from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-import EditCorporateModal from "./EditCorporateModal/EditCorporateModal";
+import EditCorporateModal from "../../../../Setups/CorporateUserList/EditCorporateModal/EditCorporateModal";
 import {
-  // AddBankUserConfirmationModalSystemAdmin,
   ConfirmationModalSystemAdmin,
   DeleteCorporateModalSystemAdmin,
   EditCorporateModalSystemAdmin,
   UserDetailsCorporateModalSystemAdmin,
-} from "../../../../store/actions/BOPSystemAdminModalsActions";
+} from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
-import DeleteConfirmationModal from "./DeleteConfirmationModal/DeleteConfirmationModal";
-// import CorporatePlusIconModal from "../../../AdminLogin/CorporateUser/CorporatePlusIconModal/CorporatePlusIconModal";
-import CorporateUserDetailsModal from "./CorporateUserDetailsModal/CorporateUserDetailsModal";
+import DeleteConfirmationModal from "../../../../Setups/CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
+import CorporateUserDetailsModal from "../../../../Setups/CorporateUserList/CorporateUserDetailsModal/CorporateUserDetailsModal";
 import { useNavigate } from "react-router-dom";
-// import { getAllCorporatesCategory } from "../../../../store/actions/Auth-Actions";
-import { corporateListSchema } from "../../../../utils/schemas";
-import ExportShowComponent from "../BankerList/ExportShowComponent";
-import ActivateConfirmationModal from "../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { corporateListSchema } from "../../../../../../utils/schemas";
+import ExportShowComponent from "../../../../Setups/BankerList/ExportShowComponent";
+import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { Popover } from "antd";
-import pdfIcon from "../../../../assets/images/pdf.png";
-import excelIcon from "../../../../assets/images/excel.png";
-import {
-  GetAllCategoriesAPI,
-  // getAllCorporatesCategory,
-} from "../../../../store/actions/Auth-Actions";
-import { formatDateAndTimeFromString } from "../../../../helpers/reusableMethods";
+import pdfIcon from "../../../../../../assets/images/pdf.png";
+import excelIcon from "../../../../../../assets/images/excel.png";
+import { GetAllCategoriesAPI } from "../../../../../../store/actions/Auth-Actions";
+import { formatDateAndTimeFromString } from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
 import {
   GetCorporateUserByUserIDApi,
   SearchCorporateUsersAPI,
-} from "../../../../store/actions/CorporateUsersAction";
-import { useTableScrollBottom } from "../../../../helpers/useTableScrollBottom";
-import { useMqtt } from "../../../../context/MQTTContext";
+} from "../../../../../../store/actions/CorporateUsersAction";
+import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -332,7 +326,7 @@ const CorporateList = () => {
   };
   const columns = [
     {
-      title: <label className='px-3'>Email</label>,
+      title: <label className="px-3">Email</label>,
       dataIndex: "email",
       key: "email",
       width: "220px",
@@ -341,13 +335,14 @@ const CorporateList = () => {
       render: (email, record) => (
         <span
           style={{ cursor: "pointer" }}
-          onClick={() => handleOnClickEmail(record)}>
+          onClick={() => handleOnClickEmail(record)}
+        >
           {email}
         </span>
       ),
     },
     {
-      title: <label className='px-3'>Name</label>,
+      title: <label className="px-3">Name</label>,
       dataIndex: "firstName",
       key: "firstName",
       width: "150px",
@@ -355,7 +350,7 @@ const CorporateList = () => {
       align: "left",
     },
     {
-      title: <label className='px-3'>Corporate Name</label>,
+      title: <label className="px-3">Corporate Name</label>,
       dataIndex: "corporateName",
       key: "corporateName",
       width: "150px",
@@ -370,7 +365,8 @@ const CorporateList = () => {
         <span
           className={
             statusId === 1 ? styles.ActiveStatus : styles.InactiveStatus
-          }>
+          }
+        >
           {statusId === 1 ? "Active" : "Inactive"}
         </span>
       ),
@@ -429,7 +425,7 @@ const CorporateList = () => {
               >
                 <Button
                   className={styles["EditButton"]}
-                  icon={<i className='icon-edit color-blue'></i>}
+                  icon={<i className="icon-edit color-blue"></i>}
                   onClick={() => handleEditCorporate(record)}
                 />
                 {/* <Button
@@ -564,20 +560,20 @@ const CorporateList = () => {
 
   return (
     <section className={styles["SectionContainer"]}>
-      <Row className='mt-4'>
+      <Row className="mt-4">
         <Col lg={12} md={12} sm={12}>
           <span className={styles["customer-List-label"]}>
             Corporate Users List
           </span>
         </Col>
       </Row>
-      <Row className='mt-2'>
+      <Row className="mt-2">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className='mt-2 g-2'>
+            <Row className="mt-2 g-2">
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder='Name'
+                  placeholder="Name"
                   labelClass={"d-none"}
                   name={"Name"}
                   value={corporateList.Name.value}
@@ -587,7 +583,7 @@ const CorporateList = () => {
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   labelClass={"d-none"}
-                  placeholder='Corporate Name'
+                  placeholder="Corporate Name"
                   name={"corporateName"}
                   value={corporateList.CorporateName.value}
                   onChange={CorporateListValidateHandler}
@@ -595,7 +591,7 @@ const CorporateList = () => {
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder='Email'
+                  placeholder="Email"
                   labelClass={"d-none"}
                   name={"email"}
                   value={corporateList.Email.value}
@@ -606,28 +602,29 @@ const CorporateList = () => {
                 <Select
                   // isClearable={true}
                   // isSearchable={true}
-                  placeholder='Select Category'
+                  placeholder="Select Category"
                   options={categoryOptions}
                   value={categoryID.value !== 0 ? categoryID : null}
                   onChange={handleSelectCategory}
-                  classNamePrefix='selectCateogyCorporateList'
+                  classNamePrefix="selectCateogyCorporateList"
                 />
               </Col>
               <Col
                 lg={4}
                 md={4}
                 sm={12}
-                className='d-flex justify-content-center gap-1'>
+                className="d-flex justify-content-center gap-1"
+              >
                 <Button
-                  icon={<i className='icon-search icon-check-space'></i>}
+                  icon={<i className="icon-search icon-check-space"></i>}
                   className={styles["CorporateList-btn-Search"]}
-                  text='Search'
+                  text="Search"
                   onClick={handleSearchEventButton}
                 />
                 <Button
-                  icon={<i className='icon-refresh icon-check-space'></i>}
+                  icon={<i className="icon-refresh icon-check-space"></i>}
                   className={styles["Corporatelist-Reset-btn"]}
-                  text='Reset'
+                  text="Reset"
                   iconClass={styles["resetIconClass"]}
                   onClick={handleReset}
                 />
@@ -635,27 +632,28 @@ const CorporateList = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<img src={pdfIcon} alt='PDF Icon' />}
+                        icon={<img src={pdfIcon} alt="PDF Icon" />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        icon={<img src={excelIcon} alt='Excel Icon' />}
+                        icon={<img src={excelIcon} alt="Excel Icon" />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                     </div>
                   }
                   // title="Title"
-                  trigger='click'
+                  trigger="click"
                   open={open}
                   onOpenChange={handleOpenChange}
-                  placement='bottomRight'
-                  arrow={false}>
+                  placement="bottomRight"
+                  arrow={false}
+                >
                   <Button
-                    icon={<i className='icon-download'></i>}
+                    icon={<i className="icon-download"></i>}
                     className={styles["Export_Button"]}
-                    text='Export'
+                    text="Export"
                     iconClass={styles["resetIconClass"]}
                     onClick={toggleExportOptions}
                   />
@@ -689,13 +687,13 @@ const CorporateList = () => {
               </Row>
             )} */}
 
-            <Row className='mt-1'>
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent />
               </Col>
             </Row>
 
-            <Row className='mt-1'>
+            <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}

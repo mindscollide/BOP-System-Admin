@@ -10,7 +10,7 @@ import CounterLimit from "../container/Admin/Reports/CounterParty/CounterLimit";
 import VolMeter from "../container/Admin/Reports/VolMeter/VolMeter";
 import CategoryManagement from "../container/Admin/Setups/CategoryManagement/CategoryManagement";
 // import CorporateUser from "../container/Admin/Pages/UserManagements/CorporateUser/CorporateUser";
-import CorporateList from "../container/Admin/Setups/CorporateUserList/CorporateList";
+// import CorporateList from "../container/Admin/Setups/CorporateUserList/CorporateList";
 import BankerList from "../container/Admin/Setups/BankerList/BankerList";
 import LoginHistory from "../container/Admin/Setups/LoginHistory/LoginHistory";
 import TradeAccessManagement from "../container/Admin/Setups/TradeAccessManagement/TradeAccessManagement";
@@ -23,6 +23,7 @@ import TwoFaVerification from "../container/AdminLogin/System Login/2faVerificat
 import AdminDashboard from "../container/Admin/AdminDashboard/AdminDashboard";
 import BankUser from "../container/Admin/Pages/UserManagements/BankUser/BankUser";
 import CorporateUser from "../container/Admin/Pages/UserManagements/CorporateUser/CorporateUser";
+import CorporateList from "../container/Admin/Pages/UserManagements/CorporateUsersList/CorporateUsersList/CorporateList";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
