@@ -1,21 +1,68 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import "./MarketTiming.css";
 import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import { useSelector } from "react-redux";
+import { ConvertDateTimrStringIntoGTM } from "../../../../../helpers/reusableMethods";
 
-const MarketTiming = () => {
-  const [monToThruStartTime, setMonToThruStartTime] = useState(null);
-  const [monToThruEndTime, setMonToThruEndTime] = useState(null);
-  const [fridayStartTime, setFridayStartTime] = useState(null);
-  const [fridayEndTime, setFridayEndTime] = useState(null);
-  const allowedStartHours = Array.from({ length: 24 }, (_, i) => i).filter(
-    (hour) => hour < 9 || hour > 14 // allow 09:00 to 15:00 (3 PM inclusive)
+const MarketTiming = ({
+  monToThruStartTime,
+  setMonToThruStartTime,
+  monToThruEndTime,
+  setMonToThruEndTime,
+  fridayStartTime,
+  setFridayStartTime,
+  fridayEndTime,
+  setFridayEndTime,
+}) => {
+  const GetMarketTimeSettings = useSelector(
+    (state) => state.settingsReducer.GetMarketTimeSettings
   );
 
-  const allowedEndHours = Array.from({ length: 24 }, (_, i) => i).filter(
-    (hour) => hour <= 9 || hour >= 15 // allow 09:15 to 02:45 only (strictly inside)
+  console.log(
+    { monToThruStartTime, monToThruEndTime, fridayStartTime, fridayEndTime },
+    "fridayEndTimefridayEndTime"
   );
+
+  useEffect(() => {
+    if (GetMarketTimeSettings !== null) {
+      try {
+        const { fridayEnd, fridayStart, monThuEnd, monThuStart } =
+          GetMarketTimeSettings;
+
+        setMonToThruStartTime(
+          ConvertDateTimrStringIntoGTM(monThuStart, "hh:mm")
+        );
+        setMonToThruEndTime(ConvertDateTimrStringIntoGTM(monThuEnd, "hh:mm"));
+
+        setFridayStartTime(ConvertDateTimrStringIntoGTM(fridayStart, "hh:mm"));
+        setFridayEndTime(ConvertDateTimrStringIntoGTM(fridayEnd, "hh:mm"));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [GetMarketTimeSettings]);
+
+  const handleChange = (eventName, event) => {
+    console.log(eventName, event, "handleChangehandleChange");
+    if (eventName === "monToThruStartTime") {
+      let newDateObj = new Date(event);
+      console.log(newDateObj, "handleChangehandleChange");
+
+      setMonToThruStartTime(new Date(event));
+    }
+    if (eventName === "monToThruEndTime") {
+      setMonToThruEndTime(new Date(event));
+    }
+    if (eventName === "fridayStartTime") {
+      setFridayStartTime(new Date(event));
+    }
+    if (eventName === "fridayEndTime") {
+      setFridayEndTime(new Date(event));
+    }
+  };
+
   return (
     <>
       <Row className="mt-4">
@@ -33,9 +80,9 @@ const MarketTiming = () => {
                 disableDayPicker
                 inputClass="markettimePicker"
                 format="hh:mm A"
-                plugins={[<TimePicker />]}
+                plugins={[<TimePicker hideSeconds />]}
                 value={monToThruStartTime}
-                onChange={setMonToThruStartTime}
+                onChange={(value) => handleChange("monToThruStartTime", value)}
                 placeholder="Select start time"
               />
             </Col>
@@ -46,11 +93,10 @@ const MarketTiming = () => {
                 disableDayPicker
                 format="hh:mm A"
                 inputClass="markettimePicker"
-                plugins={[<TimePicker />]}
+                plugins={[<TimePicker hideSeconds />]}
                 value={monToThruEndTime}
-                onChange={setMonToThruEndTime}
-                minuteStep={15}
-                disabledHours={allowedEndHours}
+                onChange={(value) => handleChange("monToThruEndTime", value)}
+                // minuteStep={15}
                 placeholder="Select end time"
               />
             </Col>
@@ -73,11 +119,10 @@ const MarketTiming = () => {
                 disableDayPicker
                 format="hh:mm A"
                 inputClass="markettimePicker"
-                plugins={[<TimePicker />]}
+                plugins={[<TimePicker hideSeconds />]}
                 value={fridayStartTime}
-                onChange={setFridayStartTime}
+                onChange={(value) => handleChange("fridayStartTime", value)}
                 minuteStep={15}
-                disabledHours={allowedStartHours}
                 placeholder="Select start time"
               />
             </Col>
@@ -88,11 +133,10 @@ const MarketTiming = () => {
                 disableDayPicker
                 format="hh:mm A"
                 inputClass="markettimePicker"
-                plugins={[<TimePicker />]}
+                plugins={[<TimePicker hideSeconds />]}
                 value={fridayEndTime}
-                onChange={setFridayEndTime}
+                onChange={(value) => handleChange("fridayEndTime", value)}
                 minuteStep={15}
-                disabledHours={allowedEndHours}
                 placeholder="Select end time"
               />
             </Col>

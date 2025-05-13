@@ -22,6 +22,7 @@ import {
 import UserSetting from "./UserSettings/UserSetting";
 import PassCodeSetting from "./PassCodeSetting/PassCodeSetting";
 import MarketTiming from "./MarketTiming/MarketTiming";
+import { extractTimeOnly } from "../../../../helpers/reusableMethods";
 
 const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const dispatch = useDispatch();
@@ -63,6 +64,10 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     fridayEnd: { value: "00:00", errorMessage: "", errorStatus: false },
   });
 
+  const [monToThruStartTime, setMonToThruStartTime] = useState("");
+  const [monToThruEndTime, setMonToThruEndTime] = useState(null);
+  const [fridayStartTime, setFridayStartTime] = useState(null);
+  const [fridayEndTime, setFridayEndTime] = useState(null);
   const [errors, setErrors] = useState({
     lengthError: true,
     numberError: true,
@@ -194,154 +199,53 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     console.log(`switch to ${e}`);
   };
 
-  const formatTimeInput = (input) => {
-    // Remove all non-digit characters
-    let digits = input.replace(/\D/g, "");
+  // const validateTime = (time) => {
+  //   if (!time || time.length !== 5 || time[2] !== ":") {
+  //     return { valid: false, message: "Time must be in HH:MM format" };
+  //   }
 
-    // If empty, return empty string
-    if (digits === "") return "";
+  //   const [hours, minutes] = time.split(":");
+  //   const hoursNum = parseInt(hours, 10);
+  //   const minutesNum = parseInt(minutes, 10);
 
-    // Limit to 4 digits
-    digits = digits.substring(0, 4);
+  //   if (isNaN(hoursNum)) {
+  //     return { valid: false, message: "Hours must be a number" };
+  //   }
 
-    // Format with colon after 2 digits
-    let formatted = "";
-    for (let i = 0; i < digits.length; i++) {
-      if (i === 2) {
-        formatted += ":";
-      }
-      formatted += digits[i];
-    }
+  //   if (isNaN(minutesNum)) {
+  //     return { valid: false, message: "Minutes must be a number" };
+  //   }
 
-    return formatted;
-  };
+  //   if (hoursNum < 0 || hoursNum > 23) {
+  //     return { valid: false, message: "Hours must be between 00:00 - 23:59" };
+  //   }
 
-  const validateTime = (time) => {
-    if (!time || time.length !== 5 || time[2] !== ":") {
-      return { valid: false, message: "Time must be in HH:MM format" };
-    }
+  //   if (minutesNum < 0 || minutesNum > 59) {
+  //     return { valid: false, message: "Minutes must be between 00-59" };
+  //   }
 
-    const [hours, minutes] = time.split(":");
-    const hoursNum = parseInt(hours, 10);
-    const minutesNum = parseInt(minutes, 10);
+  //   return { valid: true, message: "" };
+  // };
 
-    if (isNaN(hoursNum)) {
-      return { valid: false, message: "Hours must be a number" };
-    }
+  // const validateTimeComparison = (startTime, endTime) => {
+  //   if (
+  //     !startTime ||
+  //     !endTime ||
+  //     startTime.length !== 5 ||
+  //     endTime.length !== 5
+  //   ) {
+  //     return "";
+  //   }
 
-    if (isNaN(minutesNum)) {
-      return { valid: false, message: "Minutes must be a number" };
-    }
+  //   const [startH, startM] = startTime.split(":").map(Number);
+  //   const [endH, endM] = endTime.split(":").map(Number);
 
-    if (hoursNum < 0 || hoursNum > 23) {
-      return { valid: false, message: "Hours must be between 00:00 - 23:59" };
-    }
+  //   if (startH > endH || (startH === endH && startM > endM)) {
+  //     return "Start time cannot be after end time";
+  //   }
 
-    if (minutesNum < 0 || minutesNum > 59) {
-      return { valid: false, message: "Minutes must be between 00-59" };
-    }
-
-    return { valid: true, message: "" };
-  };
-
-  const validateTimeComparison = (startTime, endTime) => {
-    if (
-      !startTime ||
-      !endTime ||
-      startTime.length !== 5 ||
-      endTime.length !== 5
-    ) {
-      return "";
-    }
-
-    const [startH, startM] = startTime.split(":").map(Number);
-    const [endH, endM] = endTime.split(":").map(Number);
-
-    if (startH > endH || (startH === endH && startM > endM)) {
-      return "Start time cannot be after end time";
-    }
-
-    return "";
-  };
-
-  const handleValueChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name.includes("Start") || name.includes("End")) {
-      const formattedValue = formatTimeInput(value);
-      const validation = validateTime(formattedValue);
-
-      // Create updated field object
-      const updatedField = {
-        value: formattedValue,
-        errorMessage: validation.valid ? "" : validation.message,
-        errorStatus: !validation.valid,
-      };
-
-      // Update the specific field
-      const updatedSettings = {
-        ...settingsRecord,
-        [name]: updatedField,
-      };
-
-      // Check time comparisons
-      let comparisonError = "";
-      if (name.includes("monThu")) {
-        comparisonError = validateTimeComparison(
-          name === "monThuStart"
-            ? formattedValue
-            : updatedSettings.monThuStart.value,
-          name === "monThuEnd"
-            ? formattedValue
-            : updatedSettings.monThuEnd.value
-        );
-
-        // Update comparison errors for both fields
-        if (comparisonError) {
-          updatedSettings.monThuStart = {
-            ...updatedSettings.monThuStart,
-            errorMessage: comparisonError,
-            errorStatus: true,
-          };
-          updatedSettings.monThuEnd = {
-            ...updatedSettings.monThuEnd,
-            errorMessage: comparisonError,
-            errorStatus: true,
-          };
-        }
-      } else if (name.includes("friday")) {
-        comparisonError = validateTimeComparison(
-          name === "fridayStart"
-            ? formattedValue
-            : updatedSettings.fridayStart.value,
-          name === "fridayEnd"
-            ? formattedValue
-            : updatedSettings.fridayEnd.value
-        );
-
-        if (comparisonError) {
-          updatedSettings.fridayStart = {
-            ...updatedSettings.fridayStart,
-            errorMessage: comparisonError,
-            errorStatus: true,
-          };
-          updatedSettings.fridayEnd = {
-            ...updatedSettings.fridayEnd,
-            errorMessage: comparisonError,
-            errorStatus: true,
-          };
-        }
-      }
-
-      setSettingRecords(updatedSettings);
-    } else {
-      // Handle other fields
-      setSettingRecords({
-        ...settingsRecord,
-        [name]: value,
-      });
-    }
-  };
+  //   return "";
+  // };
 
   const UpdateButtonOnClick = () => {
     try {
@@ -371,10 +275,10 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
 
     try {
       let updateTime = {
-        MonThuStartTime: `${settingsRecord.monThuStart.value}:00`,
-        MonThuEndTime: `${settingsRecord.monThuEnd.value}:00`,
-        FridayStartTime: `${settingsRecord.fridayStart.value}:00`,
-        FridayEndTime: `${settingsRecord.fridayEnd.value}:00`,
+        MonThuStartTime: extractTimeOnly(monToThruStartTime),
+        MonThuEndTime: extractTimeOnly(monToThruEndTime),
+        FridayStartTime: extractTimeOnly(fridayStartTime),
+        FridayEndTime: extractTimeOnly(fridayEndTime),
       };
       console.log("updated time is:", updateTime);
       dispatch(
@@ -443,7 +347,16 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
                 settingsRecord={settingsRecord}
               />
             ) : marketTiming ? (
-              <MarketTiming />
+              <MarketTiming
+                monToThruStartTime={monToThruStartTime}
+                setMonToThruStartTime={setMonToThruStartTime}
+                monToThruEndTime={monToThruEndTime}
+                setMonToThruEndTime={setMonToThruEndTime}
+                fridayStartTime={fridayStartTime}
+                setFridayStartTime={setFridayStartTime}
+                fridayEndTime={fridayEndTime}
+                setFridayEndTime={setFridayEndTime}
+              />
             ) : null}
           </>
         }

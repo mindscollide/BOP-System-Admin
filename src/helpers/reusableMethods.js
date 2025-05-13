@@ -1,3 +1,5 @@
+import moment from "moment";
+
 //Date
 export const formatDate = (date) =>
   date ? new Date(date).toISOString().split("T")[0] : "";
@@ -6,33 +8,16 @@ export const formatDate = (date) =>
 export const formatDateTime = (date) =>
   date ? new Date(date).toISOString() : "";
 
-// export const formatDateAndTimeFromString = (dateString) => {
-//   // Assuming the dateString is in the format 'YYYYMMDDHHMMSS'
-//   let year = dateString.substring(0, 4);
-//   let month = dateString.substring(4, 6) - 1; // Month is 0-indexed in JavaScript
-//   let day = dateString.substring(6, 8);
-//   let hours = dateString.substring(8, 10);
-//   let minutes = dateString.substring(10, 12);
-//   let seconds = dateString.substring(12, 14);
+export const ConvertDateTimrStringIntoGTM = (date, pattern) => {
+  let ConvertIntoISO = moment(date, pattern).toISOString();
+  console.log(ConvertIntoISO, "ConvertIntoISOConvertIntoISO");
+  return new Date(ConvertIntoISO);
+};
 
-//   // Create a Date object
-//   let date = new Date(year, month, day, hours, minutes, seconds);
-
-//   // Format the date as 'DD/MM/YYYY HH:MM:SS'
-//   return (
-//     ("0" + date.getDate()).slice(-2) +
-//     "/" +
-//     ("0" + (date.getMonth() + 1)).slice(-2) +
-//     "/" +
-//     date.getFullYear() +
-//     " " +
-//     ("0" + date.getHours()).slice(-2) +
-//     ":" +
-//     ("0" + date.getMinutes()).slice(-2) +
-//     ":" +
-//     ("0" + date.getSeconds()).slice(-2)
-//   );
-// };
+export const extractTimeOnly = (dateString) => {
+  const dateObj = new Date(dateString);
+  return dateObj.toTimeString().split(" ")[0]; // Returns "HH:MM:SS"
+};
 
 export const formatDateAndTimeFromString = (date) => {
   let dateString =
@@ -70,22 +55,4 @@ export const formatCurrencyInput = (value) => {
   }
 
   return cleanVal;
-};
-
-export const formatTimeInput = (value) => {
-  if (!value) return "";
-
-  // Remove non-numeric characters
-  let cleanVal = value.replace(/[^0-9]/g, "");
-
-  // Limit to 4 digits
-  cleanVal = cleanVal.slice(0, 4);
-
-  // Pad with zeros to make it exactly 4 digits
-  while (cleanVal.length < 4) {
-    cleanVal += "0";
-  }
-
-  // Format to HH:MM
-  return `${cleanVal.slice(0, 2)}:${cleanVal.slice(2)}`;
 };
