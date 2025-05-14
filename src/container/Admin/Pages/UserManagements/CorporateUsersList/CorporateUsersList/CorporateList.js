@@ -22,7 +22,8 @@ import { useDispatch } from "react-redux";
 // import CorporateUserDetailsModal from "../../../../Setups/CorporateUserList/CorporateUserDetailsModal/CorporateUserDetailsModal";
 import { useNavigate } from "react-router-dom";
 import { corporateListSchema } from "../../../../../../utils/schemas";
-import ExportShowComponent from "../../../../Setups/BankerList/ExportShowComponent";
+// import ExportShowComponent from "../../../../Setups/BankerList/ExportShowComponent";
+
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { Popover } from "antd";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
@@ -38,6 +39,7 @@ import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBo
 import { useMqtt } from "../../../../../../context/MQTTContext";
 import CorporateUserDetailsModal from "../CorporateUserDetailsModal/CorporateUserDetailsModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
+import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

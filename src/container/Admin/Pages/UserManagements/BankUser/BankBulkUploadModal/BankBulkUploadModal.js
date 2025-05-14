@@ -138,7 +138,7 @@ const BankBulkUploadModal = () => {
           ContactNumber: user.contactNumber,
           LDAPAccount: user.ldapAccount,
           BranchName: user.branchName,
-          EmployeeID: user.employeeId,
+          EmployeeID: user.employeeID,
         })),
         UsersToBeUpdated: usersToBeUpdated.map((user) => ({
           FirstName: user.firstName,
@@ -147,9 +147,10 @@ const BankBulkUploadModal = () => {
           ContactNumber: user.contactNumber,
           LDAPAccount: user.ldapAccount,
           BranchName: user.branchName,
-          EmployeeID: user.employeeId,
+          EmployeeID: user.employeeID,
         })),
       };
+
       console.log("transformPayload", transformPayload);
       dispatch(
         CreateBulkBankUserRequestAPI(

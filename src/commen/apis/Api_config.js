@@ -216,6 +216,11 @@ const SaveMarketTimeSettings = {
 const LogoutRM = {
   RequestMethod: "ServiceManager.LogOut",
 };
+
+const GetCounterPartyList = {
+  RequestMethod: "ServiceManager.GetCounterPartyList",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -268,4 +273,5 @@ export {
   SearchAllUserLoginHistory,
   GetMarketTimeSettings,
   SaveMarketTimeSettings,
+  GetCounterPartyList,
 };

@@ -22,6 +22,7 @@ import {
   GetAllInstruments,
   BankUsersBulkList,
   SearchAllUserLoginHistory,
+  GetCounterPartyList,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
@@ -2596,6 +2597,85 @@ const SearchAllUserLoginHistoryAPI = (navigate, data) => {
       });
   };
 };
+
+//GetCounterPartyList
+const GetCounterPartyListInit = () => {
+  console.log("here now in init");
+  return {
+    type: actions.GET_COUNTER_PARTY_LIST_INIT,
+  };
+};
+const GetCounterPartyListSuccess = (response, message) => {
+  console.log("in success");
+  return {
+    type: actions.GET_COUNTER_PARTY_LIST_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetCounterPartyListFail = (message) => {
+  return {
+    type: actions.GET_COUNTER_PARTY_LIST_FAIL,
+    message: message,
+  };
+};
+
+const GetCounterPartyListAPI = (navigate) => {
+  console.log("here now");
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetCounterPartyListInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetCounterPartyList.RequestMethod);
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetCounterPartyListAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCounterPartyList_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetCounterPartyListSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCounterPartyList_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetCounterPartyListFail("Exception"));
+            }
+          } else {
+            dispatch(GetCounterPartyListFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetCounterPartyListFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetCounterPartyListFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -2620,4 +2700,5 @@ export {
   GetCounterPartyNamesAPI,
   GetAllInstrumentsAPI,
   SearchAllUserLoginHistoryAPI,
+  GetCounterPartyListAPI,
 };

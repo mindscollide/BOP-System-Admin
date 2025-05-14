@@ -28,8 +28,6 @@ import {
 } from "../../../../../../components/elements";
 import { addCorporateUserSchema } from "../../../../../../utils/schemas";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-// import CorporatePlusIconModal from "../CorporatePlusIconModal/CorporatePlusIconModal";
-// import EditCompanyModal from "../EditCompanyModal/EditCompanyModal";
 import { useCorporateUser } from "../utils/CorporateUserContext";
 
 const AddCorporateUser = () => {

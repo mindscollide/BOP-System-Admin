@@ -2,14 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Setting.css";
 import { Row, Col } from "react-bootstrap";
 
-import {
-  TextField,
-  Button,
-  Modal,
-  Loader,
-} from "../../../../components/elements";
-import { Checkbox, Switch } from "antd";
-// import Password from "antd/es/input/Password";
+import { Button, Modal, Loader } from "../../../../components/elements";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -30,30 +23,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const [settingUser, setSettingUser] = useState(true);
   const [passcodeSetting, setPasscodeSetting] = useState(false);
   const [marketTiming, setMarketTiming] = useState(false);
-  const [settings, setSettings] = useState({
-    chatPannalOverlap: true,
-    soundOnEveryMessage: true,
-    twoFactorAuthentication: true,
-    newPassword: {
-      value: "",
-    },
-    confirmNewPassword: {
-      value: "",
-    },
-    monToThurStartTime: {
-      value: "",
-    },
-    monToThurEndTime: {
-      value: "",
-    },
-    friStartTime: {
-      value: "",
-    },
-    friEndTime: {
-      value: "",
-    },
-  });
-
   const [settingsRecord, setSettingRecords] = useState({
     BD_Enable2FA: false,
     BD_SoundOnEveryMessage: false,
@@ -68,12 +37,12 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const [monToThruEndTime, setMonToThruEndTime] = useState(null);
   const [fridayStartTime, setFridayStartTime] = useState(null);
   const [fridayEndTime, setFridayEndTime] = useState(null);
-  const [errors, setErrors] = useState({
-    lengthError: true,
-    numberError: true,
-    specialCharError: true,
-    matchError: true,
-  });
+  // const [errors, setErrors] = useState({
+  //   lengthError: true,
+  //   numberError: true,
+  //   specialCharError: true,
+  //   matchError: true,
+  // });
 
   const Loading = useSelector((state) => state.settingsReducer.Loading);
   const GetUserSettings = useSelector(
@@ -169,10 +138,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     setPasscodeSetting(false);
     setMarketTiming(true);
   };
-
-  // const onChange = (e) => {
-  //   console.log(`checked = ${e.target.checked}`);
-  // };
 
   // Checkbox for Chat Panal Overlap and Sound on every personal message
   const onChangeCheckbox = (e) => {
@@ -295,7 +260,7 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
         className="modaldialog modal-setting-styles"
         modalHeaderClassName={"header-setting-Modal-close-btn"}
         modalFooterClassName={"modal-footer-setting"}
-        size="lg"
+        size="md"
         onHide={onCloseButton}
         ModalBody={
           <>

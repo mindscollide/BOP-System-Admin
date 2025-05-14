@@ -31,6 +31,7 @@ const initialState = {
   GetCounterPartyNamesData: null,
   GetAllInstruments: null,
   SearchAllUserLoginHistory: null,
+  GetCounterPartyList: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -541,6 +542,27 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         SearchAllUserLoginHistory: null,
+        ResponseMessage: action.message,
+      };
+
+    //Get Counter Party List
+    case actions.GET_COUNTER_PARTY_LIST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_COUNTER_PARTY_LIST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetCounterPartyList: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_COUNTER_PARTY_LIST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetCounterPartyList: null,
         ResponseMessage: action.message,
       };
     default:
