@@ -339,15 +339,7 @@ const UpdateCorporateUsersAPI = (navigate, data, setCorproateUserId) => {
                 )
               );
               dispatch(EditCorporateModalSystemAdmin(false));
-              let Data2 = {
-                FirstName: "",
-                CompanyName: "",
-                CategoryID: 0,
-                Email: "",
-                PageNumber: 1,
-                Length: 10,
-              };
-              dispatch(SearchCorporateUsersAPI(navigate, Data2));
+
               setCorproateUserId(0);
             } else if (
               response.data.responseResult.responseMessage
