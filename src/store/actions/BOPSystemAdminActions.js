@@ -220,7 +220,6 @@ const UpdateCorporateByCorporateIDAPI = (
                   "Record Updated"
                 )
               );
-              dispatch(getAllCorporatesCategory(navigate));
 
               dispatch(editCompanyModalSystemAdmin(false));
             } else if (
@@ -331,7 +330,7 @@ const AddBranchAPI = (navigate, data, setAddBranch) => {
                   "branch created successfully"
                 )
               );
-              dispatch(GetAllBranchesAPI(navigate));
+              // dispatch(GetAllBranchesAPI(navigate));
               dispatch(AdduserModalSystemAdmin(false));
 
               // dispatch(GetAllBranchesAPI());
@@ -459,7 +458,6 @@ const UpdateBranchAPI = (navigate, data, setBranchEditError) => {
               );
 
               dispatch(editBankUserModalSystemAdmin(false));
-              dispatch(GetAllBranchesAPI(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

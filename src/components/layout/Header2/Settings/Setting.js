@@ -15,11 +15,16 @@ import {
 import UserSetting from "./UserSettings/UserSetting";
 import PassCodeSetting from "./PassCodeSetting/PassCodeSetting";
 import MarketTiming from "./MarketTiming/MarketTiming";
-import { extractTimeOnly } from "../../../../helpers/reusableMethods";
+import {
+  ConvertDateTimrStringIntoGTM,
+  extractTimeOnly,
+} from "../../../../helpers/reusableMethods";
+import { useMqtt } from "../../../../context/MQTTContext";
 
 const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { marketTimingsUpdated, setMarketTimingsUpdated } = useMqtt();
   const [settingUser, setSettingUser] = useState(true);
   const [passcodeSetting, setPasscodeSetting] = useState(false);
   const [marketTiming, setMarketTiming] = useState(false);
@@ -27,22 +32,12 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     BD_Enable2FA: false,
     BD_SoundOnEveryMessage: false,
     BD_EmailOnEveryMessage: false,
-    monThuStart: { value: "00:00", errorMessage: "", errorStatus: false },
-    monThuEnd: { value: "00:00", errorMessage: "", errorStatus: false },
-    fridayStart: { value: "00:00", errorMessage: "", errorStatus: false },
-    fridayEnd: { value: "00:00", errorMessage: "", errorStatus: false },
   });
 
   const [monToThruStartTime, setMonToThruStartTime] = useState("");
   const [monToThruEndTime, setMonToThruEndTime] = useState(null);
   const [fridayStartTime, setFridayStartTime] = useState(null);
   const [fridayEndTime, setFridayEndTime] = useState(null);
-  // const [errors, setErrors] = useState({
-  //   lengthError: true,
-  //   numberError: true,
-  //   specialCharError: true,
-  //   matchError: true,
-  // });
 
   const Loading = useSelector((state) => state.settingsReducer.Loading);
   const GetUserSettings = useSelector(
@@ -116,6 +111,30 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
       }));
     }
   }, [GetUserSettings, GetMarketTimeSettings]);
+  console.log("marketTimingsUpdatedmarketTimingsUpdated", marketTimingsUpdated);
+  useEffect(() => {
+    if (marketTimingsUpdated !== null) {
+      console.log(
+        "marketTimingsUpdatedmarketTimingsUpdated",
+        marketTimingsUpdated
+      );
+      const { marketTimings } = marketTimingsUpdated;
+      setMonToThruStartTime(
+        ConvertDateTimrStringIntoGTM(marketTimings.monThuStartTime, "hh:mm:ss")
+      );
+      setMonToThruEndTime(
+        ConvertDateTimrStringIntoGTM(marketTimings.monThuEndTime, "hh:mm:ss")
+      );
+
+      setFridayStartTime(
+        ConvertDateTimrStringIntoGTM(marketTimings.fridayStartTime, "hh:mm:ss")
+      );
+      setFridayEndTime(
+        ConvertDateTimrStringIntoGTM(marketTimings.fridayEndTime, "hh:mm:ss")
+      );
+      setMarketTimingsUpdated(null);
+    }
+  }, [marketTimingsUpdated]);
 
   const onCloseButton = () => {
     setSettingModalState(false);
@@ -164,54 +183,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     console.log(`switch to ${e}`);
   };
 
-  // const validateTime = (time) => {
-  //   if (!time || time.length !== 5 || time[2] !== ":") {
-  //     return { valid: false, message: "Time must be in HH:MM format" };
-  //   }
-
-  //   const [hours, minutes] = time.split(":");
-  //   const hoursNum = parseInt(hours, 10);
-  //   const minutesNum = parseInt(minutes, 10);
-
-  //   if (isNaN(hoursNum)) {
-  //     return { valid: false, message: "Hours must be a number" };
-  //   }
-
-  //   if (isNaN(minutesNum)) {
-  //     return { valid: false, message: "Minutes must be a number" };
-  //   }
-
-  //   if (hoursNum < 0 || hoursNum > 23) {
-  //     return { valid: false, message: "Hours must be between 00:00 - 23:59" };
-  //   }
-
-  //   if (minutesNum < 0 || minutesNum > 59) {
-  //     return { valid: false, message: "Minutes must be between 00-59" };
-  //   }
-
-  //   return { valid: true, message: "" };
-  // };
-
-  // const validateTimeComparison = (startTime, endTime) => {
-  //   if (
-  //     !startTime ||
-  //     !endTime ||
-  //     startTime.length !== 5 ||
-  //     endTime.length !== 5
-  //   ) {
-  //     return "";
-  //   }
-
-  //   const [startH, startM] = startTime.split(":").map(Number);
-  //   const [endH, endM] = endTime.split(":").map(Number);
-
-  //   if (startH > endH || (startH === endH && startM > endM)) {
-  //     return "Start time cannot be after end time";
-  //   }
-
-  //   return "";
-  // };
-
   const UpdateButtonOnClick = () => {
     try {
       let updateData = {
@@ -235,7 +206,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
         UpdateUserSettingsAPI(navigate, updateData, setSettingModalState)
       );
       console.log("updateDataupdateData", updateData);
-      // setSettingModalState(false);
     } catch (err) {}
 
     try {

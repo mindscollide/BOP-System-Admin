@@ -30,10 +30,14 @@ import {
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useBankUser } from "../utils/BankUserContext";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 
 const AddBankUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { branchCreated, branchUpdated, setBranchCreated, setBranchUpdated } =
+    useMqtt();
   const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
   //Search all corporate Users
   const SearchBankUsers = useSelector(
@@ -167,6 +171,67 @@ const AddBankUser = () => {
     }
   }, [getALlBranches, RoleList]); // Dependency array: re-run effect when branches or roles change
 
+  useEffect(() => {
+    if (branchCreated !== null) {
+      if (Array.isArray(branchOptions)) {
+        let findBranchObj = branchOptions.find(
+          (branchData, index) =>
+            branchData.branchID === branchCreated.branch.branchID
+        );
+        if (findBranchObj === undefined) {
+          let newBranchData = {
+            ...branchCreated.branch,
+            value: branchCreated.branch.branchID,
+            label: branchCreated.branch.branchName,
+          };
+          setBranchOptions([...branchOptions, newBranchData]);
+          setBranchCreated(null);
+        }
+      }
+    }
+  }, [branchCreated]);
+
+  useEffect(() => {
+    if (branchUpdated !== null) {
+      if (Array.isArray(branchOptions)) {
+        let findBranchObj = branchOptions.find(
+          (branchData, index) =>
+            branchData.branchID === branchUpdated.branch.branchID
+        );
+        if (findBranchObj !== undefined) {
+          setBranchOptions((prevBranchData) => {
+            return prevBranchData.map((data4, index) => {
+              if (data4.branchID === branchUpdated.branch.branchID) {
+                return {
+                  ...data4,
+                  value: branchUpdated.branch.branchID,
+                  label: branchUpdated.branch.branchName,
+                  branchCode: branchUpdated.branch.branchCode,
+                  branchContact: branchUpdated.branch.branchContact,
+                  branchName: branchUpdated.branch.branchName,
+                };
+              }
+              return data4;
+            });
+          });
+
+          if (
+            branchRole &&
+            branchRole?.value === branchUpdated.branch.branchID
+          ) {
+            setBranchRole({
+              value: branchUpdated.branch.branchID,
+              label: branchUpdated.branch.branchName,
+              branchCode: branchUpdated.branch.branchCode,
+              branchContact: branchUpdated.branch.branchContact,
+              branchName: branchUpdated.branch.branchName,
+            });
+          }
+          setBranchUpdated(null);
+        }
+      }
+    }
+  }, [branchUpdated]);
   //add bank user security admin validate handler
   const addBankUserValidateHandler = (e) => {
     let name = e.target.name;

@@ -69,31 +69,27 @@ const VolMeter = () => {
   }, []);
   // Add this useEffect to set the values when API response is received
   useEffect(() => {
-    if (
-      GetVolmeterByBankID &&
-      GetVolmeterByBankID.responseResult &&
-      GetVolmeterByBankID.responseResult.volMeters
-    ) {
-      const volMeters = GetVolmeterByBankID.responseResult.volMeters;
+    if (GetVolmeterByBankID !== null) {
+      const volMetersData = GetVolmeterByBankID;
 
       // Assuming the order is always Vol 1, Vol 2, Vol 3
       setVolMeterFields({
         volatilityMeter: {
-          value: volMeters[0]?.meter || 0,
+          value: volMetersData.volMeters[0].meter || 0,
           errorMessage: "",
           errorStatus: false,
         },
         nameVol: {
-          value: volMeters[1]?.meter || 0,
+          value: volMetersData.volMeters[1].meter || 0,
           errorMessage: "",
           errorStatus: false,
         },
         volMeter: {
-          value: volMeters[2]?.meter || 0,
+          value: volMetersData.volMeters[2].meter || 0,
           errorMessage: "",
           errorStatus: false,
         },
-        isVolActive: true,
+        isVolActive: volMetersData.isVolMeterOnOff,
       });
     }
   }, [GetVolmeterByBankID]);
@@ -180,15 +176,15 @@ const VolMeter = () => {
       VolMeters: [
         {
           VolMeterID: 1,
-          meter: volMeterFields.volatilityMeter.value,
+          Meter: Number(volMeterFields.volatilityMeter.value),
         },
         {
           VolMeterID: 2,
-          meter: volMeterFields.nameVol.value,
+          Meter: Number(volMeterFields.nameVol.value),
         },
         {
           VolMeterID: 3,
-          meter: volMeterFields.volMeter.value,
+          Meter: Number(volMeterFields.volMeter.value),
         },
       ],
       BankID: 1,

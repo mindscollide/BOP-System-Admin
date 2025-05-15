@@ -29,10 +29,18 @@ import {
 import { addCorporateUserSchema } from "../../../../../../utils/schemas";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { useCorporateUser } from "../utils/CorporateUserContext";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 
 const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const {
+    corporateCreated,
+    setCorporateCreated,
+    corporateUpdated,
+    setCorporateUpdated,
+  } = useMqtt();
 
   const { setBulkUploadClicked, setEditCompanyData } = useCorporateUser();
 
@@ -60,6 +68,8 @@ const AddCorporateUser = () => {
 
   //companyRoles
   const [companyRoleID, setCompanyRole] = useState(null);
+
+  console.log("companyRoleIDcompanyRoleIDcompanyRoleID", companyRoleID);
   // const [editCompanyData, setEditCompanyData] = useState();
   //Global State
   const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
@@ -336,6 +346,103 @@ const AddCorporateUser = () => {
     }
   }, [GetAllCorporates]);
 
+  useEffect(() => {
+    if (corporateCreated !== null) {
+      console.log("corporateCreated", corporateCreated);
+      if (Array.isArray(companyNameOptions)) {
+        let findCorporateObj = companyNameOptions.find(
+          (corporateData, index) =>
+            corporateData.corporateID === corporateCreated.corporate.corporateID
+        );
+        if (findCorporateObj === undefined) {
+          let newCorporateData = {
+            ...corporateCreated.corporate,
+            value: corporateCreated.corporate.corporateID,
+            label: corporateCreated.corporate.corporateName,
+          };
+          setCompanyNameOptions([...companyNameOptions, newCorporateData]);
+          setCorporateCreated(null);
+        }
+      }
+    }
+  }, [corporateCreated]);
+
+  useEffect(() => {
+    if (corporateUpdated !== null) {
+      if (Array.isArray(companyNameOptions)) {
+        let findCorporateObj = companyNameOptions.find(
+          (corporateData, index) =>
+            corporateData.corporateID === corporateUpdated.corporate.corporateID
+        );
+        if (findCorporateObj !== undefined) {
+          setCompanyNameOptions((prevCompanyData) => {
+            return prevCompanyData.map((data, index) => {
+              console.log("datadatadatadata", data);
+              if (data.corporateID === corporateUpdated.corporate.corporateID) {
+                console.log(
+                  "corporateUpdatedcorporateUpdated",
+                  corporateUpdated
+                );
+                return {
+                  ...data,
+                  value: corporateUpdated.corporate.corporateID,
+                  label: corporateUpdated.corporate.corporateName,
+                  companyID: corporateUpdated.corporate.corporateID,
+
+                  categoryName:
+                    corporateUpdated.corporate.corporateCategory.categoryName,
+                  natureOfClient:
+                    corporateUpdated.corporate.natureOFBussiness
+                      .natureOfBussiness,
+                  rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+                  rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                };
+              }
+              return data;
+            });
+          });
+          if (
+            companyRoleID.corporateID === corporateUpdated.corporate.corporateID
+          ) {
+            console.log("here iam", companyRoleID);
+            let corporateRoleData = {
+              corporateID: corporateUpdated.corporate.corporateID,
+              corporateName: corporateUpdated.corporate.corporateName,
+              natureofBusiness: {
+                pK_NatureOfBusiness:
+                  corporateUpdated.corporate.natureOFBussiness
+                    .natureOfBussinessID,
+                name: corporateUpdated.corporate.natureOFBussiness
+                  .natureOfBussiness,
+              },
+              category: corporateUpdated.corporate.corporateCategory,
+              rfqTimers: [
+                {
+                  treasuryRFQExpiryInMin: Number(
+                    corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
+                  ),
+                  corporateRFQExpiryInMin: Number(
+                    corporateUpdated.corporate.rfqTimers.corporateRFQTimer
+                  ),
+                  corporateID: corporateUpdated.corporate.corporateID,
+                },
+              ],
+              value: corporateUpdated.corporate.corporateID,
+              label: corporateUpdated.corporate.corporateName,
+            };
+            setCompanyRole(corporateRoleData);
+            setCorporateUser({
+              ...corporateUser,
+              rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+              rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+              natureOfClient:
+                corporateUpdated.corporate.natureOFBussiness.natureOfBussiness,
+            });
+          }
+        }
+      }
+    }
+  }, [corporateUpdated]);
   // Handle File upload
   const HandleFileUpload = (event) => {
     // setBulkUploadClicked(true);

@@ -32,8 +32,9 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
   const [corporateUserRoleStatusChange, setCorporateUserRoleStatusChange] =
     useState(null);
   const [corporateCreated, setCorporateCreated] = useState(null);
-  const [corproateUpdated, setCorporateUpdated] = useState(null);
+  const [corporateUpdated, setCorporateUpdated] = useState(null);
   const [corporateUserUpdated, setCorporateUserUpdated] = useState(null);
+  const [marketTimingsUpdated, setMarketTimingsUpdated] = useState(null);
 
   const connectToMqtt = () => {
     if (!subscribeID) {
@@ -117,9 +118,11 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
           break;
         case "CORPORATE_USER_UPDATED":
           console.log("Message arrived:", data);
-
           // When System  Admin Updated a Corporate User
           setCorporateUserUpdated(data.payload);
+          break;
+        case "MARKET_TIME_UPDATED":
+          setMarketTimingsUpdated(data.payload);
           break;
         default:
           break;
@@ -173,9 +176,16 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         corproateUserCreated,
         corporateUserRoleStatusChange,
         corporateCreated,
-        corproateUpdated,
+        corporateUpdated,
         corporateUserUpdated,
-      }}>
+        setBranchCreated,
+        setBranchUpdated,
+        setCorporateCreated,
+        setCorporateUpdated,
+        marketTimingsUpdated,
+        setMarketTimingsUpdated,
+      }}
+    >
       {children}
     </MqttContext.Provider>
   );
