@@ -414,7 +414,7 @@ export const updateBankUserSchema = {
     errorStatus: false,
   },
   activeUser: {
-    value: "",
+    value: 0,
     errorMessage: "",
     errorStatus: false,
   },

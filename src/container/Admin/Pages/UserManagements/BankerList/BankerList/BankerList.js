@@ -29,12 +29,16 @@ import {
   // GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
-import { formatDateAndTimeFromString } from "../../../../../../helpers/reusableMethods";
+import {
+  formatDateAndTimeFromString,
+  IndexCell,
+} from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
 import { useMqtt } from "../../../../../../context/MQTTContext";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import EditBankerModal from "../EditBankUserModal/EditBankerModal";
+import { render } from "@testing-library/react";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -370,6 +374,9 @@ const BankerList = () => {
       width: "150px",
       ellipsis: true,
       align: "left",
+      render: (val, record) => {
+        return <IndexCell value={val} record={record} />;
+      },
     },
     // Column definition for Role
     {
@@ -379,12 +386,26 @@ const BankerList = () => {
       width: "100px",
       ellipsis: true,
       align: "left",
-      render: (userRoleID) => {
-        // Find the role name from the roles array based on userRoleID
-        const role =
+      // render: (userRoleID) => {
+      //   // Find the role name from the roles array based on userRoleID
+      //   const role =
+      //     RoleList?.roles?.length > 0 &&
+      //     RoleList.roles.find((role) => role.roleID === userRoleID);
+      //   return role ? role.roleName : ""; // Default if role not found
+      // },
+      render: (val, record) => {
+        // console.log("userRoleID", userRoleID);
+        console.log("valval", val);
+        let role =
           RoleList?.roles?.length > 0 &&
-          RoleList.roles.find((role) => role.roleID === userRoleID);
-        return role ? role.roleName : ""; // Default if role not found
+          RoleList.roles.find((role) => role.roleID === val);
+
+        return (
+          <IndexCell
+            value={role?.roleName !== undefined ? role.roleName : ""}
+            record={record}
+          />
+        );
       },
     },
     {
@@ -415,15 +436,17 @@ const BankerList = () => {
       width: "70px",
       align: "center",
       ellipsis: true,
-      render: (userStatusID) => (
-        <span
-          className={
-            userStatusID === 1 ? styles.ActiveStatus : styles.InactiveStatus
-          }
-        >
-          {userStatusID === 1 ? "Active" : "Inactive"}
-        </span>
-      ),
+      render: (val, record) => {
+        return (
+          <IndexCell
+            value={val === 1 ? "Active" : "Inactive"}
+            CellClassName={
+              val === 1 ? styles.ActiveStatus : styles.InactiveStatus
+            }
+            record={record}
+          />
+        );
+      },
     },
     {
       title: <label className="px-3">Creation Date Time</label>,

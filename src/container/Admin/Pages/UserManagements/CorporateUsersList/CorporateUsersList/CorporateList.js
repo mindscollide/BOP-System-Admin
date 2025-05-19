@@ -29,7 +29,10 @@ import { Popover } from "antd";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
 import excelIcon from "../../../../../../assets/images/excel.png";
 import { GetAllCategoriesAPI } from "../../../../../../store/actions/Auth-Actions";
-import { formatDateAndTimeFromString } from "../../../../../../helpers/reusableMethods";
+import {
+  formatDateAndTimeFromString,
+  IndexCell,
+} from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
 import {
   GetCorporateUserByUserIDApi,
@@ -366,18 +369,20 @@ const CorporateList = () => {
       title: <label>Status</label>,
       dataIndex: "statusId",
       key: "statusId",
-      render: (statusId) => (
-        <span
-          className={
-            statusId === 1 ? styles.ActiveStatus : styles.InactiveStatus
-          }
-        >
-          {statusId === 1 ? "Active" : "Inactive"}
-        </span>
-      ),
       width: "70px",
       align: "center",
       ellipsis: true,
+      render: (val, record) => {
+        return (
+          <IndexCell
+            value={val === 1 ? "Active" : "Inactive"}
+            CellClassName={
+              val === 1 ? styles.ActiveStatus : styles.InactiveStatus
+            }
+            record={record}
+          />
+        );
+      },
     },
     {
       title: <label>last Password Change</label>,

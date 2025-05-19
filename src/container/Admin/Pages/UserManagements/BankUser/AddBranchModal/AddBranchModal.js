@@ -219,7 +219,7 @@ const AddBranchModal = () => {
                   onChange={handleChangeAddBranch}
                   maxLength={50}
                 />
-                {addBranch.branchName.errorStatus && (
+                {addBranch.branchName.errorStatus === true && (
                   <Row>
                     <Col className="d-flex justify-content-start">
                       <p className={styles["branchErrorMessage"]}>

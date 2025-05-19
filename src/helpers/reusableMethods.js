@@ -1,4 +1,5 @@
 import moment from "moment";
+import React from "react";
 
 //Date
 export const formatDate = (date) =>
@@ -56,3 +57,8 @@ export const formatCurrencyInput = (value) => {
 
   return cleanVal;
 };
+
+export const IndexCell = React.memo(({ value, record, CellClassName }) => {
+  console.log("Rendering IndexCell:", record, value);
+  return <span className={CellClassName}>{value}</span>;
+});

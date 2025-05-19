@@ -16,7 +16,12 @@ import { useMqtt } from "../../../../../../context/MQTTContext";
 const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { corporateUpdated, setCorporateUpdated } = useMqtt();
+  const {
+    corporateUpdated,
+    setCorporateUpdated,
+    corporateUserRoleStatusChange,
+    setCorporateUserRoleStatusChange,
+  } = useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateUserByUserID = useSelector(
     (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
@@ -86,6 +91,18 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
       setCorporateUpdated(null);
     }
   }, [corporateUpdated]);
+
+  useEffect(() => {
+    if (corporateUserRoleStatusChange !== null) {
+      setUpdateCorporate({
+        ...updateCorporate,
+        activeUser: {
+          value: corporateUserRoleStatusChange.updatedUser.statusId,
+        },
+      });
+      setCorporateUserRoleStatusChange(null);
+    }
+  }, [corporateUserRoleStatusChange]);
 
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
