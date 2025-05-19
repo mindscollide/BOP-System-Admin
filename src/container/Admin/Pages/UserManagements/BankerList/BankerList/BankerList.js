@@ -26,7 +26,7 @@ import excelIcon from "../../../../../../assets/images/excel.png";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
 
 import {
-  GetAllBranchesAPI,
+  // GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
 import { formatDateAndTimeFromString } from "../../../../../../helpers/reusableMethods";
@@ -38,7 +38,12 @@ import EditBankerModal from "../EditBankUserModal/EditBankerModal";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { bankUserCreated, bankUserRoleStatusChange } = useMqtt();
+  const {
+    bankUserCreated,
+    bankUserRoleStatusChange,
+    branchUpdated,
+    setBranchUpdated,
+  } = useMqtt();
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -93,6 +98,22 @@ const BankerList = () => {
   //Checking snakbar state
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    // dispatch(GetAllBranchesAPI(navigate));
+    dispatch(GetBankUserRolesAPI(navigate));
+    let data = {
+      EmployeeID: "",
+      Name: "",
+      Email: "",
+      RoleID: 0,
+      sRow: 0,
+      Length: 10,
+    };
+
+    console.log("Data to Search", data);
+    dispatch(SearchBankUsersAPI(navigate, data));
+  }, []);
+
   //Role list:
   useEffect(() => {
     if (RoleList !== null) {
@@ -109,6 +130,32 @@ const BankerList = () => {
     }
   }, [RoleList]);
 
+  useEffect(() => {
+    if (
+      branchUpdated &&
+      branchUpdated.branch &&
+      branchUpdated.branch.branchID
+    ) {
+      const updatedTableData = tableData.map((user) => {
+        if (
+          user.branch &&
+          user.branch.branchID === branchUpdated.branch.branchID
+        ) {
+          return {
+            ...user,
+            branch: {
+              ...user.branch,
+              branchName: branchUpdated.branch.branchName,
+            },
+          };
+        }
+        return user;
+      });
+
+      setTableData(updatedTableData);
+      setBranchUpdated(null);
+    }
+  }, [branchUpdated]);
   //Metod to perform action of Export options
   // const ExportOptions = ({ onClose }) => {
   //   return (
@@ -221,22 +268,6 @@ const BankerList = () => {
     }
   });
 
-  useEffect(() => {
-    dispatch(GetAllBranchesAPI(navigate));
-    dispatch(GetBankUserRolesAPI(navigate));
-    let data = {
-      EmployeeID: "",
-      Name: "",
-      Email: "",
-      RoleID: 0,
-      sRow: 0,
-      Length: 10,
-    };
-
-    console.log("Data to Search", data);
-    dispatch(SearchBankUsersAPI(navigate, data));
-  }, []);
-
   //handelled states for scrolling here (2)
   //handle Search Button event
   const handleSearchEventButton = () => {
@@ -312,9 +343,6 @@ const BankerList = () => {
     console.log(record.userID);
     let Data = { UserId: record.userID };
     dispatch(GetBankUserByUserIDAPI(navigate, Data));
-
-    // dispatch(DeleteCorporateModalSystemAdmin(false));
-    // dispatch(UserDetailsCorporateModalSystemAdmin(false));
   };
 
   //Table columns for customer List
@@ -542,6 +570,7 @@ const BankerList = () => {
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
+
   const handleExport = (format) => {
     if (format === "excel") {
       exportToExcel();

@@ -43,7 +43,12 @@ import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { corproateUserCreated, corporateUserRoleStatusChange } = useMqtt();
+  const {
+    corproateUserCreated,
+    corporateUserRoleStatusChange,
+    corporateUpdated,
+    setCorporateUpdated,
+  } = useMqtt();
 
   //Global State
   // const { BOPSystemAdminReducer } = useSelector((state) => state);
@@ -516,6 +521,24 @@ const CorporateList = () => {
       }
     }
   }, [corproateUserCreated]);
+
+  useEffect(() => {
+    if (corporateUpdated !== null) {
+      console.log("corporateUpdatedcorporateUpdated", corporateUpdated);
+      console.log("tableDatatableData", tableData);
+      const updatedTableData = tableData.map((user) => {
+        if (user.corporateID === corporateUpdated.corporate.corporateID) {
+          return {
+            ...user,
+            corporateName: corporateUpdated.corporate.corporateName,
+          };
+        }
+        return user;
+      });
+      setTableData(updatedTableData);
+      setCorporateUpdated(null);
+    }
+  }, [corporateUpdated]);
 
   const [open, setOpen] = useState(false);
 

@@ -136,8 +136,9 @@ const AddBranchModal = () => {
       BranchName: addBranch.branchName.value,
       BranchCode: addBranch.branchCode.value,
       BranchContact: addBranch.branchContact.value,
-      CategoryID: 59,
+      CategoryID: categoryID.value,
     };
+    console.log("datadata", data);
     dispatch(AddBranchAPI(navigate, data, setAddBranch));
     // dispatch(AdduserModalSystemAdmin(false));
   };

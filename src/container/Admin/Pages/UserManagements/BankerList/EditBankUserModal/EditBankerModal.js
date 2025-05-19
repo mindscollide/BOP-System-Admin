@@ -18,11 +18,14 @@ import {
   GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 
 const EditBankerModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const { branchCreated, branchUpdated, setBranchCreated, setBranchUpdated } =
+    useMqtt();
 
   // GetBankUserbyUserID
   const GetBankUserbyUserID = useSelector(
@@ -108,16 +111,6 @@ const EditBankerModal = () => {
     updateField(name, value);
   };
 
-  //Radio Buttons Management
-  const handleRadioChange = (e) => {
-    console.log("radio checked", e.target.value);
-    setUpdateBankUser({
-      ...updateBankUser,
-      activeUser: {
-        value: e.target.value,
-      },
-    });
-  };
   //handle select CategoryID
   const handleSelectRole = async (selectedRole) => {
     setRoleID(selectedRole);
@@ -267,6 +260,66 @@ const EditBankerModal = () => {
     }
   }, [getAllBranches]);
 
+  useEffect(() => {
+    if (branchCreated !== null) {
+      if (Array.isArray(branchOptions)) {
+        let findBranchObj = branchOptions.find(
+          (branchData, index) =>
+            branchData.branchID === branchCreated.branch.branchID
+        );
+        if (findBranchObj === undefined) {
+          let newBranchData = {
+            ...branchCreated.branch,
+            value: branchCreated.branch.branchID,
+            label: branchCreated.branch.branchName,
+          };
+          setBranchOptions([...branchOptions, newBranchData]);
+          setBranchCreated(null);
+        }
+      }
+    }
+  }, [branchCreated]);
+  useEffect(() => {
+    if (branchUpdated !== null) {
+      if (Array.isArray(branchOptions)) {
+        let findBranchObj = branchOptions.find(
+          (branchData, index) =>
+            branchData.branchID === branchUpdated.branch.branchID
+        );
+        if (findBranchObj !== undefined) {
+          setBranchOptions((prevBranchData) => {
+            return prevBranchData.map((data4, index) => {
+              if (data4.branchID === branchUpdated.branch.branchID) {
+                return {
+                  ...data4,
+                  value: branchUpdated.branch.branchID,
+                  label: branchUpdated.branch.branchName,
+                  branchCode: branchUpdated.branch.branchCode,
+                  branchContact: branchUpdated.branch.branchContact,
+                  branchName: branchUpdated.branch.branchName,
+                };
+              }
+              return data4;
+            });
+          });
+
+          if (
+            branchRole &&
+            branchRole?.value === branchUpdated.branch.branchID
+          ) {
+            setBranchRole({
+              value: branchUpdated.branch.branchID,
+              label: branchUpdated.branch.branchName,
+              branchCode: branchUpdated.branch.branchCode,
+              branchContact: branchUpdated.branch.branchContact,
+              branchName: branchUpdated.branch.branchName,
+            });
+          }
+          setBranchUpdated(null);
+        }
+      }
+    }
+  }, [branchUpdated]);
   return (
     <>
       <Modal
@@ -286,7 +339,7 @@ const EditBankerModal = () => {
                 sm={6}
                 className={styles["EditBank_modal-title"]}
               >
-                Edit Bank User
+                Edit Banker
               </Col>
               <Col
                 sm={6}

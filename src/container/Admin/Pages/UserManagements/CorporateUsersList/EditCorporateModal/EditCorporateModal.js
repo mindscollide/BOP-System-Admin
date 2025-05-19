@@ -12,9 +12,11 @@ import { EditCorporateModalSystemAdmin } from "../../../../../../store/actions/B
 import { updateCorporateUserSchema } from "../../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
 import { UpdateCorporateUsersAPI } from "../../../../../../store/actions/CorporateUsersAction";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { corporateUpdated, setCorporateUpdated } = useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateUserByUserID = useSelector(
     (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
@@ -64,6 +66,26 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
       } catch (error) {}
     }
   }, [GetCorporateUserByUserID]);
+
+  useEffect(() => {
+    if (corporateUpdated !== null) {
+      console.log("corporateUpdatedcorporateUpdated", corporateUpdated);
+      setUpdateCorporate({
+        ...updateCorporate,
+        corporateName: {
+          value: corporateUpdated.corporate.corporateName,
+          categoryID: corporateUpdated.corporate.corporateCategory.categoryID,
+        },
+        RFQTimerCorporate: {
+          value: Number(corporateUpdated.corporate.rfqTimers.corporateRFQTimer),
+        },
+        RFQTimerTreasury: {
+          value: Number(corporateUpdated.corporate.rfqTimers.treasuryRFQTimer),
+        },
+      });
+      setCorporateUpdated(null);
+    }
+  }, [corporateUpdated]);
 
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
@@ -146,7 +168,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               sm={6}
               className={styles["EditCorporate_modal-title"]}
             >
-              Edit Corporate
+              Edit Corporate User
             </Col>
             <Col
               sm={6}
