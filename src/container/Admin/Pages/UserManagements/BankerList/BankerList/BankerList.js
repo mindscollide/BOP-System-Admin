@@ -25,10 +25,7 @@ import { Popover } from "antd";
 import excelIcon from "../../../../../../assets/images/excel.png";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
 
-import {
-  // GetAllBranchesAPI,
-  GetBankUserRolesAPI,
-} from "../../../../../../store/actions/Auth-Actions";
+import { GetBankUserRolesAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
   formatDateAndTimeFromString,
   IndexCell,
@@ -100,7 +97,6 @@ const BankerList = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // dispatch(GetAllBranchesAPI(navigate));
     dispatch(GetBankUserRolesAPI(navigate));
     let data = {
       EmployeeID: "",
@@ -379,21 +375,13 @@ const BankerList = () => {
       width: "100px",
       ellipsis: true,
       align: "left",
-      // render: (userRoleID) => {
-      //   // Find the role name from the roles array based on userRoleID
-      //   const role =
-      //     RoleList?.roles?.length > 0 &&
-      //     RoleList.roles.find((role) => role.roleID === userRoleID);
-      //   return role ? role.roleName : ""; // Default if role not found
-      // },
       render: (val, record) => {
         let role =
           RoleList?.roles?.length > 0 &&
           RoleList.roles.find((role) => role.roleID === val);
-
         return (
           <IndexCell
-            value={role?.roleName !== undefined ? role.roleName : ""}
+            value={role !== undefined ? role.roleName : ""}
             record={record}
           />
         );
@@ -406,10 +394,15 @@ const BankerList = () => {
       width: "150px",
       align: "left",
       ellipsis: true,
-      render: (text, record) => {
-        if (record.branch !== null) {
-          return record.branch.branchName;
-        }
+      render: (val, record) => {
+        console.log("valvalval", val);
+        console.log("recordrecord", record);
+        return (
+          <IndexCell
+            value={val !== null ? val?.branchName : ""}
+            record={record}
+          />
+        );
       },
     },
     {
@@ -419,6 +412,9 @@ const BankerList = () => {
       width: "120px",
       align: "left",
       ellipsis: true,
+      render: (val, record) => {
+        return <IndexCell value={val} record={record} />;
+      },
     },
     {
       title: <label>Status</label>,
@@ -446,13 +442,19 @@ const BankerList = () => {
       align: "center",
       width: "180px",
       ellipsis: true,
-      render: (creationDateTime) => {
-        // Format the date and time
-        return creationDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(creationDateTime)).format(
-              "DD/MM/YYYY HH:mm:ss"
-            )
-          : "-";
+      render: (val, record) => {
+        return (
+          <IndexCell
+            value={
+              val !== "-"
+                ? moment(formatDateAndTimeFromString(val)).format(
+                    "DD/MM/YYYY HH:mm:ss"
+                  )
+                : "-"
+            }
+            record={record}
+          />
+        );
       },
     },
     {

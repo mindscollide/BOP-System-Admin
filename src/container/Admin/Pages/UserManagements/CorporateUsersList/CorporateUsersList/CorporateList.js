@@ -462,6 +462,9 @@ const CorporateList = () => {
       width: "150px",
       ellipsis: true,
       align: "left",
+      render: (val, record) => {
+        return <IndexCell value={val} record={record} />;
+      },
     },
     {
       title: <label className="px-3">Corporate Name</label>,
@@ -470,6 +473,9 @@ const CorporateList = () => {
       width: "150px",
       ellipsis: true,
       align: "left",
+      render: (val, record) => {
+        return <IndexCell value={val} record={record} />;
+      },
     },
     {
       title: <label>Status</label>,
@@ -497,13 +503,19 @@ const CorporateList = () => {
       align: "center",
       width: "180px",
       ellipsis: true,
-      render: (passwordModificationTime) => {
-        // Format the date and time
-        return passwordModificationTime !== "-"
-          ? moment(
-              formatDateAndTimeFromString(passwordModificationTime)
-            ).format("DD/MM/YYYY HH:mm:ss")
-          : "-";
+      render: (val, record) => {
+        return (
+          <IndexCell
+            value={
+              val !== "-"
+                ? moment(formatDateAndTimeFromString(val)).format(
+                    "DD/MM/YYYY HH:mm:ss"
+                  )
+                : "-"
+            }
+            record={record}
+          />
+        );
       },
     },
     {
@@ -513,10 +525,18 @@ const CorporateList = () => {
       align: "center",
       width: "180px",
       ellipsis: true,
-      render: (creationDateTime) => {
-        // Format the date and time
-        return moment(formatDateAndTimeFromString(creationDateTime)).format(
-          "DD/MM/YYYY HH:mm:ss"
+      render: (val, record) => {
+        return (
+          <IndexCell
+            value={
+              val !== "-"
+                ? moment(formatDateAndTimeFromString(val)).format(
+                    "DD/MM/YYYY HH:mm:ss"
+                  )
+                : "-"
+            }
+            record={record}
+          />
         );
       },
     },
