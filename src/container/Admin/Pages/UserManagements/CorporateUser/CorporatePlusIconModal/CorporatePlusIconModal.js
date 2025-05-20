@@ -28,7 +28,6 @@ const CorporatePlusIconModal = () => {
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
-  console.log("getAllCategories", getAllCategories);
 
   const getAllNatureOfBuisness = useSelector(
     (state) => state.auth.getAllNatureOfBuisness
@@ -135,7 +134,6 @@ const CorporatePlusIconModal = () => {
       NatureOfBusinessID: natureID.pK_NatureOfBusiness,
       BankId: 1,
     };
-    // console.log("datadatadata", data);
     dispatch(CreateNewCorporateAPI(navigate, data, setAddCompnany));
   };
 
@@ -211,7 +209,6 @@ const CorporatePlusIconModal = () => {
 
   //handle select natureID
   const handleSelectNature = async (selectedNature) => {
-    console.log(selectedNature.value, "selectedCategoryselectedCategory");
     setNatureID(selectedNature);
 
     setAddCompnany((prevState) => ({

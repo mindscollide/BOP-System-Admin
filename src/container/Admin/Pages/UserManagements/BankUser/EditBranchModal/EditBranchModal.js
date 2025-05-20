@@ -2,16 +2,7 @@ import React, { useState } from "react";
 import styles from "./EditBranchModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-// import Select from "react-select";
-// import { editBankUserModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
-// import {
-//   Button,
-//   Modal,
-//   Notification,
-//   TextField,
-// } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
-// import { UpdateBranchAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { editBankUserModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateBranchAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
@@ -22,7 +13,6 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 const EditBranchModal = ({ editBranchData }) => {
-  console.log("data in modal ", editBranchData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
@@ -38,7 +28,6 @@ const EditBranchModal = ({ editBranchData }) => {
   });
 
   const [updateBranch, setUpdateBranch] = useState({ ...editBranchData });
-  console.log("updateBranch", updateBranch);
 
   //State to activate the edit button
   //States
@@ -100,7 +89,6 @@ const EditBranchModal = ({ editBranchData }) => {
   };
   // Handle Update Branch
   const handleUpdateBranch = () => {
-    console.log("updateBranchupdateBranch", updateBranch);
     try {
       let data = {
         BranchID: updateBranch.branchID,
@@ -108,7 +96,6 @@ const EditBranchModal = ({ editBranchData }) => {
         BranchCode: updateBranch.branchCode,
         BranchContact: updateBranch.branchContact,
       };
-      console.log("data", data);
       dispatch(UpdateBranchAPI(navigate, data, setBranchEditError));
     } catch (err) {
       console.log("error: ", err);

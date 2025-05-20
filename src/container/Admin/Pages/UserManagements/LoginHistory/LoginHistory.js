@@ -46,7 +46,6 @@ const LoginHistory = () => {
     (state) => state.BOPSystemAdminReducer.SearchAllUserLoginHistory
   );
 
-  console.log("SearchAllUserLoginHistory", SearchAllUserLoginHistory);
   //state for save and cancel button
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
@@ -54,8 +53,6 @@ const LoginHistory = () => {
 
   const [tableData, setTableData] = useState([]);
   const [modalState, setModalState] = useState(0);
-  const getAllCategories = useSelector((state) => state.auth.getAllCategories);
-  console.log("getAllCategories", getAllCategories);
 
   //Role List
   const RoleList = useSelector((state) => state.auth.RoleList);
@@ -295,7 +292,6 @@ const LoginHistory = () => {
       sRow: 0,
       Length: 10,
     };
-    console.log("Search Customer:", data);
     dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
   };
   //Table columns for customer List
@@ -446,10 +442,6 @@ const LoginHistory = () => {
     }
 
     if (SearchAllUserLoginHistory !== null) {
-      console.log(
-        "SearchAllUserLoginHistorySearchAllUserLoginHistory",
-        SearchAllUserLoginHistory
-      );
       try {
         const { userLoginHistory, totalRecords } = SearchAllUserLoginHistory;
         if (hasReachedBottom) {
@@ -463,19 +455,9 @@ const LoginHistory = () => {
           setRecordLength(totalRecords);
           setSRow(userLoginHistory.length);
         }
-
-        // if (userLoginHistory.length > 0) {
-        //   console.log("userLoginHistoryuserLoginHistory", userLoginHistory);
-        //   setTableData(userLoginHistory);
-        // }
       } catch (error) {}
     } else if (SearchAllUserLoginHistory === null) {
       if (!hasReachedBottom) {
-        console.log(
-          "SearchBankUsersSearchBankUsers",
-          SearchAllUserLoginHistory
-        );
-
         setHasReachedBottom(false);
         setTableData([]);
         setRecordLength(0);

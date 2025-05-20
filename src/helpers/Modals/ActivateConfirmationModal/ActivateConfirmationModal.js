@@ -5,16 +5,9 @@ import { Col, Row } from "react-bootstrap";
 import { Button, Modal } from "../../../components/elements";
 
 const ActivateConfirmationModal = ({ handleYesButton, handleNoButton }) => {
-  console.log(handleYesButton, "onConfirmonConfirm");
-
   const showActivationMOdal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
-  console.log(showActivationMOdal, "showActivationMOdal");
-  // //handle No Button
-  // const handleNoButton = () => {
-  //   dispatch(ConfirmationModalSystemAdmin(false));
-  // };
 
   return (
     <Modal

@@ -21,7 +21,6 @@ const GetAllCorporateUsersInit = () => {
 };
 
 const GetAllCorporateUsersSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.GET_ALL_CORPORATE_USER_SUCCESS,
     response: response,
@@ -64,8 +63,6 @@ const GetAllCorporateUsersAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetAllCorporateUsers_01".toLowerCase()
                 )
             ) {
-              // console.log(response);
-
               dispatch(
                 GetAllCorporateUsersSuccess(
                   response.data.responseResult,
@@ -107,7 +104,6 @@ const GetCorporateUserByUserIDInit = () => {
 };
 
 const GetCorporateUserByUserIDSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.GET_CORPORATE_USER_BY_USERID_SUCCESS,
     response: response,
@@ -162,8 +158,6 @@ const GetCorporateUserByUserIDApi = (
                   "SystemAdmin_SystemAdminManager_GetCorporateUserByUserID_01".toLowerCase()
                 )
             ) {
-              // console.log(response);
-
               dispatch(
                 GetCorporateUserByUserIDSuccess(
                   response.data.responseResult,

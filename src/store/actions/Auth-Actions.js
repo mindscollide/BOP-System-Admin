@@ -118,102 +118,6 @@ const RefreshToken = (navigate) => {
   };
 };
 
-// const getallcoporatesinit = () => {
-//   return {
-//     type: actions.GET_ALL_CORPORATES_INIT,
-//   };
-// };
-
-// const getallcorporatessuccess = (response, message) => {
-//   return {
-//     type: actions.GET_ALL_CORPORATES_SUCCESS,
-//     response: response,
-//     message: message,
-//   };
-// };
-
-// const getallcorporatesfailed = (message) => {
-//   return {
-//     type: actions.GET_ALL_CORPORATES_FAIL,
-//     message: message,
-//   };
-// };
-
-// const getAllCorporatesCategory = (navigate, data) => {
-//   let token = JSON.parse(localStorage.getItem("token"));
-//   // let data = {};
-//   return async (dispatch) => {
-//     dispatch(getallcoporatesinit());
-//     let form = new FormData();
-//     form.append("RequestMethod", getallCoporatesSystem.RequestMethod);
-//     form.append("RequestData", JSON.stringify(data));
-//     axios({
-//       method: "POST",
-//       url: systemAdminAPI,
-//       data: form,
-//       headers: {
-//         _token: token,
-//       },
-//     })
-//       .then(async (response) => {
-//         console.log("CorporateCategoryCorporateCategory", response);
-//         if (response.data.responseCode === 417) {
-//           await dispatch(RefreshToken(navigate));
-//           dispatch(getAllCorporatesCategory(navigate));
-//         } else if (response.data.responseCode === 200) {
-//           if (response.data.responseResult.isExecuted === true) {
-//             if (
-//               response.data.responseResult.responseMessage.toLowerCase() ===
-//               "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_01".toLowerCase()
-//             ) {
-//               dispatch(
-//                 getallcorporatessuccess(
-//                   response.data.responseResult.corporateCategories,
-//                   "Record found"
-//                 )
-//               );
-//             } else if (
-//               response.data.responseResult.responseMessage
-//                 .toLowerCase()
-//                 .includes(
-//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_02".toLowerCase()
-//                 )
-//             ) {
-//               dispatch(getallcorporatesfailed("No Record Found"));
-//             } else if (
-//               response.data.responseResult.responseMessage
-//                 .toLowerCase()
-//                 .includes(
-//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_03".toLowerCase()
-//                 )
-//             ) {
-//               dispatch(getallcorporatesfailed("Invalid Role"));
-//             } else if (
-//               response.data.responseResult.responseMessage
-//                 .toLowerCase()
-//                 .includes(
-//                   "SystemAdmin_SystemAdminManager_GetAllCorporateDetails_04".toLowerCase()
-//                 )
-//             ) {
-//               dispatch(
-//                 getallcorporatesfailed("Exception Something went wrong")
-//               );
-//             }
-//           } else {
-//             dispatch(getallcorporatesfailed("Something went wrong"));
-//             console.log("There's no corporates category");
-//           }
-//         } else {
-//           dispatch(getallcorporatesfailed("Something went wrong"));
-//           console.log("There's no corporates category");
-//         }
-//       })
-//       .catch((response) => {
-//         dispatch(getallcorporatesfailed("something went wrong"));
-//       });
-//   };
-// };
-
 const updatecorporateinit = () => {
   return {
     type: actions.UPDATE_CORPORATE_MAPPING_INIT,
@@ -251,7 +155,6 @@ const UpdatecorporateMapping = (navigate, data) => {
       },
     })
       .then(async (response) => {
-        console.log("CorporateCategoryCorporateCategory", response);
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdatecorporateMapping(navigate, data));
@@ -295,11 +198,9 @@ const UpdatecorporateMapping = (navigate, data) => {
             }
           } else {
             dispatch(updatecorporatefailed("Something went wrong"));
-            console.log("There's no corporates category");
           }
         } else {
           dispatch(updatecorporatefailed("Something went wrong"));
-          console.log("There's no corporates category");
         }
       })
       .catch((response) => {
@@ -347,7 +248,6 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
       },
     })
       .then(async (response) => {
-        console.log("CorporateCategoryCorporateCategory", response);
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(DeleteCorporateCategoryAPI(navigate, data));
@@ -407,11 +307,9 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
             }
           } else {
             dispatch(deletecorporatecategoryfailed("Something went wrong"));
-            console.log("There's no corporates category");
           }
         } else {
           dispatch(deletecorporatecategoryfailed("Something went wrong"));
-          console.log("There's no corporates category");
         }
       })
       .catch((response) => {
@@ -696,7 +594,6 @@ const GetAllCategoriesInit = () => {
 };
 
 const GetAllCategoriesSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.GET_ALL_CATEGORIES_SUCCESS,
     response: response,
@@ -726,23 +623,10 @@ const GetAllCategoriesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
-        // console.log(
-        //   response,
-        //   response.data,
-        //   response.data.responseResult.responseMessage,
-        //   response.data.responseCode
-        // );
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllCategoriesAPI(navigate));
         } else if (response.data.responseCode === 200) {
-          // console.log(
-          //   response,
-          //   response.data,
-          //   response.data.responseResult.responseMessage,
-          //   response.data.responseCode,
-          //   response.data.responseResult.isExecuted
-          // );
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage
@@ -751,8 +635,6 @@ const GetAllCategoriesAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllCategories_01".toLowerCase()
                 )
             ) {
-              // console.log(response);
-
               dispatch(
                 GetAllCategoriesSuccess(
                   response.data.responseResult,
@@ -835,8 +717,6 @@ const getAllCorporatesCategory = (navigate, data) => {
                   "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
                 )
             ) {
-              // console.log(response);
-
               dispatch(
                 getAllCorporatesSuccess(
                   response.data.responseResult,
@@ -907,23 +787,10 @@ const GetAllNatureAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
-        // console.log(
-        //   response,
-        //   response.data,
-        //   response.data.responseResult.responseMessage,
-        //   response.data.responseCode
-        // );
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllNatureAPI(navigate));
         } else if (response.data.responseCode === 200) {
-          // console.log(
-          //   response,
-          //   response.data,
-          //   response.data.responseResult.responseMessage,
-          //   response.data.responseCode,
-          //   response.data.responseResult.isExecuted
-          // );
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage
@@ -966,14 +833,12 @@ const GetAllNatureAPI = (navigate, data) => {
 };
 //Get All Categories
 const RoleListInit = () => {
-  console.log("here now");
   return {
     type: actions.ROLE_LIST_INIT,
   };
 };
 
 const RoleListSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.ROLE_LIST_SUCCESS,
     response: response,
@@ -1015,8 +880,6 @@ const RoleListAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_RoleList_01".toLowerCase()
                 )
             ) {
-              // console.log(response);
-
               dispatch(
                 RoleListSuccess(response.data.responseResult, "Data Available")
               );
@@ -1133,7 +996,6 @@ const GetAllInstrumentTypesInit = () => {
   };
 };
 const GetAllInstrumentTypesSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.GET_ALL_INSTRUMENT_TYPES_SUCCESS,
     response: response,
@@ -1215,7 +1077,6 @@ const GetAllBranchesInit = () => {
 };
 
 const GetAllBranchesSuccess = (response, message) => {
-  // console.log(response);
   return {
     type: actions.GET_ALL_BRANCHES_SUCCESS,
     response: response,
@@ -1236,7 +1097,6 @@ const GetAllBranchesAPI = (navigate) => {
     dispatch(GetAllBranchesInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllBranches.RequestMethod);
-    // form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
       url: authenticationAPI,
@@ -1246,23 +1106,10 @@ const GetAllBranchesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
-        // console.log(
-        //   response,
-        //   response.data,
-        //   response.data.responseResult.responseMessage,
-        //   response.data.responseCode
-        // );
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllBranchesAPI(navigate));
         } else if (response.data.responseCode === 200) {
-          // console.log(
-          //   response,
-          //   response.data,
-          //   response.data.responseResult.responseMessage,
-          //   response.data.responseCode,
-          //   response.data.responseResult.isExecuted
-          // );
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage
@@ -1271,8 +1118,6 @@ const GetAllBranchesAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllBranches_01".toLowerCase()
                 )
             ) {
-              console.log(response);
-
               dispatch(
                 GetAllBranchesSuccess(
                   response.data.responseResult,

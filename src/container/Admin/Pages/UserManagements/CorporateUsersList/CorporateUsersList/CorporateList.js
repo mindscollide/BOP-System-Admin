@@ -57,7 +57,6 @@ const CorporateList = () => {
   //Global State
   // const { BOPSystemAdminReducer } = useSelector((state) => state);
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
-  console.log("getAllCategories", getAllCategories);
 
   //state for save and cancel button
   const showActivationModal = useSelector(
@@ -87,7 +86,6 @@ const CorporateList = () => {
   //row length on scroll
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
-  console.log(tableData, "tableData");
   const loadingState = useSelector(
     (state) => state.CorporateUsersReducer.Loading
   );
@@ -95,7 +93,6 @@ const CorporateList = () => {
   const SearchCorporateUsers = useSelector(
     (state) => state.CorporateUsersReducer.SearchCorporateUsersData
   );
-  console.log("SearchCorporateUsers", SearchCorporateUsers);
   //Edit Corporate Use Modal Calling
   const EditCorporateModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editCorporateModal
@@ -139,7 +136,6 @@ const CorporateList = () => {
       Length: 10,
     };
 
-    console.log("Data to Search", data);
     dispatch(SearchCorporateUsersAPI(navigate, data));
   }, []);
 
@@ -235,8 +231,6 @@ const CorporateList = () => {
 
   useEffect(() => {
     if (corporateUpdated !== null) {
-      console.log("corporateUpdatedcorporateUpdated", corporateUpdated);
-      console.log("tableDatatableData", tableData);
       const updatedTableData = tableData.map((user) => {
         if (user.corporateID === corporateUpdated.corporate.corporateID) {
           return {
@@ -324,12 +318,6 @@ const CorporateList = () => {
 
   useEffect(() => {
     if (corporateUserUpdated !== null) {
-      console.log(
-        "corporateUserUpdatedcorporateUserUpdated",
-        corporateUserUpdated
-      );
-
-      console.log("tableDatatableData", tableData);
       const { user } = corporateUserUpdated;
       try {
         setTableData((prevTableData) => {
@@ -352,7 +340,6 @@ const CorporateList = () => {
 
   //handle Edit Corporate
   const handleEditCorporate = (record) => {
-    console.log("record: ", record);
     let Data = {
       CorporateId: record.corporateID,
       UserId: record.userID,
@@ -375,7 +362,6 @@ const CorporateList = () => {
   //handle OnClick Email
   const handleOnClickEmail = (record) => {
     dispatch(UserDetailsCorporateModalSystemAdmin(true));
-    console.log("record: ", record);
     let Data = {
       CorporateId: record.corporateID,
       UserId: record.userID,
@@ -403,7 +389,6 @@ const CorporateList = () => {
       Length: 10,
     };
 
-    console.log("Data to Search", data);
     dispatch(SearchCorporateUsersAPI(navigate, data));
   };
 
@@ -450,7 +435,6 @@ const CorporateList = () => {
         Length: 10,
       };
 
-      console.log("Data to Search", data);
       dispatch(SearchCorporateUsersAPI(navigate, data));
     }
   };
@@ -530,7 +514,6 @@ const CorporateList = () => {
       width: "180px",
       ellipsis: true,
       render: (creationDateTime) => {
-        console.log(creationDateTime, "creationDateTime");
         // Format the date and time
         return moment(formatDateAndTimeFromString(creationDateTime)).format(
           "DD/MM/YYYY HH:mm:ss"
@@ -592,7 +575,7 @@ const CorporateList = () => {
   const handleSelectCategory = async (selectedCategory) => {
     setCategoryID(selectedCategory);
 
-    corporateListSchema((prevState) => ({
+    setCorporateList((prevState) => ({
       ...prevState,
       categoryID: { ...prevState.categoryID, value: selectedCategory.value },
     }));

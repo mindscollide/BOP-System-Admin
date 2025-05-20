@@ -26,7 +26,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
   const GetCorporateUserByUserID = useSelector(
     (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
   );
-  console.log(GetCorporateUserByUserID, "useSelectoruseSelectoruseSelector");
 
   //State for add company
   const [updateCorporate, setUpdateCorporate] = useState({
@@ -45,7 +44,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
           categoryID,
         } = GetCorporateUserByUserID.user;
 
-        console.log(rfqTimers, "rfqTimersrfqTimers");
         setUpdateCorporate({
           ...updateCorporate,
           corporateName: {
@@ -74,7 +72,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
 
   useEffect(() => {
     if (corporateUpdated !== null) {
-      console.log("corporateUpdatedcorporateUpdated", corporateUpdated);
       setUpdateCorporate({
         ...updateCorporate,
         corporateName: {
@@ -154,7 +151,6 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
           CorporateID: updateCorporate.corporateName.categoryID,
           UserId: corporateUserId,
         };
-        console.log("newData", newData);
         dispatch(
           UpdateCorporateUsersAPI(navigate, newData, setCorproateUserId)
         );

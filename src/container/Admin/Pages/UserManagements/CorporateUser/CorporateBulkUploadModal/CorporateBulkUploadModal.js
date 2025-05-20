@@ -28,8 +28,6 @@ const CorporateBulkUploadModal = () => {
     (state) => state.BOPSystemAdminReducer.CorporateUsersBulkListData
   );
 
-  console.log("CorporateUsersBulkList", CorporateUsersBulkList);
-
   useEffect(() => {
     if (CorporateUsersBulkList !== null) {
       try {
@@ -146,7 +144,6 @@ const CorporateBulkUploadModal = () => {
           IsChatActive: user.isChatActive,
         })),
       };
-      console.log("transformedPayload", transformedPayload);
       dispatch(
         CreateBulkCorporateUserRequestAPI(
           navigate,

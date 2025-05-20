@@ -21,7 +21,6 @@ const AddBranchModal = () => {
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
-  console.log("getAllCategories", getAllCategories);
 
   const [categoryOptions, setCategoryOptions] = useState([]);
 
@@ -119,7 +118,6 @@ const AddBranchModal = () => {
 
   //handle select categoryID
   const handleSelectCategory = async (selectedCategory) => {
-    console.log(selectedCategory.value, "selectedCategoryselectedCategory");
     setCategoryID(selectedCategory);
 
     setAddBranch((prevState) => ({
@@ -138,7 +136,6 @@ const AddBranchModal = () => {
       BranchContact: addBranch.branchContact.value,
       CategoryID: categoryID.value,
     };
-    console.log("datadata", data);
     dispatch(AddBranchAPI(navigate, data, setAddBranch));
     // dispatch(AdduserModalSystemAdmin(false));
   };

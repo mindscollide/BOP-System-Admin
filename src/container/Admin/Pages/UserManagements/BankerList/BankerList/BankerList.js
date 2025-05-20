@@ -57,7 +57,6 @@ const BankerList = () => {
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
-  console.log("showActivationModalshowActivationModal", showActivationModal);
   const [modalState, setModalState] = useState(0);
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
@@ -111,8 +110,6 @@ const BankerList = () => {
       sRow: 0,
       Length: 10,
     };
-
-    console.log("Data to Search", data);
     dispatch(SearchBankUsersAPI(navigate, data));
   }, []);
 
@@ -287,8 +284,6 @@ const BankerList = () => {
       sRow: 0,
       Length: 10,
     };
-
-    console.log("Data to Search", data);
     dispatch(SearchBankUsersAPI(navigate, data));
   };
 
@@ -343,7 +338,6 @@ const BankerList = () => {
 
   //handle Edit Corporate
   const handleEditBanker = (record) => {
-    console.log(record.userID);
     let Data = { UserId: record.userID };
     dispatch(GetBankUserByUserIDAPI(navigate, Data));
   };
@@ -393,8 +387,6 @@ const BankerList = () => {
       //   return role ? role.roleName : ""; // Default if role not found
       // },
       render: (val, record) => {
-        // console.log("userRoleID", userRoleID);
-        console.log("valval", val);
         let role =
           RoleList?.roles?.length > 0 &&
           RoleList.roles.find((role) => role.roleID === val);
@@ -503,20 +495,14 @@ const BankerList = () => {
   //handelled scrolling here (4)
   useEffect(() => {
     if (SearchBankUsers !== null) {
-      console.log("here now", SearchBankUsers);
-      console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
       try {
         const { bankUsers, totalRecords } = SearchBankUsers;
         if (hasReachedBottom) {
-          console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
-
           setHasReachedBottom(false);
           setRecordLength(totalRecords);
           setTableData([...tableData, ...bankUsers]);
           setSRow(tableData.length + bankUsers.length);
         } else {
-          console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
-
           setHasReachedBottom(false);
           setTableData(bankUsers);
           setRecordLength(totalRecords);
@@ -524,11 +510,7 @@ const BankerList = () => {
         }
       } catch (error) {}
     } else if (SearchBankUsers === null) {
-      console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
-
       if (!hasReachedBottom) {
-        console.log("SearchBankUsersSearchBankUsers", SearchBankUsers);
-
         setHasReachedBottom(false);
         setTableData([]);
         setRecordLength(0);
@@ -593,9 +575,6 @@ const BankerList = () => {
   useEffect(() => {
     if (bankUserUpdated !== null) {
       const { user } = bankUserUpdated;
-
-      console.log("bankUserUpdatedbankUserUpdated", bankUserUpdated);
-      console.log("tableDatatableData", tableData);
       try {
         setTableData((prevTableData) => {
           return prevTableData.map((data, index) => {
@@ -612,7 +591,6 @@ const BankerList = () => {
                 userRoleID: user.userRoleID,
               };
             }
-            console.log("datadatata", data);
             return data;
           });
         });

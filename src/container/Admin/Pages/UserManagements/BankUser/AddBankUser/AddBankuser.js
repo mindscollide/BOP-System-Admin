@@ -80,7 +80,6 @@ const AddBankUser = () => {
   //handle Edit AddBankUser Modal
   const handleOpenEditBankUserModal = (branchData) => {
     dispatch(editBankUserModalSystemAdmin(true));
-    console.log("branchData", branchData);
     setEditBranchData(branchData);
   };
 
@@ -114,19 +113,12 @@ const AddBankUser = () => {
 
         // If the user role is "Admin" (value === 9) and a branch role is already set (not 0)
         if (role.value === 9 && branchRole.value !== 0) {
-          console.log(
-            { role, branchRole, newBranchesData },
-            "findSelectDatafindSelectData"
-          );
-
           // Proceed only if we have at least one branch option
           if (newBranchesData.length > 0) {
             // Attempt to find the branch option that matches the current `branchRole.value`
             let findSelectData = newBranchesData.find(
               (data) => data.value === branchRole.value
             );
-
-            console.log(findSelectData, "findSelectDatafindSelectData");
 
             // If a matching branch is found, update `branchRole` with the full branch object
             if (findSelectData !== undefined) {
@@ -378,7 +370,6 @@ const AddBankUser = () => {
     setRole(selectedRole);
     if (selectedRole.value === 9 && branchOptions.length > 0) {
       const firstBranchOption = branchOptions[0];
-      console.log(firstBranchOption, "firstBranchOptionfirstBranchOption");
       setBranchRole(firstBranchOption);
       setAddBankUser({
         ...addBankUser,
@@ -398,7 +389,6 @@ const AddBankUser = () => {
   };
 
   const branchSelectRoleHandler = async (selectedBranch) => {
-    console.log(selectedBranch, "selectroleselectroleselectrole");
     setBranchRole(selectedBranch);
     setAddBankUser({
       ...addBankUser,

@@ -3,7 +3,6 @@ import styles from "./AddCoporateUser.module.css";
 import { Col, Row } from "react-bootstrap";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { validateEmail } from "../../../../../../utils/regexUtil";
@@ -51,16 +50,6 @@ const AddCorporateUser = () => {
     (state) => state.auth.GetAllCorporatesData
   );
 
-  // //Add Company Use Modal Calling
-  // const PlusIconCorporateModalGobalState = useSelector(
-  //   (state) => state.BOPSystemAdminModal.corporatePlusIconModal
-  // );
-
-  // //Edit Company Use Modal Calling
-  // const editCompanyModalGobalState = useSelector(
-  //   (state) => state.BOPSystemAdminModal.editCompanyModal
-  // );
-
   //Corporate User State
   const [corporateUser, setCorporateUser] = useState({
     ...addCorporateUserSchema,
@@ -69,13 +58,10 @@ const AddCorporateUser = () => {
   //companyRoles
   const [companyRoleID, setCompanyRole] = useState(null);
 
-  console.log("companyRoleIDcompanyRoleIDcompanyRoleID", companyRoleID);
-  // const [editCompanyData, setEditCompanyData] = useState();
   //Global State
   const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
-  console.log("companyNameOptions", companyNameOptions);
 
   //state for error Message
   const [errorShow, setErrorShow] = useState(false);
@@ -135,7 +121,6 @@ const AddCorporateUser = () => {
   //handle Active Button
   // show error message When user hit activate btn
   const handleConfirmationYes = useCallback(() => {
-    console.log(modalState, "modalState");
     try {
       if (modalState === 1) {
         if (
@@ -143,16 +128,6 @@ const AddCorporateUser = () => {
           corporateUser.email.value !== "" &&
           corporateUser.companyName !== ""
         ) {
-          console.log(
-            "corporateUser.firstName.value",
-            corporateUser.firstName.value
-          );
-          console.log("corporateUser.email.value", corporateUser.email.value);
-          console.log(
-            "corporateUser.companyName.value",
-            corporateUser.companyName.value
-          );
-
           if (validateEmail(corporateUser.email.value)) {
             setErrorShow(false);
             let newData = {
@@ -175,7 +150,6 @@ const AddCorporateUser = () => {
             );
             dispatch(ConfirmationModalSystemAdmin(false));
           } else {
-            console.log("corporateUsercorporateUser");
             setErrorShow(true);
           }
         } else {
@@ -214,7 +188,6 @@ const AddCorporateUser = () => {
 
   //Edit Button
   const handleEditButton = (companyRoleID) => {
-    console.log("companyRoleIDcompanyRoleID", companyRoleID);
     dispatch(editCompanyModalSystemAdmin(true));
     setEditCompanyData(companyRoleID);
   };
@@ -256,7 +229,6 @@ const AddCorporateUser = () => {
   const handleCancelButtonYes = () => {
     setCompanyRole(companyNameOptions[0]);
 
-    console.log(companyNameOptions, "companyNameOptions");
     setCorporateUser((prevState) => ({
       ...prevState,
       companyID: companyNameOptions[0].value,
@@ -277,12 +249,7 @@ const AddCorporateUser = () => {
   };
 
   const CompanySelectHandler = async (selectedCompany) => {
-    console.log(
-      selectedCompany,
-      "selectedCompanyselectedCompanyselectedCompany"
-    );
     setCompanyRole(selectedCompany);
-
     setCorporateUser((prevState) => ({
       ...prevState,
       companyID: selectedCompany.value,
@@ -292,7 +259,6 @@ const AddCorporateUser = () => {
       rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
     }));
   };
-  console.log("corporateUser.corporateID", corporateUser);
 
   useEffect(() => {
     dispatch(getAllCorporatesCategory(navigate, null));
@@ -348,7 +314,6 @@ const AddCorporateUser = () => {
 
   useEffect(() => {
     if (corporateCreated !== null) {
-      console.log("corporateCreated", corporateCreated);
       if (Array.isArray(companyNameOptions)) {
         let findCorporateObj = companyNameOptions.find(
           (corporateData, index) =>
@@ -377,12 +342,7 @@ const AddCorporateUser = () => {
         if (findCorporateObj !== undefined) {
           setCompanyNameOptions((prevCompanyData) => {
             return prevCompanyData.map((data, index) => {
-              console.log("datadatadatadata", data);
               if (data.corporateID === corporateUpdated.corporate.corporateID) {
-                console.log(
-                  "corporateUpdatedcorporateUpdated",
-                  corporateUpdated
-                );
                 return {
                   ...data,
                   value: corporateUpdated.corporate.corporateID,
@@ -404,7 +364,6 @@ const AddCorporateUser = () => {
           if (
             companyRoleID.corporateID === corporateUpdated.corporate.corporateID
           ) {
-            console.log("here iam", companyRoleID);
             let corporateRoleData = {
               corporateID: corporateUpdated.corporate.corporateID,
               corporateName: corporateUpdated.corporate.corporateName,
@@ -446,28 +405,19 @@ const AddCorporateUser = () => {
   // Handle File upload
   const HandleFileUpload = (event) => {
     // setBulkUploadClicked(true);
-    console.log(event, "datadata");
     const { files } = event.target;
-    console.log(files, "filesfiles");
     if (files !== undefined && files.length > 0) {
       let ext = files[0].name.split(".").pop();
-      console.log("uploadedFileuploadedFile", ext);
       if (ext === "xls" || ext === "xlsx") {
         let fileData = files[0];
         dispatch(
           CorporateUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
         );
-        // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
       } else {
         alert("Invalid type");
       }
       event.target.value = null;
     }
-    // // const UploadFile = data.target;
-    // const uploadedFile = data.target.files[0];
-    // // console.log("UploadFileUploadFile", UploadFile);
-    // console.log("uploadedFileuploadedFile", uploadedFile);
-    // var ext = uploadedFile.name.split(".").pop();
   };
   return (
     <section className={styles["Container_bank_user"]}>

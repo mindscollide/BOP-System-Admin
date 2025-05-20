@@ -38,17 +38,9 @@ const EditBankerModal = () => {
   const GetBankUserbyUserID = useSelector(
     (state) => state.BOPSystemAdminReducer.GetBankUserbyUserIDData
   );
-  console.log("GetBankUserbyUserID", GetBankUserbyUserID);
-
-  // updateBankUserByUserID
-  const UpdateBankUserbyUserID = useSelector(
-    (state) => state.BOPSystemAdminReducer.UpdateBankUserbyUserIDData
-  );
-  console.log("UpdateBankUserbyUserID", UpdateBankUserbyUserID);
 
   //Role List
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
-  console.log("RoleList is: ", RoleList);
 
   //getAllBranch
   const getAllBranches = useSelector((state) => state.auth.GetAllBranchesData);
@@ -76,22 +68,14 @@ const EditBankerModal = () => {
     ...updateBankUserSchema,
   });
 
-  console.log(
-    { updateBankUser, branchRole, roleID },
-    "updateBankUserupdateBankUser"
-  );
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
     const { name, value } = e.target;
-    console.log("name", name, "value", value);
 
     //Validation rules
     const validateInput = {
       firstName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
       ContactNumber: (val) => val.replace(/[^\d]/g, ""),
-
-      // email: (val) => val.replace(/\s+/g, ""),
-      // corporateName: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
     };
 
     const isFieldEmpty = (val) => val === "";
@@ -121,7 +105,6 @@ const EditBankerModal = () => {
   //handle select CategoryID
   const handleSelectRole = async (selectedRole) => {
     setRoleID(selectedRole);
-    console.log("roleID is", roleID.value);
 
     setUpdateBankUser((prevState) => ({
       ...prevState,
@@ -137,7 +120,6 @@ const EditBankerModal = () => {
   };
 
   const branchSelectRoleHandler = async (selectedBranch) => {
-    console.log(selectedBranch, "selectroleselectroleselectrole");
     setBranchRole(selectedBranch);
   };
   //handle Active Button
@@ -158,7 +140,6 @@ const EditBankerModal = () => {
         // ActiveUser: updateBankUser.activeUser.value,
         BranchID: branchRole.value,
       };
-      console.log("newDatanewData", newData);
       dispatch(UpdateBankUserByUserIdAPI(navigate, newData));
     } else {
       console.log("Error Encoutered");
@@ -227,7 +208,6 @@ const EditBankerModal = () => {
           if (fingRoleName !== undefined) {
             setRoleID(fingRoleName);
           }
-          console.log(fingRoleName, "fingRoleNamefingRoleName");
         }
       } catch (error) {
         console.log("error: ", error);
@@ -328,9 +308,6 @@ const EditBankerModal = () => {
 
   useEffect(() => {
     if (bankUserUpdated !== null) {
-      console.log("bankUserUpdatedbankUserUpdated", bankUserUpdated);
-      console.log("updateBankUserupdateBankUser", updateBankUser);
-
       setUpdateBankUser({
         ...updateBankUser,
         firstName: {
@@ -348,7 +325,6 @@ const EditBankerModal = () => {
         if (fingRoleName !== undefined) {
           setRoleID(fingRoleName);
         }
-        console.log(fingRoleName, "fingRoleNamefingRoleName");
       }
       if (branchOptions.length > 0) {
         if (bankUserUpdated.user.branch?.branchID !== undefined) {
@@ -366,10 +342,6 @@ const EditBankerModal = () => {
 
   useEffect(() => {
     if (bankUserRoleStatusChange !== null) {
-      console.log(
-        "bankUserRoleStatusChangebankUserRoleStatusChange",
-        bankUserRoleStatusChange
-      );
       setUpdateBankUser({
         ...updateBankUser,
         activeUser: {
@@ -392,7 +364,6 @@ const EditBankerModal = () => {
         if (fingRoleName !== undefined) {
           setRoleID(fingRoleName);
         }
-        console.log(fingRoleName, "fingRoleNamefingRoleName");
       }
 
       setBranchRole({

@@ -23,8 +23,6 @@ const BankBulkUploadModal = () => {
     (state) => state.BOPSystemAdminReducer.BankUsersBankList
   );
 
-  console.log("BankUsersBankList", BankUsersBankList.usersToBeAdded);
-
   useEffect(() => {
     if (BankUsersBankList !== null) {
       try {
@@ -151,7 +149,6 @@ const BankBulkUploadModal = () => {
         })),
       };
 
-      console.log("transformPayload", transformPayload);
       dispatch(
         CreateBulkBankUserRequestAPI(
           navigate,
