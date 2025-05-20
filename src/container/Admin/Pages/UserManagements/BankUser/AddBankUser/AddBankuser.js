@@ -39,12 +39,8 @@ const AddBankUser = () => {
   const { branchCreated, branchUpdated, setBranchCreated, setBranchUpdated } =
     useMqtt();
   const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
-  //Search all corporate Users
-  const SearchBankUsers = useSelector(
-    (state) => state.BOPSystemAdminReducer.SearchBankUsersData
-  );
+
   const { setEditBranchData, setBulkUploadClicked } = useBankUser();
-  console.log("SearchBankUserSearchBankUser", SearchBankUsers);
 
   const [modalState, setModalState] = useState(0);
 
@@ -53,7 +49,6 @@ const AddBankUser = () => {
 
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
-  console.log("branchOptionsbranchOptions", branchOptions);
 
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
@@ -65,8 +60,6 @@ const AddBankUser = () => {
   // const [errorShow, setErrorShow] = useState(false);
   const [rolesOptions, setRolesOptions] = useState([]);
 
-  console.log(rolesOptions, "rolesroles");
-
   //State for Roles
   const [branchRole, setBranchRole] = useState(null);
   const [role, setRole] = useState({
@@ -74,7 +67,6 @@ const AddBankUser = () => {
     value: 0,
   });
 
-  console.log({ branchRole, role }, "branchRolebranchRole");
   //state for save and cancel button
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
@@ -147,8 +139,6 @@ const AddBankUser = () => {
         console.log("Error in mapping Branches", error);
       }
     }
-
-    console.log("branchOptionsare", branchOptions);
 
     // Check if role list data is available before proceeding
     if (RoleList !== null) {
@@ -416,11 +406,6 @@ const AddBankUser = () => {
         value: selectedBranch.categoryName,
       },
     });
-    // setAddBankUser((prevState) => ({
-    //   ...prevState,
-    //   // category: selectedBranch.categoryName,
-    //   branchID: { BranchID: selectedBranch.value },
-    // }));
   };
 
   const handleCancelButton = () => {
@@ -512,7 +497,6 @@ const AddBankUser = () => {
 
   const handleConfirmationYes = useCallback(() => {
     // Extract LDAPAccount from email (part before "@")
-    console.log("newData");
     try {
       if (modalState === 1) {
         const ldapAccountValue = addBankUser.email.value.split("@")[0];
@@ -592,11 +576,6 @@ const AddBankUser = () => {
 
       event.target.value = null;
     }
-    // // const UploadFile = data.target;
-    // const uploadedFile = data.target.files[0];
-    // // console.log("UploadFileUploadFile", UploadFile);
-    // console.log("uploadedFileuploadedFile", uploadedFile);
-    // var ext = uploadedFile.name.split(".").pop();
   };
 
   return (
@@ -649,21 +628,6 @@ const AddBankUser = () => {
                             </Col>
                           </Row>
                         )}
-                        {/* <Row>
-                          <Col className="d-flex justify-content-start">
-                            <p
-                              className={
-                                errorShow && addBankUser.EmployeeID.errorStatus
-                                  ? styles["bankErrorMessage"]
-                                  : styles["bankErrorMessage_hidden"]
-                              }
-                            >
-                              Employee ID till{" "}
-                              {dummyEmployeeIDs[dummyEmployeeIDs.length - 1]}{" "}
-                              number is already used{" "}
-                            </p>
-                          </Col>
-                        </Row> */}
                       </Col>
 
                       <Col lg={4} md={4} sm={4}>
@@ -705,20 +669,6 @@ const AddBankUser = () => {
                           isSearchable={true}
                           classNamePrefix={"selectCateogyCorporateList"}
                         />
-
-                        {/* <Row>
-                          <Col className="d-flex justify-content-start">
-                            <p
-                              className={
-                                errorShow && addBankUser.roleID.value === ""
-                                  ? styles["bankErrorMessage"]
-                                  : styles["bankErrorMessage_hidden"]
-                              }
-                            >
-                              Role is required
-                            </p>
-                          </Col>
-                        </Row> */}
                       </Col>
                     </Row>
 
@@ -813,18 +763,6 @@ const AddBankUser = () => {
                             </Col>
                           </Row>
                         )}
-                        {/* {errorShow &&
-                        !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
-                          addBankUser.email.value
-                        ) ? (
-                          <Row>
-                            <Col className="d-flex justify-content-start">
-                              <p className={styles["bankErrorMessage"]}>
-                                Email address with domain of bop is required
-                              </p>
-                            </Col>
-                          </Row>
-                        ) : null} */}
                       </Col>
                     </Row>
 

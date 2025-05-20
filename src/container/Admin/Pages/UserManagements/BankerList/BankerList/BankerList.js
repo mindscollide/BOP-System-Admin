@@ -38,7 +38,6 @@ import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBo
 import { useMqtt } from "../../../../../../context/MQTTContext";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import EditBankerModal from "../EditBankUserModal/EditBankerModal";
-import { render } from "@testing-library/react";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,6 +46,8 @@ const BankerList = () => {
     bankUserRoleStatusChange,
     branchUpdated,
     setBranchUpdated,
+    bankUserUpdated,
+    setBankUserUpdated,
   } = useMqtt();
 
   // State to control visibility of export buttons
@@ -81,9 +82,6 @@ const BankerList = () => {
   const SearchBankUsers = useSelector(
     (state) => state.BOPSystemAdminReducer.SearchBankUsersData
   );
-
-  console.log("tabledata", tableData);
-  console.log("SearchBankUserSearchBankUser", SearchBankUsers);
 
   //Role List
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
@@ -160,6 +158,7 @@ const BankerList = () => {
       setBranchUpdated(null);
     }
   }, [branchUpdated]);
+
   //Metod to perform action of Export options
   // const ExportOptions = ({ onClose }) => {
   //   return (
@@ -490,6 +489,7 @@ const BankerList = () => {
                   className={styles["EditButton"]}
                   icon={<i class="icon-trash color-red"></i>}
                   iconClass={"iconClassTrashCorporate"}
+
                   // onClick={handleDeleteCorporate}
                 /> */}
               </Col>
@@ -589,6 +589,39 @@ const BankerList = () => {
       }
     }
   }, [bankUserRoleStatusChange]);
+
+  useEffect(() => {
+    if (bankUserUpdated !== null) {
+      const { user } = bankUserUpdated;
+
+      console.log("bankUserUpdatedbankUserUpdated", bankUserUpdated);
+      console.log("tableDatatableData", tableData);
+      try {
+        setTableData((prevTableData) => {
+          return prevTableData.map((data, index) => {
+            if (data.employeeID === user.employeeID) {
+              return {
+                ...data,
+                branch: {
+                  ...user.branch,
+                  branchName: user?.branch?.branchName,
+                },
+                contactNumber: user.contactNumber,
+                firstName: user.firstName,
+                email: user.email,
+                userRoleID: user.userRoleID,
+              };
+            }
+            console.log("datadatata", data);
+            return data;
+          });
+        });
+      } catch (err) {
+        console.log(err);
+      }
+      setBankUserUpdated(null);
+    }
+  }, [bankUserUpdated]);
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);

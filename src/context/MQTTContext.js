@@ -186,6 +186,8 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setMarketTimingsUpdated,
         setCorporateUserRoleStatusChange,
         setBankUserRoleStatusChange,
+        setBankUserUpdated,
+        setCorporateUserUpdated,
       }}
     >
       {children}

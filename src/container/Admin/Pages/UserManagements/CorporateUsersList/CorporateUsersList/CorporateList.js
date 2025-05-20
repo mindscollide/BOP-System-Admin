@@ -51,6 +51,7 @@ const CorporateList = () => {
     corporateUserRoleStatusChange,
     corporateUpdated,
     setCorporateUpdated,
+    corporateUserUpdated,
   } = useMqtt();
 
   //Global State
@@ -156,6 +157,99 @@ const CorporateList = () => {
       } catch (error) {}
     }
   }, [getAllCategories]);
+
+  //handelled scrolling here (4)
+  useEffect(() => {
+    if (SearchCorporateUsers !== null) {
+      try {
+        const { corporateUsers, totalRecords } = SearchCorporateUsers;
+        if (hasReachedBottom) {
+          setHasReachedBottom(false);
+          setRecordLength(totalRecords);
+          setTableData([...tableData, ...corporateUsers]);
+          setSRow(tableData.length + corporateUsers.length);
+        } else {
+          setHasReachedBottom(false);
+          setTableData(corporateUsers);
+          setRecordLength(totalRecords);
+          setSRow(corporateUsers.length);
+        }
+        // if (corporateUsers.length > 0) {
+        //   setTableData(SearchCorporateUsers.corporateUsers);
+        // }
+      } catch (error) {}
+    } else if (SearchCorporateUsers === null) {
+      if (!hasReachedBottom) {
+        setHasReachedBottom(false);
+        setTableData([]);
+        setRecordLength(0);
+        setSRow(0);
+      }
+    }
+  }, [SearchCorporateUsers]);
+
+  useEffect(() => {
+    if (corporateUserRoleStatusChange !== null) {
+      try {
+        const { updatedUser } = corporateUserRoleStatusChange;
+        setTableData((prevState) => {
+          return prevState.map((data2, index) => {
+            if (data2.userID === updatedUser.userID) {
+              return {
+                ...data2,
+                statusId: updatedUser.statusId,
+              };
+            }
+            return data2;
+          });
+        });
+      } catch (error) {}
+    }
+  }, [corporateUserRoleStatusChange]);
+
+  useEffect(() => {
+    if (corproateUserCreated !== null) {
+      try {
+        const { user, createdUserID, createdDateTime } = corproateUserCreated;
+        let findIsExist = tableData.find(
+          (tableRow, index) => tableRow.userID === user.createdUserID
+        );
+        if (findIsExist === undefined) {
+          let userData = {
+            userID: createdUserID,
+            email: user.email,
+            firstName: user.firstname,
+            corporateID: user.fK_CorporateID,
+            corporateName: user.corporateName,
+            statusId: user.fK_UserStatusID,
+            creationDateTime: createdDateTime,
+            passwordModificationTime: "",
+          };
+          setTableData((prevState) => [userData, ...prevState]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [corproateUserCreated]);
+
+  useEffect(() => {
+    if (corporateUpdated !== null) {
+      console.log("corporateUpdatedcorporateUpdated", corporateUpdated);
+      console.log("tableDatatableData", tableData);
+      const updatedTableData = tableData.map((user) => {
+        if (user.corporateID === corporateUpdated.corporate.corporateID) {
+          return {
+            ...user,
+            corporateName: corporateUpdated.corporate.corporateName,
+          };
+        }
+        return user;
+      });
+      setTableData(updatedTableData);
+      setCorporateUpdated(null);
+    }
+  }, [corporateUpdated]);
   //Banker List validate handler
   const CorporateListValidateHandler = (e) => {
     let name = e.target.name;
@@ -227,6 +321,34 @@ const CorporateList = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (corporateUserUpdated !== null) {
+      console.log(
+        "corporateUserUpdatedcorporateUserUpdated",
+        corporateUserUpdated
+      );
+
+      console.log("tableDatatableData", tableData);
+      const { user } = corporateUserUpdated;
+      try {
+        setTableData((prevTableData) => {
+          return prevTableData.map((data, index) => {
+            if (data.userID === user.userID) {
+              return {
+                ...data,
+                firstName: user.name,
+              };
+            }
+            return data;
+          });
+        });
+      } catch (err) {
+        console.log(err);
+      }
+      setCorporateUpdated(null);
+    }
+  }, [corporateUserUpdated]);
 
   //handle Edit Corporate
   const handleEditCorporate = (record) => {
@@ -451,99 +573,6 @@ const CorporateList = () => {
       },
     },
   ];
-
-  //handelled scrolling here (4)
-  useEffect(() => {
-    if (SearchCorporateUsers !== null) {
-      try {
-        const { corporateUsers, totalRecords } = SearchCorporateUsers;
-        if (hasReachedBottom) {
-          setHasReachedBottom(false);
-          setRecordLength(totalRecords);
-          setTableData([...tableData, ...corporateUsers]);
-          setSRow(tableData.length + corporateUsers.length);
-        } else {
-          setHasReachedBottom(false);
-          setTableData(corporateUsers);
-          setRecordLength(totalRecords);
-          setSRow(corporateUsers.length);
-        }
-        // if (corporateUsers.length > 0) {
-        //   setTableData(SearchCorporateUsers.corporateUsers);
-        // }
-      } catch (error) {}
-    } else if (SearchCorporateUsers === null) {
-      if (!hasReachedBottom) {
-        setHasReachedBottom(false);
-        setTableData([]);
-        setRecordLength(0);
-        setSRow(0);
-      }
-    }
-  }, [SearchCorporateUsers]);
-
-  useEffect(() => {
-    if (corporateUserRoleStatusChange !== null) {
-      try {
-        const { updatedUser } = corporateUserRoleStatusChange;
-        setTableData((prevState) => {
-          return prevState.map((data2, index) => {
-            if (data2.userID === updatedUser.userID) {
-              return {
-                ...data2,
-                statusId: updatedUser.statusId,
-              };
-            }
-            return data2;
-          });
-        });
-      } catch (error) {}
-    }
-  }, [corporateUserRoleStatusChange]);
-
-  useEffect(() => {
-    if (corproateUserCreated !== null) {
-      try {
-        const { user, createdUserID, createdDateTime } = corproateUserCreated;
-        let findIsExist = tableData.find(
-          (tableRow, index) => tableRow.userID === user.createdUserID
-        );
-        if (findIsExist === undefined) {
-          let userData = {
-            userID: createdUserID,
-            email: user.email,
-            firstName: user.firstname,
-            corporateID: user.fK_CorporateID,
-            corporateName: user.corporateName,
-            statusId: user.fK_UserStatusID,
-            creationDateTime: createdDateTime,
-            passwordModificationTime: "",
-          };
-          setTableData((prevState) => [userData, ...prevState]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }, [corproateUserCreated]);
-
-  useEffect(() => {
-    if (corporateUpdated !== null) {
-      console.log("corporateUpdatedcorporateUpdated", corporateUpdated);
-      console.log("tableDatatableData", tableData);
-      const updatedTableData = tableData.map((user) => {
-        if (user.corporateID === corporateUpdated.corporate.corporateID) {
-          return {
-            ...user,
-            corporateName: corporateUpdated.corporate.corporateName,
-          };
-        }
-        return user;
-      });
-      setTableData(updatedTableData);
-      setCorporateUpdated(null);
-    }
-  }, [corporateUpdated]);
 
   const [open, setOpen] = useState(false);
 

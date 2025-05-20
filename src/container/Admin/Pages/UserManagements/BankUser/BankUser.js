@@ -7,7 +7,6 @@ import AddBranchModal from "./AddBranchModal/AddBranchModal";
 import EditBranchModal from "./EditBranchModal/EditBranchModal";
 
 const BankUser = () => {
-  console.log("Jeloo");
   const { BulkUploadClicked, editBranchData } = useBankUser();
 
   //Add Bank  Use Modal Calling
