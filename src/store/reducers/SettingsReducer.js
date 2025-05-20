@@ -12,7 +12,6 @@ const settingsReducer = (state = initialState, action) => {
   switch (action.type) {
     //Get user Settings reducer
     case actions.GET_USER_SETTINGS_INIT:
-      console.log("GET_USER_SETTINGS_INIT");
       return {
         ...state,
         Loading: true,

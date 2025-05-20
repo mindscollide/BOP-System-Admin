@@ -17,7 +17,6 @@ const GetUserSettingsInit = () => {
 };
 
 const GetUserSettingsSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.GET_USER_SETTINGS_SUCCESS,
     response: response,
@@ -33,8 +32,6 @@ const GetUserSettingsFail = (message) => {
 };
 
 const GetUserSettingsAPI = (navigate) => {
-  console.log("Checkig GetUserSettings");
-
   let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(GetUserSettingsInit());
@@ -50,7 +47,6 @@ const GetUserSettingsAPI = (navigate) => {
       },
     })
       .then(async (response) => {
-        console.log("Checkig GetUserSettings");
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetUserSettingsAPI(navigate));
@@ -197,7 +193,6 @@ const GetMarketTimeSettingsInit = () => {
 };
 
 const GetMarketTimeSettingsSuccess = (response, message) => {
-  console.log(response);
   return {
     type: actions.GET_MARKET_TIME_SETTINGS_SUCCESS,
     response: response,

@@ -111,13 +111,8 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
       }));
     }
   }, [GetUserSettings, GetMarketTimeSettings]);
-  console.log("marketTimingsUpdatedmarketTimingsUpdated", marketTimingsUpdated);
   useEffect(() => {
     if (marketTimingsUpdated !== null) {
-      console.log(
-        "marketTimingsUpdatedmarketTimingsUpdated",
-        marketTimingsUpdated
-      );
       const { marketTimings } = marketTimingsUpdated;
       setMonToThruStartTime(
         ConvertDateTimrStringIntoGTM(marketTimings.monThuStartTime, "hh:mm:ss")
@@ -160,7 +155,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
 
   // Checkbox for Chat Panal Overlap and Sound on every personal message
   const onChangeCheckbox = (e) => {
-    console.log("e.target.checked,", e.target.checked);
     if (e.target.name === "chatPannal") {
       setSettingRecords({
         ...settingsRecord,
@@ -180,7 +174,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
       ...settingsRecord,
       BD_Enable2FA: e,
     });
-    console.log(`switch to ${e}`);
   };
 
   const UpdateButtonOnClick = () => {
@@ -205,7 +198,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
       dispatch(
         UpdateUserSettingsAPI(navigate, updateData, setSettingModalState)
       );
-      console.log("updateDataupdateData", updateData);
     } catch (err) {}
 
     try {
@@ -215,7 +207,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
         FridayStartTime: extractTimeOnly(fridayStartTime),
         FridayEndTime: extractTimeOnly(fridayEndTime),
       };
-      console.log("updated time is:", updateTime);
       dispatch(
         SaveMarketTimeSettingsAPI(navigate, updateTime, setSettingModalState)
       );

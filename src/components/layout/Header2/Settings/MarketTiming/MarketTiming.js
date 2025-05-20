@@ -20,11 +20,6 @@ const MarketTiming = ({
     (state) => state.settingsReducer.GetMarketTimeSettings
   );
 
-  console.log(
-    { monToThruStartTime, monToThruEndTime, fridayStartTime, fridayEndTime },
-    "fridayEndTimefridayEndTime"
-  );
-
   useEffect(() => {
     if (GetMarketTimeSettings !== null) {
       try {
@@ -45,11 +40,7 @@ const MarketTiming = ({
   }, [GetMarketTimeSettings]);
 
   const handleChange = (eventName, event) => {
-    console.log(eventName, event, "handleChangehandleChange");
     if (eventName === "monToThruStartTime") {
-      let newDateObj = new Date(event);
-      console.log(newDateObj, "handleChangehandleChange");
-
       setMonToThruStartTime(new Date(event));
     }
     if (eventName === "monToThruEndTime") {

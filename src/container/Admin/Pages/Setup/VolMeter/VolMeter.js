@@ -27,15 +27,11 @@ const VolMeter = () => {
   const GetVolmeterByBankID = useSelector(
     (state) => state.BOPSystemAdminReducer.GetVolmeterByBankID
   );
-  console.log("GetVolmeterByBankID", GetVolmeterByBankID);
 
   const [open, setOpen] = useState({
     open: false,
     message: "",
   });
-
-  // state for volmeter array field
-  // const [volMeter, setVolMeter] = useState([]);
 
   // state for vol meter field
   const [volMeterFields, setVolMeterFields] = useState({
@@ -100,8 +96,6 @@ const VolMeter = () => {
     let validateValue = value.replace(/[^0-9.]/g, "");
 
     if (name === "volatilityMeter" && validateValue !== "") {
-      console.log("valuevalueemailvaluevalueemail", validateValue);
-
       if (validateValue !== "") {
         setVolMeterFields({
           ...volMeterFields,
@@ -124,7 +118,6 @@ const VolMeter = () => {
     }
 
     if (name === "nameVol" && validateValue !== "") {
-      console.log("valuevalueemailvaluevalueemail", value);
       if (validateValue !== "") {
         setVolMeterFields({
           ...volMeterFields,
@@ -147,7 +140,6 @@ const VolMeter = () => {
     }
 
     if (name === "volMeter" && validateValue !== "") {
-      console.log("valuevalueemailvaluevalueemail", validateValue);
       if (validateValue !== "") {
         setVolMeterFields({
           ...volMeterFields,
@@ -189,7 +181,6 @@ const VolMeter = () => {
       ],
       BankID: 1,
     };
-    console.log("data AddUpdateVolmterAPI(navigate, data)", data);
     dispatch(AddUpdateVolmterAPI(navigate, data));
   };
 
