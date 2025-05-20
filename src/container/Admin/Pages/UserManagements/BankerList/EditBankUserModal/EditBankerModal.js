@@ -351,12 +351,14 @@ const EditBankerModal = () => {
         console.log(fingRoleName, "fingRoleNamefingRoleName");
       }
       if (branchOptions.length > 0) {
-        let findBranchName = branchOptions.find(
-          (branchID, index) =>
-            branchID.value === bankUserUpdated.user.branch.branchID
-        );
-        if (findBranchName !== undefined) {
-          setBranchRole(findBranchName);
+        if (bankUserUpdated.user.branch?.branchID !== undefined) {
+          let findBranchName = branchOptions.find(
+            (branchID, index) =>
+              branchID.value === bankUserUpdated.user?.branch?.branchID
+          );
+          if (findBranchName !== undefined) {
+            setBranchRole(findBranchName);
+          }
         }
       }
     }
