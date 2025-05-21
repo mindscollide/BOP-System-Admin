@@ -18,12 +18,8 @@ import {
   UserDetailsCorporateModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
-// import DeleteConfirmationModal from "../../../../Setups/CorporateUserList/DeleteConfirmationModal/DeleteConfirmationModal";
-// import CorporateUserDetailsModal from "../../../../Setups/CorporateUserList/CorporateUserDetailsModal/CorporateUserDetailsModal";
 import { useNavigate } from "react-router-dom";
 import { corporateListSchema } from "../../../../../../utils/schemas";
-// import ExportShowComponent from "../../../../Setups/BankerList/ExportShowComponent";
-
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { Popover } from "antd";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
