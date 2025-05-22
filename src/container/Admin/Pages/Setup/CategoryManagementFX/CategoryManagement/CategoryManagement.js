@@ -318,10 +318,7 @@ const CategoryManagement = () => {
 
   const OpenEditCategory = (recorde, data) => {
     console.log(data, "datadata");
-    // console.log(
-    //   " i am clicked",
-    //   numberformatgerWithFourDecimalValues(data.bidSpread.trimStart())
-    // );
+
     setAddCategoryList([]);
     setadDdata({
       category: {
@@ -369,15 +366,15 @@ const CategoryManagement = () => {
         errorStatus: false,
       },
     });
-    // console.log(" i am clicked", formatNumberForFourDecimal(data.bidSpread));
 
     setEditCategoryList([recorde]);
   };
 
   const checkForEdit = (recorde) => {
+    console.log(recorde, "recorderecorderecorde");
     let newdata = editCategoryList.find((element) => element === recorde);
-    // console.log(newdata, "gggggggggggggg");
-    // console.log(recorde, "hhhhhhh");
+    console.log(newdata, "recorderecorderecorde");
+
     if (newdata !== undefined) {
       return true;
     } else {
@@ -469,11 +466,12 @@ const CategoryManagement = () => {
     // Calling Update APi
     let newdata = {
       Category: categoryupdate.category.value,
-      BidSpread: categoryupdate.bidSpread.value,
-      OfferSpread: categoryupdate.offerSpread.value,
+      BidSpread: Number(categoryupdate.bidSpread.value),
+      OfferSpread: Number(categoryupdate.offerSpread.value),
       CategoryId: Number(data.categoryID),
     };
     dispatch(UpdateCategoryAPI(navigate, newdata));
+    setEditCategoryList([]);
   };
 
   const CloseUpdateCategory = (recorde) => {
@@ -722,146 +720,6 @@ const CategoryManagement = () => {
       BankID: 1,
     });
     setAddCategoryList([]);
-  };
-
-  const addModal = (data, index) => {
-    return (
-      <Row>
-        {AddCategory.Spinner === true ? (
-          <>
-            <span className="customer-login-user-spinner">
-              <Spin size="large" />
-            </span>
-          </>
-        ) : (
-          <>
-            <Col
-              lg={12}
-              md={12}
-              sm={12}
-              // key={newInstanceId}
-              className="add-cate-wrapper m-3"
-            >
-              <Row>
-                <Col lg={12} md={12} sm={12}>
-                  <Form onSubmit={AfterClickAdd}>
-                    <Row>
-                      <Col lg={12} md={12} sm={12}>
-                        <span className="Name_tag">
-                          Name <span className="red_steric">*</span>
-                        </span>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col
-                        lg={12}
-                        md={12}
-                        sm={12}
-                        className="CreateMeetingInput"
-                      >
-                        <TextField
-                          name="name"
-                          applyClass="form-control2"
-                          ref={NameRef}
-                          type="text"
-                          autoFocus
-                          maxLength={100}
-                          labelClass="d-none"
-                          value={addData.category.value}
-                          onChange={CategoryManageState}
-                        />
-                      </Col>
-                    </Row>
-                    <p
-                      className={
-                        errormessege && addData.category.value === ""
-                          ? "errorMessage"
-                          : "errorMessage_hidden"
-                      }
-                    >
-                      Please Fill all the credentials
-                    </p>
-
-                    <Row className="mt-3">
-                      <Col lg={12} md={12} sm={12}>
-                        <span className="Name_tag">
-                          Spread <span className="red_steric">*</span>
-                        </span>
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-2">
-                      <Col lg={6} md={6} sm={12} xs={12}>
-                        <Row>
-                          <Col lg={12} md={12} sm={12}>
-                            <span className="Name_tag">Bid</span>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={12} md={12} sm={12}>
-                            <TextField
-                              name="Bid"
-                              applyClass="form-control2"
-                              type="text"
-                              maxLength={100}
-                              labelClass="d-none"
-                              required={true}
-                              value={addData.bidSpread.value}
-                              onChange={CategoryManageState}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col lg={6} md={6} sm={12} xs={12}>
-                        <Row>
-                          <Col lg={12} md={12} sm={12}>
-                            <span className="Name_tag">Offer</span>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={12} md={12} sm={12}>
-                            <TextField
-                              name="Offer"
-                              applyClass="form-control2"
-                              type="text"
-                              maxLength={100}
-                              labelClass="d-none"
-                              required={true}
-                              value={addData.offerSpread.value}
-                              onChange={CategoryManageState}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col
-                        lg={12}
-                        md={12}
-                        sm={12}
-                        className="d-flex justify-content-center gap-2"
-                      >
-                        <Button
-                          className="Add_button_category"
-                          text="Add"
-                          onClick={AfterClickAdd}
-                        />
-                        <Button
-                          className="Cancel_button_cateogry"
-                          text="Cancel"
-                          onClick={CloseNewCategory}
-                        />
-                      </Col>
-                    </Row>
-                  </Form>
-                </Col>
-              </Row>
-            </Col>
-          </>
-        )}
-      </Row>
-    );
   };
 
   const updateModal = (data, index) => {
