@@ -61,10 +61,7 @@ const CategoryManagement = () => {
     }));
   };
 
-  //For Local State
-  const [editCategoryList, setEditCategoryList] = useState([]);
-  const [errormessege, seterrormessege] = useState(false);
-  const [corporates, setCorporates] = useState([]);
+  //Local State
   const [addData, setadDdata] = useState({
     category: {
       value: "",
@@ -117,6 +114,9 @@ const CategoryManagement = () => {
     },
     BankID: 1,
   });
+  const [editCategoryList, setEditCategoryList] = useState([]);
+  const [errormessege, seterrormessege] = useState(false);
+  const [corporates, setCorporates] = useState([]);
   const [delteCateogry, setDeltecategory] = useState(null);
   const [deleteRejectModal, setDeleteRejectModal] = useState(false);
 

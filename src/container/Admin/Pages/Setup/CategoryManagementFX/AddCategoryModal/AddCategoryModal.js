@@ -21,12 +21,12 @@ const AddCategoryModal = () => {
   const { BOPSystemAdminModal, AddCategory } = useSelector((state) => state);
   const [addCategory, setAddCategory] = useState({ ...addCategroyModalSchema });
 
-  //handle Cross icon
+  //Handle Cross icon
   const handleCrossIcon = () => {
     dispatch(AddCategoryModalSystemAdmin(false));
   };
 
-  //handle Add Button
+  //Handle Add Button Api hit for Adding a Category
   const handleAddButton = () => {
     let data = {
       Category: addCategory.Name.value,
@@ -38,11 +38,12 @@ const AddCategoryModal = () => {
     dispatch(Addcategory(navigate, data));
   };
 
-  //handle CancelButton
+  //Handle CancelButton
   const handleCancelButton = () => {
     dispatch(AddCategoryModalSystemAdmin(false));
   };
 
+  // Handle Onchange for text fields
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
