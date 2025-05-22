@@ -1285,7 +1285,6 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 /* Collapser styles  */
 .custom-collapse {
   border-radius: 8px;
-  overflow: hidden;
   border: none !important;
   background-color: #e6f7ff !important;
 }
@@ -1294,11 +1293,23 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   border: none !important;
 }
 
+.header-container {
+  max-width: 145px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .company-name {
   font-family: "Roboto", sans-serif !important;
   color: #000000;
   font-weight: 800;
   font-size: 14px !important;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* This creates the '...' */
+  max-width: 100%;
 }
 .user-email {
   color: #0355c4;
@@ -1306,6 +1317,10 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   margin: 0px !important;
   padding: 0px !important;
   font-family: "Roboto", sans-serif !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* This creates the '...' */
+  max-width: 100%;
 }
 .no-user {
   color: #888888;

@@ -272,19 +272,10 @@ const CategoryManagement = () => {
                             >
                               <Panel
                                 header={
-                                  <div>
+                                  <div className="header-container">
                                     <span className="company-name">
                                       {Clients.counterPartyName}
                                     </span>
-                                    {activeKey.includes("1") && (
-                                      <Button
-                                        icon={
-                                          <div className="special-component-category "></div>
-                                        }
-                                        className={"TrashIconClassRed"}
-                                        iconClass={"trashiconClassredCollapse"}
-                                      />
-                                    )}
                                   </div>
                                 }
                                 key="1"
@@ -303,9 +294,7 @@ const CategoryManagement = () => {
                                     )}
                                   </>
                                 ) : (
-                                  <p className="no-user">
-                                    This corporate have no user
-                                  </p>
+                                  <p className="no-user"></p>
                                 )}
                               </Panel>
                             </Collapse>
@@ -317,7 +306,7 @@ const CategoryManagement = () => {
                   })
                 ) : (
                   <>
-                    <p>No Coparate in this Category.</p>
+                    <p className="NoCorporateMessage"></p>
                   </>
                 )}
               </>
