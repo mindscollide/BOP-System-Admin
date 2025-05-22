@@ -8,7 +8,6 @@ import {
 } from "../../../../../../components/elements";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Collapse } from "antd";
-import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -119,10 +118,10 @@ const CategoryManagement = () => {
     }
   }, []);
 
+  // Extracting the data of all the categories
   useEffect(() => {
     try {
       if (AllCategories && AllCategories !== null) {
-        console.log(AllCategories, "AllCategoriesAllCategories");
         setCorporates(AllCategories.categories);
       }
     } catch (error) {
@@ -133,6 +132,7 @@ const CategoryManagement = () => {
   //for Auto focus
   const NameRef = useRef(null);
 
+  //for Auto focus Render
   useEffect(() => {
     if (NameRef.current) {
       NameRef.current.focus();
@@ -154,7 +154,6 @@ const CategoryManagement = () => {
     if (Object.keys(deletecategoryData).length > 0) {
       setDeltecategory(deletecategoryData);
     }
-    // console.log("deletecategoryDatadeletecategoryData", deletecategoryData);
   }, [auth.DeleteCategory]);
 
   // store data of corporates in loacal variable
@@ -476,6 +475,7 @@ const CategoryManagement = () => {
     setEditCategoryList([]);
   };
 
+  //Cancel Button trigger on Update Modal Category
   const CloseUpdateCategory = (recorde) => {
     setCategoryUpdate({
       category: {
@@ -549,39 +549,6 @@ const CategoryManagement = () => {
       setAddCategoryList([]);
     }
   }, [AddCategory.addCategory]);
-
-  const OpenAddCategory = (recorde) => {
-    setCategoryUpdate({
-      category: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      bidSpread: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      offerSpread: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      AssetTypeId: {
-        value: 1,
-        errorMessage: "",
-        errorStatus: false,
-      },
-      categoryID: {
-        value: 0,
-        errorMessage: "",
-        errorStatus: false,
-      },
-      BankID: 1,
-    });
-    setEditCategoryList([]);
-    setAddCategoryList([recorde]);
-  };
 
   //Delete Category API Function
   const handleDelteCliked = (id) => {
@@ -804,12 +771,7 @@ const CategoryManagement = () => {
                                             >
                                               <i class="icon-text-edit"></i>
                                             </span>
-                                            <span
-                                              className="add-cat d-inline-block"
-                                              onClick={() =>
-                                                OpenAddCategory(data.categoryID)
-                                              }
-                                            ></span>
+
                                             <span
                                               className="delete-cat d-inline-block cursor-pointer"
                                               onClick={() =>
