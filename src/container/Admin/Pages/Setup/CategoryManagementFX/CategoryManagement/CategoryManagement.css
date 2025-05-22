@@ -1323,10 +1323,11 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   max-width: 100%;
 }
 .user-email {
-  color: #0355c4;
+  color: #0355c4 !important;
   font-size: 12px;
   margin: 0px !important;
   padding: 0px !important;
+  font-weight: 400 !important;
   font-family: "Roboto", sans-serif !important;
   white-space: nowrap;
   overflow: hidden;
@@ -1398,4 +1399,21 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 .SectionContainer {
   width: 100% !important;
   margin: 0 auto !important;
+}
+
+.CategoryCorporatesScroller {
+  height: 67vh !important;
+  overflow-x: hidden !important;
+}
+
+.CategoryCorporatesScroller::-webkit-scrollbar {
+  width: 0.5rem;
+  border-radius: 20px;
+  background-color: #f2f2f2;
+}
+
+.CategoryCorporatesScroller::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #ccc;
+  margin-left: -15px;
 }

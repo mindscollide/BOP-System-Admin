@@ -227,18 +227,17 @@ const CategoryManagement = () => {
 
   //This is for the corporate shown inside the main card i.e Corporate and branches
   const showCards = (data) => {
-    // console.log("showCardsshowCards", data);
+    console.log("showCardsshowCards", data);
     if (!data || Object.keys(data).length === 0) return null;
     return (
       <Droppable droppableId={data.categoryID}>
         {(provided) => (
-          <Row style={{ height: "80vh" }}>
-            {/* {console.log("authauth1234 ClientsClients", data)} */}
+          <Row>
             <Col
               lg={12}
               md={12}
               sm={12}
-              className="mt-0"
+              className="CategoryCorporatesScroller"
               {...provided.droppableProps}
               ref={provided.innerRef}
               style={{}}
@@ -250,7 +249,6 @@ const CategoryManagement = () => {
                     return (
                       <Draggable
                         key={Clients.corporateID}
-                        // draggableId={Clients.corporateID}
                         draggableId={"5"}
                         index={index}
                         type="column"
@@ -278,7 +276,7 @@ const CategoryManagement = () => {
                                     </span>
                                   </div>
                                 }
-                                key="1"
+                                key={Clients.counterPartyID}
                                 className="custom-panel"
                               >
                                 {Clients.users && Clients.users.length > 0 ? (
