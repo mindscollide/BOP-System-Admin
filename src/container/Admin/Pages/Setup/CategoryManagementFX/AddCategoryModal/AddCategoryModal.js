@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import style from "./AddCategoryModal.module.css";
 import {
   Button,
@@ -28,23 +28,14 @@ const AddCategoryModal = () => {
 
   //handle Add Button
   const handleAddButton = () => {
-    if (
-      addCategory.Name.value.trim() === "" ||
-      addCategory.Bid.value.trim() === "" ||
-      addCategory.Offer.value.trim() === ""
-    ) {
-      alert("All fields are required");
-      return;
-    } else {
-      let data = {
-        Name: addCategory.Name.value,
-        Bid: addCategory.Bid.value,
-        Offer: addCategory.Offer.value,
-      };
+    let data = {
+      Name: addCategory.Name.value,
+      Bid: Number(addCategory.Bid.value),
+      Offer: Number(addCategory.Offer.value),
+    };
 
-      console.log("data save", data);
-      dispatch(Addcategory(navigate, data));
-    }
+    console.log("data save", data);
+    dispatch(Addcategory(navigate, data));
   };
 
   //handle CancelButton

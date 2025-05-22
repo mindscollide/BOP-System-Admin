@@ -1,8 +1,9 @@
 import * as actions from "../action_types";
 import axios from "axios";
-import { Addcateogry, getBankUserApi } from "../../commen/apis/Api_config";
+import { Addcateogry } from "../../commen/apis/Api_config";
 import { RefreshToken, getAllCorporatesCategory } from "./Auth-Actions";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
+import { AddCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 
 const addcategoryinit = () => {
   return {
@@ -26,7 +27,7 @@ const addcategoryfailed = (message) => {
 };
 
 const Addcategory = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
 
   return (dispatch) => {
     dispatch(addcategoryinit());
@@ -68,7 +69,8 @@ const Addcategory = (navigate, data) => {
                   "Category saved"
                 )
               );
-              // dispatch(getAllCorporatesCategory(navigate));
+              dispatch(AddCategoryModalSystemAdmin(false));
+              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
