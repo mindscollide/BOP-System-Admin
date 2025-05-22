@@ -44,12 +44,54 @@ const CategoryManagement = () => {
     (state) => state.auth?.GetAllCorporatesData ?? null
   );
 
-  const [activeKey, setActiveKey] = useState([]);
-  const [corporates, setCorporates] = useState([]);
+  //Transforming Data for React Beautiful DND
 
-  //For edit a Category
+  const transformAPIData = (apiData) => {
+    return apiData.categories.map((category) => ({
+      categoryID: `cat-${category.categoryID}`, // convert to string and prefix
+      categoryName: category.categoryName,
+      bidSpread: category.bidSpread,
+      offerSpread: category.offerSpread,
+      corporates: category.counterParties.map((cp) => ({
+        corporateID: `corp-${cp.counterPartyID}`, // convert to string and prefix
+        corporateName: cp.counterPartyName,
+        corporateUsers: cp.users.map((u) => ({
+          email: u.email,
+        })),
+      })),
+    }));
+  };
+
+  //For Local State
   const [editCategoryList, setEditCategoryList] = useState([]);
   const [errormessege, seterrormessege] = useState(false);
+  const [activeKey, setActiveKey] = useState([]);
+  const [corporates, setCorporates] = useState([]);
+  const [addCategoryList, setAddCategoryList] = useState([]);
+  const [addData, setadDdata] = useState({
+    category: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    bidSpread: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    offerSpread: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    AssetTypeId: {
+      value: 1,
+      errorMessage: "",
+      errorStatus: false,
+    },
+
+    BankID: 1,
+  });
   const [categoryupdate, setCategoryUpdate] = useState({
     category: {
       value: "",
@@ -78,34 +120,6 @@ const CategoryManagement = () => {
     },
     BankID: 1,
   });
-
-  //local states For Adding a Category
-  const [addCategoryList, setAddCategoryList] = useState([]);
-  const [addData, setadDdata] = useState({
-    category: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    bidSpread: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    offerSpread: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    AssetTypeId: {
-      value: 1,
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    BankID: 1,
-  });
-
   const [delteCateogry, setDeltecategory] = useState(null);
   const [deleteRejectModal, setDeleteRejectModal] = useState(false);
 
@@ -122,7 +136,8 @@ const CategoryManagement = () => {
   useEffect(() => {
     try {
       if (AllCategories && AllCategories !== null) {
-        setCorporates(AllCategories.categories);
+        const transformedData = transformAPIData(AllCategories);
+        setCorporates(transformedData);
       }
     } catch (error) {
       console.log(error);
@@ -205,7 +220,6 @@ const CategoryManagement = () => {
       const storeSourceIndex = corporates.findIndex(
         (store) => store.categoryID === source.droppableId
       );
-      // console.log("handleDragEnd for sender ", storeSourceIndex);
 
       const storeDestinationIndex = corporates.findIndex(
         (store) => store.categoryID === destination.droppableId
@@ -225,8 +239,8 @@ const CategoryManagement = () => {
 
   //This is for the corporate shown inside the main card i.e Corporate and branches
   const showCards = (data) => {
-    console.log("showCardsshowCards", data);
     if (!data || Object.keys(data).length === 0) return null;
+
     return (
       <Droppable droppableId={data.categoryID}>
         {(provided) => (
@@ -235,77 +249,59 @@ const CategoryManagement = () => {
               lg={12}
               md={12}
               sm={12}
-              // className="CategoryCorporatesScroller"
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={{}}
             >
-              <>
-                {data.counterParties && data.counterParties.length > 0 ? (
-                  data.counterParties.map((Clients, index) => {
-                    console.log(Clients, "hello");
-                    return (
-                      <Draggable
-                        key={Clients.corporateID}
-                        draggableId={"5"}
-                        index={index}
-                        type="column"
+              {data.corporates && data.corporates.length > 0 ? (
+                data.corporates.map((client, index) => (
+                  <Draggable
+                    key={client.corporateID}
+                    draggableId={client.corporateID}
+                    index={index}
+                    type="column"
+                  >
+                    {(provided) => (
+                      <Col
+                        lg={12}
+                        md={12}
+                        sm={12}
+                        className="mt-2"
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
                       >
-                        {(provided) => (
-                          <Col
-                            lg={12}
-                            md={12}
-                            sm={12}
-                            className="mt-2"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
+                        <Collapse className="custom-collapse" accordion>
+                          <Panel
+                            header={
+                              <div className="header-container">
+                                <span className="company-name">
+                                  {client.corporateName}
+                                </span>
+                              </div>
+                            }
+                            key={client.corporateID}
+                            className="custom-panel"
                           >
-                            <Collapse
-                              className="custom-collapse"
-                              activeKey={activeKey}
-                              onChange={handleCollapseChange}
-                            >
-                              <Panel
-                                header={
-                                  <div className="header-container">
-                                    <span className="company-name">
-                                      {Clients.counterPartyName}
-                                    </span>
-                                  </div>
-                                }
-                                key={Clients.counterPartyID}
-                                className="custom-panel"
-                              >
-                                {Clients.users && Clients.users.length > 0 ? (
-                                  <>
-                                    {Clients.users.map(
-                                      (corporaterUser, index) => {
-                                        return (
-                                          <p className="user-email">
-                                            {corporaterUser.email}
-                                          </p>
-                                        );
-                                      }
-                                    )}
-                                  </>
-                                ) : (
-                                  <p className="no-user"></p>
-                                )}
-                              </Panel>
-                            </Collapse>
-                            {provided.placeholder}
-                          </Col>
-                        )}
-                      </Draggable>
-                    );
-                  })
-                ) : (
-                  <>
-                    <p className="NoCorporateMessage"></p>
-                  </>
-                )}
-              </>
+                            {client.corporateUsers &&
+                            client.corporateUsers.length > 0 ? (
+                              client.corporateUsers.map((user, i) => (
+                                <p className="user-email" key={i}>
+                                  {user.email}
+                                </p>
+                              ))
+                            ) : (
+                              <p className="no-user">No users</p>
+                            )}
+                          </Panel>
+                        </Collapse>
+                        {provided.placeholder}
+                      </Col>
+                    )}
+                  </Draggable>
+                ))
+              ) : (
+                <p className="NoCorporateMessage">No corporates available</p>
+              )}
             </Col>
           </Row>
         )}
@@ -704,13 +700,7 @@ const CategoryManagement = () => {
             onClick={SlideLeft}
           />
           <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable
-              droppableId="ROOT"
-              type="group"
-              direction="horizontal"
-              // direction="vertical"
-            >
-              {/* <!-- cat-item --> */}
+            <Droppable droppableId="ROOT" type="group" direction="horizontal">
               {(outerProvided) => (
                 <Col
                   lg={12}
