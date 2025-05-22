@@ -214,21 +214,10 @@ const CategoryManagement = () => {
 
       return setCorporates(reorderedStores);
     } else {
-      const itemSourceIndex = source.index;
-      const itemDestinationIndex = destination.index;
-
-      const storeSourceIndex = corporates.findIndex(
-        (store) => store.categoryID === source.droppableId
-      );
-
       const storeDestinationIndex = corporates.findIndex(
         (store) => store.categoryID === destination.droppableId
       );
 
-      // console.log("handleDragEnd for reciver", storeDestinationIndex);
-      // console.log("handleDragEnd packege", results.draggableId);
-      // console.log("handleDragEnd", corporates[storeSourceIndex]);
-      // console.log("handleDragEnd", corporates[storeSourceIndex]);
       let data = {
         CategoryID: corporates[storeDestinationIndex].categoryID,
         CorporateId: results.draggableId,
