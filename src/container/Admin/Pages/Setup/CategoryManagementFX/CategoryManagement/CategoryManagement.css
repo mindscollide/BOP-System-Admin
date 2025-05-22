@@ -64,13 +64,19 @@
   margin-left: 15px !important;
 }
 .cat-management-wrapper .cat-management-item .item-inner {
-  width: 205px;
   background: #ffffff;
   display: flex;
   justify-content: center !important;
   border-radius: 10px;
-  position: relative;
   box-shadow: 10px 10px 40px rgb(0 0 0 / 10%);
+  min-height: 80vh;
+  max-height: 80vh;
+  height: 80vh;
+  position: relative;
+  padding-right: 5px;
+  max-width: 208px;
+  width: 208px;
+  flex: 0 0 auto;
 }
 
 .cat-management-wrapper .cat-management-item .item-inner .cat-item-content {
@@ -997,20 +1003,20 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 .val-highlight1 {
   background: #096fed !important;
   color: #ffffff;
-  display: inline-block;
-  padding: 3px 4px;
-  border-radius: 2px;
-  width: 50px;
-  cursor: pointer;
+  display: inline-block !important;
+  padding: 2px 3px !important;
+  border-radius: 2px !important;
+  width: 60px !important;
+  cursor: pointer !important;
 }
 .val-highlight2 {
   background: #f8a041 !important;
   color: #ffffff;
-  display: inline-block;
-  padding: 3px 4px;
-  border-radius: 2px;
-  width: auto !important;
-  cursor: pointer;
+  display: inline-block !important;
+  padding: 2px 3px !important;
+  border-radius: 2px !important;
+  width: 60px !important;
+  cursor: pointer !important;
 }
 
 .page-gutter {
@@ -1325,7 +1331,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 }
 .user-email {
   color: #0355c4 !important;
-  font-size: 12px;
+  font-size: 11px;
   margin: 0px !important;
   padding: 0px !important;
   font-weight: 400 !important;
@@ -1366,7 +1372,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   > .ant-collapse-header
   .ant-collapse-arrow {
   position: absolute;
-  left: 160px;
+  left: 153px !important;
   font-size: 12px !important;
   top: 5.5px !important;
 }

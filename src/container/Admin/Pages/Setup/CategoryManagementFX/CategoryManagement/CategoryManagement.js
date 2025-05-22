@@ -236,7 +236,7 @@ const CategoryManagement = () => {
               lg={12}
               md={12}
               sm={12}
-              className="CategoryCorporatesScroller"
+              // className="CategoryCorporatesScroller"
               {...provided.droppableProps}
               ref={provided.innerRef}
               style={{}}
