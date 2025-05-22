@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
-import { Col, Row, Form } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import {
   TextField,
   Button,
@@ -17,13 +17,10 @@ import {
   UpdatecorporateMapping,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useSelector } from "react-redux";
-
-import { Addcategory } from "../../../../../../store/actions/AddCategoryActions";
 import {
   forNumbersOnly,
   formatNumberForFourDecimal,
   numberformatgerWithFourDecimalValues,
-  stringConvertintoNumber,
 } from "../../../../../../commen/functions/numberFormatter";
 import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
@@ -385,7 +382,7 @@ const CategoryManagement = () => {
     }
   };
 
-  //Handle Text fields in Update Modal Compoenent
+  //Handle Text fields in Update Modal Component
   const HandleUpdateChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
