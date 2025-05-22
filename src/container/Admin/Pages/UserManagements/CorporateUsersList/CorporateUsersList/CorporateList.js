@@ -51,7 +51,6 @@ const CorporateList = () => {
   } = useMqtt();
 
   //Global State
-  // const { BOPSystemAdminReducer } = useSelector((state) => state);
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
 
   //state for save and cancel button

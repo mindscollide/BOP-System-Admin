@@ -14,6 +14,7 @@ import {
   BOPSystemAdminReducer,
   CorporateUsersReducer,
   SettingsReducer,
+  SetupTradeAccessManagementReducer,
 } from "./reducers";
 
 const AppReducer = combineReducers({
@@ -25,6 +26,7 @@ const AppReducer = combineReducers({
   BOPSystemAdminReducer: BOPSystemAdminReducer,
   CorporateUsersReducer: CorporateUsersReducer,
   settingsReducer: SettingsReducer,
+  SetupTradeAccessManagementReducer: SetupTradeAccessManagementReducer,
 });
 
 const rootReducer = (state, action) => {

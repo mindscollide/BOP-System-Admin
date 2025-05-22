@@ -1,43 +1,25 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TradeAccessManagement.module.css";
 import {
-  Button,
   CustomPaper,
   CustomRadio,
-  CustomSwitch,
-  Table,
+  Loader,
   TextField,
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import { Select } from "antd";
 import { useSelector } from "react-redux";
-// import EditModalTradeAccessManagement from "./EditModalTradeAccessManagement/EditModalTradeAccessManagement";
 import { useDispatch } from "react-redux";
-// import { editTradeAccessManagementModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
-// import { tradeAccessManagementSchema } from "../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
-import { editTradeAccessManagementModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
-import { GetCounterPartyListAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
-import EditModalTradeAccessManagement from "../EditModalTradeAccessManagement/EditModalTradeAccessManagement";
+import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
+import BranchTrade from "./BranchTradeAccessManagement.js/BranchTrade";
 const TradeAccessManagement = () => {
   const { Option } = Select;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState([]);
-
-  //getcounterPartyNames API calling
-  const GetCounterPartyList = useSelector(
-    (state) => state.BOPSystemAdminReducer.GetCounterPartyList
-  );
-
-  console.log("GetCounterPartyList", GetCounterPartyList);
-
-  console.log(GetCounterPartyList);
-
-  //Add Bank  Use Modal Calling
-  const EditTradeAccessManagementModalGobalState = useSelector(
-    (state) => state.BOPSystemAdminModal.editModalTradeAccessManagement
+  const Loading = useSelector(
+    (state) => state.SetupTradeAccessManagementReducer.Loading
   );
   //States
   const [radioValue, setRadioValue] = useState("Corporate");
@@ -130,9 +112,6 @@ const TradeAccessManagement = () => {
       });
     }
   };
-  useEffect(() => {
-    dispatch(GetCounterPartyListAPI(navigate));
-  }, []);
 
   //useEffect to empty fields value on radio Change
   useEffect(() => {
@@ -146,150 +125,6 @@ const TradeAccessManagement = () => {
       });
     }
   }, [radioValue]);
-
-  //to show data in the table
-  useEffect(() => {
-    if (GetCounterPartyList !== null) {
-      console.log("GetCounterPartyList", GetCounterPartyList);
-      try {
-        const { counterPartyLists } = GetCounterPartyList;
-        if (counterPartyLists.length > 0) {
-          setTableData(GetCounterPartyList.counterPartyLists);
-        }
-      } catch (error) {}
-    }
-  }, [GetCounterPartyList]);
-
-  //Handle Edit Trade Access managment Modal
-
-  const handleEditTradeAccessManagementModal = (record) => {
-    console.log("record", record);
-    let userID = record.counterPartyID;
-
-    dispatch(editTradeAccessManagementModalSystemAdmin(true));
-  };
-
-  //Table columns for TradeAccess Management List
-  const columns = [
-    {
-      title: <label className="bottom-table-header">Counter Party Name</label>,
-      dataIndex: "counterPartyName",
-      key: "counterPartyName",
-      width: "190px",
-      ellipsis: true,
-      align: "left",
-    },
-    {
-      title: <label className="bottom-table-header">Edit</label>,
-      dataIndex: "Edit",
-      key: "Edit",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-      render: (text, record) => {
-        return (
-          <>
-            <Row>
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex gap-2 justify-content-center align-items-center"
-              >
-                <Button
-                  className={styles["edit-icon"]}
-                  icon={<i className="icon-edit color-blue"></i>}
-                  onClick={() => handleEditTradeAccessManagementModal(record)}
-                />
-              </Col>
-            </Row>
-          </>
-        );
-      },
-    },
-
-    {
-      title: <label className="bottom-table-header">Active</label>,
-      dataIndex: "isActive",
-      key: "isActive",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-      render: (text, record) => {
-        return (
-          <>
-            <CustomSwitch
-              size="large"
-              checked={record.isActive}
-              // onChange={(e) => handleToggle(e, record)}
-            />
-          </>
-        );
-      },
-    },
-    //  Active: (
-    //     <>
-    //     <CustomSwitch size="large" defaultChecked />
-    //   </>
-    // ),
-
-    {
-      title: <label className="bottom-table-header">Trade</label>,
-      dataIndex: "isTrade",
-      key: "isTrade",
-      width: "100px",
-      ellipsis: true,
-      align: "center",
-      render: (text, record) => {
-        return (
-          <>
-            <CustomSwitch
-              size="large"
-              checked={record.isTrade}
-              // onChange={(e) => handleToggle(e, record)}
-            />
-          </>
-        );
-      },
-    },
-  ];
-
-  //Dummy Data Source
-  const dataSource = [
-    {
-      key: "1",
-
-      CounterPartyName: "Atlas Honda",
-      Edit: (
-        <>
-          <Row>
-            <Col
-              lg={12}
-              md={12}
-              sm={12}
-              className="d-flex gap-2 justify-content-center align-items-center"
-            >
-              <Button
-                className={styles["edit-icon"]}
-                icon={<i className="icon-edit color-blue"></i>}
-                onClick={handleEditTradeAccessManagementModal}
-              />
-            </Col>
-          </Row>
-        </>
-      ),
-      Active: (
-        <>
-          <CustomSwitch size="large" defaultChecked />
-        </>
-      ),
-      Trade: (
-        <>
-          <CustomSwitch size="large" defaultChecked />
-        </>
-      ),
-    },
-  ];
 
   return (
     <section className={styles["TradeAccessmangementStyles"]}>
@@ -320,7 +155,7 @@ const TradeAccessManagement = () => {
                     onChange={TradeAccessManagementValidateHandler}
                     className={"BranchNameTradeAccessManagement"}
                   />
-                ) : (
+                ) : radioValue === "Branch" ? (
                   <TextField
                     placeholder="Branch Name"
                     labelClass={"d-none"}
@@ -329,6 +164,8 @@ const TradeAccessManagement = () => {
                     onChange={TradeAccessManagementValidateHandler}
                     className={"BranchNameTradeAccessManagement"}
                   />
+                ) : (
+                  ""
                 )}
               </Col>
             </Row>
@@ -355,22 +192,18 @@ const TradeAccessManagement = () => {
                 <span className={styles["spanshowClass"]}>entries</span>
               </Col>
             </Row>
-            <Row className="mt-1">
-              <Col lg={12} md={12} sm={12}>
-                <Table
-                  column={columns}
-                  pagination={true}
-                  rows={tableData}
-                  className={"TradeAccessManagement"}
-                />
-              </Col>
-            </Row>
+            {radioValue === "Corporate" ? (
+              <CorporateTrade />
+            ) : radioValue === "Branch" ? (
+              <BranchTrade />
+            ) : (
+              ""
+            )}
           </CustomPaper>
         </Col>
       </Row>
-      {EditTradeAccessManagementModalGobalState && (
-        <EditModalTradeAccessManagement />
-      )}
+
+      {Loading && <Loader />}
     </section>
   );
 };

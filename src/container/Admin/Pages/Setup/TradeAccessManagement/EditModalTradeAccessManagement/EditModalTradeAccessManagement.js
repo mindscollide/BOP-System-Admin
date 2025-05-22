@@ -21,14 +21,22 @@ import { updateCorporateDataSchema } from "../../../../../../utils/schemas";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
-const EditModalTradeAccessManagement = () => {
+const EditModalTradeAccessManagement = ({ id }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
+  const GetBranchTradeRights = useSelector(
+    (state) => state.SetupTradeAccessManagementReducer.GetBranchTradeRights
+  );
+
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
   console.log("GetAllInstruments", GetAllInstruments);
+
+  console.log("Received Branch ID is: ", id);
+
+  console.log("GetBranchTradeRights", GetBranchTradeRights);
 
   const [updateCorporateData, setUpdateCorporateData] = useState({
     ...updateCorporateDataSchema,
@@ -55,43 +63,65 @@ const EditModalTradeAccessManagement = () => {
   const handleNoButton = () => {
     dispatch(editTradeAccessManagementModalSystemAdmin(false));
   };
-  //Dummy Data
-  const [dataSource, setDataSource] = useState([
-    {
-      key: "1",
-      Instrument: "AUDPKR",
-      BuyCrossRate: false,
-      SellCrossRate: false,
-      BuyParity: true,
-      SellParity: false,
-      Forward: false,
-      Discounting: false,
-      Active: true,
-      Hide: false,
-    },
-    {
-      key: "2",
-      Instrument: "EURPKR",
-      BuyCrossRate: true,
-      SellCrossRate: true,
-      BuyParity: false,
-      SellParity: true,
-      Forward: false,
-      Discounting: true,
-      Active: false,
-      Hide: true,
-    },
-  ]);
 
+  //Trade Rights Data
+  const [TradeRightsData, setTradeRightsData] = useState(null);
+
+  //Instrument Table Data
+  const [instrumentDataSource, setInstrumentDataSource] = useState([]);
+  console.log(instrumentDataSource, "instrumentDataSource");
+
+  useEffect(() => {
+    if (GetBranchTradeRights !== null) {
+      try {
+        if (
+          GetBranchTradeRights.listOfInstruments !== null &&
+          GetBranchTradeRights.listOfInstruments !== undefined &&
+          GetBranchTradeRights.listOfInstruments.length > 0
+        ) {
+          if (
+            GetAllInstruments !== null &&
+            GetAllInstruments.instruments.length > 0
+          ) {
+            const newDataMaping = GetBranchTradeRights.listOfInstruments.map(
+              (rowTableData, index) => {
+                let findInstrumentName = GetAllInstruments.instruments.find(
+                  (instrumentName, index) =>
+                    instrumentName.instrumentID === rowTableData.instrumentID
+                );
+                if (findInstrumentName !== undefined) {
+                  return {
+                    ...rowTableData,
+                    instrumentName: findInstrumentName.instrumentName,
+                  };
+                }
+                return rowTableData;
+              }
+            );
+
+            setInstrumentDataSource(newDataMaping);
+            // setTradeRightsData()
+          }
+        }
+      } catch (error) {}
+    }
+  }, [GetBranchTradeRights, GetAllInstruments]);
   //checkbox value change method
-  const handleCheckboxChange = (key, field) => {
-    const newDataSource = dataSource.map((item) => {
-      if (item.key === key) {
-        return { ...item, [field]: !item[field] };
-      }
-      return item;
-    });
-    setDataSource(newDataSource);
+  const handleCheckboxChange = (record, field, event) => {
+    console.log(event, "checkedcheckedchecked");
+    try {
+      setInstrumentDataSource((prevData) =>
+        prevData.map((rowData) => {
+          if (rowData.instrumentID === record.instrumentID) {
+            return {
+              ...rowData,
+              [field]: event,
+            };
+          }
+          return rowData; // Moved outside the 'if' block
+        })
+      );
+    } catch (error) {}
   };
 
   //table columns for corporate
@@ -100,9 +130,9 @@ const EditModalTradeAccessManagement = () => {
       title: "",
       children: [
         {
-          title: "Instrument",
-          dataIndex: "Instrument",
-          key: "Instrument",
+          title: "instrumentID",
+          dataIndex: "instrumentName",
+          key: "instrumentName",
           align: "center",
         },
       ],
@@ -110,31 +140,44 @@ const EditModalTradeAccessManagement = () => {
       dataIndex: "",
       align: "center",
     },
+
     {
       title: "Cross Rate",
       key: "CrossRate",
       children: [
         {
           title: "Buy",
-          dataIndex: "BuyCrossRate",
-          key: "BuyCrossRate",
+          dataIndex: "isCrossRateBuy",
+          key: "isCrossRateBuy",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.BuyCrossRate}
-              onChange={() => handleCheckboxChange(record.key, "BuyCrossRate")}
+              checked={record.isCrossRateBuy}
+              onChange={(event) =>
+                handleCheckboxChange(
+                  record,
+                  "isCrossRateBuy",
+                  event.target.checked
+                )
+              }
             />
           ),
         },
         {
           title: "Sell",
-          dataIndex: "SellCrossRate",
-          key: "SellCrossRate",
+          dataIndex: "isCrossRateSell",
+          key: "isCrossRateSell",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.SellCrossRate}
-              onChange={() => handleCheckboxChange(record.key, "SellCrossRate")}
+              checked={record.isCrossRateSell}
+              onChange={(event) =>
+                handleCheckboxChange(
+                  record,
+                  "isCrossRateSell",
+                  event.target.checked
+                )
+              }
             />
           ),
         },
@@ -146,25 +189,37 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Buy",
-          dataIndex: "BuyParity",
-          key: "BuyParity",
+          dataIndex: "isParityBuy",
+          key: "isParityBuy",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.BuyParity}
-              onChange={() => handleCheckboxChange(record.key, "BuyParity")}
+              checked={record.isParityBuy}
+              onChange={(event) =>
+                handleCheckboxChange(
+                  record,
+                  "isParityBuy",
+                  event.target.checked
+                )
+              }
             />
           ),
         },
         {
           title: "Sell",
-          dataIndex: "SellParity",
-          key: "SellParity",
+          dataIndex: "isParitySell",
+          key: "isParitySell",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.SellParity}
-              onChange={() => handleCheckboxChange(record.key, "SellParity")}
+              checked={record.isParitySell}
+              onChange={(event) =>
+                handleCheckboxChange(
+                  record,
+                  "isParitySell",
+                  event.target.checked
+                )
+              }
             />
           ),
         },
@@ -178,13 +233,15 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Forward",
-          dataIndex: "Forward",
-          key: "Forward",
+          dataIndex: "isForward",
+          key: "isForward",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.Forward}
-              onChange={() => handleCheckboxChange(record.key, "Forward")}
+              checked={record.isForward}
+              onChange={(event) =>
+                handleCheckboxChange(record, "isForward", event.target.checked)
+              }
             />
           ),
         },
@@ -195,13 +252,19 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Discounting",
-          dataIndex: "Discounting",
-          key: "Discounting",
+          dataIndex: "isDiscounting",
+          key: "isDiscounting",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.Discounting}
-              onChange={() => handleCheckboxChange(record.key, "Discounting")}
+              checked={record.isDiscounting}
+              onChange={(event) =>
+                handleCheckboxChange(
+                  record,
+                  "isDiscounting",
+                  event.target.checked
+                )
+              }
             />
           ),
         },
@@ -215,14 +278,16 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Active",
-          dataIndex: "Active",
-          key: "Active",
+          dataIndex: "isActive",
+          key: "isActive",
           align: "center",
           render: (_, record) => (
             <CustomSwitch
               size="small"
-              checked={record.Active}
-              onChange={() => handleCheckboxChange(record.key, "Active")}
+              checked={record.isActive}
+              onChange={(event) =>
+                handleCheckboxChange(record, "isActive", event)
+              }
             />
           ),
         },
@@ -236,13 +301,15 @@ const EditModalTradeAccessManagement = () => {
       children: [
         {
           title: "Hide",
-          dataIndex: "Hide",
-          key: "Hide",
+          dataIndex: "isViewOnly",
+          key: "isViewOnly",
           align: "center",
           render: (_, record) => (
             <CustomSwitch
-              checked={record.Hide}
-              onChange={() => handleCheckboxChange(record.key, "Hide")}
+              checked={record.isViewOnly}
+              onChange={(event) =>
+                handleCheckboxChange(record, "isViewOnly", event)
+              }
               size="small"
             />
           ),
@@ -313,7 +380,7 @@ const EditModalTradeAccessManagement = () => {
               updateCorporateData.DefaultMaxAmountLimit.value,
           },
           //including data of checkbox and radio button here
-          tradeAccessData: dataSource,
+          tradeAccessData: instrumentDataSource,
         };
         console.log("newData", newData);
         // dispatch(UpdateCorporateUsersAPI(navigate, newData));
@@ -434,34 +501,34 @@ const EditModalTradeAccessManagement = () => {
     }));
   };
 
-  useEffect(() => {
-    console.log("writing in useEffect");
-    const {
-      InstrumentType,
-      TotalLimit,
-      DefaultMinAmountLimit,
-      DefaultMaxAmountLimit,
-    } = updateCorporateData;
+  // useEffect(() => {
+  //   console.log("writing in useEffect");
+  //   const {
+  //     InstrumentType,
+  //     TotalLimit,
+  //     DefaultMinAmountLimit,
+  //     DefaultMaxAmountLimit,
+  //   } = updateCorporateData;
 
-    // Check if any field is empty
-    const isAnyFieldEmpty =
-      !InstrumentType.value ||
-      !TotalLimit.value ||
-      !DefaultMinAmountLimit.value ||
-      !DefaultMaxAmountLimit.value;
+  //   // Check if any field is empty
+  //   const isAnyFieldEmpty =
+  //     !InstrumentType.value ||
+  //     !TotalLimit.value ||
+  //     !DefaultMinAmountLimit.value ||
+  //     !DefaultMaxAmountLimit.value;
 
-    // Check if min limit is greater than max limit
-    const isMinGreaterThanMax =
-      parseInt(DefaultMinAmountLimit.value) >
-      parseInt(DefaultMaxAmountLimit.value);
+  //   // Check if min limit is greater than max limit
+  //   const isMinGreaterThanMax =
+  //     parseInt(DefaultMinAmountLimit.value) >
+  //     parseInt(DefaultMaxAmountLimit.value);
 
-    // Disable button if any field is empty OR min > max
-    if (isAnyFieldEmpty || isMinGreaterThanMax) {
-      setEnableButton(false);
-    } else {
-      setEnableButton(true);
-    }
-  }, [updateCorporateData.InstrumentType.value, updateCorporateData]);
+  //   // Disable button if any field is empty OR min > max
+  //   if (isAnyFieldEmpty || isMinGreaterThanMax) {
+  //     setEnableButton(false);
+  //   } else {
+  //     setEnableButton(true);
+  //   }
+  // }, [updateCorporateData.InstrumentType.value, updateCorporateData]);
 
   // const data source
   return (
@@ -497,7 +564,7 @@ const EditModalTradeAccessManagement = () => {
                     name={"TotalLimit"}
                     labelClass="d-none"
                     placeholder={"Total Limit"}
-                    value={updateCorporateData.TotalLimit.value}
+                    // value={userData.totalLimit}
                     onChange={handleValueChange}
                     maxLength={10}
                   />
@@ -531,7 +598,7 @@ const EditModalTradeAccessManagement = () => {
                     name={"DefaultMinAmountLimit"}
                     labelClass="d-none"
                     placeholder={"Min Amount Limit"}
-                    value={updateCorporateData.DefaultMinAmountLimit.value}
+                    // value={userData.minTransactionLimit}
                     onChange={handleValueChange}
                     maxLength={10}
                   />
@@ -541,7 +608,7 @@ const EditModalTradeAccessManagement = () => {
                     name={"DefaultMaxAmountLimit"}
                     labelClass="d-none"
                     placeholder={"Max Amount Limit"}
-                    value={updateCorporateData.DefaultMaxAmountLimit.value}
+                    // value={userData.maxTransactionLimit}
                     onChange={handleValueChange}
                     maxLength={10}
                   />
@@ -554,8 +621,8 @@ const EditModalTradeAccessManagement = () => {
             <Col lg={12} md={12} sm={12}>
               <Table
                 column={columns}
-                pagination={true}
-                rows={dataSource}
+                pagination={false}
+                rows={instrumentDataSource}
                 className={"TradeAccessManagementEdit"}
               />
             </Col>

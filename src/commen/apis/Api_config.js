@@ -221,6 +221,30 @@ const GetCounterPartyList = {
   RequestMethod: "ServiceManager.GetCounterPartyList",
 };
 
+const GetCorporatesWithStatus = {
+  RequestMethod: "ServiceManager.GetCorporatesWithStatus",
+};
+
+const UpdateCorporateStatus = {
+  RequestMethod: "ServiceManager.UpdateCorporateStatus",
+};
+
+const GetCorporateTradeRights = {
+  RequestMethod: "ServiceManager.GetCorporateTradeRights",
+};
+
+const GetBranchesWithStatus = {
+  RequestMethod: "ServiceManager.GetBranchesWithStatus",
+};
+
+const UpdateBranchStatus = {
+  RequestMethod: "ServiceManager.UpdateBranchStatus",
+};
+
+const GetBranchTradeRights = {
+  RequestMethod: "ServiceManager.GetBranchTradeRights",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -274,4 +298,10 @@ export {
   GetMarketTimeSettings,
   SaveMarketTimeSettings,
   GetCounterPartyList,
+  GetCorporatesWithStatus,
+  GetBranchesWithStatus,
+  UpdateCorporateStatus,
+  UpdateBranchStatus,
+  GetCorporateTradeRights,
+  GetBranchTradeRights,
 };
