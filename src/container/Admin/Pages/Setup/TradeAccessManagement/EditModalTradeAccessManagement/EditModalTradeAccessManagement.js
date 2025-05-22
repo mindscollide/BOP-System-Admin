@@ -65,7 +65,12 @@ const EditModalTradeAccessManagement = ({ id }) => {
   };
 
   //Trade Rights Data
-  const [TradeRightsData, setTradeRightsData] = useState(null);
+  const [tradeRightsData, setTradeRightsData] = useState({
+    listOfInstruments: [],
+    maxTransactionLimit: 0,
+    minTransactionLimit: 0,
+    totalLimit: 0,
+  });
 
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
@@ -100,7 +105,11 @@ const EditModalTradeAccessManagement = ({ id }) => {
             );
 
             setInstrumentDataSource(newDataMaping);
-            // setTradeRightsData()
+            setTradeRightsData({
+              maxTransactionLimit: GetBranchTradeRights.maxTransactionLimit,
+              minTransactionLimit: GetBranchTradeRights.minTransactionLimit,
+              totalLimit: GetBranchTradeRights.totalLimit,
+            });
           }
         }
       } catch (error) {}
@@ -564,7 +573,11 @@ const EditModalTradeAccessManagement = ({ id }) => {
                     name={"TotalLimit"}
                     labelClass="d-none"
                     placeholder={"Total Limit"}
-                    // value={userData.totalLimit}
+                    value={
+                      tradeRightsData.totalLimit
+                        ? tradeRightsData.totalLimit
+                        : ""
+                    }
                     onChange={handleValueChange}
                     maxLength={10}
                   />
@@ -598,7 +611,7 @@ const EditModalTradeAccessManagement = ({ id }) => {
                     name={"DefaultMinAmountLimit"}
                     labelClass="d-none"
                     placeholder={"Min Amount Limit"}
-                    // value={userData.minTransactionLimit}
+                    value={tradeRightsData.minTransactionLimit}
                     onChange={handleValueChange}
                     maxLength={10}
                   />
@@ -608,7 +621,7 @@ const EditModalTradeAccessManagement = ({ id }) => {
                     name={"DefaultMaxAmountLimit"}
                     labelClass="d-none"
                     placeholder={"Max Amount Limit"}
-                    // value={userData.maxTransactionLimit}
+                    value={tradeRightsData.maxTransactionLimit}
                     onChange={handleValueChange}
                     maxLength={10}
                   />
