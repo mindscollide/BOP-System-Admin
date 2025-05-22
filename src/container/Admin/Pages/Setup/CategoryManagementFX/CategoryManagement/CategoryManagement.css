@@ -1090,6 +1090,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   background: #cbd8e6;
   flex-direction: column;
   justify-content: center;
+  right: 12px !important;
 }
 
 .Inner_items_Click_Add {
