@@ -1097,6 +1097,7 @@ const CategoryManagement = () => {
                   {Array.isArray(corporates) && corporates.length > 0 ? (
                     <>
                       {corporates.map((data, index) => {
+                        console.log(data, "datadata");
                         return (
                           <>
                             {checkForEdit(data.categoryID) ? (
@@ -1185,7 +1186,7 @@ const CategoryManagement = () => {
                                                   Bid
                                                 </div>
                                                 <div className="rate val-highlight1">
-                                                  {data.bidSpread !== ""
+                                                  {data.bidSpread !== 0
                                                     ? formatNumberForFourDecimal(
                                                         data.bidSpread
                                                       )
@@ -1212,7 +1213,7 @@ const CategoryManagement = () => {
                                                   offer
                                                 </div>
                                                 <div className="rate val-highlight2">
-                                                  {data.offerSpread !== ""
+                                                  {data.offerSpread !== 0
                                                     ? formatNumberForFourDecimal(
                                                         data.offerSpread
                                                       )
