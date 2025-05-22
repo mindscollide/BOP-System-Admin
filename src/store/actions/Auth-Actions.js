@@ -230,10 +230,8 @@ const deletecorporatecategoryfailed = (message) => {
   };
 };
 
-const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
+const DeleteCorporateCategoryAPI = (navigate, data) => {
   let token = localStorage.getItem("token");
-
   return async (dispatch) => {
     dispatch(deletecorporatecategoryinit());
     let form = new FormData();
@@ -255,9 +253,8 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_01".toLowerCase()
+              "SystemAdmin_SystemAdminManager_DeleteCategory_01".toLowerCase()
             ) {
-              setDeleteRejectModal(true);
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
@@ -268,7 +265,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_02".toLowerCase()
                 )
             ) {
               dispatch(
@@ -282,7 +279,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_03".toLowerCase()
                 )
             ) {
               dispatch(deletecorporatecategoryfailed("Category not Deleted"));
@@ -290,7 +287,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_04".toLowerCase()
                 )
             ) {
               dispatch(deletecorporatecategoryfailed("Invalid Role"));
@@ -298,7 +295,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_05".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_05".toLowerCase()
                 )
             ) {
               dispatch(

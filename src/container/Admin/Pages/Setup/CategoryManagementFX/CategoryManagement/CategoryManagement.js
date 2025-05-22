@@ -168,18 +168,19 @@ const CategoryManagement = () => {
     }
   }, [auth.Corporates]);
 
-  //Sliders Function
+  //Main Card Scroller to Left
   const SlideLeft = () => {
     var Slider = document.getElementById("Slider");
     Slider.scrollLeft = Slider.scrollLeft - 300;
   };
 
+  //Main Card Scroller to Right
   const Slideright = () => {
     var Slider = document.getElementById("Slider");
     Slider.scrollLeft = Slider.scrollLeft + 300;
   };
 
-  //  for drage card
+  //  For Dragging the Main Card
   const handleDragEnd = (results) => {
     const { source, destination, type } = results;
     // console.log("handleDragEnd", results);
@@ -316,6 +317,7 @@ const CategoryManagement = () => {
     );
   };
 
+  // Check Edit Funtion to open Edit Modal
   const OpenEditCategory = (recorde, data) => {
     console.log(data, "datadata");
 
@@ -370,6 +372,7 @@ const CategoryManagement = () => {
     setEditCategoryList([recorde]);
   };
 
+  // Check Edit Funtion to open Edit Modal
   const checkForEdit = (recorde) => {
     console.log(recorde, "recorderecorderecorde");
     let newdata = editCategoryList.find((element) => element === recorde);
@@ -382,6 +385,7 @@ const CategoryManagement = () => {
     }
   };
 
+  //Handle Text fields in Update Modal Compoenent
   const HandleUpdateChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
@@ -461,6 +465,7 @@ const CategoryManagement = () => {
     }
   };
 
+  //Update Category API Function
   const UpdateCategory = (data) => {
     console.log(data, "updateModal");
     // Calling Update APi
@@ -581,147 +586,15 @@ const CategoryManagement = () => {
     setAddCategoryList([recorde]);
   };
 
+  //Delete Category API Function
   const handleDelteCliked = (id) => {
-    let bankId = localStorage.getItem("bankID");
-    // console.log("handleDelteClikedhandleDelteCliked", id);
     let data = {
       CategoryId: parseInt(id),
-      BankID: parseInt(bankId),
     };
-    dispatch(DeleteCorporateCategoryAPI(navigate, data, setDeleteRejectModal));
+    dispatch(DeleteCorporateCategoryAPI(navigate, data));
   };
 
-  const CategoryManageState = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    if (name === "name" && value !== "") {
-      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      // console.log("valueCheckvalueCheck", valueCheck);
-      if (valueCheck !== "") {
-        setadDdata({
-          ...addData,
-          category: {
-            value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
-          },
-        });
-      }
-    } else if (name === "name" && value === "") {
-      setadDdata({
-        ...addData,
-        category: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-      });
-    }
-
-    if (name === "Bid" && value !== "") {
-      // console.log("valuevalueemailvaluevalueemail", value);
-      if (forNumbersOnly(value.trimStart()) !== "") {
-        if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-          setadDdata({
-            ...addData,
-            bidSpread: {
-              value: numberformatgerWithFourDecimalValues(value.trimStart()),
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
-      }
-    } else if (name === "Bid" && value === "") {
-      setadDdata({
-        ...addData,
-        bidSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
-    }
-
-    if (name === "Offer" && value !== "") {
-      // console.log("valuevalueemailvaluevalueemail", value);
-      if (forNumbersOnly(value.trimStart()) !== "") {
-        if (numberformatgerWithFourDecimalValues(value)) {
-          setadDdata({
-            ...addData,
-            offerSpread: {
-              value: numberformatgerWithFourDecimalValues(value),
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
-      }
-    } else if (name === "Offer" && value === "") {
-      setadDdata({
-        ...addData,
-        offerSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
-    }
-  };
-
-  const AfterClickAdd = async (e) => {
-    e.preventDefault();
-    if (addData.category.value !== "") {
-      seterrormessege(false);
-      let bankId = localStorage.getItem("bankID");
-      let Userid = localStorage.getItem("userID");
-      // console.log(" i am clicked", addData);
-
-      let data = {
-        Category: addData.category.value,
-        BidSpread: stringConvertintoNumber(addData.bidSpread.value),
-        OfferSpread: stringConvertintoNumber(addData.offerSpread.value),
-        AssetTypeId: 1,
-        BankID: parseInt(bankId),
-        UserId: parseInt(Userid),
-      };
-      // console.log(" i am clicked", data);
-
-      await dispatch(Addcategory(navigate, data));
-    } else {
-      seterrormessege(true);
-    }
-  };
-
-  const CloseNewCategory = (recorde) => {
-    seterrormessege(false);
-    setadDdata({
-      category: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      bidSpread: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      offerSpread: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      AssetTypeId: {
-        value: 1,
-        errorMessage: "",
-        errorStatus: false,
-      },
-
-      BankID: 1,
-    });
-    setAddCategoryList([]);
-  };
-
+  // Update Category Modal Component
   const updateModal = (data, index) => {
     console.log(data, "updateModal");
     return (
