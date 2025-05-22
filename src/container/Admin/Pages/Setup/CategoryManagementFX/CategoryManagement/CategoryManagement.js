@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
-import { Col, Row, Form } from "react-bootstrap";
+import { Col, Row, Form, Container } from "react-bootstrap";
 import {
   TextField,
   Button,
@@ -28,200 +28,27 @@ import {
 import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
 import { AddCategoryModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
-// import { getAllCorporatesCategory } from "../../../../store/actions/BOPSystemAdminActions";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { auth } = useSelector((state) => state);
-  const [activeKey, setActiveKey] = useState([]);
-  const [corporates, setCorporates] = useState([
-    {
-      categoryID: "cat-1",
-      categoryName: "Category 1",
-      bidSpread: "0.1234",
-      offerSpread: "0.5678",
-      corporates: [
-        {
-          corporateID: "corp-1",
-          corporateName: "Shan",
-          corporateUsers: [
-            { email: "user1@corporate1.com" },
-            { email: "user2@corporate1.com" },
-          ],
-        },
-        {
-          corporateID: "corp-2",
-          corporateName: "PPL",
-          corporateUsers: [
-            { email: "user1@corporate2.com" },
-            { email: "user2@corporate2.com" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryID: "cat-2",
-      categoryName: "Category 2",
-      bidSpread: "0.2345",
-      offerSpread: "0.6789",
-      corporates: [
-        {
-          corporateID: "corp-3",
-          corporateName: "Honda",
-          corporateUsers: [
-            { email: "user1@corporate3.com" },
-            { email: "user2@corporate3.com" },
-          ],
-        },
-        {
-          corporateID: "corp-4",
-          corporateName: "Deewan Sugar",
-          corporateUsers: [
-            { email: "user1@corporate4.com" },
-            { email: "user2@corporate4.com" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryID: "cat-3",
-      categoryName: "Category 3",
-      bidSpread: "0.3456",
-      offerSpread: "0.7890",
-      corporates: [
-        {
-          corporateID: "corp-5",
-          corporateName: "Amreeli Steel",
-          corporateUsers: [
-            { email: "user1@corporate5.com" },
-            { email: "user2@corporate5.com" },
-          ],
-        },
-        {
-          corporateID: "corp-6",
-          corporateName: "Nestle",
-          corporateUsers: [
-            { email: "user1@corporate6.com" },
-            { email: "user2@corporate6.com" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryID: "cat-4",
-      categoryName: "Category 4",
-      bidSpread: "0.4567",
-      offerSpread: "0.8901",
-      corporates: [
-        {
-          corporateID: "corp-7",
-          corporateName: "Nestle Group",
-          corporateUsers: [
-            { email: "user1@corporate7.com" },
-            { email: "user2@corporate7.com" },
-          ],
-        },
-        {
-          corporateID: "corp-8",
-          corporateName: "Corporate 8",
-          corporateUsers: [
-            { email: "user1@corporate8.com" },
-            { email: "user2@corporate8.com" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryID: "cat-5",
-      categoryName: "Category 5",
-      bidSpread: "0.5678",
-      offerSpread: "0.9012",
-      corporates: [
-        {
-          corporateID: "corp-9",
-          corporateName: "Corporate 9",
-          corporateUsers: [
-            { email: "user1@corporate9.com" },
-            { email: "user2@corporate9.com" },
-          ],
-        },
-        {
-          corporateID: "corp-10",
-          corporateName: "Corporate 10",
-          corporateUsers: [
-            { email: "user1@corporate10.com" },
-            { email: "user2@corporate10.com" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryID: "cat-6",
-      categoryName: "Category 6",
-      bidSpread: "0.6789",
-      offerSpread: "1.0123",
-      corporates: [
-        {
-          corporateID: "corp-11",
-          corporateName: "Corporate 11",
-          corporateUsers: [
-            { email: "user1@corporate11.com" },
-            { email: "user2@corporate11.com" },
-          ],
-        },
-        {
-          corporateID: "corp-12",
-          corporateName: "Corporate 12",
-          corporateUsers: [
-            { email: "user1@corporate12.com" },
-            { email: "user2@corporate12.com" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryID: "cat-7",
-      categoryName: "Category 7",
-      bidSpread: "0.7890",
-      offerSpread: "1.1234",
-      corporates: [
-        {
-          corporateID: "corp-13",
-          corporateName: "Corporate 13",
-          corporateUsers: [
-            { email: "user1@corporate13.com" },
-            { email: "user2@corporate13.com" },
-          ],
-        },
-        {
-          corporateID: "corp-14",
-          corporateName: "Corporate 14",
-          corporateUsers: [
-            { email: "user1@corporate14.com" },
-            { email: "user2@corporate14.com" },
-          ],
-        },
-      ],
-    },
-  ]);
 
   const { AddCategory, UpdateCategoryMap } = useSelector((state) => state);
 
-  //Edit Corporate Use Modal Calling
+  //local states Edit Corporate Use Modal Calling
   const AddCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addCategoryModal
   );
 
-  //for Auto focus
-  const NameRef = useRef(null);
+  //Global state for All Categories Data
+  const AllCategories = useSelector(
+    (state) => state.auth?.GetAllCorporatesData ?? null
+  );
 
-  useEffect(() => {
-    if (NameRef.current) {
-      NameRef.current.focus();
-    }
-  }, []);
+  const [activeKey, setActiveKey] = useState([]);
+  const [corporates, setCorporates] = useState([]);
 
   //For edit a Category
   const [editCategoryList, setEditCategoryList] = useState([]);
@@ -255,7 +82,7 @@ const CategoryManagement = () => {
     BankID: 1,
   });
 
-  //For Adding a Category
+  //local states For Adding a Category
   const [addCategoryList, setAddCategoryList] = useState([]);
   const [addData, setadDdata] = useState({
     category: {
@@ -285,6 +112,35 @@ const CategoryManagement = () => {
   const [delteCateogry, setDeltecategory] = useState(null);
   const [deleteRejectModal, setDeleteRejectModal] = useState(false);
 
+  // API call for get All categories
+  useEffect(() => {
+    try {
+      dispatch(getAllCorporatesCategory(navigate));
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (AllCategories && AllCategories !== null) {
+        console.log(AllCategories, "AllCategoriesAllCategories");
+        setCorporates(AllCategories.categories);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [AllCategories]);
+
+  //for Auto focus
+  const NameRef = useRef(null);
+
+  useEffect(() => {
+    if (NameRef.current) {
+      NameRef.current.focus();
+    }
+  }, []);
+
   //Active key collapser
   const handleCollapseChange = (key) => {
     setActiveKey(key);
@@ -294,11 +150,6 @@ const CategoryManagement = () => {
   const handleAddaCategoryModal = () => {
     dispatch(AddCategoryModalSystemAdmin(true));
   };
-
-  // api call for get All category
-  useEffect(() => {
-    dispatch(getAllCorporatesCategory(navigate));
-  }, []);
 
   useEffect(() => {
     const deletecategoryData = auth.DeleteCategory;
@@ -315,8 +166,6 @@ const CategoryManagement = () => {
       setCorporates(corporatesData);
     }
   }, [auth.Corporates]);
-
-  // console.log("authauth12 UpdateCategoryMap corporates", corporates);
 
   //Sliders Function
   const SlideLeft = () => {
@@ -376,112 +225,107 @@ const CategoryManagement = () => {
     }
   };
 
-  // for corporate data ui
+  //This is for the corporate shown inside the main card i.e Corporate and branches
   const showCards = (data) => {
     // console.log("showCardsshowCards", data);
-    if (Object.keys(data).length > 0) {
-      return (
-        <Droppable droppableId={data.categoryID}>
-          {(provided) => (
-            <Row style={{ height: "80vh" }}>
-              {/* {console.log("authauth1234 ClientsClients", data)} */}
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="mt-0"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{}}
-              >
-                <>
-                  {Object.keys(data.corporates).length > 0 ? (
-                    data.corporates.map((Clients, index) => {
-                      return (
-                        <Draggable
-                          key={Clients.corporateID}
-                          // draggableId={Clients.corporateID}
-                          draggableId={"5"}
-                          index={index}
-                          type="column"
-                        >
-                          {(provided) => (
-                            <Col
-                              lg={12}
-                              md={12}
-                              sm={12}
-                              className="mt-2"
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
+    if (!data || Object.keys(data).length === 0) return null;
+    return (
+      <Droppable droppableId={data.categoryID}>
+        {(provided) => (
+          <Row style={{ height: "80vh" }}>
+            {/* {console.log("authauth1234 ClientsClients", data)} */}
+            <Col
+              lg={12}
+              md={12}
+              sm={12}
+              className="mt-0"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{}}
+            >
+              <>
+                {data.counterParties && data.counterParties.length > 0 ? (
+                  data.counterParties.map((Clients, index) => {
+                    console.log(Clients, "hello");
+                    return (
+                      <Draggable
+                        key={Clients.corporateID}
+                        // draggableId={Clients.corporateID}
+                        draggableId={"5"}
+                        index={index}
+                        type="column"
+                      >
+                        {(provided) => (
+                          <Col
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            className="mt-2"
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <Collapse
+                              className="custom-collapse"
+                              activeKey={activeKey}
+                              onChange={handleCollapseChange}
                             >
-                              <Collapse
-                                className="custom-collapse"
-                                activeKey={activeKey}
-                                onChange={handleCollapseChange}
-                              >
-                                <Panel
-                                  header={
-                                    <div>
-                                      <span className="company-name">
-                                        {Clients.corporateName}
-                                      </span>
-                                      {activeKey.includes("1") && (
-                                        <Button
-                                          icon={
-                                            <div className="special-component-category ">
-                                              <i className="icon-trash color-red"></i>
-                                            </div>
-                                          }
-                                          className={"TrashIconClassRed"}
-                                          iconClass={
-                                            "trashiconClassredCollapse"
-                                          }
-                                        />
-                                      )}
-                                    </div>
-                                  }
-                                  key="1"
-                                  className="custom-panel"
-                                >
-                                  {Object.keys(Clients.corporateUsers).length >
-                                  0 ? (
-                                    <>
-                                      {Clients.corporateUsers.map(
-                                        (corporaterUser, index) => {
-                                          return (
-                                            <p className="user-email">
-                                              {corporaterUser.email}
-                                            </p>
-                                          );
+                              <Panel
+                                header={
+                                  <div>
+                                    <span className="company-name">
+                                      {Clients.counterPartyName}
+                                    </span>
+                                    {activeKey.includes("1") && (
+                                      <Button
+                                        icon={
+                                          <div className="special-component-category "></div>
                                         }
-                                      )}
-                                    </>
-                                  ) : (
-                                    <p className="no-user">
-                                      This corporate have no user
-                                    </p>
-                                  )}
-                                </Panel>
-                              </Collapse>
-                              {provided.placeholder}
-                            </Col>
-                          )}
-                        </Draggable>
-                      );
-                    })
-                  ) : (
-                    <>
-                      <p>No Coparate in this Category.</p>
-                    </>
-                  )}
-                </>
-              </Col>
-            </Row>
-          )}
-        </Droppable>
-      );
-    }
+                                        className={"TrashIconClassRed"}
+                                        iconClass={"trashiconClassredCollapse"}
+                                      />
+                                    )}
+                                  </div>
+                                }
+                                key="1"
+                                className="custom-panel"
+                              >
+                                {Clients.users && Clients.users.length > 0 ? (
+                                  <>
+                                    {Clients.users.map(
+                                      (corporaterUser, index) => {
+                                        return (
+                                          <p className="user-email">
+                                            {corporaterUser.email}
+                                          </p>
+                                        );
+                                      }
+                                    )}
+                                  </>
+                                ) : (
+                                  <p className="no-user">
+                                    This corporate have no user
+                                  </p>
+                                )}
+                              </Panel>
+                            </Collapse>
+                            {provided.placeholder}
+                          </Col>
+                        )}
+                      </Draggable>
+                    );
+                  })
+                ) : (
+                  <>
+                    <p>No Coparate in this Category.</p>
+                  </>
+                )}
+              </>
+            </Col>
+          </Row>
+        )}
+      </Droppable>
+    );
   };
 
   // for edit
@@ -726,8 +570,6 @@ const CategoryManagement = () => {
     });
     setEditCategoryList([]);
   };
-
-  // for add category
 
   // Add Corporate Function with spinnner
   useEffect(() => {
@@ -1221,7 +1063,7 @@ const CategoryManagement = () => {
   };
 
   return (
-    <section>
+    <section className="SectionContainer">
       <Row className="mt-3">
         <Col lg={10} sm={10} md={11}>
           <span className="PageHeading">Category Management</span>
@@ -1265,156 +1107,162 @@ const CategoryManagement = () => {
                   ref={outerProvided.innerRef}
                   {...outerProvided.droppableProps}
                 >
-                  {corporates.map((data, index) => {
-                    // console.log("datadatadata", data);
-                    return (
-                      <>
-                        {checkForEdit(data.categoryID) ? (
-                          updateModal(data, index)
-                        ) : (
-                          <Draggable
-                            key={data.categoryID + data.corporateID}
-                            draggableId={data.categoryID + data.corporateID}
-                            index={index}
-                            type="column"
-                          >
-                            {(outerProvided) => (
-                              <Col
-                                className="cat-management-item m-1"
-                                ref={outerProvided.innerRef}
-                                {...outerProvided.draggableProps}
-                                {...outerProvided.dragHandleProps}
+                  {Array.isArray(corporates) && corporates.length > 0 ? (
+                    <>
+                      {corporates.map((data, index) => {
+                        return (
+                          <>
+                            {checkForEdit(data.categoryID) ? (
+                              updateModal(data, index)
+                            ) : (
+                              <Draggable
+                                key={data.categoryID + data.corporateID}
+                                draggableId={data.categoryID + data.corporateID}
+                                index={index}
+                                type="column"
                               >
-                                <Row className="item-inner">
-                                  <Col className="cat-header">
-                                    <Row className="mt-2">
-                                      <Col
-                                        className="cat-title"
-                                        lg={6}
-                                        sm={6}
-                                        md={6}
-                                      >
-                                        {data.categoryName}
+                                {(outerProvided) => (
+                                  <Col
+                                    className="cat-management-item m-1"
+                                    ref={outerProvided.innerRef}
+                                    {...outerProvided.draggableProps}
+                                    {...outerProvided.dragHandleProps}
+                                  >
+                                    <Row className="item-inner">
+                                      <Col className="cat-header">
+                                        <Row className="mt-2">
+                                          <Col
+                                            className="cat-title"
+                                            lg={6}
+                                            sm={6}
+                                            md={6}
+                                          >
+                                            {data.categoryName}
+                                          </Col>
+                                          <Col
+                                            className="d-flex justify-content-end gap-1"
+                                            lg={6}
+                                            sm={6}
+                                            md={6}
+                                          >
+                                            <span
+                                              className="edit-cat d-inline-block"
+                                              onClick={() =>
+                                                OpenEditCategory(
+                                                  data.categoryID,
+                                                  data
+                                                )
+                                              }
+                                            >
+                                              <i className="icon-text-edit"></i>
+                                            </span>
+                                            <span
+                                              className="add-cat d-inline-block"
+                                              onClick={() =>
+                                                OpenAddCategory(data.categoryID)
+                                              }
+                                            ></span>
+                                            <span
+                                              className="delete-cat d-inline-block cursor-pointer"
+                                              onClick={() =>
+                                                handleDelteCliked(
+                                                  data.categoryID
+                                                )
+                                              }
+                                            >
+                                              <i className="icon-trash"></i>
+                                            </span>
+                                          </Col>
+                                          <Row>
+                                            <Col lg={12} md={12} sm={12}>
+                                              <hr className="Line" />
+                                            </Col>
+                                          </Row>
+                                        </Row>
+
+                                        <Row className="mt-2">
+                                          <Col
+                                            lg={6}
+                                            sm={6}
+                                            md={6}
+                                            className="d-flex justify-content-start"
+                                          >
+                                            <Row>
+                                              <Col
+                                                lg={12}
+                                                md={12}
+                                                sm={12}
+                                                className="text-center"
+                                              >
+                                                <div className="title_bid">
+                                                  Bid
+                                                </div>
+                                                <div className="rate val-highlight1">
+                                                  {data.bidSpread !== ""
+                                                    ? formatNumberForFourDecimal(
+                                                        data.bidSpread
+                                                      )
+                                                    : "0.00"}
+                                                </div>
+                                              </Col>
+                                            </Row>
+                                          </Col>
+
+                                          <Col
+                                            lg={6}
+                                            sm={6}
+                                            md={6}
+                                            className="d-flex justify-content-end"
+                                          >
+                                            <Row>
+                                              <Col
+                                                lg={12}
+                                                md={12}
+                                                sm={12}
+                                                className="text-center"
+                                              >
+                                                <div className="title_bid">
+                                                  offer
+                                                </div>
+                                                <div className="rate val-highlight2">
+                                                  {data.offerSpread !== ""
+                                                    ? formatNumberForFourDecimal(
+                                                        data.offerSpread
+                                                      )
+                                                    : "0.00"}
+                                                </div>
+                                              </Col>
+                                            </Row>
+                                          </Col>
+                                        </Row>
                                       </Col>
-                                      <Col
-                                        className="d-flex justify-content-end gap-1"
-                                        lg={6}
-                                        sm={6}
-                                        md={6}
-                                      >
-                                        <span
-                                          className="edit-cat d-inline-block"
-                                          onClick={() =>
-                                            OpenEditCategory(
-                                              data.categoryID,
-                                              data
-                                            )
-                                          }
+                                      <Row className="cat-item-content">
+                                        <Col
+                                          className="customer"
+                                          lg={12}
+                                          sm={12}
+                                          md={12}
                                         >
-                                          <i className="icon-text-edit"></i>
-                                        </span>
-                                        <span
-                                          className="add-cat d-inline-block"
-                                          onClick={() =>
-                                            OpenAddCategory(data.categoryID)
-                                          }
-                                        >
-                                          {/* <i className="icon-add-circle"></i> */}
-                                        </span>
-                                        <span
-                                          className="delete-cat d-inline-block cursor-pointer"
-                                          onClick={() =>
-                                            handleDelteCliked(data.categoryID)
-                                          }
-                                        >
-                                          <i className="icon-trash"></i>
-                                        </span>
-                                      </Col>
-                                      <Row>
-                                        <Col lg={12} md={12} sm={12}>
-                                          <hr className="Line" />
+                                          {showCards(data)}
                                         </Col>
+                                        {outerProvided.placeholder}
                                       </Row>
                                     </Row>
-
-                                    <Row className="mt-2">
-                                      <Col
-                                        lg={6}
-                                        sm={6}
-                                        md={6}
-                                        className="d-flex justify-content-start"
-                                      >
-                                        <Row>
-                                          <Col
-                                            lg={12}
-                                            md={12}
-                                            sm={12}
-                                            className="text-center"
-                                          >
-                                            <div className="title_bid">Bid</div>
-                                            <div className="rate val-highlight1">
-                                              {data.bidSpread !== ""
-                                                ? formatNumberForFourDecimal(
-                                                    data.bidSpread
-                                                  )
-                                                : "0.00"}
-                                            </div>
-                                          </Col>
-                                        </Row>
-                                      </Col>
-
-                                      <Col
-                                        lg={6}
-                                        sm={6}
-                                        md={6}
-                                        className="d-flex justify-content-end"
-                                      >
-                                        <Row>
-                                          <Col
-                                            lg={12}
-                                            md={12}
-                                            sm={12}
-                                            className="text-center"
-                                          >
-                                            <div className="title_bid">
-                                              offer
-                                            </div>
-                                            <div className="rate val-highlight2">
-                                              {data.offerSpread !== ""
-                                                ? formatNumberForFourDecimal(
-                                                    data.offerSpread
-                                                  )
-                                                : "0.00"}
-                                            </div>
-                                          </Col>
-                                        </Row>
-                                      </Col>
-                                    </Row>
+                                    {/* {outerProvided.placeholder} */}
                                   </Col>
-                                  <Row className="cat-item-content">
-                                    <Col
-                                      className="customer"
-                                      lg={12}
-                                      sm={12}
-                                      md={12}
-                                    >
-                                      {showCards(data)}
-                                    </Col>
-                                    {outerProvided.placeholder}
-                                  </Row>
-                                </Row>
-                                {/* {outerProvided.placeholder} */}
-                              </Col>
+                                )}
+                              </Draggable>
                             )}
-                          </Draggable>
-                        )}
 
-                        {checkForAdd(data.categoryID)
-                          ? addModal(data, index)
-                          : null}
-                      </>
-                    );
-                  })}
+                            {/* {checkForAdd(data.categoryID)
+                              ? addModal(data, index)
+                              : null} */}
+                          </>
+                        );
+                      })}
+                    </>
+                  ) : null}
+
                   {/* {outerProvided.placeholder} */}
                 </Col>
               )}

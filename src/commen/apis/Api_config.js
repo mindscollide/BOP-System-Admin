@@ -158,7 +158,7 @@ const GetAllCategories = {
 };
 
 const GetAllCorporates = {
-  RequestMethod: "ServiceManager.GetAllCorporates",
+  RequestMethod: "ServiceManager.GetAllCategoryDetailsWithCounterParties",
 };
 
 const GetAllNatureOfBussiness = {

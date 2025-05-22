@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "categoryID": 64,
+      "categoryName": "Alpha",
+      "offerSpread": 0.75,
+      "bidSpread": 0.6,
+      "counterParties": [
+        {
+          "counterPartyType": 1,
+          "counterPartyID": 33,
+          "counterPartyName": "Stonk Technologies",
+          "categoryID": 64,
+          "users": []
+        }
+      ]
+    },
+    {
+      "categoryID": 49,
+      "categoryName": "asim",
+      "offerSpread": 9,
+      "bidSpread": 9,
+      "counterParties": [
+        {
+          "counterPartyType": 1,
+          "counterPartyID": 20,
+          "counterPartyName": "Asad Owais",
+          "categoryID": 49,
+          "users": []
+        },
+        {
+          "counterPartyType": 1,
+          "counterPartyID": 1,
+          "counterPartyName": "ENGRO Energys",
+          "categoryID": 49,
+          "users": [
+            {
+              "userID": 123,
+              "counterPartyID": 1,
+              "email": "alimamdani05@yopmail.com"
+            },
+            {
+              "userID": 135,
+              "counterPartyID": 1,
+              "email": "allama007@yopmail.com"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "responseMessage": "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01",
+  "isExecuted": true
+}

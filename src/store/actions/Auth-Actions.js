@@ -674,6 +674,7 @@ const getAllCoporatesInit = () => {
 };
 
 const getAllCorporatesSuccess = (response, message) => {
+  console.log(response, "responseresponse");
   return {
     type: actions.GET_ALL_CORPORATES_SUCCESS,
     response: response,
@@ -688,16 +689,15 @@ const getAllCorporatesFail = (message) => {
   };
 };
 
-const getAllCorporatesCategory = (navigate, data) => {
+const getAllCorporatesCategory = (navigate) => {
   let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(getAllCoporatesInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllCorporates.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: authenticationAPI,
+      url: systemAdminAPI,
       data: form,
       headers: {
         _token: token,
@@ -706,14 +706,15 @@ const getAllCorporatesCategory = (navigate, data) => {
       .then(async (response) => {
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(getAllCorporatesCategory(navigate, data));
+          dispatch(getAllCorporatesCategory(navigate));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
+            console.log(response.data.responseResult, "responseResult");
             if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01".toLowerCase()
                 )
             ) {
               dispatch(
@@ -724,14 +725,14 @@ const getAllCorporatesCategory = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+              "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_02".toLowerCase()
             ) {
               dispatch(getAllCorporatesFail("No Data Available"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_04".toLowerCase()
                 )
             ) {
               dispatch(getAllCorporatesFail("Exception"));

@@ -291,7 +291,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        GetAllCorporatesData: [],
+        GetAllCorporatesData: null,
         ResponseMessage: action.message,
       };
 

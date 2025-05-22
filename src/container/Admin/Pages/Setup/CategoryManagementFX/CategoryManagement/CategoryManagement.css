@@ -1250,6 +1250,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   color: #4d4946 !important;
   font-weight: 600;
   font-family: "Roboto", sans-serif !important;
+  margin-left: 10px !important;
 }
 
 .AddCategoryButton {
@@ -1366,6 +1367,6 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   margin-left: 23px !important;
 }
 .SectionContainer {
-  width: 99% !important;
+  width: 100% !important;
   margin: 0 auto !important;
 }
