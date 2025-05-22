@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
-import { Col, Row, Form, Container } from "react-bootstrap";
+import { Col, Row, Form } from "react-bootstrap";
 import {
   TextField,
   Button,
@@ -28,6 +28,7 @@ import {
 import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
 import { AddCategoryModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
@@ -35,7 +36,7 @@ const CategoryManagement = () => {
   const navigate = useNavigate();
   const { auth } = useSelector((state) => state);
 
-  const { AddCategory, UpdateCategoryMap } = useSelector((state) => state);
+  const { AddCategory } = useSelector((state) => state);
 
   //local states Edit Corporate Use Modal Calling
   const AddCategoryGobalState = useSelector(
@@ -315,67 +316,6 @@ const CategoryManagement = () => {
     );
   };
 
-  // for edit
-  // Update Corporate Function with spinnner
-  // useEffect(() => {
-  //   let corporatesData = UpdateCategoryMap.UpdateCategory;
-  //   if (Object.keys(corporatesData).length > 0) {
-  //     console.log("authauth12 UpdateCategoryMap", corporatesData);
-  //     console.log("authauth12 UpdateCategoryMap", categoryupdate);
-  //     let id = categoryupdate.categoryID.value;
-  //     const categoryIndex = corporates.findIndex(
-  //       (store) => store.categoryID === id.toString()
-  //     );
-  //     console.log("authauth12 UpdateCategoryMap", categoryIndex);
-
-  //     const newSourceItems = [...corporates];
-  //     const newSourceItem = newSourceItems[categoryIndex];
-  //     console.log("authauth12 UpdateCategoryMap", newSourceItem);
-  //     console.log("authauth12 UpdateCategoryMapvvvv", categoryupdate);
-  //     // stringConvertintoNumber(addData.bidSpread.value)
-  //     let data = {
-  //       categoryName: categoryupdate.category.value,
-  //       categoryID: categoryupdate.categoryID.value,
-  //       offerSpread: parseInt(categoryupdate.offerSpread.value),
-  //       bidSpread: parseInt(categoryupdate.bidSpread.value),
-  //       corporates: newSourceItems[categoryIndex].corporates,
-  //     };
-  //     if (categoryIndex !== -1) {
-  //       newSourceItems[categoryIndex] = data;
-  //       setCorporates(newSourceItems);
-  //     }
-  //     setEditCategoryList([]);
-  //     setCategoryUpdate({
-  //       category: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: false,
-  //       },
-  //       bidSpread: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: false,
-  //       },
-  //       offerSpread: {
-  //         value: "",
-  //         errorMessage: "",
-  //         errorStatus: false,
-  //       },
-  //       AssetTypeId: {
-  //         value: 1,
-  //         errorMessage: "",
-  //         errorStatus: false,
-  //       },
-  //       categoryID: {
-  //         value: 0,
-  //         errorMessage: "",
-  //         errorStatus: false,
-  //       },
-  //       BankID: 1,
-  //     });
-  //   }
-  // }, [UpdateCategoryMap.UpdateCategory]);
-
   const OpenEditCategory = (recorde, data) => {
     console.log(data, "datadata");
     // console.log(
@@ -524,7 +464,16 @@ const CategoryManagement = () => {
     }
   };
 
-  const UpdateCategory = () => {};
+  const UpdateCategory = () => {
+    // Calling Update APi
+    let data = {
+      Category: "Alpha",
+      BidSpread: 0.6,
+      OfferSpread: 0.75,
+      CategoryId: 64,
+    };
+    dispatch(UpdateCategoryAPI(navigate, data));
+  };
 
   const CloseUpdateCategory = (recorde) => {
     setCategoryUpdate({
@@ -641,16 +590,6 @@ const CategoryManagement = () => {
       BankID: parseInt(bankId),
     };
     dispatch(DeleteCorporateCategoryAPI(navigate, data, setDeleteRejectModal));
-  };
-
-  const checkForAdd = (recorde) => {
-    let newdata = addCategoryList.find((element) => element === recorde);
-    // console.log(newdata, "hhhhhhh");
-    if (newdata !== undefined) {
-      return true;
-    } else {
-      return false;
-    }
   };
 
   const CategoryManageState = (e) => {
@@ -925,15 +864,9 @@ const CategoryManagement = () => {
   };
 
   const updateModal = (data, index) => {
+    console.log(data, "updateModal");
     return (
       <Row>
-        {/* {UpdateCategoryMap.Spinner === true ? (
-          <>
-            <span className="customer-login-user-spinner m-3">
-              <Spin size="large" />
-            </span>
-          </>
-        ) : ( */}
         <>
           <Col lg={12} md={12} sm={12} className="add-cate-wrapper m-3">
             <Form onSubmit={UpdateCategory}>
@@ -1236,22 +1169,15 @@ const CategoryManagement = () => {
                                         {outerProvided.placeholder}
                                       </Row>
                                     </Row>
-                                    {/* {outerProvided.placeholder} */}
                                   </Col>
                                 )}
                               </Draggable>
                             )}
-
-                            {/* {checkForAdd(data.categoryID)
-                              ? addModal(data, index)
-                              : null} */}
                           </>
                         );
                       })}
                     </>
                   ) : null}
-
-                  {/* {outerProvided.placeholder} */}
                 </Col>
               )}
             </Droppable>
