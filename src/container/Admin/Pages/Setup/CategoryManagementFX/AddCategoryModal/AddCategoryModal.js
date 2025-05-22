@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import style from "./AddCategoryModal.module.css";
 import {
   Button,
+  Loader,
   Modal,
   TextField,
 } from "../../../../../../components/elements";
@@ -10,7 +11,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-// import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
 import { addCategroyModalSchema } from "../../../../../../utils/schemas";
 import { Addcategory } from "../../../../../../store/actions/AddCategoryActions";
 import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
@@ -18,7 +18,7 @@ import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { BOPSystemAdminModal } = useSelector((state) => state);
+  const { BOPSystemAdminModal, AddCategory } = useSelector((state) => state);
   const [addCategory, setAddCategory] = useState({ ...addCategroyModalSchema });
 
   //handle Cross icon
@@ -29,9 +29,9 @@ const AddCategoryModal = () => {
   //handle Add Button
   const handleAddButton = () => {
     let data = {
-      Name: addCategory.Name.value,
-      Bid: Number(addCategory.Bid.value),
-      Offer: Number(addCategory.Offer.value),
+      Category: addCategory.Name.value,
+      BidSpread: Number(addCategory.Bid.value),
+      OfferSpread: Number(addCategory.Offer.value),
     };
 
     console.log("data save", data);
@@ -178,6 +178,7 @@ const AddCategoryModal = () => {
               />
             </Col>
           </Row>
+          {AddCategory.Loading && <Loader />}
         </>
       }
     />
