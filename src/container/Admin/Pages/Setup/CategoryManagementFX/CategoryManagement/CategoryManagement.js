@@ -45,7 +45,6 @@ const CategoryManagement = () => {
   );
 
   //Transforming Data for React Beautiful DND
-
   const transformAPIData = (apiData) => {
     return apiData.categories.map((category) => ({
       categoryID: `cat-${category.categoryID}`, // convert to string and prefix
@@ -65,9 +64,7 @@ const CategoryManagement = () => {
   //For Local State
   const [editCategoryList, setEditCategoryList] = useState([]);
   const [errormessege, seterrormessege] = useState(false);
-  const [activeKey, setActiveKey] = useState([]);
   const [corporates, setCorporates] = useState([]);
-  const [addCategoryList, setAddCategoryList] = useState([]);
   const [addData, setadDdata] = useState({
     category: {
       value: "",
@@ -153,11 +150,6 @@ const CategoryManagement = () => {
       NameRef.current.focus();
     }
   }, []);
-
-  //Active key collapser
-  const handleCollapseChange = (key) => {
-    setActiveKey(key);
-  };
 
   //Add a Category Modal Trigger
   const handleAddaCategoryModal = () => {
@@ -302,7 +294,6 @@ const CategoryManagement = () => {
   const OpenEditCategory = (recorde, data) => {
     console.log(data, "datadata");
 
-    setAddCategoryList([]);
     setadDdata({
       category: {
         value: "",
@@ -531,7 +522,6 @@ const CategoryManagement = () => {
 
         BankID: 1,
       });
-      setAddCategoryList([]);
     }
   }, [AddCategory.addCategory]);
 
