@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
 import "./assets/custom-icons/custom-icon.css";
 import "@fontsource/montserrat"; // Defaults to weight 400
@@ -17,18 +17,16 @@ import "@fontsource/roboto/400-italic.css";
 import "@fontsource/poppins";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/400-italic.css";
-import { Header } from "./components/layout";
-import { Sidebar2 } from "./components/layout";
-import PropertyType from "./container/Admin/Setups/PropertyType/PropertyType";
+
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/Routes";
+import { useMqtt } from "./context/MQTTContext";
 
 function App() {
-  return (
-    <>
-      <Sidebar2 />
-      <Header />
-      <PropertyType />
-    </>
-  );
+  const { isConnected, lastMessages } = useMqtt();
+  console.log(lastMessages, isConnected, "lastMessageslastMessages");
+  console.log("App component rendered", isConnected);
+  return <>{/* <RouterProvider router={router} /> */}</>;
 }
 
 export default App;

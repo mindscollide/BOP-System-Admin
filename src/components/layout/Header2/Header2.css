@@ -1,4 +1,4 @@
-.container-header-2 {
+.bop_systemHeader {
   background: #f26522;
   z-index: 1;
   width: 100% !important;
@@ -23,7 +23,9 @@
 }
 
 .WholeDropDown {
-  margin-right: -20px !important;
+  /* margin-right: -20px !important; */
+  display: flex;
+  justify-content: end;
 }
 
 .dropdown-toggle-header2 {
@@ -42,6 +44,7 @@
   padding: 0 10px;
   max-width: 100px;
   white-space: nowrap;
+  text-overflow: ellipsis;
   overflow: hidden;
 }
 
@@ -50,6 +53,10 @@
   margin-top: 10px !important;
 }
 
+.dropdown_menu-Item {
+  z-index: 1000;
+  color: #f26522;
+}
 @media (max-width: 1024px) and (min-width: 769px) {
   .container-header-2 {
     padding: 0 10px;

@@ -6,7 +6,6 @@ const Uploads = () => {
   const dispatch = useDispatch();
   const props = {
     onChange: (info) => {
-      console.log("setUploadList", info.fileList);
     },
   };
   return (

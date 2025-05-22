@@ -14,6 +14,7 @@ const CustomModal = ({
   modalFooterClassName,
   modalHeaderClassName,
   className,
+  modalContentClassName,
 }) => {
   return (
     <>
@@ -23,6 +24,7 @@ const CustomModal = ({
           onHide={onHide}
           // backdrop={backdrop}
           data-backdrop="true"
+          contentClassName={modalContentClassName}
           size={size}
           centered={true}
           className={className}

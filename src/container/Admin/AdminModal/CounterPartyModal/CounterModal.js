@@ -11,50 +11,16 @@ import {
 import { Checkbox } from "antd";
 import "./CounterModal.css";
 import { useEffect } from "react";
+import { counterModalFieldSchema } from "../../../../utils/schemas";
 
 const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { systemReducer, uploadReducer } = useSelector((state) => state);
-  console.log(systemReducer, "systemReducersystemReducer");
   // state for CounterModal edit user
   const [counterModalField, setCounterModalField] = useState({
-    corporateName: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    avaliableLimit: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instumentNameTbill: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instumentNamePib: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instumentNameSukuk: {
-      value: 0,
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
+    ...counterModalFieldSchema,
   });
-  console.log(counterModalField, "counterModalField");
   // onchange handler for counterModal
   const counterValidationHandler = (e) => {
     let name = e.target.name;
@@ -62,7 +28,6 @@ const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
 
     if (name === "corporateName" && value !== "") {
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setCounterModalField({
           ...counterModalField,
@@ -82,7 +47,6 @@ const CounterModal = ({ ModalTitle, modalCounter, setModalCounter }) => {
 
     if (name === "avaliableLimit" && value !== "") {
       let valueCheck = value.replace(/[^\d]/g, "");
-      console.log("valueCheckvalueCheck", valueCheck);
       if (valueCheck !== "") {
         setCounterModalField({
           ...counterModalField,

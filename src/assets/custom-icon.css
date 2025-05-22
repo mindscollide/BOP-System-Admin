@@ -1,18 +1,19 @@
 @font-face {
-  font-family: 'custom-icon';
-  src:  url('fonts/custom-icon.eot?kgs6eu');
-  src:  url('fonts/custom-icon.eot?kgs6eu#iefix') format('embedded-opentype'),
-    url('fonts/custom-icon.ttf?kgs6eu') format('truetype'),
-    url('fonts/custom-icon.woff?kgs6eu') format('woff'),
-    url('fonts/custom-icon.svg?kgs6eu#custom-icon') format('svg');
+  font-family: "custom-icon";
+  src: url("fonts/custom-icon.eot?kgs6eu");
+  src: url("fonts/custom-icon.eot?kgs6eu#iefix") format("embedded-opentype"),
+    url("fonts/custom-icon.ttf?kgs6eu") format("truetype"),
+    url("fonts/custom-icon.woff?kgs6eu") format("woff"),
+    url("fonts/custom-icon.svg?kgs6eu#custom-icon") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'custom-icon' !important;
+  font-family: "custom-icon" !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -24,7 +25,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.icon-view-comment:before {
+  content: "\e9b6";
+}
 .icon-chat2:before {
   content: "\e9b3";
 }

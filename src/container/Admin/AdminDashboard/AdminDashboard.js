@@ -4,6 +4,7 @@ import Header2 from "../../../components/layout/Header2/Header2";
 
 import Sidebar2 from "../../../components/layout/Sidebar2/Sidebar2";
 import { Layout } from "antd";
+import ResponseMessage from "../../../utils/ResponseMessage";
 
 const AdminDashboard = () => {
   const { Content, Sider } = Layout;
@@ -11,7 +12,6 @@ const AdminDashboard = () => {
     <>
       <Layout>
         <Header2 />
-
         <Layout>
           <Sider width={260}>
             <Sidebar2 />
@@ -20,6 +20,7 @@ const AdminDashboard = () => {
             <Outlet />
           </Content>
         </Layout>
+        <ResponseMessage />
       </Layout>
     </>
   );

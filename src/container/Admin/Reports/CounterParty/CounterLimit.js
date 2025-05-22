@@ -13,16 +13,15 @@ import CounterModal from "../../AdminModal/CounterPartyModal/CounterModal";
 import CounterPartyModal from "../../AdminModal/CounterPartyUplaodModal/CounterPartyModal";
 import { Spin, Upload } from "antd";
 import "./CounterLimit.css";
+import { viewCounterModalSchema } from "../../../../utils/schemas";
 
 const CounterLimit = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
-  console.log(file, "filefile");
   const { systemReducer, uploadReducer, downloadReducer } = useSelector(
     (state) => state
   );
-  console.log(systemReducer, "systemReducersystemReducer");
 
   //get bankID from local storage
   let CounterPartyModalBankId =
@@ -47,43 +46,7 @@ const CounterLimit = () => {
 
   // view Counter party modal
   const [viewCounterModal, setViewCounterModal] = useState({
-    counterFileType: {
-      value: 3,
-      errorMessage: "",
-      errorStatus: false,
-    },
-    corporateName: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    avaliableLimit: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instrumentName: {
-      value: "",
-      label: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    weightage: {
-      value: 0,
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    instrumentAvaliableLimit: {
-      value: 0,
-      errorMessage: "",
-      errorStatus: false,
-    },
+    ...viewCounterModalSchema,
   });
 
   //open counterParty modal on click
@@ -134,7 +97,6 @@ const CounterLimit = () => {
       align: "center",
       width: "180px",
       render: (text, record) => {
-        console.log(record, "recordrecordrecord");
         return (
           <label
             className="icon-eye eyeicon-counter"

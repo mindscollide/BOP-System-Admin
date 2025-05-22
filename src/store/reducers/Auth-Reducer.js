@@ -14,7 +14,6 @@ const initialState = {
   allCorporateCompany: [],
   searchBankLogin: [],
   allUserStatus: [],
-  getAllNature: [],
   Corporates: [],
   UpdatedCorporates: [],
   DeleteCategory: [],
@@ -26,6 +25,14 @@ const initialState = {
   corporateUserlogin: null,
   sendEmailResetPassword: null,
   createCorporatePassword: null,
+  getAllCategories: null,
+  GetAllCorporatesData: null,
+  getAllNatureOfBuisness: null,
+  RoleList: null,
+  GetBankUserRoles: null,
+  GetAllInstrumentTypes: null,
+  GetAllBranchesData: null,
+  userLogout: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -52,6 +59,28 @@ const authReducer = (state = initialState, action) => {
         Token: "",
         Refresh: "",
       };
+    case actions.USER_LOGOUT_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.USER_LOGOUT_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        userLogout: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.USER_LOGOUT_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        userLogout: null,
+        ResponseMessage: action.message,
+      };
+    }
 
     case actions.SIGN_UP_INIT:
       return { ...state, Loading: true };
@@ -222,25 +251,25 @@ const authReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
-    case actions.GET_ALL_NATURE_BUSINESS_INIT:
+    case actions.GET_ALL_NATURE_OF_BUSINESS_INIT:
       return {
         ...state,
         Loading: true,
       };
 
-    case actions.GET_ALL_NATURE_BUSINESS_SUCCESS:
+    case actions.GET_ALL_NATURE_OF_BUSINESS_SUCCESS:
       return {
         ...state,
         Loading: false,
-        getAllNature: action.response,
+        getAllNatureOfBuisness: action.response,
         ResponseMessage: action.message,
       };
 
-    case actions.GET_ALL_NATURE_BUSINESS_FAIL:
+    case actions.GET_ALL_NATURE_OF_BUSINESS_FAIL:
       return {
         ...state,
         Loading: false,
-        getAllNature: [],
+        getAllNatureOfBuisness: [],
         ResponseMessage: action.message,
       };
 
@@ -254,7 +283,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        Corporates: action.response,
+        GetAllCorporatesData: action.response,
         ResponseMessage: action.message,
       };
 
@@ -262,6 +291,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        GetAllCorporatesData: [],
         ResponseMessage: action.message,
       };
 
@@ -330,10 +360,125 @@ const authReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    //getAllCategories Reducer
+    case actions.GET_ALL_CATEGORIES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        getAllCategories: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_CATEGORIES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        getAllCategories: [],
+        ResponseMessage: action.message,
+      };
+
+    //RoleList Reducer
+    case actions.ROLE_LIST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.ROLE_LIST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        RoleList: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.ROLE_LIST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        RoleList: [],
+        ResponseMessage: action.message,
+      };
+
+    //GetBankUserRoles Reducer
+    case actions.GET_BANK_USER_ROLES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_BANK_USER_ROLES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetBankUserRoles: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_BANK_USER_ROLES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetBankUserRoles: [],
+        ResponseMessage: action.message,
+      };
+
     case actions.CLEARE_MESSAGE:
       return {
         ...state,
         ResponseMessage: "",
+      };
+
+    //GetAllInstruments Reducer
+    case actions.GET_ALL_INSTRUMENT_TYPES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_INSTRUMENT_TYPES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstrumentTypes: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_INSTRUMENT_TYPES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstrumentTypes: [],
+        ResponseMessage: action.message,
+      };
+
+    //Get All Branches
+    case actions.GET_ALL_BRANCHES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_BRANCHES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBranchesData: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_BRANCHES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBranchesData: null,
+        ResponseMessage: action.message,
       };
 
     default:

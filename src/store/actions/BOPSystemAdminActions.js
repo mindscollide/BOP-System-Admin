@@ -1,27 +1,43 @@
 import axios from "axios";
 import {
   AddBranch,
-  BankUsersBankList,
   CorporateUsersBulkList,
   CreateBankUserRequest,
   CreateBulkBankUserRequest,
   CreateBulkCorporateUserRequest,
   CreateCorporateUserRequest,
   CreateNewCorporate,
-  GetAllBranches,
   UpdateBranch,
   UpdateCorporateByCorporateID,
-  SearchCorporateUsers,
   SearchBankUsers,
-  UpdateCorporateUsers,
   GetBankUserByUserID,
-  UpdateBankUserByBankID,
+  UpdateBankUserByUserID,
   GetVolmeterByBankID,
   AddUpdateVolmeter,
+  UpdateVolmeterByDealer,
+  UpdateVolMeterSettingByBankId,
+  GetVolMeterSettingByBankId,
+  UpdateCategory,
+  GetCounterPartyNames,
+  GetAllInstruments,
+  BankUsersBulkList,
+  SearchAllUserLoginHistory,
+  GetCounterPartyList,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
-import { RefreshToken } from "./Auth-Actions";
+import {
+  GetAllBranchesAPI,
+  getAllCorporatesCategory,
+  RefreshToken,
+} from "./Auth-Actions";
+import {
+  AdduserModalSystemAdmin,
+  ConfirmationModalSystemAdmin,
+  corporatePlusIconModalSystemAdmin,
+  editBankUserModalSystemAdmin,
+  editCompanyModalSystemAdmin,
+} from "./BOPSystemAdminModalsActions";
 
 //Create New Corporate API
 const CreateNewCorporateInit = () => {
@@ -45,8 +61,9 @@ const CreateNewCorporateFail = (message) => {
   };
 };
 
-const CreateNewCorporateAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
+  let token = localStorage.getItem("token");
+
   return (dispatch) => {
     dispatch(CreateNewCorporateInit());
     let form = new FormData();
@@ -63,7 +80,7 @@ const CreateNewCorporateAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateNewCorporateAPI(navigate, data));
+          dispatch(CreateNewCorporateAPI(navigate, data, setAddCompnany));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -73,9 +90,11 @@ const CreateNewCorporateAPI = (navigate, data) => {
               dispatch(
                 CreateNewCorporateSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Corporate Saved"
                 )
               );
+              dispatch(getAllCorporatesCategory(navigate));
+              dispatch(corporatePlusIconModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -83,7 +102,7 @@ const CreateNewCorporateAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateNewCorporate_02".toLowerCase()
                 )
             ) {
-              dispatch(CreateNewCorporateFail("Failed"));
+              dispatch(CreateNewCorporateFail("Corporate Category Not Saved"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -91,7 +110,42 @@ const CreateNewCorporateAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateNewCorporate_03".toLowerCase()
                 )
             ) {
-              dispatch(CreateNewCorporateFail("Something went wrong"));
+              dispatch(CreateNewCorporateFail("Corporate Asset Not Saved"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateNewCorporate_04".toLowerCase()
+                )
+            ) {
+              dispatch(CreateNewCorporateFail("Corporate Not Saved"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateNewCorporate_05".toLowerCase()
+                )
+            ) {
+              dispatch(CreateNewCorporateFail("Corporate Already Exists"));
+
+              setAddCompnany((prevState) => {
+                return {
+                  ...prevState,
+                  companyName: {
+                    ...prevState.companyName,
+                    errorMessage: "Corporate Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateNewCorporate_06".toLowerCase()
+                )
+            ) {
+              dispatch(CreateNewCorporateFail("Exception"));
             }
           } else {
             dispatch(CreateNewCorporateFail("Something went wrong"));
@@ -115,7 +169,7 @@ const UpdateCorporateByCorporateIDInit = () => {
 
 const UpdateCorporateByCorporateIDSuccess = (response, message) => {
   return {
-    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_INIT,
+    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_SUCCESS,
     response: response,
     message: message,
   };
@@ -123,13 +177,17 @@ const UpdateCorporateByCorporateIDSuccess = (response, message) => {
 
 const UpdateCorporateByCorporateIDFail = (message) => {
   return {
-    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_INIT,
+    type: actions.UPDATE_CORPORATE_BY_CORPORATEID_FAIL,
     message: message,
   };
 };
 
-const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const UpdateCorporateByCorporateIDAPI = (
+  navigate,
+  data,
+  setCompanyEditError
+) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateCorporateByCorporateIDInit());
     let form = new FormData();
@@ -146,7 +204,9 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(UpdateCorporateByCorporateIDAPI(navigate, data));
+          dispatch(
+            UpdateCorporateByCorporateIDAPI(navigate, data, setCompanyEditError)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -156,9 +216,11 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
               dispatch(
                 UpdateCorporateByCorporateIDSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Record Updated"
                 )
               );
+
+              dispatch(editCompanyModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -166,7 +228,7 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateCorporateByCorporateID_02".toLowerCase()
                 )
             ) {
-              dispatch(UpdateCorporateByCorporateIDFail("Failed"));
+              dispatch(UpdateCorporateByCorporateIDFail("No Record Updated "));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -175,8 +237,25 @@ const UpdateCorporateByCorporateIDAPI = (navigate, data) => {
                 )
             ) {
               dispatch(
-                UpdateCorporateByCorporateIDFail("Something went wrong")
+                UpdateCorporateByCorporateIDFail("Corporate Already Exists")
               );
+              setCompanyEditError((prevState) => {
+                return {
+                  ...prevState,
+                  corporateName: {
+                    errorMessage: "Corporate Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateByCorporateID_04".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCorporateByCorporateIDFail("Exception"));
             }
           } else {
             dispatch(UpdateCorporateByCorporateIDFail("Something went wrong"));
@@ -213,9 +292,8 @@ const AddBranchFail = (message) => {
   };
 };
 
-const AddBranchAPI = (navigate, data) => {
+const AddBranchAPI = (navigate, data, setAddBranch) => {
   let token = localStorage.getItem("token");
-  console.log(typeof token, token, "tokentoken");
   return (dispatch) => {
     dispatch(AddBranchInit());
     let form = new FormData();
@@ -232,7 +310,7 @@ const AddBranchAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(AddBranchAPI(navigate, data));
+          dispatch(AddBranchAPI(navigate, data, setAddBranch));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -240,8 +318,12 @@ const AddBranchAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_AddBranch_01".toLowerCase()
             ) {
               dispatch(
-                AddBranchSuccess(response.data.responseResult, "Successfull")
+                AddBranchSuccess(
+                  response.data.responseResult,
+                  "branch created successfully"
+                )
               );
+              dispatch(AdduserModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -249,7 +331,7 @@ const AddBranchAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_AddBranch_02".toLowerCase()
                 )
             ) {
-              dispatch(AddBranchFail("Failed"));
+              dispatch(AddBranchFail("save unsuccessful"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -257,7 +339,43 @@ const AddBranchAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_AddBranch_03".toLowerCase()
                 )
             ) {
-              dispatch(AddBranchFail("Something went wrong"));
+              dispatch(AddBranchFail("Exception"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddBranch_04".toLowerCase()
+                )
+            ) {
+              dispatch(AddBranchFail("Branch Name Already Exists"));
+              setAddBranch((prevState) => {
+                return {
+                  ...prevState,
+                  branchName: {
+                    ...prevState.branchName,
+                    errorMessage: "Branch Name Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddBranch_05".toLowerCase()
+                )
+            ) {
+              dispatch(AddBranchFail("Branch Code Already Exists"));
+              setAddBranch((prevState) => {
+                return {
+                  ...prevState,
+                  branchCode: {
+                    ...prevState.branchCode,
+                    errorMessage: "Branch Code Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             }
           } else {
             dispatch(AddBranchFail("Something went wrong"));
@@ -294,8 +412,8 @@ const UpdateBranchFail = (message) => {
   };
 };
 
-const UpdateBranchAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const UpdateBranchAPI = (navigate, data, setBranchEditError) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateBranchInit());
     let form = new FormData();
@@ -312,7 +430,7 @@ const UpdateBranchAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(UpdateBranchAPI(navigate, data));
+          dispatch(UpdateBranchAPI(navigate, data, setBranchEditError));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -320,8 +438,13 @@ const UpdateBranchAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_UpdateBranch_01".toLowerCase()
             ) {
               dispatch(
-                UpdateBranchSuccess(response.data.responseResult, "Successfull")
+                UpdateBranchSuccess(
+                  response.data.responseResult,
+                  "branch updated successfully"
+                )
               );
+
+              dispatch(editBankUserModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -329,7 +452,7 @@ const UpdateBranchAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateBranch_02".toLowerCase()
                 )
             ) {
-              dispatch(UpdateBranchFail("Failed"));
+              dispatch(UpdateBranchFail("save unsuccessful"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -337,7 +460,42 @@ const UpdateBranchAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateBranch_03".toLowerCase()
                 )
             ) {
-              dispatch(UpdateBranchFail("Something went wrong"));
+              dispatch(UpdateBranchFail("Exception"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranch_04".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateBranchFail("Branch Name Already Exists"));
+
+              setBranchEditError((prevState) => {
+                return {
+                  ...prevState,
+                  branchName: {
+                    errorMessage: "Branch Name Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranch_05".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateBranchFail("Branch Code Already Exists"));
+              setBranchEditError((prevState) => {
+                return {
+                  ...prevState,
+                  branchCode: {
+                    errorMessage: "Branch Code Already Exists",
+                    errorStatus: true,
+                  },
+                };
+              });
             }
           } else {
             dispatch(UpdateBranchFail("Something went wrong"));
@@ -348,89 +506,6 @@ const UpdateBranchAPI = (navigate, data) => {
       })
       .catch((response) => {
         dispatch(UpdateBranchFail("something went wrong"));
-      });
-  };
-};
-
-//Get All Branches
-const GetAllBranchesInit = () => {
-  return {
-    type: actions.GET_ALL_BRANCHES_INIT,
-  };
-};
-
-const GetAllBranchesSuccess = (response, message) => {
-  return {
-    type: actions.GET_ALL_BRANCHES_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const GetAllBranchesFail = (message) => {
-  return {
-    type: actions.GET_ALL_BRANCHES_FAIL,
-    message: message,
-  };
-};
-
-const GetAllBranchesAPI = (navigate) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
-  return (dispatch) => {
-    dispatch(GetAllBranchesInit());
-    let form = new FormData();
-    form.append("RequestMethod", GetAllBranches.RequestMethod);
-    // form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        // _token: token,
-      },
-    })
-      .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(GetAllBranchesAPI(navigate));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllBranches_01".toLowerCase()
-            ) {
-              dispatch(
-                GetAllBranchesSuccess(
-                  response.data.responseResult,
-                  "Successfull"
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllBranches_02".toLowerCase()
-                )
-            ) {
-              dispatch(GetAllBranchesFail("Failed"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllBranches_03".toLowerCase()
-                )
-            ) {
-              dispatch(GetAllBranchesFail("Something went wrong"));
-            }
-          } else {
-            dispatch(GetAllBranchesFail("Something went wrong"));
-          }
-        } else {
-          dispatch(GetAllBranchesFail("Something went wrong"));
-        }
-      })
-      .catch((response) => {
-        dispatch(GetAllBranchesFail("something went wrong"));
       });
   };
 };
@@ -457,8 +532,14 @@ const CreateBankUserRequestFail = (message) => {
   };
 };
 
-const CreateBankUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateBankUserRequestAPI = (
+  navigate,
+  data,
+  handleCancelYes,
+  setAddBankUser
+) => {
+  let token = localStorage.getItem("token");
+
   return (dispatch) => {
     dispatch(CreateBankUserRequestInit());
     let form = new FormData();
@@ -475,19 +556,28 @@ const CreateBankUserRequestAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateBankUserRequestAPI(navigate, data));
+          dispatch(
+            CreateBankUserRequestAPI(
+              navigate,
+              data,
+              handleCancelYes,
+              setAddBankUser
+            )
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_CreateBankUserRequest_01".toLowerCase()
             ) {
-              dispatch(
+              await dispatch(
                 CreateBankUserRequestSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "bank user request created"
                 )
               );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+              handleCancelYes();
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -495,7 +585,9 @@ const CreateBankUserRequestAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateBankUserRequest_02".toLowerCase()
                 )
             ) {
-              dispatch(CreateBankUserRequestFail("Failed"));
+              dispatch(
+                CreateBankUserRequestFail("bank user request not created")
+              );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -503,7 +595,67 @@ const CreateBankUserRequestAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateBankUserRequest_03".toLowerCase()
                 )
             ) {
-              dispatch(CreateBankUserRequestFail("Something went wrong"));
+              dispatch(CreateBankUserRequestFail("not a valid role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBankUserRequest_05".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateBankUserRequestFail("bank user request not created")
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBankUserRequest_06".toLowerCase()
+                )
+            ) {
+              await dispatch(
+                CreateBankUserRequestFail("user's email already exists")
+              );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+
+              setAddBankUser((prevState) => {
+                return {
+                  ...prevState,
+                  email: {
+                    ...prevState.email,
+                    errorMessage: "Email Already Exist",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBankUserRequest_07".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBankUserRequestFail("Employee ID Already Exists"));
+              dispatch(ConfirmationModalSystemAdmin(false));
+
+              setAddBankUser((prevState) => {
+                return {
+                  ...prevState,
+                  EmployeeID: {
+                    ...prevState.EmployeeID,
+                    errorMessage: "Employee ID Already Exist",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBankUserRequest_08".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBankUserRequestFail("exception"));
             }
           } else {
             dispatch(CreateBankUserRequestFail("Something went wrong"));
@@ -519,6 +671,7 @@ const CreateBankUserRequestAPI = (navigate, data) => {
 };
 
 //Create Bulk Bank Use Request
+
 const CreateBulkBankUserRequestInit = () => {
   return {
     type: actions.CREATE_BULK_BANK_USER_REQUEST_INIT,
@@ -540,8 +693,8 @@ const CreateBulkBankUserRequestFail = (message) => {
   };
 };
 
-const CreateBulkBankUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateBulkBankUserRequestAPI = (navigate, data, setBulkUploadClicked) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(CreateBulkBankUserRequestInit());
     let form = new FormData();
@@ -558,7 +711,9 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateBulkBankUserRequestAPI(navigate, data));
+          dispatch(
+            CreateBulkBankUserRequestAPI(navigate, data, setBulkUploadClicked)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -568,17 +723,10 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
               dispatch(
                 CreateBulkBankUserRequestSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "bank user request/s created"
                 )
               );
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_02".toLowerCase()
-                )
-            ) {
-              dispatch(CreateBulkBankUserRequestFail("Failed"));
+              setBulkUploadClicked(false);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -586,7 +734,35 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_03".toLowerCase()
                 )
             ) {
-              dispatch(CreateBulkBankUserRequestFail("Something went wrong"));
+              dispatch(CreateBulkBankUserRequestFail("not a valid role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_04".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateBulkBankUserRequestFail("no users to be added or updated")
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_05".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateBulkBankUserRequestFail("bank user request not created")
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_07".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBulkBankUserRequestFail("exception"));
             }
           } else {
             dispatch(CreateBulkBankUserRequestFail("Something went wrong"));
@@ -600,6 +776,82 @@ const CreateBulkBankUserRequestAPI = (navigate, data) => {
       });
   };
 };
+
+// //Get All Bank Users
+// const GetAllBankUsersInit = () => {
+//   return {
+//     type: actions.GET_ALL_BRANCHES_INIT,
+//   };
+// };
+
+// const GetAllBankUsersSuccess = (response, message) => {
+//   return {
+//     type: actions.GET_ALL_BRANCHES_SUCCESS,
+//     response: response,
+//     message: message,
+//   };
+// };
+
+// const GetAllBankUsersFail = (message) => {
+//   return {
+//     type: actions.GET_ALL_BRANCHES_FAIL,
+//     message: message,
+//   };
+// };
+
+// const GetAllBankUsersAPI = (navigate, data) => {
+//   // let token = JSON.parse(localStorage.getItem("token"));
+//   return async (dispatch) => {
+//     dispatch(GetAllBankUsersInit());
+//     let form = new FormData();
+//     form.append("RequestMethod", GetAllBankUsers.RequestMethod);
+//     form.append("RequestData", JSON.stringify(data));
+//     axios({
+//       method: "POST",
+//       url: systemAdminAPI,
+//       data: form,
+//       // headers: {
+//       //   _token: token,
+//       // },
+//     })
+//       .then(async (response) => {
+//         if (response.data.responseCode === 417) {
+//           await dispatch(RefreshToken(navigate));
+//           dispatch(GetAllBankUsersAPI(navigate));
+//         } else if (response.data.responseCode === 200) {
+//           if (response.data.responseResult.isExecuted === true) {
+//             if (
+//               response.data.responseResult.responseMessage.toLowerCase() ===
+//               "SystemAdmin_SystemAdminManager_GetAllBankUsers_01".toLowerCase()
+//             ) {
+//               dispatch(
+//                 GetAllBankUsersSuccess(
+//                   response.data.responseResult,
+//                   "Data Available"
+//                 )
+//               );
+//             }
+//             // else if (
+//             //   response.data.responseResult.responseMessage
+//             //     .toLowerCase()
+//             //     .includes(
+//             //       "SystemAdmin_SystemAdminManager_GetAllBranches_03".toLowerCase()
+//             //     )
+//             // ) {
+//             //   dispatch(GetAllBankUsersFail("Exception"));
+//             // }
+//           } else {
+//             dispatch(GetAllBankUsersFail("Something went wrong"));
+//           }
+//         } else {
+//           dispatch(GetAllBankUsersFail("Something went wrong"));
+//         }
+//       })
+//       .catch((response) => {
+//         dispatch(GetAllBankUsersFail("something went wrong"));
+//       });
+//   };
+// };
 
 //Create Corporate User Request
 const CreateCorporateUserRequestInit = () => {
@@ -623,8 +875,14 @@ const CreateCorporateUserRequestFail = (message) => {
   };
 };
 
-const CreateCorporateUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateCorporateUserRequestAPI = (
+  navigate,
+  data,
+  handleCancelButtonYes,
+  setCorporateUser
+) => {
+  let token = localStorage.getItem("token");
+
   return (dispatch) => {
     dispatch(CreateCorporateUserRequestInit());
     let form = new FormData();
@@ -641,19 +899,28 @@ const CreateCorporateUserRequestAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CreateCorporateUserRequestAPI(navigate, data));
+          dispatch(
+            CreateCorporateUserRequestAPI(
+              navigate,
+              data,
+              handleCancelButtonYes,
+              setCorporateUser
+            )
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_01".toLowerCase()
             ) {
-              dispatch(
+              await dispatch(
                 CreateCorporateUserRequestSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Corporate user request created"
                 )
               );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+              handleCancelButtonYes();
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -661,7 +928,11 @@ const CreateCorporateUserRequestAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_02".toLowerCase()
                 )
             ) {
-              dispatch(CreateCorporateUserRequestFail("Failed"));
+              dispatch(
+                CreateCorporateUserRequestFail(
+                  "corporate user request not created"
+                )
+              );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -669,7 +940,51 @@ const CreateCorporateUserRequestAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_03".toLowerCase()
                 )
             ) {
-              dispatch(CreateCorporateUserRequestFail("Something went wrong"));
+              dispatch(
+                CreateCorporateUserRequestFail("User's email already exists")
+              );
+              setCorporateUser((prevState) => {
+                return {
+                  ...prevState,
+                  email: {
+                    ...prevState.email,
+                    errorMessage: "User's email already exists",
+                    errorStatus: true,
+                  },
+                };
+              });
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_04".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateCorporateUserRequestFail(
+                  "no users to be added or updated"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_05".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateCorporateUserRequestFail(
+                  "corporate user request not created"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateCorporateUserRequest_08".toLowerCase()
+                )
+            ) {
+              dispatch(CreateCorporateUserRequestFail("Exception"));
             }
           } else {
             dispatch(CreateCorporateUserRequestFail("Something went wrong"));
@@ -706,8 +1021,12 @@ const CreateBulkCorporateUserRequestFail = (message) => {
   };
 };
 
-const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CreateBulkCorporateUserRequestAPI = (
+  navigate,
+  data,
+  setBulkUploadClicked
+) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(CreateBulkCorporateUserRequestInit());
     let form = new FormData();
@@ -729,32 +1048,75 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_01".toLowerCase()
+              "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_01".toLowerCase()
             ) {
               dispatch(
                 CreateBulkCorporateUserRequestSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Corporate User Request Created"
                 )
               );
+              setBulkUploadClicked(false);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_02".toLowerCase()
-                )
-            ) {
-              dispatch(CreateBulkCorporateUserRequestFail("Failed"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_CreateBulkBankUserRequests_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_02".toLowerCase()
                 )
             ) {
               dispatch(
-                CreateBulkCorporateUserRequestFail("Something went wrong")
+                CreateBulkCorporateUserRequestFail(
+                  "Corporate User Request Not Created"
+                )
               );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_03".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBulkCorporateUserRequestFail("Not A Valid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_04".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateBulkCorporateUserRequestFail(
+                  "corporate user request not created"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_05".toLowerCase()
+                )
+            ) {
+              dispatch(
+                CreateBulkCorporateUserRequestFail(
+                  "corporate user request not created"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_06".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBulkCorporateUserRequestFail("not a valid role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CreateBulkCorporateUserRequests_07".toLowerCase()
+                )
+            ) {
+              dispatch(CreateBulkCorporateUserRequestFail("exception"));
             }
           } else {
             dispatch(
@@ -772,13 +1134,13 @@ const CreateBulkCorporateUserRequestAPI = (navigate, data) => {
 };
 
 //Bank Users BankUserList
-const BankUsersBankListInit = () => {
+const BankUsersBulkListInit = () => {
   return {
     type: actions.BANK_USERS_BANK_LIST_INIT,
   };
 };
 
-const BankUsersBankListSuccess = (response, message) => {
+const BankUsersBulkListSuccess = (response, message) => {
   return {
     type: actions.BANK_USERS_BANK_LIST_SUCCESS,
     response: response,
@@ -786,20 +1148,20 @@ const BankUsersBankListSuccess = (response, message) => {
   };
 };
 
-const BankUsersBankListFail = (message) => {
+const BankUsersBulkListFail = (message) => {
   return {
     type: actions.BANK_USERS_BANK_LIST_FAIL,
     message: message,
   };
 };
 
-const BankUsersBankListAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const BankUsersBulkListAPI = (navigate, data, setBulkUploadClicked) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
-    dispatch(BankUsersBankListInit());
+    dispatch(BankUsersBulkListInit());
     let form = new FormData();
-    form.append("RequestMethod", BankUsersBankList.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
+    form.append("RequestMethod", BankUsersBulkList.RequestMethod);
+    form.append("Files", data);
     axios({
       method: "POST",
       url: systemAdminAPI,
@@ -811,7 +1173,7 @@ const BankUsersBankListAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(BankUsersBankListAPI(navigate, data));
+          dispatch(BankUsersBulkListAPI(navigate, data, setBulkUploadClicked));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -819,11 +1181,12 @@ const BankUsersBankListAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_BankUsersBulkList_01".toLowerCase()
             ) {
               dispatch(
-                BankUsersBankListSuccess(
+                BankUsersBulkListSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "file Uploaded SuccessFully"
                 )
               );
+              setBulkUploadClicked(true);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -831,7 +1194,7 @@ const BankUsersBankListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_BankUsersBulkList_02".toLowerCase()
                 )
             ) {
-              dispatch(BankUsersBankListFail("Failed"));
+              dispatch(BankUsersBulkListFail("Invalid File"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -839,17 +1202,25 @@ const BankUsersBankListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_BankUsersBulkList_03".toLowerCase()
                 )
             ) {
-              dispatch(BankUsersBankListFail("Something went wrong"));
+              dispatch(BankUsersBulkListFail("Invalid Request Data"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_BankUsersBulkList_05".toLowerCase()
+                )
+            ) {
+              dispatch(BankUsersBulkListFail("Exception"));
             }
           } else {
-            dispatch(BankUsersBankListFail("Something went wrong"));
+            dispatch(BankUsersBulkListFail("Something went wrong"));
           }
         } else {
-          dispatch(CreateBulkCorporateUserRequestFail("Something went wrong"));
+          dispatch(BankUsersBulkListFail("Something went wrong"));
         }
       })
       .catch((response) => {
-        dispatch(BankUsersBankListFail("something went wrong"));
+        dispatch(BankUsersBulkListFail("something went wrong"));
       });
   };
 };
@@ -857,7 +1228,7 @@ const BankUsersBankListAPI = (navigate, data) => {
 //Corporate Users Bulk List
 const CorporateUsersBulkListInit = () => {
   return {
-    type: actions.BANK_USERS_BANK_LIST_INIT,
+    type: actions.CORPORATE_USERS_BULK_LIST_INIT,
   };
 };
 
@@ -876,13 +1247,14 @@ const CorporateUsersBulkListFail = (message) => {
   };
 };
 
-const CorporateUsersBulkListAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+const CorporateUsersBulkListAPI = (navigate, data, setBulkUploadClicked) => {
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(CorporateUsersBulkListInit());
     let form = new FormData();
     form.append("RequestMethod", CorporateUsersBulkList.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
+    form.append("Files", data);
+
     axios({
       method: "POST",
       url: systemAdminAPI,
@@ -894,7 +1266,9 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
       .then(async (response) => {
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(CorporateUsersBulkListAPI(navigate, data));
+          dispatch(
+            CorporateUsersBulkListAPI(navigate, data, setBulkUploadClicked)
+          );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
@@ -904,9 +1278,10 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
               dispatch(
                 CorporateUsersBulkListSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "file Uploaded SuccessFully"
                 )
               );
+              setBulkUploadClicked(true);
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -914,7 +1289,7 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CorporateUsersBulkList_02".toLowerCase()
                 )
             ) {
-              dispatch(CorporateUsersBulkListFail("Failed"));
+              dispatch(CorporateUsersBulkListFail("Invalid File"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -922,7 +1297,23 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_CorporateUsersBulkList_03".toLowerCase()
                 )
             ) {
-              dispatch(CorporateUsersBulkListFail("Something went wrong"));
+              dispatch(CorporateUsersBulkListFail("Invalid Request Data"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CorporateUsersBulkList_04".toLowerCase()
+                )
+            ) {
+              dispatch(CorporateUsersBulkListFail("Invalid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_CorporateUsersBulkList_05".toLowerCase()
+                )
+            ) {
+              dispatch(CorporateUsersBulkListFail("Exception"));
             }
           } else {
             dispatch(CorporateUsersBulkListFail("Something went wrong"));
@@ -933,89 +1324,6 @@ const CorporateUsersBulkListAPI = (navigate, data) => {
       })
       .catch((response) => {
         dispatch(CorporateUsersBulkListFail("something went wrong"));
-      });
-  };
-};
-
-//Search Corporate Users
-const SearchCorporateUsersInit = () => {
-  return {
-    type: actions.SEARCH_CORPORATE_USERS_INIT,
-  };
-};
-
-const SearchCorporateUsersSuccess = (response, message) => {
-  return {
-    type: actions.SEARCH_CORPORATE_USERS_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const SearchCorporateUsersFail = (message) => {
-  return {
-    type: actions.SEARCH_CORPORATE_USERS_FAIL,
-    message: message,
-  };
-};
-
-const SearchCorporateUsersAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
-  return (dispatch) => {
-    dispatch(SearchCorporateUsersInit());
-    let form = new FormData();
-    form.append("RequestMethod", SearchCorporateUsers.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        _token: token,
-      },
-    })
-      .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(SearchCorporateUsersAPI(navigate, data));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_SearchCorporateUsers_01".toLowerCase()
-            ) {
-              dispatch(
-                SearchCorporateUsersSuccess(
-                  response.data.responseResult,
-                  "Successfull"
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_SearchCorporateUsers_02".toLowerCase()
-                )
-            ) {
-              dispatch(SearchCorporateUsersFail("Failed"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_SearchCorporateUsers_03".toLowerCase()
-                )
-            ) {
-              dispatch(SearchCorporateUsersFail("Something went wrong"));
-            }
-          } else {
-            dispatch(SearchCorporateUsersFail("Something went wrong"));
-          }
-        } else {
-          dispatch(SearchCorporateUsersFail("Something went wrong"));
-        }
-      })
-      .catch((response) => {
-        dispatch(SearchCorporateUsersFail("something went wrong"));
       });
   };
 };
@@ -1043,7 +1351,7 @@ const SearchBankUsersFail = (message) => {
 };
 
 const SearchBankUsersAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(SearchBankUsersInit());
     let form = new FormData();
@@ -1070,7 +1378,7 @@ const SearchBankUsersAPI = (navigate, data) => {
               dispatch(
                 SearchBankUsersSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Data Available"
                 )
               );
             } else if (
@@ -1080,7 +1388,7 @@ const SearchBankUsersAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchBankUsers_02".toLowerCase()
                 )
             ) {
-              dispatch(SearchBankUsersFail("Failed"));
+              dispatch(SearchBankUsersFail("No Data Available"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1088,7 +1396,7 @@ const SearchBankUsersAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchBankUsers_03".toLowerCase()
                 )
             ) {
-              dispatch(SearchBankUsersFail("Something went wrong"));
+              dispatch(SearchBankUsersFail("Exception"));
             }
           } else {
             dispatch(SearchBankUsersFail("Something went wrong"));
@@ -1103,91 +1411,7 @@ const SearchBankUsersAPI = (navigate, data) => {
   };
 };
 
-//Update Corporate User
-const UpdateCorporateUsersInit = () => {
-  return {
-    type: actions.UPDATE_CORPORATE_USERS_INIT,
-  };
-};
-
-const UpdateCorporateUsersSuccess = (response, message) => {
-  return {
-    type: actions.UPDATE_CORPORATE_USERS_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const UpdateCorporateUsersFail = (message) => {
-  return {
-    type: actions.UPDATE_CORPORATE_USERS_FAIL,
-    message: message,
-  };
-};
-
-const UpdateCorporateUsersAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
-  return (dispatch) => {
-    dispatch(UpdateCorporateUsersInit());
-    let form = new FormData();
-    form.append("RequestMethod", UpdateCorporateUsers.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        _token: token,
-      },
-    })
-      .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(UpdateCorporateUsersAPI(navigate, data));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_UpdateCorporateUser_01".toLowerCase()
-            ) {
-              dispatch(
-                UpdateCorporateUsersSuccess(
-                  response.data.responseResult,
-                  "Successfull"
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateCorporateUser_02".toLowerCase()
-                )
-            ) {
-              dispatch(UpdateCorporateUsersFail("Failed"));
-            } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateCorporateUser_03".toLowerCase()
-                )
-            ) {
-              dispatch(UpdateCorporateUsersFail("Something went wrong"));
-            }
-          } else {
-            dispatch(UpdateCorporateUsersFail("Something went wrong"));
-          }
-        } else {
-          dispatch(UpdateCorporateUsersFail("Something went wrong"));
-        }
-      })
-      .catch((response) => {
-        dispatch(UpdateCorporateUsersFail("something went wrong"));
-      });
-  };
-};
-
 //Get Bank User by UserID
-
 const GetBankUserByUserIDInit = () => {
   return {
     type: actions.GET_BANK_USER_BY_USERID_INIT,
@@ -1210,7 +1434,7 @@ const GetBankUserByUserIDFail = (message) => {
 };
 
 const GetBankUserByUserIDAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(GetBankUserByUserIDInit());
     let form = new FormData();
@@ -1237,9 +1461,10 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
               dispatch(
                 GetBankUserByUserIDSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "User Status Updated"
                 )
               );
+              dispatch(editBankUserModalSystemAdmin(true));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1247,7 +1472,7 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_02".toLowerCase()
                 )
             ) {
-              dispatch(GetBankUserByUserIDFail("Failed"));
+              dispatch(GetBankUserByUserIDFail("User Status Not Updated"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1255,7 +1480,7 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_03".toLowerCase()
                 )
             ) {
-              dispatch(GetBankUserByUserIDFail("Something went wrong"));
+              dispatch(GetBankUserByUserIDFail("Exception"));
             }
           } else {
             dispatch(GetBankUserByUserIDFail("Something went wrong"));
@@ -1294,11 +1519,11 @@ const UpdateBankUserByUserIdFail = (message) => {
 };
 
 const UpdateBankUserByUserIdAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateBankUserByUserIdInit());
     let form = new FormData();
-    form.append("RequestMethod", UpdateBankUserByBankID.RequestMethod);
+    form.append("RequestMethod", UpdateBankUserByUserID.RequestMethod);
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
@@ -1316,30 +1541,31 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_01".toLowerCase()
+              "SystemAdmin_SystemAdminManager_UpdateBankUserbyUserID_01".toLowerCase()
             ) {
               dispatch(
                 UpdateBankUserByUserIdSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "User Status Updated"
                 )
               );
+              dispatch(editBankUserModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateBankUserbyUserID_02".toLowerCase()
                 )
             ) {
-              dispatch(UpdateBankUserByUserIdFail("Failed"));
+              dispatch(UpdateBankUserByUserIdFail("User Status Not Updated"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateUserbyUserID_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateBankUserbyUserID_03".toLowerCase()
                 )
             ) {
-              dispatch(UpdateBankUserByUserIdFail("Something went wrong"));
+              dispatch(UpdateBankUserByUserIdFail("Exception"));
             }
           } else {
             dispatch(UpdateBankUserByUserIdFail("Something went wrong"));
@@ -1378,7 +1604,7 @@ const GetVolmeterByBankIDfail = (message) => {
 };
 
 const GetVolmeterByBankIDAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(GetVolmeterByBankIDInit());
     let form = new FormData();
@@ -1405,17 +1631,19 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
               dispatch(
                 GetVolmeterByBankIDsuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Volmeter values by bank"
                 )
               );
             } else if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_02".toLowerCase()
-                )
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_02".toLowerCase()
             ) {
-              dispatch(GetVolmeterByBankIDfail("Failed"));
+              dispatch(
+                GetVolmeterByBankIDsuccess(
+                  response.data.responseResult,
+                  "All Volmeter values"
+                )
+              );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1423,7 +1651,23 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_03".toLowerCase()
                 )
             ) {
-              dispatch(GetVolmeterByBankIDfail("Something went wrong"));
+              dispatch(GetVolmeterByBankIDfail("No values available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetVolmeterByBankIDfail("Not valid role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_05".toLowerCase()
+                )
+            ) {
+              dispatch(GetVolmeterByBankIDfail("Exception"));
             }
           } else {
             dispatch(GetVolmeterByBankIDfail("Something went wrong"));
@@ -1462,7 +1706,7 @@ const AddUpdateVolmterFail = (message) => {
 };
 
 const AddUpdateVolmterAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(AddUpdateVolmterInit());
     let form = new FormData();
@@ -1489,7 +1733,7 @@ const AddUpdateVolmterAPI = (navigate, data) => {
               dispatch(
                 AddUpdateVolmterSuccess(
                   response.data.responseResult,
-                  "Successfull"
+                  "Record Saved"
                 )
               );
             } else if (
@@ -1499,15 +1743,49 @@ const AddUpdateVolmterAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_02".toLowerCase()
                 )
             ) {
-              dispatch(AddUpdateVolmterFail("Failed"));
+              dispatch(AddUpdateVolmterFail("No Record Saved"));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_03".toLowerCase()
+            ) {
+              dispatch(
+                AddUpdateVolmterSuccess(
+                  response.data.responseResult,
+                  "Record Saved"
+                )
+              );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_04".toLowerCase()
                 )
             ) {
-              dispatch(AddUpdateVolmterFail("Something went wrong"));
+              dispatch(AddUpdateVolmterFail("No Record Saved"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_05".toLowerCase()
+                )
+            ) {
+              dispatch(AddUpdateVolmterFail("No Record Saved"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_06".toLowerCase()
+                )
+            ) {
+              dispatch(AddUpdateVolmterFail("Invalid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_AddUpdateVolmeter_07".toLowerCase()
+                )
+            ) {
+              dispatch(AddUpdateVolmterFail("exception"));
             }
           } else {
             dispatch(AddUpdateVolmterFail("Something went wrong"));
@@ -1522,23 +1800,694 @@ const AddUpdateVolmterAPI = (navigate, data) => {
   };
 };
 
+//UpdateVolmeneterByDealer
+const UpdateVolmeterByDealerInit = () => {
+  return {
+    type: actions.UPDATE_VOLMETER_BY_DEALER_INIT,
+  };
+};
+
+const UpdateVolmeterByDealerSuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_VOLMETER_BY_DEALER_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateVolmeterByDealerFail = (message) => {
+  return {
+    type: actions.UPDATE_VOLMETER_BY_DEALER_FAIL,
+    message: message,
+  };
+};
+
+const UpdateVolmeterByDealerAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(UpdateVolmeterByDealerInit());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateVolmeterByDealer.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateVolmeterByDealerAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateVolmeterByDealer_01".toLowerCase()
+            ) {
+              dispatch(
+                UpdateVolmeterByDealerSuccess(
+                  response.data.responseResult,
+                  "Vol Meter Status Updated"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateVolmeterByDealer_02".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateVolmeterByDealerFail("Invalid Action Id"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateVolmeterByDealer_03".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateVolmeterByDealerFail("Invalid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateVolmeterByDealer_04".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateVolmeterByDealerFail("Exception"));
+            }
+          } else {
+            dispatch(UpdateVolmeterByDealerFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateVolmeterByDealerFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateVolmeterByDealerFail("something went wrong"));
+      });
+  };
+};
+
+//Update Volmeter Setting By Bank Id
+const UpdateVolmeterSettingByBankIdInit = () => {
+  return {
+    type: actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_INIT,
+  };
+};
+
+const UpdateVolmeterSettingByBankIdSuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateVolmeterSettingByBankIdFail = (message) => {
+  return {
+    type: actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_FAIL,
+    message: message,
+  };
+};
+
+const UpdateVolmeterSettingByBankIdAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(UpdateVolmeterSettingByBankIdInit());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateVolMeterSettingByBankId.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateVolmeterSettingByBankIdAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateVolMeterSettingByBankId_01".toLowerCase()
+            ) {
+              dispatch(
+                UpdateVolmeterSettingByBankIdSuccess(
+                  response.data.responseResult,
+                  "Update Successfully"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateVolMeterSettingByBankId_02".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateVolmeterSettingByBankIdFail("UnSuccessful"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateVolMeterSettingByBankId_03".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateVolmeterSettingByBankIdFail("Exception"));
+            }
+          } else {
+            dispatch(UpdateVolmeterSettingByBankIdFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateVolmeterSettingByBankIdFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateVolmeterSettingByBankIdFail("something went wrong"));
+      });
+  };
+};
+
+//Get Volmeter Setting By Bank Id
+const GetVolMeterSettingByBankIdInit = () => {
+  return {
+    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_INIT,
+  };
+};
+
+const GetVolMeterSettingByBankIdSuccess = (response, message) => {
+  return {
+    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetVolMeterSettingByBankIdFail = (message) => {
+  return {
+    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_FAIL,
+    message: message,
+  };
+};
+
+const GetVolMeterSettingByBankIdAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(GetVolMeterSettingByBankIdInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetVolMeterSettingByBankId.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetVolMeterSettingByBankIdAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetVolMeterSettingByBankId_01".toLowerCase()
+            ) {
+              dispatch(
+                GetVolMeterSettingByBankIdSuccess(
+                  response.data.responseResult,
+                  "Record found"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetVolMeterSettingByBankId_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetVolMeterSettingByBankIdFail("No Record found"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetVolMeterSettingByBankId_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetVolMeterSettingByBankIdFail("Exception"));
+            }
+          } else {
+            dispatch(GetVolMeterSettingByBankIdFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetVolMeterSettingByBankIdFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetVolMeterSettingByBankIdFail("something went wrong"));
+      });
+  };
+};
+
+//Update Category
+
+//Get Volmeter Setting By Bank Id
+const UpdateCategoryInit = () => {
+  return {
+    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_INIT,
+  };
+};
+
+const UpdateCategorySuccess = (response, message) => {
+  return {
+    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateCategoryFail = (message) => {
+  return {
+    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_FAIL,
+    message: message,
+  };
+};
+
+const UpdateCategoryAPI = (navigate, data) => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  return (dispatch) => {
+    dispatch(UpdateCategoryInit());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateCategory.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateCategoryAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCategory_02".toLowerCase()
+            ) {
+              dispatch(
+                UpdateCategorySuccess(
+                  response.data.responseResult,
+                  "category Updated"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCategory_01".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCategoryFail("Category Already Exists"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCategory_03".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCategoryFail("category not Updated"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCategory_04".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCategoryFail("Invalid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCategory_05".toLowerCase()
+                )
+            ) {
+              dispatch(UpdateCategoryFail("Exception"));
+            }
+          } else {
+            dispatch(UpdateCategoryFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateCategoryFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateCategoryFail("something went wrong"));
+      });
+  };
+};
+
+//Get All Branches
+const GetCounterPartyNamesInit = () => {
+  return {
+    type: actions.GET_COUNTER_PARTY_NAMES_INIT,
+  };
+};
+
+const GetCounterPartyNamesSuccess = (response, message) => {
+  return {
+    type: actions.GET_COUNTER_PARTY_NAMES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetCounterPartyNamesFail = (message) => {
+  return {
+    type: actions.GET_COUNTER_PARTY_NAMES_FAIL,
+    message: message,
+  };
+};
+
+const GetCounterPartyNamesAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetCounterPartyNamesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetCounterPartyNames.RequestMethod);
+    // form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetCounterPartyNamesAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCounterPartyNames_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetCounterPartyNamesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCounterPartyNames_04".toLowerCase()
+            ) {
+              dispatch(GetCounterPartyNamesFail("Exception"));
+            }
+          } else {
+            dispatch(GetCounterPartyNamesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetCounterPartyNamesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetCounterPartyNamesFail("something went wrong"));
+      });
+  };
+};
+const GetAllInstrumentsInit = () => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_INIT,
+  };
+};
+const GetAllInstrumentsSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllInstrumentsFail = (message) => {
+  return {
+    type: actions.GET_ALL_INSTRUMENTS_FAIL,
+    message: message,
+  };
+};
+
+const GetAllInstrumentsAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllInstrumentsInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllInstruments.RequestMethod);
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllInstrumentsAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllInstruments_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllInstrumentsSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllInstruments_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllInstrumentsFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllInstrumentsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllInstrumentsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllInstrumentsFail("something went wrong"));
+      });
+  };
+};
+
+//SearchAllUserLoginHistoryAPI Actions
+const SearchAllUserLoginHistoryInit = () => {
+  return {
+    type: actions.SEARCH_ALL_USER_LOGIN_HISTORY_INIT,
+  };
+};
+
+const SearchAllUserLoginHistorySuccess = (response, message) => {
+  return {
+    type: actions.SEARCH_ALL_USER_LOGIN_HISTORY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SearchAllUserLoginHistoryFail = (message) => {
+  return {
+    type: actions.SEARCH_ALL_USER_LOGIN_HISTORY_FAIL,
+    message: message,
+  };
+};
+
+const SearchAllUserLoginHistoryAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(SearchAllUserLoginHistoryInit());
+    let form = new FormData();
+    form.append("RequestMethod", SearchAllUserLoginHistory.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_01".toLowerCase()
+            ) {
+              dispatch(
+                SearchAllUserLoginHistorySuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_02".toLowerCase()
+                )
+            ) {
+              dispatch(SearchAllUserLoginHistoryFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_03".toLowerCase()
+                )
+            ) {
+              dispatch(SearchAllUserLoginHistoryFail("Exception"));
+            }
+          } else {
+            dispatch(SearchAllUserLoginHistoryFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SearchAllUserLoginHistoryFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SearchAllUserLoginHistoryFail("something went wrong"));
+      });
+  };
+};
+
+//GetCounterPartyList
+const GetCounterPartyListInit = () => {
+  return {
+    type: actions.GET_COUNTER_PARTY_LIST_INIT,
+  };
+};
+const GetCounterPartyListSuccess = (response, message) => {
+  return {
+    type: actions.GET_COUNTER_PARTY_LIST_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetCounterPartyListFail = (message) => {
+  return {
+    type: actions.GET_COUNTER_PARTY_LIST_FAIL,
+    message: message,
+  };
+};
+
+const GetCounterPartyListAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetCounterPartyListInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetCounterPartyList.RequestMethod);
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetCounterPartyListAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCounterPartyList_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetCounterPartyListSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetCounterPartyList_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetCounterPartyListFail("Exception"));
+            }
+          } else {
+            dispatch(GetCounterPartyListFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetCounterPartyListFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetCounterPartyListFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
   AddBranchAPI,
   UpdateBranchAPI,
-  GetAllBranchesAPI,
   CreateBankUserRequestAPI,
   CreateBulkBankUserRequestAPI,
   CreateCorporateUserRequestAPI,
   CreateBulkCorporateUserRequestAPI,
-  BankUsersBankListAPI,
+  BankUsersBulkListAPI,
   CorporateUsersBulkListAPI,
-  SearchCorporateUsersAPI,
   SearchBankUsersAPI,
-  UpdateCorporateUsersAPI,
+  // getAllCorporatesCategory,
   GetBankUserByUserIDAPI,
   UpdateBankUserByUserIdAPI,
   GetVolmeterByBankIDAPI,
   AddUpdateVolmterAPI,
+  UpdateVolmeterByDealerAPI,
+  UpdateVolmeterSettingByBankIdAPI,
+  GetVolMeterSettingByBankIdAPI,
+  UpdateCategoryAPI,
+  GetCounterPartyNamesAPI,
+  GetAllInstrumentsAPI,
+  SearchAllUserLoginHistoryAPI,
+  GetCounterPartyListAPI,
 };

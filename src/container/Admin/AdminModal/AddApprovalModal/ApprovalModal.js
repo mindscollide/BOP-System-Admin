@@ -28,13 +28,9 @@ const ApprovalModal = ({ ModalTitle, modalApproval, setModalApproval }) => {
             {modalApproval ? (
               <Fragment>
                 <Row className="mt-2">
-                  <Col
-                    lg={12}
-                    md={12}
-                    sm={12}
-                  >
+                  <Col lg={12} md={12} sm={12}>
                     <p className="paragraph-accepting">
-                    Are you sure you want to add Approval Reason?
+                      Are you sure you want to add Approval Reason?
                     </p>
                   </Col>
                 </Row>

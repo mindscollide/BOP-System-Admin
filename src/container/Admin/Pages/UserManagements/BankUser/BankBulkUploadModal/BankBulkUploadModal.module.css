@@ -1,0 +1,96 @@
+.BulkUpload-modalcontent {
+  background: #f3f2f1 !important;
+  border: rgba(0, 0, 0, 0.175) 1px solid;
+}
+
+.BulkUpload_modal-title {
+  color: #f26522 !important;
+  font-size: 1.25rem;
+  /* line-height: ; */
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.BulkUpload_modal-crossIcon {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex;
+  justify-content: flex-end;
+}
+.BulkUpload_modal-crossIcon:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.BulkUpload_newusertabletitle {
+  color: #4d4946 !important;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1px !important;
+}
+
+.Complete-btn-BulkUpload {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: #096fed !important;
+  background-color: #096fed !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.Complete-btn-BulkUpload:is(:hover, :active, :focus, :focus-visible) {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.Cancel-btn-BulkUpload {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.Cancel-btn-BulkUpload:is(:hover, :active, :focus, :focus-visible) {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: #096fed !important;
+  background-color: #096fed !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
