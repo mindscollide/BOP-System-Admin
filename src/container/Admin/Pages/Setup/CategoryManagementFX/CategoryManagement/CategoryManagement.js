@@ -1129,7 +1129,7 @@ const CategoryManagement = () => {
                                             {data.categoryName}
                                           </Col>
                                           <Col
-                                            className="d-flex justify-content-end gap-1"
+                                            className="d-flex justify-content-end gap-1 align-items-center"
                                             lg={6}
                                             sm={6}
                                             md={6}
@@ -1143,7 +1143,7 @@ const CategoryManagement = () => {
                                                 )
                                               }
                                             >
-                                              <i className="icon-text-edit"></i>
+                                              <i class="icon-text-edit"></i>
                                             </span>
                                             <span
                                               className="add-cat d-inline-block"
@@ -1159,7 +1159,7 @@ const CategoryManagement = () => {
                                                 )
                                               }
                                             >
-                                              <i className="icon-trash"></i>
+                                              <i class="icon-trash"></i>
                                             </span>
                                           </Col>
                                           <Row>

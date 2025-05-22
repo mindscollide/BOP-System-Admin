@@ -1069,7 +1069,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   text-overflow: ellipsis !important;
   font-family: "Roboto", sans-serif !important;
   font-weight: 600;
-  color: #002650;
+  color: #002650 !important;
 }
 
 .Line {
@@ -1321,6 +1321,9 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   overflow: hidden;
   text-overflow: ellipsis; /* This creates the '...' */
   max-width: 100%;
+}
+
+.NoCorporateMessage {
 }
 .no-user {
   color: #888888;
