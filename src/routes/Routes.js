@@ -1,41 +1,38 @@
 import {
   Route,
   createRoutesFromElements,
-  createHashRouter,
+  createBrowserRouter,
 } from "react-router-dom";
 
-import TradeCount from "../container/Admin/Setups/TradeCount/Tradecount";
 import CounterLimit from "../container/Admin/Reports/CounterParty/CounterLimit";
-import VolMeter from "../container/Admin/Reports/VolMeter/VolMeter";
-import CategoryManagement from "../container/Admin/Setups/CategoryManagement/CategoryManagement";
-import Bankuser from "../container/AdminLogin/BankUser/Bankuser";
-import CorporateUser from "../container/AdminLogin/CorporateUser/CorporateUser";
-import CorporateList from "../container/Admin/Setups/CorporateUserList/CorporateList";
-import BankerList from "../container/Admin/Setups/BankerList/BankerList";
-import LoginHistory from "../container/Admin/Setups/LoginHistory/LoginHistory";
-import TradeAccessManagement from "../container/Admin/Setups/TradeAccessManagement/TradeAccessManagement";
-import SpreadManagement from "../container/Admin/Setups/Spread Management/SpreadManagement";
+import VolMeter from "../container/Admin/Pages/Setup/VolMeter/VolMeter";
+import CategoryManagement from "../container/Admin/Pages/Setup/CategoryManagementFX/CategoryManagement/CategoryManagement";
+import BankerList from "../container/Admin/Pages/UserManagements/BankerList/BankerList/BankerList";
 import SystemLogin from "../container/AdminLogin/System Login/Login/SystemLogin";
 import CreatePassword from "../container/AdminLogin/System Login/CreatePassword/CreatePassword";
 import ChangePassword from "../container/AdminLogin/System Login/ChangePassword/ChangePassword";
 import ResetPassword from "../container/AdminLogin/System Login/ResetPassword/ResetPassword";
 import TwoFaVerification from "../container/AdminLogin/System Login/2faVerificationScreen/TwoFaVerification";
 import AdminDashboard from "../container/Admin/AdminDashboard/AdminDashboard";
+import BankUser from "../container/Admin/Pages/UserManagements/BankUser/BankUser";
+import CorporateUser from "../container/Admin/Pages/UserManagements/CorporateUser/CorporateUser";
+import CorporateList from "../container/Admin/Pages/UserManagements/CorporateUsersList/CorporateUsersList/CorporateList";
+import LoginHistory from "../container/Admin/Pages/UserManagements/LoginHistory/LoginHistory";
+import TradeCount from "../container/Admin/Pages/UserManagements/TradeCount/TradeCount/TradeCount";
+import TradeAccessManagement from "../container/Admin/Pages/Setup/TradeAccessManagement/TradeAccessManagement/TradeAccessManagement";
+import SpreadManagement from "../container/Admin/Pages/Setup/Spread Management/SpreadManagement";
 
-export const router = createHashRouter(
+export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route exact path="/" element={<SystemLogin />} />
-      <Route exact path="CreatePassword" element={<CreatePassword />} />
-      <Route exact path="ChangePassword" element={<ChangePassword />} />
-      <Route exact path="ResetPassword" element={<ResetPassword />} />
-      <Route exact path="2FAVerfication" element={<TwoFaVerification />} />
-      {/* <Route element={<PrivateRoutes />}> */}
-      <Route exact path="/SystemAdmin/" element={<AdminDashboard />}>
-        <Route path="" element={<Bankuser />} />
-        {/* <Route path="" element={<PropertyType />} /> */}
-        {/* <Route path="" element={<AssetsBanking />} /> */}
-        <Route path="AddBankUser" element={<Bankuser />} />
+      <Route path="/" element={<SystemLogin />} />
+      <Route path="CreatePassword" element={<CreatePassword />} />
+      <Route path="ChangePassword" element={<ChangePassword />} />
+      <Route path="ResetPassword" element={<ResetPassword />} />
+      <Route path="2FAVerfication" element={<TwoFaVerification />} />
+      <Route path="/BOP/" element={<AdminDashboard />}>
+        <Route index element={<BankUser />} />
+        <Route path="AddBankUser" element={<BankUser />} />
         <Route path="tradeCount" element={<TradeCount />} />
         <Route path="counterLimit" element={<CounterLimit />} />
         <Route path="volMeter" element={<VolMeter />} />

@@ -17,7 +17,6 @@ const CustomTable = ({
   style,
   bordered,
 }) => {
-  console.log("CustomTable", className);
 
   return (
     <>

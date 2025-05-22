@@ -1,0 +1,57 @@
+.AddBranchLabel {
+  color: #2c4cff !important;
+  font-size: 1.25rem !important;
+  display: flex !important;
+  justify-content: left !important;
+  font-weight: 700;
+}
+
+.labels-add-bank {
+  font-size: 1rem !important;
+  color: #4d4946 !important;
+}
+
+.AddBranchClass {
+  display: flex !important;
+  gap: 10px !important;
+  background: #096fed !important;
+  border-radius: 4px;
+  border: none !important;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  align-items: center !important;
+}
+
+.AddBranchClass:is(:hover, :focus, :active, :focus-visible) {
+  display: flex !important;
+  gap: 10px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border-radius: 4px;
+  border: none !important;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  align-items: center !important;
+}
+
+.IconClass {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.CrossButton {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.CrossButton:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
+}

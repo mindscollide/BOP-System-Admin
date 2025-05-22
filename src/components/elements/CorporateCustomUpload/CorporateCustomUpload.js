@@ -1,9 +1,8 @@
 import React from "react";
 import styles from "./CorporateCustomUpload.module.css";
-import { Box } from "@material-ui/core";
 const CorporateCustomUpload = ({ change, onClick, disable }) => {
   return (
-    <Box display="flex">
+    <>
       <input
         className={styles.uploadText}
         id="contained-button-file"
@@ -19,7 +18,7 @@ const CorporateCustomUpload = ({ change, onClick, disable }) => {
       >
         <span className={styles["PlusIcon"]}>+</span>
       </label>
-    </Box>
+    </>
   );
 };
 

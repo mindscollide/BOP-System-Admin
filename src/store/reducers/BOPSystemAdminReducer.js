@@ -1,4 +1,3 @@
-import { GetAllBranches } from "../../commen/apis/Api_config";
 import * as actions from "../action_types";
 
 const initialState = {
@@ -18,10 +17,21 @@ const initialState = {
   SearchCorporateUsersData: null,
   SearchBankUsersData: null,
   UpdateCorporateUsersData: null,
-  GetBankUserByUserIDData: null,
   UpdateBankUserByUserIdData: null,
   GetVolmeterByBankIDData: null,
   AddUpdateVolmeter: null,
+  GetBankUserbyUserIDData: null,
+
+  //from here
+  UpdateVolmeterByDealer: null,
+  UpdateVolMeterSettingByBankId: null,
+  GetVolMeterSettingByBankId: null,
+  GetAllBankUsers: null,
+  GetVolmeterByBankID: null,
+  GetCounterPartyNamesData: null,
+  GetAllInstruments: null,
+  SearchAllUserLoginHistory: null,
+  GetCounterPartyList: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -36,7 +46,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.CREATE_NEW_CORPORATE_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         createNewCorporate: action.response,
         ResponseMessage: action.message,
       };
@@ -44,7 +54,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.CREATE_NEW_CORPORATE_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         createNewCorporate: null,
         ResponseMessage: action.message,
       };
@@ -80,7 +90,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.ADD_BRANCH_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         AddBranchData: action.response,
         ResponseMessage: action.message,
       };
@@ -88,7 +98,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.ADD_BRANCH_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         AddBranchData: null,
         ResponseMessage: action.message,
       };
@@ -102,40 +112,19 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.UPDATE_BRANCH_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         UpdateBranchData: action.response,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
 
     case actions.UPDATE_BRANCH_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         UpdateBranchData: null,
-        ResponseMessage: action.response,
-      };
-    //Get All Branches
-    case actions.GET_ALL_BRANCHES_INIT:
-      return {
-        ...state,
-        Loading: true,
+        ResponseMessage: action.message,
       };
 
-    case actions.GET_ALL_BRANCHES_SUCCESS:
-      return {
-        ...state,
-        Loading: false,
-        GetAllBranches: action.response,
-        ResponseMessage: action.response,
-      };
-
-    case actions.GET_ALL_BRANCHES_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        GetAllBranches: null,
-        ResponseMessage: action.response,
-      };
     //Create  Bank User Request
     case actions.CREATE_BANK_USER_REQUEST_INIT:
       return {
@@ -148,14 +137,15 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         CreateBankUserRequestData: action.response,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
     case actions.CREATE_BANK_USER_REQUEST_FAIL:
+      console.log(action);
       return {
         ...state,
         Loading: false,
         CreateBankUserRequestData: null,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
     //Create Bulk Bank User Request
     case actions.CREATE_BULK_BANK_USER_REQUEST_INIT:
@@ -258,26 +248,7 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         CorporateUsersBulkListData: action.response,
         ResponseMessage: action.message,
       };
-    //Search Corporate Users
-    case actions.SEARCH_CORPORATE_USERS_INIT:
-      return {
-        ...state,
-        Loading: true,
-      };
-    case actions.SEARCH_CORPORATE_USERS_SUCCESS:
-      return {
-        ...state,
-        Loading: false,
-        SearchCorporateUsersData: action.response,
-        ResponseMessage: action.message,
-      };
-    case actions.SEARCH_CORPORATE_USERS_FAIL:
-      return {
-        ...state,
-        Loading: false,
-        SearchCorporateUsersData: null,
-        ResponseMessage: action.message,
-      };
+
     //Search Bank Users
     case actions.SEARCH_BANK_USERS_INIT:
       return {
@@ -318,6 +289,28 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         UpdateCorporateUsersData: null,
         ResponseMessage: action.message,
       };
+
+    //Get All Bank Users
+    case actions.GET_ALL_BANK_USERS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_ALL_BANK_USERS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBankUsers: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_ALL_BANK_USERS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllBankUsers: null,
+        ResponseMessage: action.message,
+      };
+
     //Get Bank User by UserID
     case actions.GET_BANK_USER_BY_USERID_INIT:
       return {
@@ -328,14 +321,14 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        GetBankUserByUserIDData: action.response,
+        GetBankUserbyUserIDData: action.response,
         ResponseMessage: action.message,
       };
     case actions.GET_BANK_USER_BY_USERID_FAIL:
       return {
         ...state,
         Loading: false,
-        GetBankUserByUserIDData: null,
+        GetBankUserbyUserIDData: null,
         ResponseMessage: action.message,
       };
     //Update Bank User By Bank ID
@@ -367,16 +360,16 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.GET_VOLMETER_BY_BANKID_SUCCESS:
       return {
         ...state,
-        Loading: true,
-        GetVolmeterByBankIDData: action.response,
-        ResponseMessage: action.response,
+        Loading: false,
+        GetVolmeterByBankID: action.response,
+        ResponseMessage: action.message,
       };
     case actions.GET_VOLMETER_BY_BANKID_FAIL:
       return {
         ...state,
-        Loading: true,
-        GetVolmeterByBankIDData: null,
-        ResponseMessage: action.response,
+        Loading: false,
+        GetVolmeterByBankID: null,
+        ResponseMessage: action.message,
       };
     //Add Update Volmeter
     case actions.ADD_UPDATE_VOLMTER_INIT:
@@ -387,16 +380,190 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
     case actions.ADD_UPDATE_VOLMTER_SUCCESS:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         AddUpdateVolmeter: action.response,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
       };
     case actions.ADD_UPDATE_VOLMTER_FAIL:
       return {
         ...state,
-        Loading: true,
+        Loading: false,
         AddUpdateVolmeter: null,
-        ResponseMessage: action.response,
+        ResponseMessage: action.message,
+      };
+
+    //Update Volmeter By Dealer
+    case actions.UPDATE_VOLMETER_BY_DEALER_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.UPDATE_VOLMETER_BY_DEALER_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterByDealer: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_VOLMETER_BY_DEALER_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterByDealer: null,
+        ResponseMessage: action.message,
+      };
+
+    //Update VolMeter Setting By Bank Id
+    case actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterSettingByBankId: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_VOLMETER_SETTING_BY_BANK_ID_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateVolmeterSettingByBankId: null,
+        ResponseMessage: action.message,
+      };
+
+    //Get Vometer setting by bank ID
+    case actions.GET_VOLMETER_SETTING_BY_BANK_ID_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_VOLMETER_SETTING_BY_BANK_ID_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetVolmeterSettingByBankId: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_VOLMETER_SETTING_BY_BANK_ID_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetVolMeterSettingByBankId: null,
+        ResponseMessage: action.message,
+      };
+
+    // //Get all Corporates
+    // case actions.GET_ALL_CORPORATES_INIT:
+    //   return {
+    //     ...state,
+    //     Loading: true,
+    //   };
+    // case actions.GET_ALL_CORPORATES_SUCCESS:
+    //   return {
+    //     ...state,
+    //     Loading: false,
+    //     GetAllCorporates: action.response,
+    //     ResponseMessage: action.message,
+    //   };
+    // case actions.GET_ALL_CORPORATES_FAIL:
+    //   return {
+    //     ...state,
+    //     Loading: false,
+    //     GetAllCorporates: null,
+    //     ResponseMessage: action.message,
+    //   };
+    //Delete Volmeter
+
+    //GetCounterPartyNames Reducer
+    case actions.GET_COUNTER_PARTY_NAMES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_COUNTER_PARTY_NAMES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetCounterPartyNamesData: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_COUNTER_PARTY_NAMES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetCounterPartyNamesData: "",
+        ResponseMessage: action.message,
+      };
+
+    //GetAllInstruments Reducer
+    case actions.GET_ALL_INSTRUMENTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_INSTRUMENTS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstruments: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_INSTRUMENTS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllInstruments: null,
+        ResponseMessage: action.message,
+      };
+    //Search Bank Users
+    case actions.SEARCH_ALL_USER_LOGIN_HISTORY_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.SEARCH_ALL_USER_LOGIN_HISTORY_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        SearchAllUserLoginHistory: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.SEARCH_ALL_USER_LOGIN_HISTORY_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        SearchAllUserLoginHistory: null,
+        ResponseMessage: action.message,
+      };
+
+    //Get Counter Party List
+    case actions.GET_COUNTER_PARTY_LIST_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_COUNTER_PARTY_LIST_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetCounterPartyList: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_COUNTER_PARTY_LIST_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetCounterPartyList: null,
+        ResponseMessage: action.message,
       };
     default:
       return { ...state };

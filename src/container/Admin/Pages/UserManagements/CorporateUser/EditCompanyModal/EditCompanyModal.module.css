@@ -1,0 +1,108 @@
+.AddCompanyLabel {
+  color: #f26522 !important;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+  font-family: "Roboto", sans-serif;
+}
+
+.EditCompany_modal-title {
+  color: #f26522 !important;
+  font-size: 1.25rem;
+  /* line-height: ; */
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+.EditCompany_modal-crossIcon {
+  display: flex;
+  justify-content: flex-end;
+}
+.labels-add-bank {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-family: "Roboto", sans-serif !important;
+  font-weight: 500;
+}
+
+.aesterick-color {
+  color: #cf5b5b !important;
+}
+
+.AddButton {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: #096fed !important;
+  background-color: #096fed !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.AddButton:is(:hover, :active, :focus, :focus-visible) {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.CancelButton {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.CancelButton:is(:hover, :active, :focus, :focus-visible) {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: #096fed !important;
+  background-color: #096fed !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.companyErrorMessage {
+  height: 0px;
+  margin-top: 0px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #f16b6b;
+  visibility: visible !important;
+}
+
+.companyErrorMessage_hidden {
+  visibility: hidden;
+  margin: 0;
+  height: 16px;
+  color: #f16b6b !important;
+}

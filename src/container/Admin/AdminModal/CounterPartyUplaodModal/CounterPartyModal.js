@@ -15,11 +15,9 @@ const CounterPartyModal = ({ uploadCounterModal, setUploadCounterModal }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { uploadReducer, systemReducer } = useSelector((state) => state);
-  console.log(uploadReducer, "uploadReduceruploadReduceruploadReducer");
 
   const [validCorporates, setValidCorporates] = useState([]);
   const [invalidCorporates, setInvalidCorporates] = useState([]);
-  console.log(validCorporates, invalidCorporates, "excelDataexcelData");
   // for close modal handler
   const closeUploadCounterPartyModal = () => {
     setUploadCounterModal(false);
@@ -37,9 +35,8 @@ const CounterPartyModal = ({ uploadCounterModal, setUploadCounterModal }) => {
     ) {
       if (uploadReducer.uploadValidCorporates.validCorporates.length > 0) {
         let validCor = [];
-        uploadReducer.uploadValidCorporates.validCorporates.map(
+        uploadReducer.uploadValidCorporates.validCorporates.forEach(
           (data, index) => {
-            console.log("datadatadata", data);
             validCor.push(data);
           }
         );
@@ -47,9 +44,8 @@ const CounterPartyModal = ({ uploadCounterModal, setUploadCounterModal }) => {
       }
       if (uploadReducer.uploadValidCorporates.invalidCorporates.length > 0) {
         let invalidCor = [];
-        uploadReducer.uploadValidCorporates.invalidCorporates.map(
+        uploadReducer.uploadValidCorporates.invalidCorporates.forEach(
           (data, index) => {
-            console.log("datadatadata", data);
             invalidCor.push(data);
           }
         );

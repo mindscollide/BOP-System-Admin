@@ -10,6 +10,10 @@ const Addcateogry = {
   RequestMethod: "ServiceManager.AddCategory",
 };
 
+const UpdateCategory = {
+  RequestMethod: "ServiceManager.UpdateCategory",
+};
+
 const getallCoporatesSystem = {
   RequestMethod: "ServiceManager.GetAllCorporateDetails",
 };
@@ -90,7 +94,7 @@ const CreateBulkCorporateUserRequest = {
 };
 
 //Bank Users BankUserList
-const BankUsersBankList = {
+const BankUsersBulkList = {
   RequestMethod: "ServiceManager.BankUsersBulkList",
 };
 //Corporate Users Bulk List
@@ -114,8 +118,13 @@ const GetBankUserByUserID = {
   RequestMethod: "ServiceManager.GetBankUserbyUserID",
 };
 //Update Bank User By Bank ID
-const UpdateBankUserByBankID = {
+const UpdateBankUserByUserID = {
   RequestMethod: "ServiceManager.UpdateBankUserbyUserID",
+};
+
+//Get All Bank Users
+const GetAllBankUsers = {
+  RequestMethod: "ServiceManager.GetAllBankUsers",
 };
 
 //Get VolMeters By Bannking ID
@@ -128,10 +137,120 @@ const AddUpdateVolmeter = {
   RequestMethod: "ServiceManager.AddUpdateVolmeter",
 };
 
+//Update Volmeter by Dealer
+const UpdateVolmeterByDealer = {
+  RequestMethod: "ServiceManager.UpdateVolmeterByDealer",
+};
+
+//Update Volmeter Setting By Bank Id
+const UpdateVolMeterSettingByBankId = {
+  RequestMethod: "ServiceManager.UpdateVolMeterSettingByBankId",
+};
+
+//Update Volmeter Setting By Bank Id
+const GetVolMeterSettingByBankId = {
+  RequestMethod: "ServiceManager.GetVolMeterSettingByBankId",
+};
+
+//Get All Categories
+const GetAllCategories = {
+  RequestMethod: "ServiceManager.GetAllCategories",
+};
+
+const GetAllCorporates = {
+  RequestMethod: "ServiceManager.GetAllCorporates",
+};
+
+const GetAllNatureOfBussiness = {
+  RequestMethod: "ServiceManager.GetAllNatureOfBussiness",
+};
+
+const GetAllCorporateUsers = {
+  RequestMethod: "ServiceManager.GetAllCorporateUsers",
+};
+
+const GetCorporateUserByUserID = {
+  RequestMethod: "ServiceManager.GetCorporateUserByUserID",
+};
+
+const RoleList = {
+  RequestMethod: "ServiceManager.RoleList",
+};
+
+const GetBankUserRoles = {
+  RequestMethod: "ServiceManager.GetBankUserRoles",
+};
+
+const GetCounterPartyNames = {
+  RequestMethod: "ServiceManager.GetCounterPartyNames",
+};
+const GetAllInstruments = {
+  RequestMethod: "ServiceManager.GetAllInstruments",
+};
+const GetAllInstrumentTypes = {
+  RequestMethod: "ServiceManager.GetAllInstrumentTypes",
+};
+
+const GetUserSettings = {
+  RequestMethod: "ServiceManager.GetUserSettings",
+};
+
+const UpdateUserSettings = {
+  RequestMethod: "ServiceManager.UpdateUserSettings",
+};
+
+const IsEmployeeIDExists = {
+  RequestMethod: "ServiceManager.IsEmployeeIDExists",
+};
+const SearchAllUserLoginHistory = {
+  RequestMethod: "ServiceManager.SearchAllUserLoginHistory",
+};
+const GetMarketTimeSettings = {
+  RequestMethod: "ServiceManager.GetMarketTimeSettings",
+};
+
+const SaveMarketTimeSettings = {
+  RequestMethod: "ServiceManager.SaveMarketTimeSettings",
+};
+
+const LogoutRM = {
+  RequestMethod: "ServiceManager.LogOut",
+};
+
+const GetCounterPartyList = {
+  RequestMethod: "ServiceManager.GetCounterPartyList",
+};
+
+const GetCorporatesWithStatus = {
+  RequestMethod: "ServiceManager.GetCorporatesWithStatus",
+};
+
+const UpdateCorporateStatus = {
+  RequestMethod: "ServiceManager.UpdateCorporateStatus",
+};
+
+const GetCorporateTradeRights = {
+  RequestMethod: "ServiceManager.GetCorporateTradeRights",
+};
+
+const GetBranchesWithStatus = {
+  RequestMethod: "ServiceManager.GetBranchesWithStatus",
+};
+
+const UpdateBranchStatus = {
+  RequestMethod: "ServiceManager.UpdateBranchStatus",
+};
+
+const GetBranchTradeRights = {
+  RequestMethod: "ServiceManager.GetBranchTradeRights",
+};
+
 export {
+  LogoutRM,
   authenticationRefreshToken,
   UpdateCorporateMapping,
   Addcateogry,
+  UpdateCategory,
   getallCoporatesSystem,
   downloadCorporateUserLogin,
   downloadBankUserLoginHistory,
@@ -149,13 +268,40 @@ export {
   CreateBulkBankUserRequest,
   CreateCorporateUserRequest,
   CreateBulkCorporateUserRequest,
-  BankUsersBankList,
+  BankUsersBulkList,
   CorporateUsersBulkList,
   SearchCorporateUsers,
   SearchBankUsers,
   UpdateCorporateUsers,
   GetBankUserByUserID,
-  UpdateBankUserByBankID,
+  UpdateBankUserByUserID,
   GetVolmeterByBankID,
   AddUpdateVolmeter,
+  UpdateVolmeterByDealer,
+  UpdateVolMeterSettingByBankId,
+  GetVolMeterSettingByBankId,
+  GetAllBankUsers,
+  GetAllCategories,
+  GetAllCorporates,
+  GetAllNatureOfBussiness,
+  GetAllCorporateUsers,
+  GetCorporateUserByUserID,
+  RoleList,
+  GetBankUserRoles,
+  GetCounterPartyNames,
+  GetAllInstruments,
+  GetAllInstrumentTypes,
+  GetUserSettings,
+  UpdateUserSettings,
+  IsEmployeeIDExists,
+  SearchAllUserLoginHistory,
+  GetMarketTimeSettings,
+  SaveMarketTimeSettings,
+  GetCounterPartyList,
+  GetCorporatesWithStatus,
+  GetBranchesWithStatus,
+  UpdateCorporateStatus,
+  UpdateBranchStatus,
+  GetCorporateTradeRights,
+  GetBranchTradeRights,
 };
