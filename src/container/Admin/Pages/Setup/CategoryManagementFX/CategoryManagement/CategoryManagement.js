@@ -24,7 +24,10 @@ import {
 } from "../../../../../../commen/functions/numberFormatter";
 import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
-import { AddCategoryModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import {
+  AddCategoryModalSystemAdmin,
+  DeleteCategoryModalSystemAdmin,
+} from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 const CategoryManagement = () => {
   //Accordian
@@ -33,10 +36,17 @@ const CategoryManagement = () => {
   const navigate = useNavigate();
   const { auth } = useSelector((state) => state);
 
-  //local states Edit Corporate Use Modal Calling
+  //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addCategoryModal
   );
+
+  //Global State for Delete Category Modal
+  const DeleteCategoryGobalState = useSelector(
+    (state) => state.BOPSystemAdminModal.deleteCategoryModal
+  );
+
+  console.log(DeleteCategoryGobalState, "DeleteCategoryGobalState");
 
   //Global state for All Categories Data
   const AllCategories = useSelector(
@@ -91,8 +101,7 @@ const CategoryManagement = () => {
   });
   const [editCategoryList, setEditCategoryList] = useState([]);
   const [corporates, setCorporates] = useState([]);
-  const [delteCateogry, setDeltecategory] = useState(null);
-  const [deleteRejectModal, setDeleteRejectModal] = useState(false);
+  const [categoryID, setCategoryID] = useState(0);
 
   // API call for get All categories
   useEffect(() => {
@@ -449,10 +458,9 @@ const CategoryManagement = () => {
 
   //Delete Category API Function
   const handleDelteCliked = (id) => {
-    let data = {
-      CategoryId: parseInt(id),
-    };
-    dispatch(DeleteCorporateCategoryAPI(navigate, data));
+    console.log(id, "DeleteCategoryGobalState");
+    setCategoryID(id);
+    dispatch(DeleteCategoryModalSystemAdmin(true));
   };
 
   // Update Category Modal Component
@@ -763,11 +771,7 @@ const CategoryManagement = () => {
           />
         </Col>
       </Row>
-      <DeleteModal
-        delteCateogry={delteCateogry}
-        deleteRejectModal={deleteRejectModal}
-        setDeleteRejectModal={setDeleteRejectModal}
-      />
+      {DeleteCategoryGobalState && <DeleteModal categoryID={categoryID} />}
       {AddCategoryGobalState && <AddCategoryModal />}
       {auth.Loading && <Loader />}
     </section>
