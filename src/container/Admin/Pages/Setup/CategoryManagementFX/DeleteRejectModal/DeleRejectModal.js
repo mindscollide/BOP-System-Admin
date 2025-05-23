@@ -1,79 +1,81 @@
 import React, { Fragment } from "react";
 import { Col, Row } from "react-bootstrap";
-import { Modal } from "../../../../../../components/elements";
+import { Button, Modal } from "../../../../../../components/elements";
 import styles from "./DeleteRejectModal.module.css";
-const DeleteModal = ({
-  deleteRejectModal,
-  setDeleteRejectModal,
-  delteCateogry,
-}) => {
-  console.log("delteCateogrydelteCateogry", delteCateogry);
-  // for close modal handler
-  const closeRejectionReasonModal = () => {
-    setDeleteRejectModal(false);
+import { useSelector } from "react-redux";
+import { DeleteCategoryModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
+import { useDispatch } from "react-redux";
+import { DeleteCorporateCategoryAPI } from "../../../../../../store/actions/Auth-Actions";
+import { useNavigate } from "react-router-dom";
+const DeleteModal = ({ categoryID }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { BOPSystemAdminModal } = useSelector((state) => state);
+
+  const handleDeleteModalOKButtonEvent = () => {
+    let data = {
+      CategoryId: Number(categoryID),
+    };
+    dispatch(DeleteCorporateCategoryAPI(navigate, data));
   };
 
   return (
     <Fragment>
       <Modal
-        show={deleteRejectModal}
-        setShow={setDeleteRejectModal}
+        show={BOPSystemAdminModal.deleteCategoryModal}
+        setShow={(value) => dispatch(DeleteCategoryModalSystemAdmin(value))}
+        className="UniversalBOPModalStylesAddCategory"
         modalHeaderClassName={"d-none"}
-        size="lg"
-        onHide={closeRejectionReasonModal}
+        modalFooterClassName="UniversalBOPModalStylesfooter"
+        size="md"
+        onHide={() => dispatch(DeleteCategoryModalSystemAdmin(false))}
         ModalBody={
           <>
-            <Row className="mt-2">
+            <Row>
               <Col
                 lg={12}
                 md={12}
                 sm={12}
                 className="d-flex justify-content-center"
               >
-                <span className={styles["HeadingModal"]}>
-                  Corporates Associated With Category
-                </span>
+                <span className={styles["HeadingModal"]}>Delete Category</span>
               </Col>
             </Row>
-            <Row>
+            <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
                 <Row>
                   <Col
                     lg={12}
                     md={12}
                     sm={12}
-                    className={styles["ModalScroller"]}
+                    className={styles["Description"]}
                   >
-                    {delteCateogry !== undefined && delteCateogry !== null ? (
-                      <>
-                        <p>{delteCateogry?.categoryName}</p>
-                        <p>{delteCateogry?.bidSpread}</p>
-                        <p>{delteCateogry?.categoryID}</p>
-                        <p>{delteCateogry?.offerSpread}</p>
-                        {delteCateogry?.corporates.length > 0
-                          ? delteCateogry?.corporates.map((data, index) => {
-                              return (
-                                <p>
-                                  {
-                                    <ul>
-                                      <li>{data.corporateName}</li>
-                                    </ul>
-                                  }
-                                </p>
-                              );
-                            })
-                          : ""}
-
-                        <p>{delteCateogry?.categoryName}</p>
-                      </>
-                    ) : null}
+                    Some counter party are assigned to this category, kindly
+                    clear the category first
                   </Col>
                 </Row>
               </Col>
             </Row>
           </>
         }
-        ModalFooter={<></>}
+        ModalFooter={
+          <>
+            <Row>
+              <Col
+                lg={12}
+                md={12}
+                sm={12}
+                className="d-flex justify-content-center align-items-center"
+              >
+                <Button
+                  text={"OK"}
+                  onClick={handleDeleteModalOKButtonEvent}
+                  className={"OkayButttonDeleteCategoryModal"}
+                />
+              </Col>
+            </Row>
+          </>
+        }
       />
     </Fragment>
   );

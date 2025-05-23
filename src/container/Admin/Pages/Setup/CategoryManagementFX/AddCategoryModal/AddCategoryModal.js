@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import style from "./AddCategoryModal.module.css";
 import {
   Button,
+  Loader,
   Modal,
   TextField,
 } from "../../../../../../components/elements";
@@ -10,7 +11,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-// import { Addcategory } from "../../../../../store/actions/AddCategoryActions";
 import { addCategroyModalSchema } from "../../../../../../utils/schemas";
 import { Addcategory } from "../../../../../../store/actions/AddCategoryActions";
 import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
@@ -18,40 +18,32 @@ import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { BOPSystemAdminModal } = useSelector((state) => state);
+  const { BOPSystemAdminModal, AddCategory } = useSelector((state) => state);
   const [addCategory, setAddCategory] = useState({ ...addCategroyModalSchema });
 
-  //handle Cross icon
+  //Handle Cross icon
   const handleCrossIcon = () => {
     dispatch(AddCategoryModalSystemAdmin(false));
   };
 
-  //handle Add Button
+  //Handle Add Button Api hit for Adding a Category
   const handleAddButton = () => {
-    if (
-      addCategory.Name.value.trim() === "" ||
-      addCategory.Bid.value.trim() === "" ||
-      addCategory.Offer.value.trim() === ""
-    ) {
-      alert("All fields are required");
-      return;
-    } else {
-      let data = {
-        Name: addCategory.Name.value,
-        Bid: addCategory.Bid.value,
-        Offer: addCategory.Offer.value,
-      };
+    let data = {
+      Category: addCategory.Name.value,
+      BidSpread: Number(addCategory.Bid.value),
+      OfferSpread: Number(addCategory.Offer.value),
+    };
 
-      console.log("data save", data);
-      dispatch(Addcategory(navigate, data));
-    }
+    console.log("data save", data);
+    dispatch(Addcategory(navigate, data));
   };
 
-  //handle CancelButton
+  //Handle CancelButton
   const handleCancelButton = () => {
     dispatch(AddCategoryModalSystemAdmin(false));
   };
 
+  // Handle Onchange for text fields
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
@@ -187,6 +179,7 @@ const AddCategoryModal = () => {
               />
             </Col>
           </Row>
+          {AddCategory.Loading && <Loader />}
         </>
       }
     />

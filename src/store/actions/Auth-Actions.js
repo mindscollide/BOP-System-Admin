@@ -14,6 +14,7 @@ import {
   GetAllInstrumentTypes,
   GetAllBranches,
   LogoutRM,
+  UpdateBranchCategoryMappingapi,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -140,7 +141,7 @@ const updatecorporatefailed = (message) => {
 };
 
 const UpdatecorporateMapping = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(updatecorporateinit());
     let form = new FormData();
@@ -230,10 +231,8 @@ const deletecorporatecategoryfailed = (message) => {
   };
 };
 
-const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
-  // let token = JSON.parse(localStorage.getItem("token"));
+const DeleteCorporateCategoryAPI = (navigate, data) => {
   let token = localStorage.getItem("token");
-
   return async (dispatch) => {
     dispatch(deletecorporatecategoryinit());
     let form = new FormData();
@@ -255,9 +254,8 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_01".toLowerCase()
+              "SystemAdmin_SystemAdminManager_DeleteCategory_01".toLowerCase()
             ) {
-              setDeleteRejectModal(true);
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
@@ -268,7 +266,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_02".toLowerCase()
                 )
             ) {
               dispatch(
@@ -282,7 +280,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_03".toLowerCase()
                 )
             ) {
               dispatch(deletecorporatecategoryfailed("Category not Deleted"));
@@ -290,7 +288,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_04".toLowerCase()
                 )
             ) {
               dispatch(deletecorporatecategoryfailed("Invalid Role"));
@@ -298,7 +296,7 @@ const DeleteCorporateCategoryAPI = (navigate, data, setDeleteRejectModal) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCorporateCategory_05".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_05".toLowerCase()
                 )
             ) {
               dispatch(
@@ -344,7 +342,6 @@ const loginSystemAdminFailed = (message) => {
 
 const loginSystemAdminAPI = (navigate, data) => {
   // let token = JSON.parse(localStorage.getItem("token"));
-
   return (dispatch) => {
     dispatch(loginSystemAdmininit());
     let form = new FormData();
@@ -677,6 +674,7 @@ const getAllCoporatesInit = () => {
 };
 
 const getAllCorporatesSuccess = (response, message) => {
+  console.log(response, "responseresponse");
   return {
     type: actions.GET_ALL_CORPORATES_SUCCESS,
     response: response,
@@ -691,16 +689,15 @@ const getAllCorporatesFail = (message) => {
   };
 };
 
-const getAllCorporatesCategory = (navigate, data) => {
+const getAllCorporatesCategory = (navigate) => {
   let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(getAllCoporatesInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllCorporates.RequestMethod);
-    form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: authenticationAPI,
+      url: systemAdminAPI,
       data: form,
       headers: {
         _token: token,
@@ -709,14 +706,15 @@ const getAllCorporatesCategory = (navigate, data) => {
       .then(async (response) => {
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(getAllCorporatesCategory(navigate, data));
+          dispatch(getAllCorporatesCategory(navigate));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
+            console.log(response.data.responseResult, "responseResult");
             if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01".toLowerCase()
                 )
             ) {
               dispatch(
@@ -727,14 +725,14 @@ const getAllCorporatesCategory = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+              "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_02".toLowerCase()
             ) {
               dispatch(getAllCorporatesFail("No Data Available"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_04".toLowerCase()
                 )
             ) {
               dispatch(getAllCorporatesFail("Exception"));
@@ -1221,6 +1219,91 @@ const logOutApi = (navigate) => {
       });
   };
 };
+
+const updateBranchCataegoryInit = () => {
+  return {
+    type: actions.UPDATE_BRANCH_CATEGORY_MAPPING_INIT,
+  };
+};
+
+const updateBranchCataegorySuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_BRANCH_CATEGORY_MAPPING_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const updateBranchCataegoryFailed = (message) => {
+  return {
+    type: actions.UPDATE_BRANCH_CATEGORY_MAPPING_FAILED,
+    message: message,
+  };
+};
+
+const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(updateBranchCataegoryInit());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateBranchCategoryMappingapi.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateBranchCataegoryMappingAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_01".toLowerCase()
+            ) {
+              dispatch(
+                updateBranchCataegorySuccess(
+                  response.data.responseResult,
+                  "Record Updated"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_02".toLowerCase()
+                )
+            ) {
+              dispatch(updateBranchCataegoryFailed("No Record Updated"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_04".toLowerCase()
+                )
+            ) {
+              dispatch(
+                updateBranchCataegoryFailed("Exception Something went wrong")
+              );
+            }
+          } else {
+            dispatch(updateBranchCataegoryFailed("Something went wrong"));
+          }
+        } else {
+          dispatch(updateBranchCataegoryFailed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(updateBranchCataegoryFailed("something went wrong"));
+      });
+  };
+};
+
 export {
   logOutApi,
   signOut,
@@ -1237,4 +1320,5 @@ export {
   GetBankUserRolesAPI,
   GetAllInstrumentTypesAPI,
   GetAllBranchesAPI,
+  UpdateBranchCataegoryMappingAPI,
 };

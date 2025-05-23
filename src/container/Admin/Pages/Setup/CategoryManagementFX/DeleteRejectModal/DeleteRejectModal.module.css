@@ -1,21 +1,27 @@
-.ModalScroller {
-  height: 30vh !important;
-  overflow-x: hidden !important;
-}
-
-.ModalScroller::-webkit-scrollbar {
-  width: 0.5rem;
-  border-radius: 20px;
-  background-color: #f2f2f2;
-}
-
-.ModalScroller::-webkit-scrollbar-thumb {
-  border-radius: 20px;
-  background: #ccc;
-  margin-left: -15px;
-}
 .HeadingModal {
-  font-size: 18px;
-  color: #004990;
+  font-size: 1.25rem;
+  color: #f26522;
   font-weight: 600;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.Description {
+  text-align: center !important;
+  font-size: 1rem !important;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.OkayButttonDeleteCategoryModal {
+  background: #096fed !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.OkayButttonDeleteCategoryModal:hover {
+  background: #feac78 !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
 }

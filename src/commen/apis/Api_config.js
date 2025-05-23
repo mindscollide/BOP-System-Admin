@@ -158,7 +158,7 @@ const GetAllCategories = {
 };
 
 const GetAllCorporates = {
-  RequestMethod: "ServiceManager.GetAllCorporates",
+  RequestMethod: "ServiceManager.GetAllCategoryDetailsWithCounterParties",
 };
 
 const GetAllNatureOfBussiness = {
@@ -252,6 +252,10 @@ const UpdateBranchTradeRights = {
 const UpdateCorporateTradeRights = {
   RequestMethod: "ServiceManager.UpdateCorporateTradeRights",
 };
+const UpdateBranchCategoryMappingapi = {
+  RequestMethod: "ServiceManager.UpdateBranchCategoryMapping",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -313,4 +317,5 @@ export {
   GetBranchTradeRights,
   UpdateBranchTradeRights,
   UpdateCorporateTradeRights,
+  UpdateBranchCategoryMappingapi,
 };

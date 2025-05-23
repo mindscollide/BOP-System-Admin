@@ -16,6 +16,7 @@ const initialState = {
   confirmationModal: false,
   tradeCountCommentModal: false,
   BankBulkUploadModal: false,
+  deleteCategoryModal: false,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -109,6 +110,13 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         BankBulkUploadModal: action.response,
+      };
+    }
+
+    case actions.DELETE_CATEGORY_MODAL: {
+      return {
+        ...state,
+        deleteCategoryModal: action.response,
       };
     }
 

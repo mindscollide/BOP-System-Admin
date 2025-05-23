@@ -9,11 +9,13 @@ body {
 }
 
 .Scroller-x-resolution {
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
+  width: 100% !important;
+  display: flex !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
   scroll-behavior: smooth !important;
-  align-items: center;
+  align-items: center !important;
+  margin-left: 10px !important;
 }
 
 .Scroller-x-resolution::-webkit-scrollbar {

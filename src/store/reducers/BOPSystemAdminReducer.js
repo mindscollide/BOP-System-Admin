@@ -32,6 +32,7 @@ const initialState = {
   GetAllInstruments: null,
   SearchAllUserLoginHistory: null,
   GetCounterPartyList: null,
+  updateCateogryData: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -563,6 +564,27 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetCounterPartyList: null,
+        ResponseMessage: action.message,
+      };
+
+    //Update Category
+    case actions.UPDATE_CATEGORY_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.UPDATE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        updateCateogryData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.UPDATE_CATEGORY_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        updateCateogryData: null,
         ResponseMessage: action.message,
       };
     default:
