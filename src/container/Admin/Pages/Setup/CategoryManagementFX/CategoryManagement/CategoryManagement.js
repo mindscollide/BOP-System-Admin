@@ -55,9 +55,8 @@ const CategoryManagement = () => {
       CounterParties: category.counterParties.map((cp) => ({
         CounterpartyID: `corp-${cp.counterPartyID}`, // convert to string and prefix
         CounterPartyName: cp.counterPartyName,
-        copID: cp.counterPartyID,
-
-        corporateUsers: cp.users.map((u) => ({
+        CounterPartyType: cp.counterPartyType,
+        CounterPartyUsers: cp.users.map((u) => ({
           email: u.email,
         })),
       })),
@@ -270,9 +269,9 @@ const CategoryManagement = () => {
                             key={client.CounterpartyID}
                             className="custom-panel"
                           >
-                            {client.corporateUsers &&
-                            client.corporateUsers.length > 0 ? (
-                              client.corporateUsers.map((user, i) => (
+                            {client.CounterPartyUsers &&
+                            client.CounterPartyUsers.length > 0 ? (
+                              client.CounterPartyUsers.map((user, i) => (
                                 <p className="user-email" key={i}>
                                   {user.email}
                                 </p>
