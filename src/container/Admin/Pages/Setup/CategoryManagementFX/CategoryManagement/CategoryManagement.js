@@ -188,8 +188,8 @@ const CategoryManagement = () => {
 
   //  For Dragging the Main Card
   const handleDragEnd = (results) => {
-    const { source, destination, type } = results;
-    console.log("handleDragEnd", results);
+    const { source, destination, type, draggableId } = results;
+    console.log("handleDragEnd", draggableId);
     if (!destination) return;
 
     if (
@@ -209,18 +209,15 @@ const CategoryManagement = () => {
 
       return setCorporates(reorderedStores);
     } else {
-      const storeDestinationIndex = corporates.findIndex(
-        (store) => store.categoryID === destination.droppableId
-      );
-      const reorderedStores = [...corporates];
-      console.log(reorderedStores, "reorderedStores");
-      console.log(storeDestinationIndex, "handleDragEnd");
+      //Extracting the IDs Corporate and Category form the Results
+      const sourceCategoryId = parseInt(source.droppableId.replace("cat-", ""));
+      const corporateId = parseInt(draggableId.replace("corp-", ""));
       let data = {
-        CategoryID: corporates[storeDestinationIndex].CatID,
-        CorporateID: corporates[storeDestinationIndex].copID,
+        CategoryID: sourceCategoryId,
+        CorporateID: corporateId,
       };
       console.log(data, "handleDragEnd");
-      // dispatch(UpdatecorporateMapping(navigate, data));
+      dispatch(UpdatecorporateMapping(navigate, data));
     }
   };
 
