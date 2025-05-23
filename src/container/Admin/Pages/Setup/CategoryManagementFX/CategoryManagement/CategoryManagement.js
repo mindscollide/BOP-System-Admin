@@ -261,7 +261,7 @@ const CategoryManagement = () => {
                           className={
                             client.CounterPartyType === 1
                               ? "custom-collapse"
-                              : ""
+                              : "Branchcustom-collapse"
                           }
                           accordion
                         >
@@ -277,7 +277,7 @@ const CategoryManagement = () => {
                             className={
                               client.CounterPartyType === 1
                                 ? "custom-panel"
-                                : ""
+                                : "Branchcustom-panel"
                             }
                           >
                             {client.CounterPartyUsers &&
