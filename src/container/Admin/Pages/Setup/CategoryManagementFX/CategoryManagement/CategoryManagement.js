@@ -54,7 +54,7 @@ const CategoryManagement = () => {
       CatID: category.categoryID, // convert to string and prefix
       CounterParties: category.counterParties.map((cp) => ({
         CounterpartyID: `corp-${cp.counterPartyID}`, // convert to string and prefix
-        corporateName: cp.counterPartyName,
+        CounterPartyName: cp.counterPartyName,
         copID: cp.counterPartyID,
 
         corporateUsers: cp.users.map((u) => ({
@@ -263,7 +263,7 @@ const CategoryManagement = () => {
                             header={
                               <div className="header-container">
                                 <span className="company-name">
-                                  {client.corporateName}
+                                  {client.CounterPartyName}
                                 </span>
                               </div>
                             }
