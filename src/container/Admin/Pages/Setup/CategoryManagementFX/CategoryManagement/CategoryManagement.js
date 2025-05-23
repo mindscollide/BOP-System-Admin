@@ -228,7 +228,6 @@ const CategoryManagement = () => {
           client.CounterPartyType !== null
         ) {
           counterPartyType = client.CounterPartyType;
-
           if (counterPartyType === 1) {
             const data = {
               CategoryID: sourceCategoryId,
