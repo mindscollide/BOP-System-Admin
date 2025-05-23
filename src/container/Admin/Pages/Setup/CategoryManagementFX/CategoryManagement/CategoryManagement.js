@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import {
   DeleteCorporateCategoryAPI,
   getAllCorporatesCategory,
+  UpdateBranchCataegoryMappingAPI,
   UpdatecorporateMapping,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useSelector } from "react-redux";
@@ -185,10 +186,9 @@ const CategoryManagement = () => {
     Slider.scrollLeft = Slider.scrollLeft + 300;
   };
 
-  //  For Dragging the Main Card
+  //For Dragging the Main Card
   const handleDragEnd = (results) => {
     const { source, destination, type, draggableId } = results;
-    console.log("handleDragEnd", results);
     if (!destination) return;
 
     if (
@@ -199,7 +199,6 @@ const CategoryManagement = () => {
 
     if (type === "group") {
       const reorderedStores = [...corporates];
-      console.log(reorderedStores, "handleDragEnd");
       const storeSourceIndex = source.index;
       const storeDestinatonIndex = destination.index;
 
@@ -208,19 +207,44 @@ const CategoryManagement = () => {
 
       return setCorporates(reorderedStores);
     } else {
-      const reorderedStores = [...corporates];
-      console.log(reorderedStores, "handleDragEnd");
       //Extracting the IDs Corporate and Category form the Results
       const sourceCategoryId = parseInt(source.droppableId.replace("cat-", ""));
       const corporateId = parseInt(draggableId.replace("corp-", ""));
-      let data = {
-        CategoryID: sourceCategoryId,
-        CorporateID: corporateId,
-      };
-      console.log(data, "handleDragEnd");
-      dispatch(UpdatecorporateMapping(navigate, data)); //For Category Update
 
-      // dispatch(UpdateBranchCataegoryMappingAPI(navigate, data)); => For Branch Update
+      let counterPartyType = null;
+
+      const sourceCategory = corporates.find(
+        (cat) => cat.categoryID === source.droppableId
+      );
+
+      if (sourceCategory && Array.isArray(sourceCategory.CounterParties)) {
+        const client = sourceCategory.CounterParties.find(
+          (c) => c.CounterpartyID === draggableId
+        );
+
+        if (
+          client &&
+          client.CounterPartyType !== undefined &&
+          client.CounterPartyType !== null
+        ) {
+          counterPartyType = client.CounterPartyType;
+
+          if (counterPartyType === 1) {
+            const data = {
+              CategoryID: sourceCategoryId,
+              CorporateID: corporateId,
+            };
+            console.log("Dispatching with data:", data);
+            dispatch(UpdatecorporateMapping(navigate, data));
+          } else {
+            const data = { CategoryID: sourceCategoryId, BranchID: 5 };
+            console.log("Dispatching with data:", data);
+            dispatch(UpdateBranchCataegoryMappingAPI(navigate, data));
+          }
+        } else {
+        }
+      } else {
+      }
     }
   };
 
