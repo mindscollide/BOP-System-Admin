@@ -25,7 +25,6 @@ import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
 import { AddCategoryModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
-import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
@@ -53,10 +52,11 @@ const CategoryManagement = () => {
       bidSpread: category.bidSpread,
       offerSpread: category.offerSpread,
       CatID: category.categoryID, // convert to string and prefix
-      corporates: category.counterParties.map((cp) => ({
-        corporateID: `corp-${cp.counterPartyID}`, // convert to string and prefix
+      CounterParties: category.counterParties.map((cp) => ({
+        CounterpartyID: `corp-${cp.counterPartyID}`, // convert to string and prefix
         corporateName: cp.counterPartyName,
         copID: cp.counterPartyID,
+
         corporateUsers: cp.users.map((u) => ({
           email: u.email,
         })),
@@ -189,7 +189,7 @@ const CategoryManagement = () => {
   //  For Dragging the Main Card
   const handleDragEnd = (results) => {
     const { source, destination, type, draggableId } = results;
-    console.log("handleDragEnd", draggableId);
+    console.log("handleDragEnd", results);
     if (!destination) return;
 
     if (
@@ -200,7 +200,7 @@ const CategoryManagement = () => {
 
     if (type === "group") {
       const reorderedStores = [...corporates];
-
+      console.log(reorderedStores, "handleDragEnd");
       const storeSourceIndex = source.index;
       const storeDestinatonIndex = destination.index;
 
@@ -209,6 +209,8 @@ const CategoryManagement = () => {
 
       return setCorporates(reorderedStores);
     } else {
+      const reorderedStores = [...corporates];
+      console.log(reorderedStores, "handleDragEnd");
       //Extracting the IDs Corporate and Category form the Results
       const sourceCategoryId = parseInt(source.droppableId.replace("cat-", ""));
       const corporateId = parseInt(draggableId.replace("corp-", ""));
@@ -217,7 +219,9 @@ const CategoryManagement = () => {
         CorporateID: corporateId,
       };
       console.log(data, "handleDragEnd");
-      dispatch(UpdatecorporateMapping(navigate, data));
+      dispatch(UpdatecorporateMapping(navigate, data)); //For Category Update
+
+      // dispatch(UpdateBranchCataegoryMappingAPI(navigate, data)); => For Branch Update
     }
   };
 
@@ -236,11 +240,11 @@ const CategoryManagement = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {data.corporates && data.corporates.length > 0 ? (
-                data.corporates.map((client, index) => (
+              {data.CounterParties && data.CounterParties.length > 0 ? (
+                data.CounterParties.map((client, index) => (
                   <Draggable
-                    key={client.corporateID}
-                    draggableId={client.corporateID}
+                    key={client.CounterpartyID}
+                    draggableId={client.CounterpartyID}
                     index={index}
                     type="column"
                   >
@@ -263,7 +267,7 @@ const CategoryManagement = () => {
                                 </span>
                               </div>
                             }
-                            key={client.corporateID}
+                            key={client.CounterpartyID}
                             className="custom-panel"
                           >
                             {client.corporateUsers &&
@@ -636,7 +640,7 @@ const CategoryManagement = () => {
                 <Button
                   className="Cancel_button_cateogry"
                   text="Cancel"
-                  onClick={() => CloseUpdateCategory(data.corporateID)}
+                  onClick={() => CloseUpdateCategory(data.CounterpartyID)}
                 />
               </Col>
             </Row>
@@ -696,8 +700,10 @@ const CategoryManagement = () => {
                               updateModal(data, index)
                             ) : (
                               <Draggable
-                                key={data.categoryID + data.corporateID}
-                                draggableId={data.categoryID + data.corporateID}
+                                key={data.categoryID + data.CounterpartyID}
+                                draggableId={
+                                  data.categoryID + data.CounterpartyID
+                                }
                                 index={index}
                                 type="column"
                               >
