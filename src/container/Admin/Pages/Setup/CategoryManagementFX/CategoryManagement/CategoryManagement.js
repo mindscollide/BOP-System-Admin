@@ -25,6 +25,7 @@ import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
 import { AddCategoryModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
@@ -51,6 +52,7 @@ const CategoryManagement = () => {
       categoryName: category.categoryName,
       bidSpread: category.bidSpread,
       offerSpread: category.offerSpread,
+      CatID: category.categoryID, // convert to string and prefix
       corporates: category.counterParties.map((cp) => ({
         corporateID: `corp-${cp.counterPartyID}`, // convert to string and prefix
         corporateName: cp.counterPartyName,
@@ -281,7 +283,7 @@ const CategoryManagement = () => {
                   </Draggable>
                 ))
               ) : (
-                <p className="NoCorporateMessage">No corporates available</p>
+                <p className="NoCorporateMessage">No Data Available</p>
               )}
             </Col>
           </Row>
@@ -363,13 +365,12 @@ const CategoryManagement = () => {
     let value = e.target.value;
 
     if (name === "nameUpdate" && value !== "") {
-      let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
-      // console.log("valueCheckvalueCheck", valueCheck);
+      let valueCheck = value.replace(/[^a-zA-Z ]/g, "").trimStart(); // updated to match handleValueChange
       if (valueCheck !== "") {
         setCategoryUpdate({
           ...categoryupdate,
           category: {
-            value: valueCheck.trimStart(),
+            value: valueCheck,
             errorMessage: "",
             errorStatus: false,
           },
@@ -383,8 +384,6 @@ const CategoryManagement = () => {
     }
 
     if (name === "Bidupdated" && value !== "") {
-      let valueCheck = value.replace(/[^0-9]+/g, "");
-      // console.log("valuevalueemailvaluevalueemail", value);
       if (forNumbersOnly(value.trimStart()) !== "") {
         if (numberformatgerWithFourDecimalValues(value.trimStart())) {
           setCategoryUpdate({
@@ -409,10 +408,6 @@ const CategoryManagement = () => {
     }
 
     if (name === "Offerupdate" && value !== "") {
-      // console.log(
-      //   "valuevalueemailvaluevalueemail",
-      //   numberformatgerWithFourDecimalValues(value.trimStart())
-      // );
       if (forNumbersOnly(value.trimStart()) !== "") {
         if (numberformatgerWithFourDecimalValues(value.trimStart())) {
           setCategoryUpdate({
@@ -445,7 +440,7 @@ const CategoryManagement = () => {
       Category: categoryupdate.category.value,
       BidSpread: Number(categoryupdate.bidSpread.value),
       OfferSpread: Number(categoryupdate.offerSpread.value),
-      CategoryId: Number(data.categoryID),
+      CategoryId: Number(data.CatID),
     };
     dispatch(UpdateCategoryAPI(navigate, newdata));
     setEditCategoryList([]);
