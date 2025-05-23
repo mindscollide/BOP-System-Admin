@@ -257,7 +257,14 @@ const CategoryManagement = () => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <Collapse className="custom-collapse" accordion>
+                        <Collapse
+                          className={
+                            client.CounterPartyType === 1
+                              ? "custom-collapse"
+                              : ""
+                          }
+                          accordion
+                        >
                           <Panel
                             header={
                               <div className="header-container">
@@ -267,7 +274,11 @@ const CategoryManagement = () => {
                               </div>
                             }
                             key={client.CounterpartyID}
-                            className="custom-panel"
+                            className={
+                              client.CounterPartyType === 1
+                                ? "custom-panel"
+                                : ""
+                            }
                           >
                             {client.CounterPartyUsers &&
                             client.CounterPartyUsers.length > 0 ? (

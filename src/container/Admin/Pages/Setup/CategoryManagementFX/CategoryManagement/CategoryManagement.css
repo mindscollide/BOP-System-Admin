@@ -1298,6 +1298,11 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   padding-top: 5px !important;
 }
 
+.Branchcustom-collapse {
+  border: none !important;
+  background-color: #fbf0e7 !important;
+  padding-top: 5px !important;
+}
 :where(.css-dev-only-do-not-override-k7429z).ant-collapse
   > .ant-collapse-item:last-child,
 :where(.css-dev-only-do-not-override-k7429z).ant-collapse
@@ -1307,7 +1312,12 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 }
 
 .custom-panel {
-  background-color: #e6f7ff;
+  background-color: #e6f7ff !important;
+  border: none !important;
+}
+
+.Branchcustom-panel {
+  background-color: #fbf0e7 !important;
   border: none !important;
 }
 
