@@ -2058,17 +2058,15 @@ const GetVolMeterSettingByBankIdAPI = (navigate, data) => {
 };
 
 //Update Category
-
-//Get Volmeter Setting By Bank Id
 const UpdateCategoryInit = () => {
   return {
-    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_INIT,
+    type: actions.UPDATE_CATEGORY_INIT,
   };
 };
 
 const UpdateCategorySuccess = (response, message) => {
   return {
-    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_SUCCESS,
+    type: actions.UPDATE_CATEGORY_SUCCESS,
     response: response,
     message: message,
   };
@@ -2076,13 +2074,13 @@ const UpdateCategorySuccess = (response, message) => {
 
 const UpdateCategoryFail = (message) => {
   return {
-    type: actions.GET_VOLMETER_SETTING_BY_BANK_ID_FAIL,
+    type: actions.UPDATE_CATEGORY_FAIL,
     message: message,
   };
 };
 
 const UpdateCategoryAPI = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(UpdateCategoryInit());
     let form = new FormData();
@@ -2112,6 +2110,7 @@ const UpdateCategoryAPI = (navigate, data) => {
                   "category Updated"
                 )
               );
+              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

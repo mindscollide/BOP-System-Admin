@@ -25,13 +25,6 @@ const counterPartyUploadFail = (message) => {
   };
 };
 
-const resetCounterPartyUpload = () => {
-  return {
-    type: actions.RESET_COUNTER_PART_FILE_UPLOAD,
-    response: [],
-  };
-};
-
 const counterPartyUpload = (navigate, data, setCounterUploadModal, setFile) => {
   let token = JSON.parse(localStorage.getItem("token"));
   let form = new FormData();

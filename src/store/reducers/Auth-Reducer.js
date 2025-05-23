@@ -33,6 +33,7 @@ const initialState = {
   GetAllInstrumentTypes: null,
   GetAllBranchesData: null,
   userLogout: null,
+  updatedBranchCategoryData: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -291,7 +292,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        GetAllCorporatesData: [],
+        GetAllCorporatesData: null,
         ResponseMessage: action.message,
       };
 
@@ -478,6 +479,28 @@ const authReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetAllBranchesData: null,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_BRANCH_CATEGORY_MAPPING_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.UPDATE_BRANCH_CATEGORY_MAPPING_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        updatedBranchCategoryData: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_BRANCH_CATEGORY_MAPPING_FAILED:
+      return {
+        ...state,
+        Loading: false,
+        updatedBranchCategoryData: null,
         ResponseMessage: action.message,
       };
 

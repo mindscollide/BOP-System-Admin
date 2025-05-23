@@ -95,6 +95,14 @@ const editTradeAccessManagementModalSystemAdmin = (response, message) => {
   };
 };
 
+const DeleteCategoryModalSystemAdmin = (response, message) => {
+  return {
+    type: actions.DELETE_CATEGORY_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
 export {
   AdduserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
@@ -108,4 +116,5 @@ export {
   ConfirmationModalSystemAdmin,
   AddBankUserConfirmationModalSystemAdmin,
   TradeCountCommentModalSystemAdmin,
+  DeleteCategoryModalSystemAdmin,
 };
