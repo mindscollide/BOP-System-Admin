@@ -140,7 +140,7 @@ const updatecorporatefailed = (message) => {
 };
 
 const UpdatecorporateMapping = (navigate, data) => {
-  let token = JSON.parse(localStorage.getItem("token"));
+  let token = localStorage.getItem("token");
   return (dispatch) => {
     dispatch(updatecorporateinit());
     let form = new FormData();

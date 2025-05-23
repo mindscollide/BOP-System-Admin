@@ -56,6 +56,7 @@ const CategoryManagement = () => {
       corporates: category.counterParties.map((cp) => ({
         corporateID: `corp-${cp.counterPartyID}`, // convert to string and prefix
         corporateName: cp.counterPartyName,
+        copID: cp.counterPartyID,
         corporateUsers: cp.users.map((u) => ({
           email: u.email,
         })),
@@ -188,7 +189,7 @@ const CategoryManagement = () => {
   //  For Dragging the Main Card
   const handleDragEnd = (results) => {
     const { source, destination, type } = results;
-    // console.log("handleDragEnd", results);
+    console.log("handleDragEnd", results);
     if (!destination) return;
 
     if (
@@ -211,12 +212,15 @@ const CategoryManagement = () => {
       const storeDestinationIndex = corporates.findIndex(
         (store) => store.categoryID === destination.droppableId
       );
-
+      const reorderedStores = [...corporates];
+      console.log(reorderedStores, "reorderedStores");
+      console.log(storeDestinationIndex, "handleDragEnd");
       let data = {
-        CategoryID: corporates[storeDestinationIndex].categoryID,
-        CorporateId: results.draggableId,
+        CategoryID: corporates[storeDestinationIndex].CatID,
+        CorporateID: corporates[storeDestinationIndex].copID,
       };
-      dispatch(UpdatecorporateMapping(navigate, data));
+      console.log(data, "handleDragEnd");
+      // dispatch(UpdatecorporateMapping(navigate, data));
     }
   };
 

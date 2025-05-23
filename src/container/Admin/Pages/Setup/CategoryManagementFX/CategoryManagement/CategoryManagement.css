@@ -1004,18 +1004,18 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   background: #096fed !important;
   color: #ffffff;
   display: inline-block !important;
-  padding: 2px 3px !important;
+  padding: 2px 0px !important;
   border-radius: 2px !important;
-  width: 60px !important;
+  width: 63px !important;
   cursor: pointer !important;
 }
 .val-highlight2 {
   background: #f8a041 !important;
   color: #ffffff;
   display: inline-block !important;
-  padding: 2px 3px !important;
+  padding: 2px 0px !important;
   border-radius: 2px !important;
-  width: 60px !important;
+  width: 63px !important;
   cursor: pointer !important;
 }
 
