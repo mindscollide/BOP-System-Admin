@@ -33,8 +33,6 @@ const CategoryManagement = () => {
   const navigate = useNavigate();
   const { auth } = useSelector((state) => state);
 
-  const { AddCategory } = useSelector((state) => state);
-
   //local states Edit Corporate Use Modal Calling
   const AddCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addCategoryModal
@@ -63,32 +61,6 @@ const CategoryManagement = () => {
       })),
     }));
   };
-
-  //Local State
-  const [addData, setadDdata] = useState({
-    category: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    bidSpread: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    offerSpread: {
-      value: "",
-      errorMessage: "",
-      errorStatus: false,
-    },
-    AssetTypeId: {
-      value: 1,
-      errorMessage: "",
-      errorStatus: false,
-    },
-
-    BankID: 1,
-  });
   const [categoryupdate, setCategoryUpdate] = useState({
     category: {
       value: "",
@@ -118,7 +90,6 @@ const CategoryManagement = () => {
     BankID: 1,
   });
   const [editCategoryList, setEditCategoryList] = useState([]);
-  const [errormessege, seterrormessege] = useState(false);
   const [corporates, setCorporates] = useState([]);
   const [delteCateogry, setDeltecategory] = useState(null);
   const [deleteRejectModal, setDeleteRejectModal] = useState(false);
@@ -158,21 +129,6 @@ const CategoryManagement = () => {
   const handleAddaCategoryModal = () => {
     dispatch(AddCategoryModalSystemAdmin(true));
   };
-
-  useEffect(() => {
-    const deletecategoryData = auth.DeleteCategory;
-    if (Object.keys(deletecategoryData).length > 0) {
-      setDeltecategory(deletecategoryData);
-    }
-  }, [auth.DeleteCategory]);
-
-  // store data of corporates in loacal variable
-  useEffect(() => {
-    let corporatesData = auth.Corporates;
-    if (Object.keys(corporatesData).length > 0) {
-      setCorporates(corporatesData);
-    }
-  }, [auth.Corporates]);
 
   //Main Card Scroller to Left
   const SlideLeft = () => {
@@ -332,32 +288,6 @@ const CategoryManagement = () => {
 
   // Check Edit Funtion to open Edit Modal
   const OpenEditCategory = (recorde, data) => {
-    console.log(data, "datadata");
-
-    setadDdata({
-      category: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      bidSpread: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      offerSpread: {
-        value: "",
-        errorMessage: "",
-        errorStatus: false,
-      },
-      AssetTypeId: {
-        value: 1,
-        errorMessage: "",
-        errorStatus: false,
-      },
-
-      BankID: 1,
-    });
     setCategoryUpdate({
       offerSpread: {
         value: formatNumberForFourDecimal(data.offerSpread),
@@ -517,47 +447,6 @@ const CategoryManagement = () => {
     setEditCategoryList([]);
   };
 
-  // Add Corporate Function with spinnner
-  useEffect(() => {
-    let corporatesData = AddCategory.addCategory;
-    if (Object.keys(corporatesData).length > 0) {
-      const newSourceItems = [...corporates];
-      let data = {
-        categoryName: addData.category.value,
-        categoryID: corporatesData.categoryID,
-        offerSpread: formatNumberForFourDecimal(addData.offerSpread.value),
-        bidSpread: formatNumberForFourDecimal(addData.bidSpread.value),
-        corporates: [],
-      };
-      newSourceItems.push(data);
-      setCorporates(newSourceItems);
-      setadDdata({
-        category: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-        bidSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-        offerSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: false,
-        },
-        AssetTypeId: {
-          value: 1,
-          errorMessage: "",
-          errorStatus: false,
-        },
-
-        BankID: 1,
-      });
-    }
-  }, [AddCategory.addCategory]);
-
   //Delete Category API Function
   const handleDelteCliked = (id) => {
     let data = {
@@ -594,15 +483,6 @@ const CategoryManagement = () => {
                   value={categoryupdate.category.value}
                   onChange={HandleUpdateChange}
                 />
-                <p
-                  className={
-                    errormessege && categoryupdate.category.value === ""
-                      ? "errorMessage"
-                      : "errorMessage_hidden"
-                  }
-                >
-                  Please Fill all the credentials
-                </p>
               </Col>
             </Row>
 
