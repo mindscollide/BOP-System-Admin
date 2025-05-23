@@ -1,0 +1,100 @@
+.HeaderNameLabel {
+  color: #f26522 !important;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.EditCorporateTrade_modal-crossIcon {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex;
+  justify-content: flex-end;
+}
+.EditCorporateTrade_modal-crossIcon:is(
+    :hover,
+    :active,
+    :focus,
+    :focus-visible
+  ) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.labels-add-bank {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif !important;
+}
+.aesterick-color {
+  color: #cf5b5b !important;
+}
+
+.AddBranchClass {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.AddBranchClass:is(:hover, :active, :focus, :focus-visible) {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.CancelButton {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.CancelButton:is(:hover, :active, :focus, :focus-visible) {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  background: #0b5ed7 !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+/* :where(.css-dev-only-do-not-override-k7429z)[class^="ant-checkbox"]
+  [class^="ant-checkbox"],
+:where(.css-dev-only-do-not-override-k7429z)[class*=" ant-checkbox"]
+  [class^="ant-checkbox"],
+:where(.css-dev-only-do-not-override-k7429z)[class^="ant-checkbox"]
+  [class*=" ant-checkbox"],
+:where(.css-dev-only-do-not-override-k7429z)[class*=" ant-checkbox"]
+  [class*=" ant-checkbox"] {
+  box-sizing: border-box;
+  background-color: #fff !important;
+} */

@@ -1,8 +1,23 @@
 .HeaderNameLabel {
   color: #f26522 !important;
-  font-weight: 500;
   font-size: 1.25rem;
-  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+.EditBranchTrade_modal-crossIcon {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex;
+  justify-content: flex-end;
+}
+.EditBranchTrade_modal-crossIcon:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
 }
 
 .labels-add-bank {

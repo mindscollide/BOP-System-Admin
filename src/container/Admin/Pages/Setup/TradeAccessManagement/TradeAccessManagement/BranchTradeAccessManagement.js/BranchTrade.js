@@ -14,16 +14,15 @@ import {
 import { Col, Row } from "react-bootstrap";
 import styles from "./BranchTrade.module.css";
 import { useDispatch } from "react-redux";
-import { editTradeAccessManagementModalSystemAdmin } from "../../../../../../../store/actions/BOPSystemAdminModalsActions";
-import EditModalTradeAccessManagement from "../../EditModalTradeAccessManagement/EditModalTradeAccessManagement";
+import EditBranchTradeModal from "./EditBranchTradeModal/EditBranchTradeModal";
 
 const BranchTrade = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //Table for Branche data
   const [branchTableData, setBranchTableData] = useState([]);
-  const [branchID, setBranchID] = useState(0);
-  // const [userData, setUserData] = useState([]);
+
+  const [branchInfo, setBranchInfo] = useState(null);
 
   const GetBranchesWithStatus = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetBranchesWithStatus
@@ -45,10 +44,13 @@ const BranchTrade = () => {
   //   dispatch(editTradeAccessManagementModalSystemAdmin(true));
   // };
 
-  const handleEditCorporateTrade = (record) => {
-    console.log("recordrecord", record);
+  const handleEditBranchTrade = (record) => {
+    console.log("handleEditBranchTrade", record);
+    setBranchInfo({
+      id: record.branchID,
+      name: record.branchName,
+    });
     let data = { BranchID: record.branchID };
-    setBranchID(record.branchID);
     dispatch(GetBranchTradeRightsAPI(navigate, data));
   };
 
@@ -127,8 +129,7 @@ const BranchTrade = () => {
                 <Button
                   className={styles["edit-icon"]}
                   icon={<i className="icon-edit color-blue"></i>}
-                  // onClick={() => handleEditTradeAccessManagementModal(record)}
-                  onClick={() => handleEditCorporateTrade(record)}
+                  onClick={() => handleEditBranchTrade(record)}
                 />
               </Col>
             </Row>
@@ -190,7 +191,7 @@ const BranchTrade = () => {
         </Col>
       </Row>
       {EditTradeAccessManagementModalGobalState && (
-        <EditModalTradeAccessManagement id={branchID} />
+        <EditBranchTradeModal info={branchInfo} />
       )}
     </>
   );

@@ -511,7 +511,7 @@ export const tradeCountSchema = {
     errorStatus: false,
   },
 };
-export const updateCorporateDataSchema = {
+export const updateTradeAccessmanagementDataSchema = {
   TotalLimit: {
     value: "",
     errorMessage: "",

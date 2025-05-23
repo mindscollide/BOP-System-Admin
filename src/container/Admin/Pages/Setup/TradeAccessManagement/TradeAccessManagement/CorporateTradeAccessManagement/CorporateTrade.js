@@ -4,32 +4,45 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   GetCorporatesWithStatusAPI,
+  GetCorporateTradeRightsAPI,
   UpdateCorporateStatusAPI,
 } from "../../../../../../../store/actions/SetupTradeAccessManagementActions";
 import {
   Button,
   CustomSwitch,
+  Loader,
+  // Loader,
   Table,
 } from "../../../../../../../components/elements";
 
 import styles from "./CorporateTrade.module.css";
 import { Col, Row } from "react-bootstrap";
-import { editTradeAccessManagementModalSystemAdmin } from "../../../../../../../store/actions/BOPSystemAdminModalsActions";
-import EditModalTradeAccessManagement from "../../EditModalTradeAccessManagement/EditModalTradeAccessManagement";
+import EditCorporateTradeModal from "./EditCorporateTradeModal/EditCorporateTradeModal";
 
 const CorporateTrade = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   //table for corporate
   const [corporateTableData, setCorporateTableData] = useState([]);
   const GetCorporatesWithStatus = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetCorporatesWithStatus
   );
-  const handleEditTradeAccessManagementModal = (record) => {
-    // console.log("record", record);
-    // let userID = record.counterPartyID;
-    dispatch(editTradeAccessManagementModalSystemAdmin(true));
+
+  const Loading = useSelector(
+    (state) => state.SetupTradeAccessManagementReducer.Loading
+  );
+  console.log("Loading", Loading);
+  const [corporateInfo, setCorporateInfo] = useState(null);
+
+  const handleEditCorporateTrade = (record) => {
+    setCorporateInfo({
+      id: record.corporateID,
+      name: record.corporateName,
+    });
+    let data = {
+      CorporateID: record.corporateID,
+    };
+    dispatch(GetCorporateTradeRightsAPI(navigate, data));
   };
   //Add Bank  Use Modal Calling
   const EditTradeAccessManagementModalGobalState = useSelector(
@@ -107,7 +120,7 @@ const CorporateTrade = () => {
                 <Button
                   className={styles["edit-icon"]}
                   icon={<i className="icon-edit color-blue"></i>}
-                  onClick={() => handleEditTradeAccessManagementModal(record)}
+                  onClick={() => handleEditCorporateTrade(record)}
                 />
               </Col>
             </Row>
@@ -135,11 +148,6 @@ const CorporateTrade = () => {
         );
       },
     },
-    //  Active: (
-    //     <>
-    //     <CustomSwitch size="large" defaultChecked />
-    //   </>
-    // ),
 
     {
       title: <label className="bottom-table-header">Trade</label>,
@@ -175,8 +183,9 @@ const CorporateTrade = () => {
         </Col>
       </Row>
       {EditTradeAccessManagementModalGobalState && (
-        <EditModalTradeAccessManagement />
+        <EditCorporateTradeModal info={corporateInfo} />
       )}
+      {Loading && <Loader />}
     </>
   );
 };

@@ -25,7 +25,7 @@
   border: 1px solid #dbd7d5 !important;
   width: 100% !important;
   overflow: hidden !important;
-  padding: 10px !important;
+  /* padding: 10px !important; */
 }
 
 .UniversalBOPModalStylesAddCategory .modal-content {

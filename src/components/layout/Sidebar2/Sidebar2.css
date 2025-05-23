@@ -3,7 +3,7 @@
   font-weight: 600;
   font-size: 15px;
   color: #fff !important;
-  width: 100% !important;
+  width: 250px !important;
   min-height: 100vh !important;
   background: #4d4946 !important;
 }
@@ -103,7 +103,7 @@
   > .ant-menu.ant-menu-inline
   .ant-menu-sub.ant-menu-inline:hover {
   background: #4d4946 !important;
-  padding: 0px 10px !important;
+  /* padding: 0px 10px !important; */
 }
 
 :where(.css-dev-only-do-not-override-k7429z).ant-menu-inline.ant-menu-root

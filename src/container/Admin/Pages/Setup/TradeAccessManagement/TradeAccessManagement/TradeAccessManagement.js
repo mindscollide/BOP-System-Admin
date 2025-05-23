@@ -9,14 +9,11 @@ import {
 import { Col, Row } from "react-bootstrap";
 import { Select } from "antd";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
+// import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
 import BranchTrade from "./BranchTradeAccessManagement.js/BranchTrade";
+import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
 const TradeAccessManagement = () => {
   const { Option } = Select;
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const Loading = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.Loading
@@ -46,7 +43,16 @@ const TradeAccessManagement = () => {
 
   //Radio Buttons Management
   const handleChange = (e) => {
-    console.log("radio checked", e.target.value);
+    console.log("radio checked", e, e.target.value);
+    if (e.target.value === "Branch") {
+      setBranchName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    } else {
+      setCorporateName({
+        Name: { value: "", errorMessage: "", errorStatus: false },
+      });
+    }
     setRadioValue(e.target.value);
   };
 
@@ -112,19 +118,6 @@ const TradeAccessManagement = () => {
       });
     }
   };
-
-  //useEffect to empty fields value on radio Change
-  useEffect(() => {
-    if (radioValue === "Branch") {
-      setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
-      });
-    } else if (radioValue === "Corporate") {
-      setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
-      });
-    }
-  }, [radioValue]);
 
   return (
     <section className={styles["TradeAccessmangementStyles"]}>

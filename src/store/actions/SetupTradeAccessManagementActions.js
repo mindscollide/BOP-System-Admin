@@ -6,11 +6,16 @@ import {
   GetCorporatesWithStatus,
   GetCorporateTradeRights,
   UpdateBranchStatus,
+  UpdateBranchTradeRights,
   UpdateCorporateStatus,
+  UpdateCorporateTradeRights,
 } from "../../commen/apis/Api_config";
 import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import { RefreshToken } from "./Auth-Actions";
-import { editTradeAccessManagementModalSystemAdmin } from "./BOPSystemAdminModalsActions";
+import {
+  ConfirmationModalSystemAdmin,
+  editTradeAccessManagementModalSystemAdmin,
+} from "./BOPSystemAdminModalsActions";
 
 //GetCorporatesWithStatus
 const GetCorporatesWithStatusInit = () => {
@@ -374,6 +379,7 @@ const GetCorporateTradeRightsAPI = (navigate, data) => {
                   "Data Available."
                 )
               );
+              dispatch(editTradeAccessManagementModalSystemAdmin(true));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporateTradeRights_04".toLowerCase()
@@ -470,6 +476,162 @@ const GetBranchTradeRightsAPI = (navigate, data) => {
   };
 };
 
+//UpdateBranchTradeRights
+const UpdateBranchTradeRightsInit = () => {
+  return {
+    type: actions.UPDATE_BRANCH_TRADE_RIGHTS_INIT,
+  };
+};
+
+const UpdateBranchTradeRightsSuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_BRANCH_TRADE_RIGHT_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateBranchTradeRightsFail = (message) => {
+  return {
+    type: actions.UPDATE_BRANCH_TRADE_RIGHT_FAIL,
+    message: message,
+  };
+};
+
+const UpdateBranchTradeRightsAPI = (navigate, data, handleCloseModal) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(UpdateBranchTradeRightsInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", UpdateBranchTradeRights.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            UpdateBranchTradeRightsAPI(navigate, data, handleCloseModal)
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateBranchTradeRights_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                UpdateBranchTradeRightsSuccess(
+                  response.data.responseResult,
+                  "Successful."
+                )
+              );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+              handleCloseModal();
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchTradeRights_04".toLowerCase()
+            ) {
+              dispatch(UpdateBranchTradeRightsFail("Exception."));
+            }
+          } else {
+            dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
+      });
+  };
+};
+
+//UpdateCorporateTradeRights
+const UpdateCorporateTradeRightsInit = () => {
+  return {
+    type: actions.UPDATE_CORPORATE_TRADE_RIGHTS_INIT,
+  };
+};
+
+const UpdateCorporateTradeRightsSuccess = (response, message) => {
+  return {
+    type: actions.UPDATE_CORPORATE_TRADE_RIGHT_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const UpdateCorporateTradeRightsFail = (message) => {
+  return {
+    type: actions.UPDATE_CORPORATE_TRADE_RIGHT_FAIL,
+    message: message,
+  };
+};
+
+const UpdateCorporateTradeRightsAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(UpdateCorporateTradeRightsInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", UpdateCorporateTradeRights.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(UpdateCorporateTradeRightsAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                UpdateCorporateTradeRightsSuccess(
+                  response.data.responseResult,
+                  "Successful."
+                )
+              );
+              await dispatch(ConfirmationModalSystemAdmin(false));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_04".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateTradeRightsFail("Exception."));
+            }
+          } else {
+            dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
+      });
+  };
+};
 export {
   GetCorporatesWithStatusAPI,
   GetBranchesWithStatusAPI,
@@ -477,4 +639,6 @@ export {
   UpdateBranchStatusAPI,
   GetCorporateTradeRightsAPI,
   GetBranchTradeRightsAPI,
+  UpdateBranchTradeRightsAPI,
+  UpdateCorporateTradeRightsAPI,
 };

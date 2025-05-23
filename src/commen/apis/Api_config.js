@@ -245,6 +245,13 @@ const GetBranchTradeRights = {
   RequestMethod: "ServiceManager.GetBranchTradeRights",
 };
 
+const UpdateBranchTradeRights = {
+  RequestMethod: "ServiceManager.UpdateBranchTradeRights",
+};
+
+const UpdateCorporateTradeRights = {
+  RequestMethod: "ServiceManager.UpdateCorporateTradeRights",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -304,4 +311,6 @@ export {
   UpdateBranchStatus,
   GetCorporateTradeRights,
   GetBranchTradeRights,
+  UpdateBranchTradeRights,
+  UpdateCorporateTradeRights,
 };

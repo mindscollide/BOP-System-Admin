@@ -389,6 +389,8 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
               console.log("loginSystemAdminSuccess", response);
+              localStorage.setItem("defaultOpenKey", "sub1");
+              localStorage.setItem("defaultSelectedKey", "1");
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
               localStorage.setItem("token", response.data.responseResult.token);
               localStorage.setItem(

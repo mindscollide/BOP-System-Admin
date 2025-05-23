@@ -81,6 +81,7 @@ const Sidebar2 = () => {
     <Menu
       theme="dark"
       mode="inline"
+      defaultOpenKeys={[localStorage.getItem("defaultOpenKey")]}
       selectedKeys={[localStorage.getItem("defaultSelectedKey")]}
       className="Menu-sidebar-class"
     >

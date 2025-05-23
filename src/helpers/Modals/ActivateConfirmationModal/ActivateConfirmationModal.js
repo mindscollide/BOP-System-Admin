@@ -16,7 +16,7 @@ const ActivateConfirmationModal = ({ handleYesButton, handleNoButton }) => {
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
       size="md"
-      onHide={handleNoButton}
+      // onHide={handleNoButton}
       ModalBody={
         <>
           <Row>

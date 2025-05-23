@@ -27,7 +27,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
     (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
   );
 
-  //State for add company
+  //State for edit company
   const [updateCorporate, setUpdateCorporate] = useState({
     ...updateCorporateUserSchema,
   });
