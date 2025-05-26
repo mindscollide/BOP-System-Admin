@@ -441,13 +441,13 @@ const AddCorporateUser = () => {
                 <Row>
                   <Col lg={12} md={12} sm={12}>
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Name
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           labelClass="d-none"
                           name={"firstName"}
@@ -464,13 +464,13 @@ const AddCorporateUser = () => {
                     {/* <Row className="mt-3"></Row> */}
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Email
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           labelClass="d-none"
                           name={"email"}
@@ -520,13 +520,13 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3 position-relative">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Company Name
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12} className="position-relative">
+                      <Col lg={6} md={6} sm={12} className="position-relative">
                         <Select
                           options={companyNameOptions}
                           isSearchable={true}
@@ -548,14 +548,15 @@ const AddCorporateUser = () => {
                       </Col>
                     </Row>
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Category
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
+                          className={styles["disableText"]}
                           labelClass="d-none"
                           value={corporateUser.categoryName || ""}
                           maxLength={50}
@@ -565,7 +566,7 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>Chat</span>
                       </Col>
                       <Col lg={6} md={6} sm={12} className="m-0 p-0">
@@ -581,7 +582,7 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           FE / Non-FE
                         </span>
@@ -609,15 +610,15 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           RFQ Timer
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <Row>
-                          <Col lg={5} md={5} sm={12}>
+                          <Col lg={6} md={6} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Treasury
                               <span className={styles["aesterick-color"]}>
@@ -625,12 +626,13 @@ const AddCorporateUser = () => {
                               </span>
                             </span>
                             <TextField
+                              className={styles["disableText"]}
                               labelClass="d-none"
                               value={corporateUser.rfqTreasury || ""}
                               disable={true}
                             />
                           </Col>
-                          <Col lg={5} md={5} sm={12}>
+                          <Col lg={6} md={6} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Corporate
                               <span className={styles["aesterick-color"]}>
@@ -638,6 +640,7 @@ const AddCorporateUser = () => {
                               </span>
                             </span>
                             <TextField
+                              className={styles["disableText"]}
                               labelClass="d-none"
                               value={corporateUser.rfqCorporate || ""}
                               disable={true}
@@ -648,14 +651,15 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Nature of the Client
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
+                          className={styles["disableText"]}
                           labelClass="d-none"
                           value={corporateUser.natureOfClient || ""}
                           disable={true}

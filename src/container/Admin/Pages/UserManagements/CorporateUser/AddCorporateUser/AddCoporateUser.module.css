@@ -207,6 +207,10 @@
   border: 1px solid #ced4da;
   border-radius: 0px !important;
 }
+.disableText {
+  color: var(--disabled-font);
+  background: var(--disabled-field) !important;
+}
 
 @media (max-width: 768px) {
   .EditButton,

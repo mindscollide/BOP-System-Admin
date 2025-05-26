@@ -1,9 +1,21 @@
+.modal-content {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 0.5rem;
+}
 .EditBranchLabel {
   color: #f26522 !important;
   font-size: 1.25rem;
   font-weight: 500;
   display: flex;
   justify-content: flex-start;
+}
+.EditBranch_modal-crossIcon {
+  display: flex;
+  align-items: center;
+}
+.cross-icon-style {
+  font-size: 20px !important;
 }
 
 .labels-add-bank {
@@ -18,7 +30,7 @@
 
 .AddBranchClass {
   display: flex !important;
-  gap: 10px !important;
+  gap: 5px !important;
   background: #096fed !important;
   border-radius: 4px;
   border: none !important;
@@ -26,11 +38,12 @@
   font-weight: 500;
   cursor: pointer;
   align-items: center !important;
+  padding: 0.5rem 1rem;
 }
 
 .AddBranchClass:is(:hover, :focus, :active, :focus-visible) {
   display: flex !important;
-  gap: 10px !important;
+  gap: 5px !important;
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
   border-radius: 4px;
   border: none !important;
@@ -38,6 +51,7 @@
   font-weight: 500;
   cursor: pointer;
   align-items: center !important;
+  padding: 0.5rem 1rem;
 }
 
 .IconClass {
@@ -47,7 +61,7 @@
 
 .CancelButton {
   display: flex !important;
-  gap: 10px !important;
+  gap: 5px !important;
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
   border-radius: 4px;
   border: none !important;
@@ -59,7 +73,7 @@
 
 .CancelButton:is(:hover, :focus, :active, :focus-visible) {
   display: flex !important;
-  gap: 10px !important;
+  gap: 5px !important;
   background: #096fed !important;
   border-radius: 4px;
   border: none !important;
@@ -68,6 +82,7 @@
   cursor: pointer;
   align-items: center !important;
 }
+
 .branchErrorMessage {
   height: 0px;
   margin-top: 0px !important;

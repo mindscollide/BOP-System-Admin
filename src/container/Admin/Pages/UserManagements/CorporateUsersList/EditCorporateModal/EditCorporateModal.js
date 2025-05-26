@@ -218,6 +218,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
+                className={styles["disableText"]}
                 labelClass="d-none"
                 name="email"
                 value={updateCorporate.email.value}
@@ -234,6 +235,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
+                className={styles["disableText"]}
                 labelClass="d-none"
                 name={"corporateName"}
                 value={updateCorporate.corporateName.value}
@@ -257,6 +259,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                   </span>
 
                   <TextField
+                    className={styles["disableText"]}
                     labelClass="d-none"
                     value={`${updateCorporate.RFQTimerTreasury.value} Minutes`}
                     disable={true}
@@ -270,6 +273,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                   </span>
 
                   <TextField
+                    className={styles["disableText"]}
                     labelClass="d-none"
                     value={`${updateCorporate.RFQTimerCorporate.value} Minutes`}
                     disable={true}

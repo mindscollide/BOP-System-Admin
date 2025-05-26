@@ -107,7 +107,7 @@ const EditBranchModal = ({ editBranchData }) => {
       <Modal
         show={BOPSystemAdminModal.editBankUserModal}
         setShow={(value) => dispatch(editBankUserModalSystemAdmin(value))}
-        className="UniversalBOPModalStyles"
+        className="UniversalBOPModalStylesBankUser"
         modalHeaderClassName={"d-none"}
         modalFooterClassName="UniversalBOPModalStylesfooter"
         size="lg"
@@ -125,13 +125,13 @@ const EditBranchModal = ({ editBranchData }) => {
                 className={styles["EditBranch_modal-crossIcon"]}
               >
                 <i
-                  className="icon-close cursor-pointer"
+                  className={`icon-close cursor-pointer ${styles["cross-icon-style"]}`}
                   onClick={() => dispatch(editBankUserModalSystemAdmin(false))}
                 />
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Name
                   <span className={styles["aesterick-color"]}>*</span>
@@ -158,7 +158,7 @@ const EditBranchModal = ({ editBranchData }) => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Code
                   <span className={styles["aesterick-color"]}>*</span>
@@ -184,7 +184,7 @@ const EditBranchModal = ({ editBranchData }) => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Contact
                   <span className={styles["aesterick-color"]}>*</span>
@@ -203,7 +203,7 @@ const EditBranchModal = ({ editBranchData }) => {
           </>
         }
         ModalFooter={
-          <Row className="mb-3">
+          <Row className="mt-4 mb-3">
             <Col
               lg={12}
               md={12}

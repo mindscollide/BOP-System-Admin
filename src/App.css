@@ -4,8 +4,12 @@
 
 body {
   background-color: #f4f4f4 !important;
-  font-family: "Montserrat", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   overflow: hidden !important;
+}
+:where(.css-dev-only-do-not-override-k7429z)[class^="ant-layout"],
+:where(.css-dev-only-do-not-override-k7429z)[class*=" ant-layout"] {
+  font-family: "Roboto", sans-serif !important;
 }
 
 .Scroller-x-resolution {
@@ -344,7 +348,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   > tr:not(:last-child)
   > th {
   border-bottom: 1px solid #f0f0f0 !important;
-  padding: 8px !important;
+  /* padding: 8px !important; */
 }
 
 :where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper

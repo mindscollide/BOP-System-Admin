@@ -202,7 +202,7 @@ const AddBranchModal = () => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Name
                   <span className={styles["aesterick-color"]}>*</span>
@@ -228,7 +228,7 @@ const AddBranchModal = () => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Code
                   <span className={styles["aesterick-color"]}>*</span>
@@ -254,7 +254,7 @@ const AddBranchModal = () => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Category
                   <span className={styles["aesterick-color"]}>*</span>
@@ -275,7 +275,7 @@ const AddBranchModal = () => {
             </Row>
 
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12} className="d-flex align-items-center">
+              <Col lg={4} md={4} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Contact
                   <span className={styles["aesterick-color"]}>*</span>

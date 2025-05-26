@@ -588,14 +588,14 @@ const AddBankUser = () => {
                 <Row>
                   <Col lg={12} md={12} sm={12}>
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Employee ID
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
 
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           name={"EmployeeID"}
                           labelClass="d-none"
@@ -620,20 +620,20 @@ const AddBankUser = () => {
                         )}
                       </Col>
 
-                      <Col lg={4} md={4} sm={4}>
+                      <Col lg={5} md={5} sm={12}>
                         <CustomUpload change={HandleFileUpload} />
                         {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
                       </Col>
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Treasury Person Name
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           name={"firstName"}
                           value={addBankUser.firstName.value}
@@ -645,13 +645,13 @@ const AddBankUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           User Role
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <Select
                           options={rolesOptions}
                           value={role}
@@ -665,7 +665,7 @@ const AddBankUser = () => {
                     {role.value === 9 && (
                       <>
                         <Row className="mt-3 position-relative">
-                          <Col lg={2} md={2} sm={12}>
+                          <Col lg={1} md={1} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Select Branch
                               <span className={styles["aesterick-color"]}>
@@ -675,8 +675,8 @@ const AddBankUser = () => {
                           </Col>
 
                           <Col
-                            lg={5}
-                            md={5}
+                            lg={6}
+                            md={6}
                             sm={12}
                             className="position-relative"
                           >
@@ -707,7 +707,7 @@ const AddBankUser = () => {
                         </Row>
 
                         <Row className="mt-3">
-                          <Col lg={2} md={2} sm={12}>
+                          <Col lg={1} md={1} sm={12}>
                             <span className={styles["labels-add-bank"]}>
                               Category
                               <span className={styles["aesterick-color"]}>
@@ -715,8 +715,9 @@ const AddBankUser = () => {
                               </span>
                             </span>
                           </Col>
-                          <Col lg={5} md={5} sm={12}>
+                          <Col lg={6} md={6} sm={12}>
                             <TextField
+                              className={styles["disableText"]}
                               name={"cateogry"}
                               value={addBankUser.category.value}
                               maxLength={50}
@@ -730,13 +731,13 @@ const AddBankUser = () => {
                     )}
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Email
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           name={"email"}
                           value={addBankUser.email.value}
@@ -757,13 +758,13 @@ const AddBankUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={2} md={2} sm={12}>
+                      <Col lg={1} md={1} sm={12}>
                         <span className={styles["labels-add-bank"]}>
                           Contact
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                       </Col>
-                      <Col lg={5} md={5} sm={12}>
+                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           name={"Contact"}
                           value={addBankUser.Contact.value}
