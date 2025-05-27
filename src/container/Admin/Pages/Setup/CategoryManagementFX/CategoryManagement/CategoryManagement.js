@@ -254,9 +254,7 @@ const CategoryManagement = () => {
         destination.droppableId.replace("cat-", "")
       );
 
-      console.log(sourceCategoryId, "resultsresultsresults");
       const corporateId = parseInt(draggableId.split("corp-")[1]);
-      console.log(corporateId, "resultsresultsresults");
 
       let counterPartyType = null;
 
@@ -264,16 +262,10 @@ const CategoryManagement = () => {
         (cat) => cat.categoryID === source.droppableId
       );
 
-      console.log(sourceCategory, "resultsresultsresults");
-
       if (sourceCategory && Array.isArray(sourceCategory.CounterParties)) {
-        console.log("resultsresultsresults");
         const client = sourceCategory.CounterParties.find(
           (c) => c.CounterpartyID === draggableId.replace(/^cat-\d+-/, "")
         );
-        console.log(client, "resultsresultsresults");
-        console.log(sourceCategory.CounterParties, "resultsresultsresults");
-        console.log(draggableId, "resultsresultsresults");
         if (
           client &&
           client.CounterPartyType !== undefined &&
@@ -288,7 +280,13 @@ const CategoryManagement = () => {
             console.log("Dispatching with data:", data);
             dispatch(UpdatecorporateMapping(navigate, data));
           } else {
-            const data = { CategoryID: sourceCategoryId, BranchID: 5 };
+            const BranchCounterPartyID = parseInt(
+              client.CounterpartyID.replace("corp-", "")
+            );
+            const data = {
+              CategoryID: sourceCategoryId,
+              BranchID: BranchCounterPartyID,
+            };
             console.log("Dispatching with data:", data);
             dispatch(UpdateBranchCataegoryMappingAPI(navigate, data));
           }

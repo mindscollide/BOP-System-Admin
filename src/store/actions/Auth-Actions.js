@@ -166,13 +166,13 @@ const UpdatecorporateMapping = (navigate, data) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_01".toLowerCase()
             ) {
-              await dispatch(getAllCorporatesCategory(navigate));
               dispatch(
                 updatecorporatesuccess(
                   response.data.responseResult.corporateCategory,
                   "Record Updated"
                 )
               );
+              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1272,6 +1272,7 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
                   "Record Updated"
                 )
               );
+              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
