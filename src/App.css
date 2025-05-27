@@ -210,7 +210,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* Seperate Bank User Table of Gray Header CSS */
 .GrayHeader-table {
-  max-height: 45vh !important;
+  max-height: 100vh !important;
   max-width: 76vw;
   width: 100%;
   box-sizing: border-box !important;
@@ -388,7 +388,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* All TextFileds PlaceHolder Sizes */
 input.form-control {
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-family: "Roboto", sans-serif !important;
   font-weight: 500;
   white-space: nowrap !important;

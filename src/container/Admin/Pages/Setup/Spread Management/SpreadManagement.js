@@ -19,20 +19,48 @@ import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateCon
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { GetAllCategoriesAPI } from "../../../../../store/actions/Auth-Actions.js";
-import { SpreadManagementSchema } from "../../../../../utils/schemas.js";
 
-import { Button, CustomPaper } from "../../../../../components/elements";
+import {
+  Button,
+  CustomPaper,
+  Loader,
+} from "../../../../../components/elements";
+import {
+  GetCrossRateSpreadsForCategoryAPI,
+  GetSpotSpreadsForCategoryAPI,
+  GetTenorWiseForwardSpreadsForCategoryAPI,
+} from "../../../../../store/actions/SpreadManagementActions.js";
+import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const LoadingState = useSelector(
+    (state) => state.SpreadManagementReducer.Loading
+  );
+
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
   console.log("getAllCategories", getAllCategories);
 
-  // const [category, setCategory] = useState(defaultCategory);
-  const [paritySpotData, setParitySpotData] = useState(parityData);
-  const [crossRateData, setCrossRateData] = useState(crossData);
-  const [forwardData, setForwardData] = useState(initialForwardState);
+  const GetSpotSpreadsForCategory = useSelector(
+    (state) => state.SpreadManagementReducer.GetSpotSpreadsForCategory
+  );
+  const GetCrossRateSpreadsForCategory = useSelector(
+    (state) => state.SpreadManagementReducer.GetCrossRateSpreadsForCategory
+  );
+
+  const GetTenorWiseForwardSpreadsForCategory = useSelector(
+    (state) =>
+      state.SpreadManagementReducer.GetTenorWiseForwardSpreadsForCategory
+  );
+
+  console.log(
+    "GetTenorWiseForwardSpreadsForCategory",
+    GetTenorWiseForwardSpreadsForCategory
+  );
+  const [paritySpotData, setParitySpotData] = useState([]);
+  const [crossRateData, setCrossRateData] = useState([]);
+  const [forwardData, setForwardData] = useState([]);
   const [discountingData, setDiscountingData] = useState(
     initialDiscountingState
   );
@@ -43,6 +71,7 @@ const SpreadManagement = () => {
     value: 0,
     label: "",
   });
+
   // Function to handle input changes in Parity Spot table
   const handleParitySpotInputChange = (index, field, value) => {
     let validateValue = value.replace(/[^0-9.]/g, "");
@@ -76,7 +105,6 @@ const SpreadManagement = () => {
 
   // Save action placeholder (can be extended to API calls)
   const saveData = (dataType) => {
-    // console.log(`Saving data for ${dataType}:`, JSON.stringify(dataType));
     console.log(
       `Saving data for Parity Data: ${paritySpotData}:`,
       JSON.stringify(paritySpotData),
@@ -102,11 +130,14 @@ const SpreadManagement = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
   };
 
-  const handleResetDiscounting = () => {
+  const handleResetFEDiscounting = () => {
     setResetOrSaveComponent("resetDiscountingTable");
     dispatch(ConfirmationModalSystemAdmin(true));
   };
-
+  const handleResetNonFEDiscounting = () => {
+    setResetOrSaveComponent("resetDiscountingTable");
+    dispatch(ConfirmationModalSystemAdmin(true));
+  };
   const handleResetOrSave = () => {
     if (resetOrSaveComponent === "resetForwardTable") {
       setForwardData(resetForwardState);
@@ -135,6 +166,7 @@ const SpreadManagement = () => {
       saveData();
     }
   };
+
   //Reset Discouting Table to 0
   const resetDiscountingState = initialDiscountingState.map((row) => ({
     ...row,
@@ -168,7 +200,9 @@ const SpreadManagement = () => {
 
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
+    dispatch(GetAllInstrumentsAPI(navigate));
   }, []);
+
   useEffect(() => {
     if (getAllCategories !== null) {
       try {
@@ -183,27 +217,61 @@ const SpreadManagement = () => {
       } catch (error) {}
     }
   }, [getAllCategories]);
+
+  useEffect(() => {
+    if (getAllCategories !== null) {
+      dispatch(
+        GetSpotSpreadsForCategoryAPI(navigate, {
+          CategoryID: categoryID.categoryID,
+        })
+      );
+      dispatch(
+        GetCrossRateSpreadsForCategoryAPI(navigate, {
+          CategoryID: categoryID.categoryID,
+        })
+      );
+      dispatch(
+        GetTenorWiseForwardSpreadsForCategoryAPI(navigate, {
+          CategoryID: categoryID.categoryID,
+        })
+      );
+
+      if (GetSpotSpreadsForCategory !== null) {
+        setParitySpotData(GetSpotSpreadsForCategory.paritySpotSpreads);
+      }
+      if (GetCrossRateSpreadsForCategory !== null) {
+        setCrossRateData(GetCrossRateSpreadsForCategory.crossRatesSpreads);
+      }
+      if (GetTenorWiseForwardSpreadsForCategory !== null) {
+        console.log(
+          GetTenorWiseForwardSpreadsForCategory,
+          "GetTenorWiseForwardSpreadsForCategory"
+        );
+        setForwardData(GetTenorWiseForwardSpreadsForCategory);
+      }
+    }
+  }, [categoryID]);
   //handle select CategoryID
   const handleSelectCategory = async (selectedCategory) => {
     setCategoryID(selectedCategory);
 
-    SpreadManagementSchema((prevState) => ({
-      ...prevState,
-      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
-    }));
+    // SpreadManagementSchema((prevState) => ({
+    //   ...prevState,
+    //   categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+    // }));
   };
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
       <Row className="mt-4">
         <Col lg={6} md={6} sm={12}>
           <span className={style["CategoryManagementLabel"]}>
-            Category Spread Management
+            Spread Management
           </span>
         </Col>
         <Col lg={3} md={3} sm={12}></Col>
         <Col lg={3} md={3} sm={12}>
           <Select
-            name="category"
+            // name="category"
             placeholder={"Select Category"}
             classNamePrefix={"selectCateogyCorporateList"}
             options={categoryOptions}
@@ -218,7 +286,9 @@ const SpreadManagement = () => {
           <CustomPaper className={style["SpreadManagmentPaper"]}>
             <Row>
               <Col lg={6} md={6} sm={12}>
-                <span className={style["ParitySpotHeading"]}>Parity Spot</span>
+                <span className={style["ParitySpotHeading"]}>
+                  Against USD (bps)
+                </span>
                 <ParitySpotTable
                   data={paritySpotData}
                   onInputChange={handleParitySpotInputChange}
@@ -226,7 +296,9 @@ const SpreadManagement = () => {
               </Col>
 
               <Col lg={6} md={6} sm={12}>
-                <span className={style["ParitySpotHeading"]}>Cross Rate</span>
+                <span className={style["ParitySpotHeading"]}>
+                  Against PKR (bps)
+                </span>
                 <CrossRateTable
                   data={crossRateData}
                   onInputChange={handleCrossRateInputChange}
@@ -246,7 +318,6 @@ const SpreadManagement = () => {
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                   onClick={handleResetParityAndCross}
-                  disableBtn={true}
                 />
                 <Button
                   icon={<i className="icon-save"></i>}
@@ -261,7 +332,7 @@ const SpreadManagement = () => {
             {/* Forward Table  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
-                <span className={style["ForwardLabel"]}>Forward</span>
+                <span className={style["ForwardLabel"]}>Forward (bps)</span>
                 <ForwardTable
                   data={forwardData}
                   onInputChange={handleForwardInputChange}
@@ -291,10 +362,12 @@ const SpreadManagement = () => {
               </Col>
             </Row>
 
-            {/* Discounting Table  */}
+            {/* FE Discounting (%)  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
-                <span className={style["ForwardLabel"]}>Discounting</span>
+                <span className={style["ForwardLabel"]}>
+                  FE Discounting (%)
+                </span>
                 <DiscountingTable
                   data={discountingData}
                   onInputChange={handleDiscountingInputChange}
@@ -314,7 +387,43 @@ const SpreadManagement = () => {
                   className={style["Reset-btn-spreadManagement"]}
                   text="Reset"
                   // onClick={() => setDiscountingData(resetDiscountingState)}
-                  onClick={handleResetDiscounting}
+                  onClick={handleResetFEDiscounting}
+                  disableBtn={true}
+                />
+                <Button
+                  icon={<i className="icon-save"></i>}
+                  className={style["Search-btn-spreadManagement"]}
+                  text="Save"
+                />
+              </Col>
+            </Row>
+
+            {/* Non-FE Discounting (%)  */}
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <span className={style["ForwardLabel"]}>
+                  Non-FE Discounting (%)
+                </span>
+                <DiscountingTable
+                  data={discountingData}
+                  onInputChange={handleDiscountingInputChange}
+                />
+              </Col>
+            </Row>
+
+            <Row className="mt-4 mb-5">
+              <Col
+                lg={12}
+                md={12}
+                sm={12}
+                className="d-flex justify-content-center gap-2"
+              >
+                <Button
+                  icon={<i className="icon-refresh"></i>}
+                  className={style["Reset-btn-spreadManagement"]}
+                  text="Reset"
+                  // onClick={() => setDiscountingData(resetDiscountingState)}
+                  onClick={handleResetNonFEDiscounting}
                   disableBtn={true}
                 />
                 <Button
@@ -327,6 +436,7 @@ const SpreadManagement = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {LoadingState && <Loader />}
       {<ActivateConfirmationModal onConfirm={handleResetOrSave} />}
       {/* {<ActivateConfirmationModal onConfirm={handleResetForwardYes} />} */}
     </section>

@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CorporatePlusIconModal.module.css";
-// import { Button, Modal, TextField } from "../../../../components/elements";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-// import { corporatePlusIconModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
 import { Col, Row } from "react-bootstrap";
-// import { CreateNewCorporateAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { addCompanySchema } from "../../../../../../utils/schemas";
 import { corporatePlusIconModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
@@ -223,10 +220,10 @@ const CorporatePlusIconModal = () => {
     <Modal
       show={BOPSystemAdminModal.corporatePlusIconModal}
       setShow={(value) => dispatch(corporatePlusIconModalSystemAdmin(value))}
-      className="UniversalBOPModalStyles"
+      className="UniversalBOPModalStylesAddCompany"
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
-      size="md"
+      size="lg"
       onHide={() => dispatch(corporatePlusIconModalSystemAdmin(false))}
       ModalBody={
         <>
@@ -246,19 +243,24 @@ const CorporatePlusIconModal = () => {
               className={styles["AddCompany_modal-crossIcon"]}
             >
               <i
-                className="icon-close cursor-pointer"
+                className={`icon-close cursor-pointer ${styles["cross-icon-style"]}`}
                 onClick={handleCancelButton}
               />
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 Company Name
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
             </Col>
-            <Col lg={8} md={8} sm={12}>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addCompany-inputField"]}
+            >
               <TextField
                 labelClass="d-none"
                 name="companyName"
@@ -278,13 +280,19 @@ const CorporatePlusIconModal = () => {
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 Category
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
             </Col>
-            <Col lg={8} md={8} sm={12}>
+
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addCompany-inputField"]}
+            >
               <Select
                 classNamePrefix={"selectCateogyCorporateList"}
                 isSearchable={true}
@@ -297,7 +305,7 @@ const CorporatePlusIconModal = () => {
           </Row>
 
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 <span className={styles["labels-add-bank"]}>
                   RFQ Timer
@@ -306,7 +314,12 @@ const CorporatePlusIconModal = () => {
               </span>
             </Col>
 
-            <Col lg={8} md={8} sm={12}>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addCompany-inputField"]}
+            >
               <Row>
                 <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
                   <span className={styles["labels-add-bank"]}>
@@ -314,7 +327,6 @@ const CorporatePlusIconModal = () => {
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <Select
-                    // className="RFQTimerTreasury"
                     classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
                     value={RFQTimerTreasury}
@@ -331,7 +343,6 @@ const CorporatePlusIconModal = () => {
                   </span>
 
                   <Select
-                    // className="RFQTimerCorporate"
                     classNamePrefix={"selectCateogyCorporateList"}
                     options={RFQTimerOptions}
                     value={RFQTimerCorporate}
@@ -344,13 +355,18 @@ const CorporatePlusIconModal = () => {
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 Nature of Client
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
             </Col>
-            <Col lg={8} md={8} sm={12}>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addCompany-inputField"]}
+            >
               <Select
                 classNamePrefix="selectCateogyCorporateList"
                 options={natureOptions}
@@ -365,7 +381,7 @@ const CorporatePlusIconModal = () => {
       }
       ModalFooter={
         <>
-          <Row className="mt-4">
+          <Row className="mt-4 mb-3">
             <Col
               lg={12}
               md={12}

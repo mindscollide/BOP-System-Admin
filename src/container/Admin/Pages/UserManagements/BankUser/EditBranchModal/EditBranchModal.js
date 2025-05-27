@@ -114,7 +114,7 @@ const EditBranchModal = ({ editBranchData }) => {
         onHide={() => dispatch(editBankUserModalSystemAdmin(false))}
         ModalBody={
           <>
-            <Row className={styles["EditBranchHeader"]}>
+            <Row>
               <Col lg={6} md={6} sm={6} className={styles["EditBranchLabel"]}>
                 Edit Branch
               </Col>
@@ -131,13 +131,18 @@ const EditBranchModal = ({ editBranchData }) => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Name
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["editBranch-inputField"]}
+              >
                 <TextField
                   name={"branchName"}
                   value={updateBranch.branchName}
@@ -158,13 +163,18 @@ const EditBranchModal = ({ editBranchData }) => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Code
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["editBranch-inputField"]}
+              >
                 <TextField
                   name={"branchCode"}
                   maxLength={25}
@@ -184,13 +194,18 @@ const EditBranchModal = ({ editBranchData }) => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Contact
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["editBranch-inputField"]}
+              >
                 <TextField
                   name={"branchContact"}
                   value={updateBranch.branchContact}

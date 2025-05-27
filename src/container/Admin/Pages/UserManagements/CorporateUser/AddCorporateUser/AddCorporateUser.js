@@ -521,7 +521,7 @@ const AddCorporateUser = () => {
 
                     <Row className="mt-3 position-relative">
                       <Col lg={1} md={1} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
+                        <span className={styles["labels-add-bank2"]}>
                           Company Name
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>

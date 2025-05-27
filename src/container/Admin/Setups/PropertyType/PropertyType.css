@@ -52,6 +52,7 @@
   > td {
   padding: 7px !important;
   text-align: center;
+  vertical-align: top;
 }
 
 .Comment_section {

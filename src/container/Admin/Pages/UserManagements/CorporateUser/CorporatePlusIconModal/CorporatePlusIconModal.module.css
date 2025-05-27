@@ -1,15 +1,6 @@
-.AddCompanyLabel {
-  color: #f26522 !important;
-  font-size: 1.25rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: flex-start;
-  font-family: "Roboto", sans-serif;
-}
 .AddCompany_modal-title {
   color: #f26522 !important;
   font-size: 1.25rem;
-  /* line-height: ; */
   font-weight: 500;
   display: flex;
   justify-content: flex-start;
@@ -17,6 +8,10 @@
 .AddCompany_modal-crossIcon {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+.cross-icon-style {
+  font-size: 20px !important;
 }
 .labels-add-bank {
   font-size: 12px !important;
@@ -92,13 +87,13 @@
   border: none !important;
   display: flex !important;
   align-items: center !important;
-  gap: 4px !important;
+  gap: 5px !important;
 }
 
 .CancelButton:is(:hover, :active, :focus, :focus-visible) {
   font-family: "Poppins", sans-serif;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease-in;
@@ -124,4 +119,10 @@
   margin: 0;
   height: 16px;
   color: #f16b6b !important;
+}
+.addCompany-inputField {
+  margin-left: 28px;
+  min-width: 335px;
+  max-width: 335px;
+  margin-right: 0px !important;
 }

@@ -138,14 +138,11 @@ const EditCompanyModal = ({ editCompanyData }) => {
     <Modal
       show={BOPSystemAdminModal.editCompanyModal}
       setShow={(value) => dispatch(editCompanyModalSystemAdmin(value))}
-      className="UniversalBOPModalStyles"
+      className="UniversalBOPModalStylesEditCompany"
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
       size="md"
-      onHide={
-        () => dispatch(editCompanyModalSystemAdmin(false))
-        // setCompanyRole(false)
-      }
+      onHide={() => dispatch(editCompanyModalSystemAdmin(false))}
       ModalBody={
         <>
           <Row>
@@ -164,19 +161,24 @@ const EditCompanyModal = ({ editCompanyData }) => {
               className={styles["EditCompany_modal-crossIcon"]}
             >
               <i
-                className="icon-close cursor-pointer"
+                className={`icon-close cursor-pointer ${styles["cross-icon-style"]}`}
                 onClick={handleCancelButton}
               />
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 Company Name
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
             </Col>
-            <Col lg={8} md={8} sm={12}>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["editCompany-inputField"]}
+            >
               <TextField
                 labelClass="d-none"
                 name={"companyName"}
@@ -197,7 +199,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
           </Row>
 
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 <span className={styles["labels-add-bank"]}>
                   RFQ Timer
@@ -205,7 +207,12 @@ const EditCompanyModal = ({ editCompanyData }) => {
                 </span>
               </span>
             </Col>
-            <Col lg={8} md={8} sm={12}>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["editCompany-inputField"]}
+            >
               <Row>
                 <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
                   <span className={styles["labels-add-bank"]}>
@@ -240,13 +247,18 @@ const EditCompanyModal = ({ editCompanyData }) => {
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col lg={4} md={4} sm={12}>
+            <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 Nature of Client
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
             </Col>
-            <Col lg={8} md={8} sm={12}>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["editCompany-inputField"]}
+            >
               <Select
                 classNamePrefix="selectCateogyCorporateList"
                 placeholder={"IMPORTANT PAYMENT"}
@@ -261,7 +273,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
       }
       ModalFooter={
         <>
-          <Row className="mt-4">
+          <Row className="mt-4 mb-3">
             <Col
               lg={12}
               md={12}
@@ -271,7 +283,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
               <Button
                 text={"Update"}
                 icon={<i className="icon-refresh"></i>}
-                className={styles["AddButton"]}
+                className={styles["AddBranchClass"]}
                 onClick={handleUpdateEditCompany}
                 disableBtn={updateCompany.corporateName !== "" ? false : true}
               />

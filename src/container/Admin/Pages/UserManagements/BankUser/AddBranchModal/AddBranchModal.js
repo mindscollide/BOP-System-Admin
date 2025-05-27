@@ -178,10 +178,10 @@ const AddBranchModal = () => {
       <Modal
         show={BOPSystemAdminModal.addBankUserModal}
         setShow={(value) => dispatch(AdduserModalSystemAdmin(value))}
-        className="UniversalBOPModalStyles"
+        className="UniversalBOPModalStylesBankUser"
         modalHeaderClassName={"d-none"}
         modalFooterClassName="UniversalBOPModalStylesfooter"
-        size="md"
+        size="lg"
         onHide={() => dispatch(AdduserModalSystemAdmin(false))}
         ModalBody={
           <>
@@ -196,19 +196,24 @@ const AddBranchModal = () => {
                 className={styles["AddBranch_modal-crossIcon"]}
               >
                 <i
-                  className="icon-close cursor-pointer"
+                  className={`icon-close cursor-pointer ${styles["cross-icon-style"]}`}
                   onClick={() => dispatch(AdduserModalSystemAdmin(false))}
                 />
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Name
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["addBranch-inputField"]}
+              >
                 <TextField
                   name={"branchName"}
                   labelClass="d-none"
@@ -228,13 +233,18 @@ const AddBranchModal = () => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Branch Code
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["addBranch-inputField"]}
+              >
                 <TextField
                   name={"branchCode"}
                   labelClass="d-none"
@@ -254,13 +264,18 @@ const AddBranchModal = () => {
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Category
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["addBranch-inputField"]}
+              >
                 <Select
                   name="categoryID"
                   options={categoryOptions}
@@ -275,13 +290,18 @@ const AddBranchModal = () => {
             </Row>
 
             <Row className="mt-3">
-              <Col lg={4} md={4} sm={12}>
+              <Col lg={3} md={3} sm={12}>
                 <span className={styles["labels-add-bank"]}>
                   Contact
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
               </Col>
-              <Col lg={8} md={8} sm={12}>
+              <Col
+                lg={9}
+                md={9}
+                sm={12}
+                className={styles["addBranch-inputField"]}
+              >
                 <TextField
                   name={"branchContact"}
                   labelClass="d-none"
@@ -294,7 +314,7 @@ const AddBranchModal = () => {
           </>
         }
         ModalFooter={
-          <Row className="mb-3">
+          <Row className="mb-3 mt-4">
             <Col
               lg={12}
               md={12}

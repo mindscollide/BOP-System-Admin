@@ -94,6 +94,13 @@
   font-family: "Roboto", sans-serif !important;
   font-weight: 500;
 }
+.labels-add-bank2 {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-family: "Roboto", sans-serif !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
 .aesterick-color {
   color: #cf5b5b !important;
 }

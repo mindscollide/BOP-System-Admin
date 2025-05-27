@@ -770,11 +770,7 @@ const BankerList = () => {
       {EditBankerModalGobalState && <EditBankerModal />}
 
       {BOPSystemAdminReducer.Loading && <Loader />}
-      {/* {<ActivateConfirmationModal onConfirm={handleResetYes} />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
-      {/* {showExportOptions && (
-        <ExportOptions onClose={() => setShowExportOptions(false)} />
-      )} */}
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleResetYes}

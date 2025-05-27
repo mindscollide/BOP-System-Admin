@@ -156,6 +156,10 @@ const UpdatecorporateMapping = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdatecorporateMapping(navigate, data));
@@ -247,6 +251,10 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(DeleteCorporateCategoryAPI(navigate, data));
@@ -353,7 +361,10 @@ const loginSystemAdminAPI = (navigate, data) => {
       data: form,
     })
       .then(async (response) => {
-        console.log("loginSystemAdmin", response);
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(loginSystemAdminAPI(navigate, data));
@@ -522,6 +533,10 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(SendEmailResetPasswordAPI(navigate, data));
@@ -622,6 +637,10 @@ const GetAllCategoriesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllCategoriesAPI(navigate));
@@ -704,6 +723,10 @@ const getAllCorporatesCategory = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(getAllCorporatesCategory(navigate));
@@ -787,6 +810,10 @@ const GetAllNatureAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllNatureAPI(navigate));
@@ -868,6 +895,10 @@ const RoleListAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(RoleListAPI(navigate));
@@ -946,6 +977,10 @@ const GetBankUserRolesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetBankUserRolesAPI(navigate));
@@ -1025,6 +1060,10 @@ const GetAllInstrumentTypesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllInstrumentTypesInit(navigate));
@@ -1106,6 +1145,10 @@ const GetAllBranchesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllBranchesAPI(navigate));
@@ -1186,7 +1229,10 @@ const logOutApi = (navigate) => {
       },
     })
       .then(async (response) => {
-        console.log("logOutApi", response);
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(logOutApi(navigate));
@@ -1257,6 +1303,10 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateBranchCataegoryMappingAPI(navigate, data));

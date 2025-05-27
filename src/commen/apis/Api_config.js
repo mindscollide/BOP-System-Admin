@@ -256,6 +256,17 @@ const UpdateBranchCategoryMappingapi = {
   RequestMethod: "ServiceManager.UpdateBranchCategoryMapping",
 };
 
+const GetSpotSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetSpotSpreadsForCategory",
+};
+const GetCrossRateSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetCrossRateSpreadsForCategory",
+};
+
+const GetTenorWiseForwardSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetTenorWiseForwardSpreadsForCategory",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -318,4 +329,7 @@ export {
   UpdateBranchTradeRights,
   UpdateCorporateTradeRights,
   UpdateBranchCategoryMappingapi,
+  GetSpotSpreadsForCategory,
+  GetCrossRateSpreadsForCategory,
+  GetTenorWiseForwardSpreadsForCategory,
 };

@@ -2,16 +2,27 @@ import React from "react";
 import { Input } from "antd";
 import "./SpreadManagement.module.css";
 import { Table } from "../../../../../components/elements";
+import { useSelector } from "react-redux";
 
 const CrossRateTable = ({ data, onInputChange }) => {
+  const GetAllInstruments = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllInstruments
+  );
   const columns = [
     {
       title: <label className="bottom-table-header">Currency</label>,
-      dataIndex: "currency",
-      key: "currency",
+      dataIndex: "instrumentID",
+      key: "instrumentID",
       width: "100px",
       ellipsis: true,
       align: "center",
+      render: (val, record) => {
+        const matchedInstrument = GetAllInstruments.instruments?.find(
+          (instrument) => instrument.instrumentID === val
+        );
+        console.log("matchedInstrumentmatchedInstrument", matchedInstrument);
+        return matchedInstrument ? matchedInstrument.instrumentName : val;
+      },
     },
     {
       title: <label className="bottom-table-header">Bid Spread</label>,

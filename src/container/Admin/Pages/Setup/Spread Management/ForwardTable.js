@@ -1,10 +1,10 @@
 import React from "react";
 import { Input } from "antd";
-// import { Table } from "../../../../components/elements";
 import "./SpreadManagement.module.css";
 import { Table } from "../../../../../components/elements";
 
 const ForwardTable = ({ data, onInputChange }) => {
+  console.log("data in FOrwardTable", data);
   //Forward Table
   const columns = [
     {
@@ -279,6 +279,8 @@ const ForwardTable = ({ data, onInputChange }) => {
       bordered
       pagination={false}
       prefixCls="groupTable"
+      // className={"GrayHeader-table"}
+      className={"Forward-table"}
     />
   );
 };
