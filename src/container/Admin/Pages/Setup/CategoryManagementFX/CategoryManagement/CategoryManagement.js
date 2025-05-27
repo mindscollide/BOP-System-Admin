@@ -11,7 +11,6 @@ import { Collapse } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
-  DeleteCorporateCategoryAPI,
   getAllCorporatesCategory,
   UpdateBranchCataegoryMappingAPI,
   UpdatecorporateMapping,
@@ -34,8 +33,7 @@ const CategoryManagement = () => {
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { auth } = useSelector((state) => state);
-
+  const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addCategoryModal
@@ -116,6 +114,7 @@ const CategoryManagement = () => {
   useEffect(() => {
     try {
       if (AllCategories && AllCategories !== null) {
+        console.log(AllCategories, "AllCategoriesAllCategories");
         const transformedData = transformAPIData(AllCategories);
         setCorporates(transformedData);
       }
@@ -124,6 +123,7 @@ const CategoryManagement = () => {
     }
   }, [AllCategories]);
 
+  console.log(corporates, "corporatescorporatescorporates");
   //for Auto focus
   const NameRef = useRef(null);
 
@@ -154,6 +154,7 @@ const CategoryManagement = () => {
   //For Dragging the Main Card
   const handleDragEnd = (results) => {
     const { source, destination, type, draggableId } = results;
+    console.log(results, "resultsresultsresults");
     if (!destination) return;
 
     if (
@@ -173,7 +174,9 @@ const CategoryManagement = () => {
       return setCorporates(reorderedStores);
     } else {
       //Extracting the IDs Corporate and Category form the Results
-      const sourceCategoryId = parseInt(source.droppableId.replace("cat-", ""));
+      const sourceCategoryId = parseInt(
+        destination.droppableId.replace("cat-", "")
+      );
       const corporateId = parseInt(draggableId.replace("corp-", ""));
 
       let counterPartyType = null;
@@ -459,7 +462,8 @@ const CategoryManagement = () => {
   //Delete Category API Function
   const handleDelteCliked = (id) => {
     console.log(id, "DeleteCategoryGobalState");
-    setCategoryID(id);
+    const ParsedCategoryID = parseInt(id.replace("cat-", ""));
+    setCategoryID(ParsedCategoryID);
     dispatch(DeleteCategoryModalSystemAdmin(true));
   };
 
@@ -773,7 +777,7 @@ const CategoryManagement = () => {
       </Row>
       {DeleteCategoryGobalState && <DeleteModal categoryID={categoryID} />}
       {AddCategoryGobalState && <AddCategoryModal />}
-      {auth.Loading && <Loader />}
+      {auth.Loading || BOPSystemAdminReducer.Loading ? <Loader /> : null}
     </section>
   );
 };

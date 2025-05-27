@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { DeleteCorporateCategoryAPI } from "../../../../../../store/actions/Auth-Actions";
 import { useNavigate } from "react-router-dom";
 const DeleteModal = ({ categoryID }) => {
+  console.log(categoryID, "categoryIDcategoryID");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);

@@ -20,6 +20,7 @@ import {
   authenticationAPI,
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
+import { DeleteCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 // import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
 
 const cleareMessage = (response) => {
@@ -259,9 +260,10 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
-                  "Category Cannot be delete It is mapped with a corporate"
+                  "Category Deleted"
                 )
               );
+              dispatch(DeleteCategoryModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -272,7 +274,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
-                  "Category Deleted"
+                  "Category Cannot be delete It is mapped with a corporate"
                 )
               );
               dispatch(getAllCorporatesCategory(navigate));

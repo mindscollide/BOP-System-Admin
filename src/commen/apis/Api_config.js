@@ -35,7 +35,7 @@ const uploadCounterPartyFile = {
 
 //Delete a Category
 const DeleteCategory = {
-  RequestMethod: "ServiceManager.DeleteCorporateCategory",
+  RequestMethod: "ServiceManager.DeleteCategory",
 };
 
 // download counter party file
