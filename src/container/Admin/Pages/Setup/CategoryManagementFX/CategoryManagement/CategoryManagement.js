@@ -151,6 +151,77 @@ const CategoryManagement = () => {
     Slider.scrollLeft = Slider.scrollLeft + 300;
   };
 
+  //This is for the corporate shown inside the main card i.e Corporate and branches
+  const showCards = (data) => {
+    if (!data || Object.keys(data).length === 0) return null;
+
+    return (
+      <Droppable droppableId={data.categoryID}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+          >
+            {data.CounterParties.map((client, index) => (
+              <Draggable
+                key={`${data.categoryID}-${client.CounterpartyID}`}
+                draggableId={`${data.categoryID}-${client.CounterpartyID}`}
+                index={index}
+                type="DEFAULT"
+              >
+                {(provided) => (
+                  <div
+                    className="mt-2"
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Collapse
+                      className={
+                        client.CounterPartyType === 1
+                          ? "custom-collapse"
+                          : "Branchcustom-collapse"
+                      }
+                      accordion
+                    >
+                      <Panel
+                        header={
+                          <div className="header-container">
+                            <span className="company-name">
+                              {client.CounterPartyName}
+                            </span>
+                          </div>
+                        }
+                        key={client.CounterpartyID}
+                        className={
+                          client.CounterPartyType === 1
+                            ? "custom-panel"
+                            : "Branchcustom-panel"
+                        }
+                      >
+                        {client.CounterPartyUsers.length > 0 ? (
+                          client.CounterPartyUsers.map((user, i) => (
+                            <p className="user-email" key={i}>
+                              {user.email}
+                            </p>
+                          ))
+                        ) : (
+                          <p className="no-user">No users</p>
+                        )}
+                      </Panel>
+                    </Collapse>
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    );
+  };
+
   //For Dragging the Main Card
   const handleDragEnd = (results) => {
     const { source, destination, type, draggableId } = results;
@@ -177,7 +248,10 @@ const CategoryManagement = () => {
       const sourceCategoryId = parseInt(
         destination.droppableId.replace("cat-", "")
       );
-      const corporateId = parseInt(draggableId.replace("corp-", ""));
+
+      console.log(sourceCategoryId, "resultsresultsresults");
+      const corporateId = parseInt(draggableId.split("corp-")[1]);
+      console.log(corporateId, "resultsresultsresults");
 
       let counterPartyType = null;
 
@@ -185,11 +259,16 @@ const CategoryManagement = () => {
         (cat) => cat.categoryID === source.droppableId
       );
 
-      if (sourceCategory && Array.isArray(sourceCategory.CounterParties)) {
-        const client = sourceCategory.CounterParties.find(
-          (c) => c.CounterpartyID === draggableId
-        );
+      console.log(sourceCategory, "resultsresultsresults");
 
+      if (sourceCategory && Array.isArray(sourceCategory.CounterParties)) {
+        console.log("resultsresultsresults");
+        const client = sourceCategory.CounterParties.find(
+          (c) => c.CounterpartyID === draggableId.replace(/^cat-\d+-/, "")
+        );
+        console.log(client, "resultsresultsresults");
+        console.log(sourceCategory.CounterParties, "resultsresultsresults");
+        console.log(draggableId, "resultsresultsresults");
         if (
           client &&
           client.CounterPartyType !== undefined &&
@@ -213,89 +292,6 @@ const CategoryManagement = () => {
       } else {
       }
     }
-  };
-
-  //This is for the corporate shown inside the main card i.e Corporate and branches
-  const showCards = (data) => {
-    if (!data || Object.keys(data).length === 0) return null;
-
-    return (
-      <Droppable droppableId={data.categoryID}>
-        {(provided) => (
-          <Row>
-            <Col
-              lg={12}
-              md={12}
-              sm={12}
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {data.CounterParties && data.CounterParties.length > 0 ? (
-                data.CounterParties.map((client, index) => (
-                  <Draggable
-                    key={client.CounterpartyID}
-                    draggableId={client.CounterpartyID}
-                    index={index}
-                    type="column"
-                  >
-                    {(provided) => (
-                      <Col
-                        lg={12}
-                        md={12}
-                        sm={12}
-                        className="mt-2"
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Collapse
-                          className={
-                            client.CounterPartyType === 1
-                              ? "custom-collapse"
-                              : "Branchcustom-collapse"
-                          }
-                          accordion
-                        >
-                          <Panel
-                            header={
-                              <div className="header-container">
-                                <span className="company-name">
-                                  {client.CounterPartyName}
-                                </span>
-                              </div>
-                            }
-                            key={client.CounterpartyID}
-                            className={
-                              client.CounterPartyType === 1
-                                ? "custom-panel"
-                                : "Branchcustom-panel"
-                            }
-                          >
-                            {client.CounterPartyUsers &&
-                            client.CounterPartyUsers.length > 0 ? (
-                              client.CounterPartyUsers.map((user, i) => (
-                                <p className="user-email" key={i}>
-                                  {user.email}
-                                </p>
-                              ))
-                            ) : (
-                              <p className="no-user">No users</p>
-                            )}
-                          </Panel>
-                        </Collapse>
-                        {provided.placeholder}
-                      </Col>
-                    )}
-                  </Draggable>
-                ))
-              ) : (
-                <p className="NoCorporateMessage">No Data Available</p>
-              )}
-            </Col>
-          </Row>
-        )}
-      </Droppable>
-    );
   };
 
   // Check Edit Funtion to open Edit Modal
