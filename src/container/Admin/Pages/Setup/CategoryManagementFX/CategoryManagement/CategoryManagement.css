@@ -1295,13 +1295,11 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 .custom-collapse {
   border: none !important;
   background-color: #e6f7ff !important;
-  padding-top: 5px !important;
 }
 
 .Branchcustom-collapse {
   border: none !important;
   background-color: #fbf0e7 !important;
-  padding-top: 5px !important;
 }
 :where(.css-dev-only-do-not-override-k7429z).ant-collapse
   > .ant-collapse-item:last-child,
@@ -1312,13 +1310,29 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
 }
 
 .custom-panel {
-  background-color: #e6f7ff !important;
   border: none !important;
+  padding-top: 3px !important;
+}
+
+.custom-collapse .ant-collapse-header {
+  background: #e6f7ff !important;
+}
+
+.custom-collapse .ant-collapse-content-box {
+  background: #e6f7ff !important;
+}
+
+.Branchcustom-panel .ant-collapse-header {
+  background: #fbf0e7 !important;
+}
+
+.Branchcustom-panel .ant-collapse-content-box {
+  background: #fbf0e7 !important;
 }
 
 .Branchcustom-panel {
-  background-color: #fbf0e7 !important;
   border: none !important;
+  padding-top: 3px !important;
 }
 
 .header-container {
@@ -1364,6 +1378,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  font-size: 11px !important;
 }
 
 :where(.css-dev-only-do-not-override-k7429z).ant-collapse
