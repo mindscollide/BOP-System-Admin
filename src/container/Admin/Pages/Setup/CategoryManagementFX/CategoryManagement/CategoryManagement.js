@@ -161,7 +161,12 @@ const CategoryManagement = () => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              minHeight: "50px",
+            }}
           >
             {data.CounterParties.map((client, index) => (
               <Draggable
