@@ -20,6 +20,7 @@ import {
   authenticationAPI,
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
+import { DeleteCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 // import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
 
 const cleareMessage = (response) => {
@@ -165,13 +166,13 @@ const UpdatecorporateMapping = (navigate, data) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_01".toLowerCase()
             ) {
-              await dispatch(getAllCorporatesCategory(navigate));
               dispatch(
                 updatecorporatesuccess(
                   response.data.responseResult.corporateCategory,
                   "Record Updated"
                 )
               );
+              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -259,9 +260,10 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
-                  "Category Cannot be delete It is mapped with a corporate"
+                  "Category Deleted"
                 )
               );
+              dispatch(DeleteCategoryModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -272,7 +274,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
-                  "Category Deleted"
+                  "Category Cannot be delete It is mapped with a corporate"
                 )
               );
               dispatch(getAllCorporatesCategory(navigate));
@@ -1270,6 +1272,7 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
                   "Record Updated"
                 )
               );
+              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
