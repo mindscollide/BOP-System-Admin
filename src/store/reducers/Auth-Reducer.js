@@ -305,7 +305,7 @@ const authReducer = (state = initialState, action) => {
     case actions.UPDATE_CORPORATE_MAPPING_SUCCESS:
       return {
         ...state,
-        // Loading: false,
+        Loading: false,
         UpdatedCorporates: action.response,
         ResponseMessage: action.message,
       };

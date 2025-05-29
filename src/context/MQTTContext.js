@@ -38,6 +38,7 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
   const [categoryAdded, setCategoryAdded] = useState(null);
   const [categoryUpdate, setCategoryUpdate] = useState(null);
   const [categoryDeleted, setCategoryDeleted] = useState(null);
+  const [counterpartyChnaged, setCounterpartyChnaged] = useState(null);
 
   const connectToMqtt = () => {
     if (!subscribeID) {
@@ -139,6 +140,10 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         case "CATEGORY_DELETED":
           setCategoryDeleted(data.payload);
           break;
+        // When Category is Deleted
+        case "COUNTER_PARTY_CATEGORY_CHANGED":
+          setCounterpartyChnaged(data.payload);
+          break;
         default:
           break;
       }
@@ -209,6 +214,8 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setCategoryUpdate,
         categoryDeleted,
         setCategoryDeleted,
+        counterpartyChnaged,
+        setCounterpartyChnaged,
       }}
     >
       {children}

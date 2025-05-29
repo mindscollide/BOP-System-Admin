@@ -34,9 +34,14 @@ const CategoryManagement = () => {
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { categoryAdded, categoryUpdate, categoryDeleted } = useMqtt();
+  const {
+    categoryAdded,
+    categoryUpdate,
+    categoryDeleted,
+    counterpartyChnaged,
+  } = useMqtt();
 
-  console.log(categoryDeleted, "categoryAdded");
+  console.log(counterpartyChnaged, "categoryAdded");
 
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
@@ -49,12 +54,12 @@ const CategoryManagement = () => {
     (state) => state.BOPSystemAdminModal.deleteCategoryModal
   );
 
-  console.log(DeleteCategoryGobalState, "DeleteCategoryGobalState");
-
   //Global state for All Categories Data
   const AllCategories = useSelector(
     (state) => state.auth?.GetAllCorporatesData ?? null
   );
+
+  console.log(AllCategories, "AllCategories");
 
   //Transforming Data for React Beautiful DND
   const transformAPIData = (apiData) => {
@@ -176,6 +181,53 @@ const CategoryManagement = () => {
       setCorporates((prev) => prev.filter((corp) => corp.CatID !== idToDelete));
     }
   }, [categoryDeleted]);
+
+  useEffect(() => {
+    if (
+      counterpartyChnaged?.categoryID &&
+      counterpartyChnaged?.counterPartyID
+    ) {
+      const { categoryID, counterPartyID, counterPartyType } =
+        counterpartyChnaged;
+
+      setCorporates((prev) => {
+        return prev.map((category) => {
+          if (String(category.CatID) === String(categoryID)) {
+            const exists = category.CounterParties?.some(
+              (cp) => cp.CounterpartyID === `corp-${counterPartyID}`
+            );
+
+            if (exists) return category;
+
+            const actualCounterParty = AllCategories?.categories
+              ?.flatMap((cat) => cat.counterParties || [])
+              .find((cp) => cp.counterPartyID === counterPartyID);
+
+            console.log(actualCounterParty, "actualCounterParty");
+            const newCounterParty = {
+              CounterpartyID: `corp-${counterPartyID}`,
+              CounterPartyType: counterPartyType,
+              CounterPartyName:
+                actualCounterParty?.counterPartyName || "Unknown",
+              CounterPartyUsers:
+                actualCounterParty?.users?.map((u) => ({ email: u.email })) ||
+                [],
+            };
+
+            return {
+              ...category,
+              CounterParties: [
+                ...(category.CounterParties || []),
+                newCounterParty,
+              ],
+            };
+          }
+
+          return category;
+        });
+      });
+    }
+  }, [counterpartyChnaged]);
 
   //for Auto focus
   const NameRef = useRef(null);

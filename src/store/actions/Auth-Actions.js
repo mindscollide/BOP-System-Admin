@@ -172,7 +172,6 @@ const UpdatecorporateMapping = (navigate, data) => {
                   "Record Updated"
                 )
               );
-              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
