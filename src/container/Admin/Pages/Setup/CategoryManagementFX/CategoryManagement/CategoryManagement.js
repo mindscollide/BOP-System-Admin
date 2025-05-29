@@ -34,9 +34,9 @@ const CategoryManagement = () => {
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { categoryAdded } = useMqtt();
+  const { categoryAdded, categoryUpdate } = useMqtt();
 
-  console.log(categoryAdded, "categoryAdded");
+  console.log(categoryUpdate, "categoryAdded");
 
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
@@ -147,7 +147,26 @@ const CategoryManagement = () => {
     }
   }, [categoryAdded]);
 
-  console.log(corporates, "corporatescorporatescorporates");
+  useEffect(() => {
+    if (categoryUpdate?.category) {
+      const updatedCat = categoryUpdate.category;
+
+      setCorporates((prev) =>
+        prev.map((corp) => {
+          if (corp.CatID === updatedCat.categoryId) {
+            return {
+              ...corp,
+              categoryName: updatedCat.category,
+              bidSpread: updatedCat.bidSpread,
+              offerSpread: updatedCat.offerSpread,
+            };
+          }
+          return corp;
+        })
+      );
+    }
+  }, [categoryUpdate]);
+
   //for Auto focus
   const NameRef = useRef(null);
 
