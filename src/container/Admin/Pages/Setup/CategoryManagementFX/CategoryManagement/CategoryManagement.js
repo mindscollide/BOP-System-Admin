@@ -28,11 +28,16 @@ import {
   DeleteCategoryModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { categoryAdded } = useMqtt();
+
+  console.log(categoryAdded, "categoryAdded");
+
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
@@ -122,6 +127,25 @@ const CategoryManagement = () => {
       console.log(error);
     }
   }, [AllCategories]);
+
+  // Append newly added category to corporates
+  useEffect(() => {
+    if (categoryAdded?.category) {
+      const newCat = categoryAdded.category;
+
+      // Manually transform this simple object
+      const transformedNewCategory = {
+        categoryID: `cat-${newCat.categoryId}`,
+        categoryName: newCat.category, // adjust if needed
+        bidSpread: newCat.bidSpread,
+        offerSpread: newCat.offerSpread,
+        CatID: newCat.categoryId,
+        CounterParties: [], // assume empty, since not sent in the payload
+      };
+
+      setCorporates((prev) => [...prev, transformedNewCategory]);
+    }
+  }, [categoryAdded]);
 
   console.log(corporates, "corporatescorporatescorporates");
   //for Auto focus

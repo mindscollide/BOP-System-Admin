@@ -35,6 +35,7 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
   const [corporateUpdated, setCorporateUpdated] = useState(null);
   const [corporateUserUpdated, setCorporateUserUpdated] = useState(null);
   const [marketTimingsUpdated, setMarketTimingsUpdated] = useState(null);
+  const [categoryAdded, setCategoryAdded] = useState(null);
 
   const connectToMqtt = () => {
     if (!subscribeID) {
@@ -124,6 +125,10 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         case "MARKET_TIME_UPDATED":
           setMarketTimingsUpdated(data.payload);
           break;
+        // When Category is Added
+        case "CATEGORY_ADDED":
+          setCategoryAdded(data.payload);
+          break;
         default:
           break;
       }
@@ -188,6 +193,8 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setBankUserRoleStatusChange,
         setBankUserUpdated,
         setCorporateUserUpdated,
+        categoryAdded,
+        setCategoryAdded,
       }}
     >
       {children}
