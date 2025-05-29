@@ -60,8 +60,6 @@ const CategoryManagement = () => {
     (state) => state.auth?.GetAllCorporatesData ?? null
   );
 
-  console.log(AllCategories, "AllCategories");
-
   //Transforming Data for React Beautiful DND
   const transformAPIData = (apiData) => {
     return apiData.categories.map((category) => ({
@@ -80,6 +78,7 @@ const CategoryManagement = () => {
       })),
     }));
   };
+
   const [categoryupdate, setCategoryUpdate] = useState({
     category: {
       value: "",
@@ -235,11 +234,6 @@ const CategoryManagement = () => {
       });
     }
   }, [counterpartyChnaged]);
-
-  console.log(
-    counterpartyBranchChnaged,
-    "counterpartyChnagedcounterpartyChnaged"
-  );
 
   // When CounterParty Branch Is mapped
   useEffect(() => {
