@@ -195,7 +195,7 @@ const CategoryManagement = () => {
         const actualCounterParty = AllCategories?.categories
           ?.flatMap((cat) => cat.counterParties || [])
           .find((cp) => cp.counterPartyID === counterPartyID);
-
+        console.log(actualCounterParty, "saif");
         // Shape new item
         const newCounterParty = {
           CounterpartyID: `corp-${counterPartyID}`,
@@ -234,53 +234,6 @@ const CategoryManagement = () => {
     }
   }, [counterpartyChnaged]);
 
-  // useEffect(() => {
-  //   if (
-  //     counterpartyChnaged?.categoryID &&
-  //     counterpartyChnaged?.counterPartyID
-  //   ) {
-  //     const { categoryID, counterPartyID, counterPartyType } =
-  //       counterpartyChnaged;
-
-  //     setCorporates((prev) => {
-  //       return prev.map((category) => {
-  //         if (String(category.CatID) === String(categoryID)) {
-  //           const exists = category.CounterParties?.some(
-  //             (cp) => cp.CounterpartyID === `corp-${counterPartyID}`
-  //           );
-
-  //           if (exists) return category;
-
-  //           const actualCounterParty = AllCategories?.categories
-  //             ?.flatMap((cat) => cat.counterParties || [])
-  //             .find((cp) => cp.counterPartyID === counterPartyID);
-
-  //           console.log(actualCounterParty, "actualCounterParty");
-  //           const newCounterParty = {
-  //             CounterpartyID: `corp-${counterPartyID}`,
-  //             CounterPartyType: counterPartyType,
-  //             CounterPartyName:
-  //               actualCounterParty?.counterPartyName || "Unknown",
-  //             CounterPartyUsers:
-  //               actualCounterParty?.users?.map((u) => ({ email: u.email })) ||
-  //               [],
-  //           };
-
-  //           return {
-  //             ...category,
-  //             CounterParties: [
-  //               ...(category.CounterParties || []),
-  //               newCounterParty,
-  //             ],
-  //           };
-  //         }
-
-  //         return category;
-  //       });
-  //     });
-  //   }
-  // }, [counterpartyChnaged]);
-
   //for Auto focus
   const NameRef = useRef(null);
 
@@ -310,6 +263,7 @@ const CategoryManagement = () => {
 
   //This is for the corporate shown inside the main card i.e Corporate and branches
   const showCards = (data) => {
+    console.log(data, "datadata");
     if (!data || Object.keys(data).length === 0) return null;
 
     return (
@@ -327,8 +281,8 @@ const CategoryManagement = () => {
           >
             {data.CounterParties.map((client, index) => (
               <Draggable
-                key={`${data.categoryID}-${client.CounterpartyID}`}
-                draggableId={`${data.categoryID}-${client.CounterpartyID}`}
+                key={`${data.categoryID}-${client.CounterpartyID}-${client.CounterPartyType}`}
+                draggableId={`${data.categoryID}-${client.CounterpartyID}-${client.CounterPartyType}`}
                 index={index}
                 type="DEFAULT"
               >
@@ -421,8 +375,14 @@ const CategoryManagement = () => {
 
       if (sourceCategory && Array.isArray(sourceCategory.CounterParties)) {
         const client = sourceCategory.CounterParties.find(
-          (c) => c.CounterpartyID === draggableId.replace(/^cat-\d+-/, "")
+          (c) =>
+            c.CounterpartyID ===
+            draggableId.replace(/^cat-\d+-(.+)-[^-]+$/, "$1")
         );
+
+        console.log(client, "resultsresultsresults");
+        console.log(draggableId, "resultsresultsresults");
+        console.log(sourceCategory.CounterParties, "resultsresultsresults");
         if (
           client &&
           client.CounterPartyType !== undefined &&
@@ -774,7 +734,6 @@ const CategoryManagement = () => {
                   {Array.isArray(corporates) && corporates.length > 0 ? (
                     <>
                       {corporates.map((data, index) => {
-                        console.log(data, "datadata");
                         return (
                           <>
                             {checkForEdit(data.categoryID) ? (
