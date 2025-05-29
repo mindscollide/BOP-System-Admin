@@ -42,8 +42,6 @@ const CategoryManagement = () => {
     counterpartyBranchChnaged,
   } = useMqtt();
 
-  console.log(counterpartyChnaged, "categoryAdded");
-
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
