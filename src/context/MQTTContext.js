@@ -39,6 +39,8 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
   const [categoryUpdate, setCategoryUpdate] = useState(null);
   const [categoryDeleted, setCategoryDeleted] = useState(null);
   const [counterpartyChnaged, setCounterpartyChnaged] = useState(null);
+  const [counterpartyBranchChnaged, setCounterpartyBranchChnaged] =
+    useState(null);
 
   const connectToMqtt = () => {
     if (!subscribeID) {
@@ -140,9 +142,13 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         case "CATEGORY_DELETED":
           setCategoryDeleted(data.payload);
           break;
-        // When Category is Deleted
-        case "COUNTER_PARTY_CATEGORY_CHANGED":
+        // When Counter party category is mapped
+        case "CORPORATE_CATEGORY_CHANGED":
           setCounterpartyChnaged(data.payload);
+          break;
+        // When Counter party Branch is mapped
+        case "BRANCH_CATEGORY_CHANGED":
+          setCounterpartyBranchChnaged(data.payload);
           break;
         default:
           break;
@@ -216,6 +222,8 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setCategoryDeleted,
         counterpartyChnaged,
         setCounterpartyChnaged,
+        counterpartyBranchChnaged,
+        setCounterpartyBranchChnaged,
       }}
     >
       {children}
