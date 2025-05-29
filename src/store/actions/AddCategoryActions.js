@@ -74,7 +74,6 @@ const Addcategory = (navigate, data) => {
                 )
               );
               dispatch(AddCategoryModalSystemAdmin(false));
-              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
