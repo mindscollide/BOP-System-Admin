@@ -277,7 +277,6 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
                   "Category Cannot be delete It is mapped with a corporate"
                 )
               );
-              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

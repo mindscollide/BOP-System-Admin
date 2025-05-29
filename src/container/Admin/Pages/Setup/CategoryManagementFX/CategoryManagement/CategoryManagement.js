@@ -34,9 +34,9 @@ const CategoryManagement = () => {
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { categoryAdded, categoryUpdate } = useMqtt();
+  const { categoryAdded, categoryUpdate, categoryDeleted } = useMqtt();
 
-  console.log(categoryUpdate, "categoryAdded");
+  console.log(categoryDeleted, "categoryAdded");
 
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
@@ -147,6 +147,7 @@ const CategoryManagement = () => {
     }
   }, [categoryAdded]);
 
+  // Update  category to corporates
   useEffect(() => {
     if (categoryUpdate?.category) {
       const updatedCat = categoryUpdate.category;
@@ -166,6 +167,15 @@ const CategoryManagement = () => {
       );
     }
   }, [categoryUpdate]);
+
+  //Delete the category
+  useEffect(() => {
+    if (categoryDeleted?.categoryID) {
+      const idToDelete = categoryDeleted.categoryID;
+
+      setCorporates((prev) => prev.filter((corp) => corp.CatID !== idToDelete));
+    }
+  }, [categoryDeleted]);
 
   //for Auto focus
   const NameRef = useRef(null);
