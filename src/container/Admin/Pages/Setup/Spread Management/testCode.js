@@ -184,8 +184,8 @@ export const generateData = (
           : "",
         InstrumentID: findInstrumentName ? findInstrumentName.instrumentID : 0,
 
-        ask: forwData.ask,
-        bid: forwData.bid,
+        ask: forwData.askSpread,
+        bid: forwData.bidSpread,
       };
 
       forwardsRatesResult.push(forwardRateData);
@@ -302,7 +302,7 @@ export const createColumns = (data, value) => {
         // Check if the instrument column already exists in acc
         if (!acc.find((col) => col.title === instrument)) {
           acc.push({
-            title: instrument, // Title of the instrument column
+            title: instrument ? instrument : "No Match", // Title of the instrument column
             key: instrument, // Unique key for the instrument column
 
             children: [

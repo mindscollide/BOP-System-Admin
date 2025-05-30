@@ -274,6 +274,15 @@ const GetTenorWiseFEDiscountingSpreadsForCategory = {
   RequestMethod: "ServiceManager.GetTenorWiseFEDiscountingSpreadsForCategory",
 };
 
+const GetAllTenors = {
+  RequestMethod: "ServiceManager.GetAllTenors",
+};
+
+const GetTenorWiseNonFEDiscountingSpreadsForCategory = {
+  RequestMethod:
+    "ServiceManager.GetTenorWiseNonFEDiscountingSpreadsForCategory",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -341,4 +350,6 @@ export {
   GetTenorWiseForwardSpreadsForCategory,
   GetAllCorporatesData,
   GetTenorWiseFEDiscountingSpreadsForCategory,
+  GetAllTenors,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory,
 };

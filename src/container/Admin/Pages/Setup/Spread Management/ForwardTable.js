@@ -13,6 +13,19 @@ const ForwardTable = () => {
     (state) =>
       state.SpreadManagementReducer.GetTenorWiseForwardSpreadsForCategory
   );
+  const GetAllInstruments = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllInstruments
+  );
+  console.log("GetAllInstrumentsGetAllInstruments", GetAllInstruments);
+  const GetAllTenors = useSelector(
+    (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
+  );
+  console.log(
+    "GetTenorWiseForwardSpreadsForCategory",
+    GetTenorWiseForwardSpreadsForCategory?.forwardSpreads
+  );
+
+  console.log("GetAllTenors", GetAllTenors?.tenors);
   // Function to handle input changes in Forward table
   const handleForwardInputChange = (index, field, value) => {
     let validateValue = value.replace(/[^0-9.]/g, "");
@@ -21,9 +34,31 @@ const ForwardTable = () => {
     setForwardData(updatedData);
   };
   useEffect(() => {
-    if (GetTenorWiseForwardSpreadsForCategory !== null) {
+    if (
+      GetAllInstruments !== null &&
+      GetAllTenors !== null &&
+      GetTenorWiseForwardSpreadsForCategory !== null
+    ) {
       try {
-        let { forwardsRates } = generateData(3);
+        console.log(
+          {
+            GetAllTenors,
+            GetAllInstruments,
+            GetTenorWiseForwardSpreadsForCategory,
+          },
+          "GetTenorWiseForwardSpreadsForCategoryGetTenorWiseForwardSpreadsForCategory"
+        );
+        let tenors = GetAllTenors.tenors;
+        let instruments = GetAllInstruments.instruments;
+        let forwardSpreadsData =
+          GetTenorWiseForwardSpreadsForCategory.forwardSpreads;
+
+        let { forwardsRates } = generateData(
+          4,
+          tenors,
+          instruments,
+          forwardSpreadsData
+        );
         console.log(forwardsRates, "getDatagetData");
         const columnData = createColumns(forwardsRates, 2);
         setForwardColumns(columnData);
@@ -33,7 +68,7 @@ const ForwardTable = () => {
         // setForwardData(GetTenorWiseForwardSpreadsForCategory.forwardSpreads);
       } catch (error) {}
     }
-  }, [GetTenorWiseForwardSpreadsForCategory]);
+  }, [GetTenorWiseForwardSpreadsForCategory, GetAllInstruments, GetAllTenors]);
   //Forward Table
 
   console.log({ forwardData, forwardColumns }, "forwardColumnsforwardColumns");
@@ -44,9 +79,10 @@ const ForwardTable = () => {
       column={forwardColumns}
       bordered
       pagination={false}
+      scroll={{ y: 200, x: "100%" }}
       prefixCls="groupTable"
       // className={"GrayHeader-table"}
-      className={"Forward-table"}
+      // className={"Forward-table"}
     />
   );
 };

@@ -31,7 +31,10 @@ import {
   GetTenorWiseForwardSpreadsForCategoryAPI,
 } from "../../../../../store/actions/SpreadManagementActions.js";
 import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions.js";
-import { GetTenorWiseFEDiscountingSpreadsForCategoryAPI } from "../../../../../store/actions/SetupTradeAccessManagementActions.js";
+import {
+  GetAllTenorsAPI,
+  GetTenorWiseFEDiscountingSpreadsForCategoryAPI,
+} from "../../../../../store/actions/SetupTradeAccessManagementActions.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,6 +60,7 @@ const SpreadManagement = () => {
     "GetTenorWiseFEDiscountingSpreadsForCategory",
     GetTenorWiseFEDiscountingSpreadsForCategory
   );
+
   const [discountingData, setDiscountingData] = useState(
     initialDiscountingState
   );
@@ -161,6 +165,7 @@ const SpreadManagement = () => {
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
     dispatch(GetAllInstrumentsAPI(navigate));
+    dispatch(GetAllTenorsAPI(navigate));
   }, []);
 
   useEffect(() => {

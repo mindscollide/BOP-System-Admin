@@ -11,10 +11,34 @@ const initialState = {
   UpdateBranchTradeRights: null,
   UpdateCorporateTradeRights: null,
   GetTenorWiseFEDiscountingSpreadsForCategory: null,
+  GetAllTenors: null,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory: null,
 };
 
 const SetupTradeAccessManagementReducer = (state = initialState, action) => {
   switch (action.type) {
+    //GetAllTenors  reducer
+    case actions.GET_ALL_TENORS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_TENORS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTenors: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_TENORS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTenors: null,
+        ResponseMessage: action.message,
+      };
     //Get GetCorporatesWithStatus reducer
     case actions.GET_CORPORATES_WITH_STATUS_INTI:
       return {
@@ -219,6 +243,29 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetTenorWiseFEDiscountingSpreadsForCategory: null,
+        ResponseMessage: action.message,
+      };
+
+    //GetTenorWiseNonFEDiscountingSpreadsForCategory  reducer
+    case actions.GET_TENOR_WISE_NON_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_TENOR_WISE_NON_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetTenorWiseNonFEDiscountingSpreadsForCategory: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_TENOR_WISE_NON_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetTenorWiseNonFEDiscountingSpreadsForCategory: null,
         ResponseMessage: action.message,
       };
     default:

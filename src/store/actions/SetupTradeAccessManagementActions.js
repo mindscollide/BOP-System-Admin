@@ -1,16 +1,22 @@
 import axios from "axios";
 import * as actions from "../action_types";
 import {
+  GetAllTenors,
   GetBranchesWithStatus,
   GetBranchTradeRights,
   GetCorporatesWithStatus,
   GetCorporateTradeRights,
+  GetTenorWiseFEDiscountingSpreadsForCategory,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory,
   UpdateBranchStatus,
   UpdateBranchTradeRights,
   UpdateCorporateStatus,
   UpdateCorporateTradeRights,
 } from "../../commen/apis/Api_config";
-import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
+import {
+  systemAdminAPI,
+  uploadRateAPI,
+} from "../../commen/apis/Api_ends_points";
 import { RefreshToken } from "./Auth-Actions";
 import {
   ConfirmationModalSystemAdmin,
@@ -700,7 +706,10 @@ const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
     dispatch(GetTenorWiseFEDiscountingSpreadsForCategoryInit());
 
     let form = new FormData();
-    form.append("RequestMethod", GetBranchTradeRights.RequestMethod);
+    form.append(
+      "RequestMethod",
+      GetTenorWiseFEDiscountingSpreadsForCategory.RequestMethod
+    );
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
@@ -782,7 +791,220 @@ const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
       });
   };
 };
+//GetAllTenors
+const GetAllTenorsInit = () => {
+  return {
+    type: actions.GET_ALL_TENORS_INIT,
+  };
+};
+
+const GetAllTenorsSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_TENORS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllTenorsFail = (message) => {
+  return {
+    type: actions.GET_ALL_TENORS_FAIL,
+    message: message,
+  };
+};
+
+const GetAllTenorsAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllTenorsInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", GetAllTenors.RequestMethod);
+    axios({
+      method: "POST",
+      url: uploadRateAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllTenorsAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "UploadRate_UploadRateServiceManager_GetAllTenors_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllTenorsSuccess(
+                  response.data.responseResult,
+                  "API executed successfully."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
+            ) {
+              dispatch(GetAllTenorsFail("No Data Available."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
+            ) {
+              dispatch(GetAllTenorsFail("Role doesn’t matched."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "UploadRate_UploadRateServiceManager_GetAllTenors_03".toLowerCase()
+            ) {
+              dispatch(GetAllTenorsFail("Exception has been occurred."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "UploadRate_UploadRateServiceManager_GetAllTenors_04".toLowerCase()
+            ) {
+              dispatch(GetAllTenorsFail("DB Error."));
+            } else {
+              dispatch(GetAllTenorsFail("Something went wrong"));
+            }
+          } else {
+            dispatch(GetAllTenorsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllTenorsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllTenorsFail("Something went wrong"));
+      });
+  };
+};
+
+//GetTenorWiseNonFEDiscountingSpreadsForCategory
+const GetTenorWiseNonFEDiscountingSpreadsForCategoryInit = () => {
+  return {
+    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_INIT,
+  };
+};
+
+const GetTenorWiseNonFEDiscountingSpreadsForCategorySuccess = (
+  response,
+  message
+) => {
+  return {
+    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetTenorWiseNonFEDiscountingSpreadsForCategoryFail = (message) => {
+  return {
+    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_FAIL,
+    message: message,
+  };
+};
+
+const GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetTenorWiseNonFEDiscountingSpreadsForCategoryInit());
+
+    let form = new FormData();
+    form.append(
+      "RequestMethod",
+      GetTenorWiseNonFEDiscountingSpreadsForCategory.RequestMethod
+    );
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI(navigate, data)
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetTenorWiseNonFEDiscountingSpreadsForCategorySuccess(
+                  response.data.responseResult,
+                  "Data Available."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_02".toLowerCase()
+            ) {
+              dispatch(
+                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
+                  "No Data Available."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_04".toLowerCase()
+            ) {
+              dispatch(
+                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail("Exception")
+              );
+            } else {
+              dispatch(
+                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
+                  "Something went wrong"
+                )
+              );
+            }
+          } else {
+            dispatch(
+              GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
+                "Something went wrong"
+              )
+            );
+          }
+        } else {
+          dispatch(
+            GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
+              "Something went wrong"
+            )
+          );
+        }
+      })
+      .catch((response) => {
+        dispatch(
+          GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
+            "Something went wrong"
+          )
+        );
+      });
+  };
+};
 export {
+  GetAllTenorsAPI,
   GetCorporatesWithStatusAPI,
   GetBranchesWithStatusAPI,
   UpdateCorporateStatusAPI,
@@ -792,4 +1014,5 @@ export {
   UpdateBranchTradeRightsAPI,
   UpdateCorporateTradeRightsAPI,
   GetTenorWiseFEDiscountingSpreadsForCategoryAPI,
+  GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI,
 };

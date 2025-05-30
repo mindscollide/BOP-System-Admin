@@ -433,119 +433,92 @@ const AddCorporateUser = () => {
               </span>
             </Col>
           </Row>
-          <Row className="mt-1">
+          <Row className="mt-3">
             <Col lg={12} md={12} sm={12} className="m-0 p-0">
-              <Paper className={styles["bankuser-paper"]}>
-                <Row>
-                  <Col lg={12} md={12} sm={12}>
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
-                        <span className={styles["labels-add-bank"]}>
-                          Name
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <TextField
-                          labelClass="d-none"
-                          name={"firstName"}
-                          value={corporateUser.firstName?.value || ""}
-                          onChange={addCorporateUserValidateHandler}
-                          maxLength={50}
-                        />
-                      </Col>
+              <Paper className={styles["corporateuser-paper"]}>
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12} className="d-flex">
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Name
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        name={"firstName"}
+                        labelClass="d-none"
+                        formParentClass={"MainClass"}
+                        className={styles["InputFieldClass"]}
+                        value={corporateUser.firstName?.value || ""}
+                        onChange={addCorporateUserValidateHandler}
+                        maxLength={50}
+                      />
+                    </div>
+                  </Col>
 
-                      <Col lg={4} md={4} sm={4}>
-                        <CustomUpload change={HandleFileUpload} />
-                      </Col>
-                    </Row>
-                    {/* <Row className="mt-3"></Row> */}
+                  <Col lg={4} md={4} sm={12}>
+                    <CustomUpload change={HandleFileUpload} />
+                  </Col>
+                </Row>
 
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
-                        <span className={styles["labels-add-bank"]}>
-                          Email
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <TextField
-                          labelClass="d-none"
-                          name={"email"}
-                          value={corporateUser.email.value || ""}
-                          onChange={addCorporateUserValidateHandler}
-                        />
-                        {corporateUser.email.errorStatus && (
-                          <Row>
-                            <Col className="d-flex justify-content-start">
-                              <p className={styles["bankErrorMessage"]}>
-                                {corporateUser.email.errorMessage}
-                              </p>
-                            </Col>
-                          </Row>
-                        )}
-                        {/* <Row>
-                            <Col className="d-flex justify-content-start">
-                              <p
-                                className={
-                                  errorShow &&
-                                  !/^[a-zA-Z0-9._%+-]+@bop\.com$/.test(
-                                    corporateUser.email.value
-                                  )
-                                    ? styles["bankErrorMessage"]
-                                    : styles["bankErrorMessage_hidden"]
-                                }
-                              >
-                                Email address with domain of bop is required
-                              </p>
-                            </Col>
-                          </Row> */}
-                        {errorShow &&
-                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                          corporateUser.email.value
-                        ) ? (
-                          <Row>
-                            <Col className="d-flex justify-content-start">
-                              <p className={styles["bankErrorMessage"]}>
-                                Enter Valid Email Address
-                              </p>
-                            </Col>
-                          </Row>
-                        ) : (
-                          ""
-                        )}
-                      </Col>
-                    </Row>
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Email
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        labelClass="d-none"
+                        name={"email"}
+                        value={corporateUser.email.value || ""}
+                        onChange={addCorporateUserValidateHandler}
+                        formParentClass={"MainClass"}
+                        className={styles["InputFieldClass"]}
+                      />
+                    </div>
+                    {corporateUser.email.errorStatus && (
+                      <Row>
+                        <Col className="d-flex justify-content-start">
+                          <p className={styles["bankErrorMessage"]}>
+                            {corporateUser.email.errorMessage}
+                          </p>
+                        </Col>
+                      </Row>
+                    )}
 
-                    <Row className="mt-3 position-relative">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
-                        <span className={styles["labels-add-bank2"]}>
-                          Company Name
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12} className="position-relative">
+                    {errorShow &&
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                      corporateUser.email.value
+                    ) ? (
+                      <Row>
+                        <Col className="d-flex justify-content-start">
+                          <p className={styles["bankErrorMessage"]}>
+                            Enter Valid Email Address
+                          </p>
+                        </Col>
+                      </Row>
+                    ) : (
+                      ""
+                    )}
+                  </Col>
+                </Row>
+
+                <Row className="mt-3 position-relative">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Company Name
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+
+                      <Col className="position-relative">
                         <Select
                           options={companyNameOptions}
                           isSearchable={true}
                           value={companyRoleID !== 0 ? companyRoleID : null}
                           onChange={CompanySelectHandler}
                           classNamePrefix={"selectCateogyCorporateList"}
+                          className={styles["InputFieldClass"]}
                         />
                         <Button
                           className={styles["PlusButton"]}
@@ -555,183 +528,154 @@ const AddCorporateUser = () => {
                         <Button
                           className={styles["EditButton"]}
                           icon={<i className={"icon-edit color-blue"}></i>}
-                          // onClick={handleEditButton}
                           onClick={() => handleEditButton(companyRoleID)}
                         />
                       </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Category
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+
+                      <TextField
+                        labelClass="d-none"
+                        value={corporateUser.categoryName || ""}
+                        maxLength={50}
+                        disable={true}
+                        formParentClass={"MainClass"}
+                        className={styles["disableText"]}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>Chat</span>
+
+                      <Checkbox
+                        label2="Active"
+                        classNameDiv={styles["CheckboxActive"]}
+                        onChange={changeActiveTick}
+                        checked={
+                          corporateUser.isChatActive.value ? true : false
+                        }
+                        className={styles["InputFieldClass"]}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        FE / Non-FE
+                      </span>
+                      <Checkbox
+                        label2="FE"
+                        classNameDiv={styles["CheckboxActive"]}
+                        onChange={changeFETick}
+                        checked={corporateUser.isFEActive.value ? true : false}
+                      />
+                      <Checkbox
+                        label2="Non-FE"
+                        classNameDiv={styles["CheckboxActive"]}
+                        onChange={changeNonFETick}
+                        checked={
+                          corporateUser.isNonFEActive.value ? true : false
+                        }
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        RFQ Timer
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+
+                      <Col className="me-2">
                         <span className={styles["labels-add-bank"]}>
-                          Category
+                          Treasury
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           className={styles["disableText"]}
                           labelClass="d-none"
-                          value={corporateUser.categoryName || ""}
-                          maxLength={50}
+                          value={corporateUser.rfqTreasury || ""}
                           disable={true}
                         />
                       </Col>
-                    </Row>
 
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
-                        <span className={styles["labels-add-bank"]}>Chat</span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12} className="m-0 p-0">
-                        <Checkbox
-                          label2="Active"
-                          classNameDiv={styles["CheckboxActive"]}
-                          onChange={changeActiveTick}
-                          checked={
-                            corporateUser.isChatActive.value ? true : false
-                          }
-                        />
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
+                      <Col>
                         <span className={styles["labels-add-bank"]}>
-                          FE / Non-FE
-                        </span>
-                      </Col>
-                      <Col lg={1} md={1} sm={12} className="m-0 p-0">
-                        <Checkbox
-                          label2="FE"
-                          classNameDiv={styles["CheckboxActive"]}
-                          onChange={changeFETick}
-                          checked={
-                            corporateUser.isFEActive.value ? true : false
-                          }
-                        />
-                      </Col>
-                      <Col lg={1} md={1} sm={12} className="m-0 p-0">
-                        <Checkbox
-                          label2="Non-FE"
-                          classNameDiv={styles["CheckboxActive"]}
-                          onChange={changeNonFETick}
-                          checked={
-                            corporateUser.isNonFEActive.value ? true : false
-                          }
-                        />
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
-                        <span className={styles["labels-add-bank"]}>
-                          RFQ Timer
+                          Corporate
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <Row>
-                          <Col lg={6} md={6} sm={12}>
-                            <span className={styles["labels-add-bank"]}>
-                              Treasury
-                              <span className={styles["aesterick-color"]}>
-                                *
-                              </span>
-                            </span>
-                            <TextField
-                              className={styles["disableText"]}
-                              labelClass="d-none"
-                              value={corporateUser.rfqTreasury || ""}
-                              disable={true}
-                            />
-                          </Col>
-                          <Col lg={6} md={6} sm={12}>
-                            <span className={styles["labels-add-bank"]}>
-                              Corporate
-                              <span className={styles["aesterick-color"]}>
-                                *
-                              </span>
-                            </span>
-                            <TextField
-                              className={styles["disableText"]}
-                              labelClass="d-none"
-                              value={corporateUser.rfqCorporate || ""}
-                              disable={true}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-3">
-                      <Col
-                        lg={1}
-                        md={1}
-                        sm={12}
-                        className={styles["AddCorporateLabel"]}
-                      >
-                        <span className={styles["labels-add-bank"]}>
-                          Nature of the Client
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
                         <TextField
                           className={styles["disableText"]}
                           labelClass="d-none"
-                          value={corporateUser.natureOfClient || ""}
+                          value={corporateUser.rfqCorporate || ""}
                           disable={true}
                         />
                       </Col>
-                    </Row>
+                    </div>
+                  </Col>
+                </Row>
 
-                    <Row className="mt-3 mb-5">
-                      <Col
-                        lg={9}
-                        md={9}
-                        sm={12}
-                        className="d-flex justify-content-center gap-2"
-                      >
-                        <Button
-                          icon={<i className="icon-check icon-check-space"></i>}
-                          text="Activate"
-                          className={styles["Active-btn"]}
-                          onClick={handleActivateButton}
-                          disableBtn={
-                            corporateUser.firstName.value !== "" &&
-                            corporateUser.email.value !== ""
-                              ? false
-                              : true
-                          }
-                        />
-                        <Button
-                          icon={<i className="icon-close icon-check-space"></i>}
-                          text="Cancel"
-                          onClick={handleCancelButton}
-                          className={styles["Cancel-btn-AddBankUser"]}
-                        />
-                      </Col>
-                    </Row>
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Nature of the Client
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        className={styles["disableText"]}
+                        labelClass="d-none"
+                        value={corporateUser.natureOfClient || ""}
+                        disable={true}
+                        formParentClass={"MainClass"}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3 mb-5">
+                  <Col
+                    lg={9}
+                    md={9}
+                    sm={12}
+                    className="d-flex justify-content-center gap-2"
+                  >
+                    <Button
+                      icon={<i className="icon-check icon-check-space"></i>}
+                      text="Activate"
+                      className={styles["Active-btn"]}
+                      onClick={handleActivateButton}
+                      disableBtn={
+                        corporateUser.firstName.value !== "" &&
+                        corporateUser.email.value !== ""
+                          ? false
+                          : true
+                      }
+                    />
+                    <Button
+                      icon={<i className="icon-close icon-check-space"></i>}
+                      text="Cancel"
+                      onClick={handleCancelButton}
+                      className={styles["Cancel-btn-AddBankUser"]}
+                    />
                   </Col>
                 </Row>
               </Paper>

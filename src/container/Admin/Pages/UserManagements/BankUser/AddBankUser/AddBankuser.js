@@ -582,7 +582,7 @@ const AddBankUser = () => {
               <span className={styles["bank-user-label"]}>Add a Bank user</span>
             </Col>
           </Row>
-          <Row className="mt-1">
+          <Row className="mt-3">
             <Col lg={12} md={12} sm={12} className="m-0 p-0">
               <Paper className={styles["bankuser-paper"]}>
                 <Row className="mt-3">
@@ -714,7 +714,6 @@ const AddBankUser = () => {
                             <span className={styles["aesterick-color"]}>*</span>
                           </span>
                           <TextField
-                            // className={styles["disableText"]}
                             name={"cateogry"}
                             value={addBankUser.category.value}
                             maxLength={50}
