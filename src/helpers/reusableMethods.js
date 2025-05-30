@@ -43,19 +43,25 @@ export const formatTimeSpan = (timeString) => {
 };
 
 export const formatCurrencyInput = (value) => {
-  if (!value) return ""; // Return empty string if no value
+  if (!value) return "";
 
-  // Remove non-numeric characters
-  let cleanVal = value.replace(/[^0-9]/g, "");
+  // Allow only numbers and one dot
+  let cleanVal = value.replace(/[^0-9.]/g, "");
 
-  // Automatically add decimal if length is greater than 3
-  if (cleanVal.length > 3) {
-    let integerPart = cleanVal.slice(0, 3); // First 3 digits
-    let decimalPart = cleanVal.slice(3, 5) || "00"; // Next 2 digits or default "00"
-    return `${integerPart}.${decimalPart}`;
+  // Only allow one dot
+  const parts = cleanVal.split(".");
+  if (parts.length > 2) {
+    return parts[0].slice(0, 2) + "." + parts[1].slice(0, 4); // Ignore extra dots
   }
 
-  return cleanVal;
+  const beforeDot = parts[0].slice(0, 2); // Max 2 digits before dot
+
+  if (parts.length === 2) {
+    const afterDot = parts[1].slice(0, 4); // Max 4 digits after dot
+    return `${beforeDot}.${afterDot}`;
+  }
+
+  return beforeDot;
 };
 
 export const IndexCell = React.memo(({ value, record, CellClassName }) => {
