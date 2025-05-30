@@ -161,6 +161,10 @@ const GetAllCorporates = {
   RequestMethod: "ServiceManager.GetAllCategoryDetailsWithCounterParties",
 };
 
+const GetAllCorporatesData = {
+  RequestMethod: "ServiceManager.GetAllCorporates",
+};
+
 const GetAllNatureOfBussiness = {
   RequestMethod: "ServiceManager.GetAllNatureOfBussiness",
 };
@@ -332,4 +336,5 @@ export {
   GetSpotSpreadsForCategory,
   GetCrossRateSpreadsForCategory,
   GetTenorWiseForwardSpreadsForCategory,
+  GetAllCorporatesData,
 };

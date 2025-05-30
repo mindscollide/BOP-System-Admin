@@ -471,6 +471,7 @@ const EditCorporateTradeModal = ({ info }) => {
       selectedInstrument.some((data2) => data2.value === newData.instrumentID)
     );
   }, [selectedInstrument, instrumentDataSource]);
+  console.log(filterRows, "filterRowsfilterRows");
 
   const closeModal = useCallback(() => {
     setTradeRightsData({

@@ -405,6 +405,8 @@ const GetCorporateTradeRightsAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_GetCorporateTradeRights_04".toLowerCase()
             ) {
               dispatch(GetCorporateTradeRightsFail("Exception."));
+            } else {
+              dispatch(GetCorporateTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(GetCorporateTradeRightsFail("Something went wrong"));
@@ -486,6 +488,8 @@ const GetBranchTradeRightsAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_GetBranchTradeRights_04".toLowerCase()
             ) {
               dispatch(GetBranchTradeRightsFail("Exception."));
+            } else {
+              dispatch(GetBranchTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(GetBranchTradeRightsFail("Something went wrong"));

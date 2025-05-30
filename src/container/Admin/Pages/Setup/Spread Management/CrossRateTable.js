@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "antd";
 import "./SpreadManagement.module.css";
 import { Table } from "../../../../../components/elements";
 import { useSelector } from "react-redux";
 
-const CrossRateTable = ({ data, onInputChange }) => {
+const CrossRateTable = () => {
+  const [crossRateData, setCrossRateData] = useState([]);
+
+  const GetCrossRateSpreadsForCategory = useSelector(
+    (state) => state.SpreadManagementReducer.GetCrossRateSpreadsForCategory
+  );
+  console.log("GetCrossRateSpreadsForCategory", GetCrossRateSpreadsForCategory);
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
+  const handleCrossRateInputChange = (index, field, value) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = [...crossRateData];
+    updatedData[index][field] = validateValue;
+    setCrossRateData(updatedData);
+  };
+  useEffect(() => {
+    if (GetCrossRateSpreadsForCategory !== null) {
+      try {
+        setCrossRateData(GetCrossRateSpreadsForCategory.crossRatesSpreads);
+      } catch (error) {}
+    }
+  }, [GetCrossRateSpreadsForCategory]);
   const columns = [
     {
       title: <label className="bottom-table-header">Currency</label>,
@@ -37,7 +56,9 @@ const CrossRateTable = ({ data, onInputChange }) => {
           style={{ width: "60px", textAlign: "center" }}
           className="WidthInputParitySpot"
           value={text}
-          onChange={(e) => onInputChange(index, "bidSpread", e.target.value)}
+          onChange={(e) =>
+            handleCrossRateInputChange(index, "bidSpread", e.target.value)
+          }
         />
       ),
     },
@@ -54,7 +75,9 @@ const CrossRateTable = ({ data, onInputChange }) => {
           maxLength={5}
           style={{ width: "60px", textAlign: "center" }}
           value={text}
-          onChange={(e) => onInputChange(index, "askSpread", e.target.value)}
+          onChange={(e) =>
+            handleCrossRateInputChange(index, "askSpread", e.target.value)
+          }
         />
       ),
     },
@@ -63,7 +86,7 @@ const CrossRateTable = ({ data, onInputChange }) => {
   return (
     <Table
       column={columns}
-      rows={data}
+      rows={crossRateData}
       bordered
       pagination={false}
       className={"GrayHeader-table"}

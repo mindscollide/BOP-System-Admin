@@ -1,70 +1,80 @@
-import moment from "moment";
-import React from "react";
-
-//Date
-export const formatDate = (date) =>
-  date ? new Date(date).toISOString().split("T")[0] : "";
-
-//Date and Time
-export const formatDateTime = (date) =>
-  date ? new Date(date).toISOString() : "";
-
-export const ConvertDateTimrStringIntoGTM = (date, pattern) => {
-  let ConvertIntoISO = moment(date, pattern).toISOString();
-  console.log(ConvertIntoISO, "ConvertIntoISOConvertIntoISO");
-  return new Date(ConvertIntoISO);
+let Data = {
+  tenors: [
+    {
+      tenorID: 1,
+      tenorName: "1 Month",
+      tenorDays: 30,
+    },
+    {
+      tenorID: 2,
+      tenorName: "3 Months",
+      tenorDays: 90,
+    },
+    {
+      tenorID: 3,
+      tenorName: "6 Months",
+      tenorDays: 180,
+    },
+    {
+      tenorID: 4,
+      tenorName: "1 Year",
+      tenorDays: 365,
+    },
+  ],
+  instruments: [
+    {
+      instrumentID: 1,
+      instrumentName: "Instrument A",
+    },
+    {
+      instrumentID: 2,
+      instrumentName: "Instrument B",
+    },
+    {
+      instrumentID: 3,
+      instrumentName: "Instrument C",
+    },
+  ],
+  forwardRates: [
+    {
+      tenorID: 1,
+      instrumentID: 1,
+      bid: 1.25,
+      ask: 1.3,
+    },
+    {
+      tenorID: 2,
+      instrumentID: 2,
+      bid: 1.35,
+      ask: 1.4,
+    },
+    {
+      tenorID: 3,
+      instrumentID: 3,
+      bid: 1.45,
+      ask: 1.5,
+    },
+  ],
+  discountRates: [
+    {
+      tenorID: 1,
+      instrumentID: 1,
+      rate: 0.02,
+    },
+    {
+      tenorID: 2,
+      instrumentID: 2,
+      rate: 0.025,
+    },
+    {
+      tenorID: 3,
+      instrumentID: 3,
+      rate: 0.03,
+    },
+  ],
 };
-
-export const extractTimeOnly = (dateString) => {
-  const dateObj = new Date(dateString);
-  return dateObj.toTimeString().split(" ")[0]; // Returns "HH:MM:SS"
-};
-
-export const formatDateAndTimeFromString = (date) => {
-  let dateString =
-    date.slice(0, 4) +
-    "-" +
-    date.slice(4, 6) +
-    "-" +
-    date.slice(6, 8) +
-    " " +
-    date.slice(8, 10) +
-    ":" +
-    date.slice(10, 12) +
-    ":" +
-    date.slice(12, 14);
-  return new Date(dateString);
-};
-
-export const formatTimeSpan = (timeString) => {
-  const [hours, minutes, seconds] = timeString.split(":").map(Number);
-
-  return `${hours} hrs ${minutes} mins ${seconds} secs`;
-};
-
-export const formatCurrencyInput = (value) => {
-  if (!value) return ""; // Return empty string if no value
-
-  // Remove non-numeric characters
-  let cleanVal = value.replace(/[^0-9]/g, "");
-
-  // Automatically add decimal if length is greater than 3
-  if (cleanVal.length > 3) {
-    let integerPart = cleanVal.slice(0, 3); // First 3 digits
-    let decimalPart = cleanVal.slice(3, 5) || "00"; // Next 2 digits or default "00"
-    return `${integerPart}.${decimalPart}`;
-  }
-
-  return cleanVal;
-};
-
-export const IndexCell = React.memo(({ value, record, CellClassName }) => {
-  console.log("Rendering IndexCell:", record, value);
-  return <span className={CellClassName}>{value}</span>;
-});
 
 export const generateData = (
-  Data,
   columnValue,
   tenors = [],
   instruments = [],
@@ -195,7 +205,6 @@ export const generateData = (
  * @param {number} value - Determines the type of columns to create (1 for Discount, others for Forwards).
  * @returns {Array} - An array of column configurations for the Ant Design table.
  */
-
 export const createColumns = (data, value) => {
   let baseColumns;
   if (value === 3) {

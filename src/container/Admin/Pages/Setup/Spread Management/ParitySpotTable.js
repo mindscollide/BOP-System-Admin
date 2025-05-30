@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "antd";
 import { Table } from "../../../../../components/elements";
 import "./SpreadManagement.module.css";
 import { useSelector } from "react-redux";
 
-const ParitySpotTable = ({ data, onInputChange }) => {
+const ParitySpotTable = () => {
+  const [paritySpotData, setParitySpotData] = useState([]);
+
+  const GetSpotSpreadsForCategory = useSelector(
+    (state) => state.SpreadManagementReducer.GetSpotSpreadsForCategory
+  );
+
+  console.log(
+    paritySpotData,
+    GetSpotSpreadsForCategory,
+    "paritySpotDataparitySpotData"
+  );
+
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
+
+  // Function to handle input changes in Parity Spot table
+  const handleParitySpotInputChange = (index, field, value) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = [...paritySpotData];
+    updatedData[index][field] = validateValue;
+    setParitySpotData(updatedData);
+  };
+  useEffect(() => {
+    if (GetSpotSpreadsForCategory !== null) {
+      try {
+        setParitySpotData(GetSpotSpreadsForCategory.paritySpotSpreads);
+      } catch (error) {}
+    }
+  }, [GetSpotSpreadsForCategory]);
+
   const columns = [
     {
       title: <label className="bottom-table-header">Currency</label>,
@@ -37,7 +65,9 @@ const ParitySpotTable = ({ data, onInputChange }) => {
           style={{ width: "60px", textAlign: "center" }}
           className="WidthInputParitySpot"
           value={text}
-          onChange={(e) => onInputChange(index, "bidSpread", e.target.value)}
+          onChange={(e) =>
+            handleParitySpotInputChange(index, "bidSpread", e.target.value)
+          }
         />
       ),
     },
@@ -54,7 +84,9 @@ const ParitySpotTable = ({ data, onInputChange }) => {
           maxLength={5}
           style={{ width: "60px", textAlign: "center" }}
           value={text}
-          onChange={(e) => onInputChange(index, "askSpread", e.target.value)}
+          onChange={(e) =>
+            handleParitySpotInputChange(index, "askSpread", e.target.value)
+          }
         />
       ),
     },
@@ -63,7 +95,7 @@ const ParitySpotTable = ({ data, onInputChange }) => {
   return (
     <Table
       column={columns}
-      rows={data}
+      rows={paritySpotData}
       bordered
       pagination={false}
       className={"GrayHeader-table"}

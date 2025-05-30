@@ -42,13 +42,6 @@ const SpreadManagement = () => {
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
   console.log("getAllCategories", getAllCategories);
 
-  const GetSpotSpreadsForCategory = useSelector(
-    (state) => state.SpreadManagementReducer.GetSpotSpreadsForCategory
-  );
-  const GetCrossRateSpreadsForCategory = useSelector(
-    (state) => state.SpreadManagementReducer.GetCrossRateSpreadsForCategory
-  );
-
   const GetTenorWiseForwardSpreadsForCategory = useSelector(
     (state) =>
       state.SpreadManagementReducer.GetTenorWiseForwardSpreadsForCategory
@@ -58,9 +51,6 @@ const SpreadManagement = () => {
     "GetTenorWiseForwardSpreadsForCategory",
     GetTenorWiseForwardSpreadsForCategory
   );
-  const [paritySpotData, setParitySpotData] = useState([]);
-  const [crossRateData, setCrossRateData] = useState([]);
-  const [forwardData, setForwardData] = useState([]);
   const [discountingData, setDiscountingData] = useState(
     initialDiscountingState
   );
@@ -72,28 +62,7 @@ const SpreadManagement = () => {
     label: "",
   });
 
-  // Function to handle input changes in Parity Spot table
-  const handleParitySpotInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = [...paritySpotData];
-    updatedData[index][field] = validateValue;
-    setParitySpotData(updatedData);
-  };
   // Function to handle input changes in Cross Rate table
-  const handleCrossRateInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = [...crossRateData];
-    updatedData[index][field] = validateValue;
-    setCrossRateData(updatedData);
-  };
-
-  // Function to handle input changes in Forward table
-  const handleForwardInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = [...forwardData];
-    updatedData[index][field] = validateValue;
-    setForwardData(updatedData);
-  };
 
   // Function to handle input changes in Discounting table
   const handleDiscountingInputChange = (index, field, value) => {
@@ -104,15 +73,7 @@ const SpreadManagement = () => {
   };
 
   // Save action placeholder (can be extended to API calls)
-  const saveData = (dataType) => {
-    console.log(
-      `Saving data for Parity Data: ${paritySpotData}:`,
-      JSON.stringify(paritySpotData),
-
-      `Saving data for Cross Data: ${crossRateData}:`,
-      JSON.stringify(crossRateData)
-    );
-  };
+  const saveData = (dataType) => {};
 
   //reset Parity and Cross Rate to 0.0
   const handleResetParityAndCross = () => {
@@ -139,24 +100,17 @@ const SpreadManagement = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
   };
   const handleResetOrSave = () => {
-    if (resetOrSaveComponent === "resetForwardTable") {
-      setForwardData(resetForwardState);
-    }
+    // if (resetOrSaveComponent === "resetForwardTable") {
+    //   setForwardData(resetForwardState);
+    // }
     if (resetOrSaveComponent === "resetPartyAndCrossTable") {
-      setParitySpotData(
-        parityData.map((row) => ({
-          ...row,
-          bidSpread: "0.0",
-          askSpread: "0.0",
-        }))
-      );
-      setCrossRateData(
-        crossData.map((row) => ({
-          ...row,
-          bidSpread: "0.0",
-          askSpread: "0.0",
-        }))
-      );
+      // setCrossRateData(
+      //   crossData.map((row) => ({
+      //     ...row,
+      //     bidSpread: "0.0",
+      //     askSpread: "0.0",
+      //   }))
+      // );
     }
     if (resetOrSaveComponent === "resetDiscountingTable") {
       setDiscountingData(resetDiscountingState);
@@ -218,47 +172,24 @@ const SpreadManagement = () => {
     }
   }, [getAllCategories]);
 
-  useEffect(() => {
-    if (getAllCategories !== null) {
-      dispatch(
-        GetSpotSpreadsForCategoryAPI(navigate, {
-          CategoryID: categoryID.categoryID,
-        })
-      );
-      dispatch(
-        GetCrossRateSpreadsForCategoryAPI(navigate, {
-          CategoryID: categoryID.categoryID,
-        })
-      );
-      dispatch(
-        GetTenorWiseForwardSpreadsForCategoryAPI(navigate, {
-          CategoryID: categoryID.categoryID,
-        })
-      );
-
-      if (GetSpotSpreadsForCategory !== null) {
-        setParitySpotData(GetSpotSpreadsForCategory.paritySpotSpreads);
-      }
-      if (GetCrossRateSpreadsForCategory !== null) {
-        setCrossRateData(GetCrossRateSpreadsForCategory.crossRatesSpreads);
-      }
-      if (GetTenorWiseForwardSpreadsForCategory !== null) {
-        console.log(
-          GetTenorWiseForwardSpreadsForCategory,
-          "GetTenorWiseForwardSpreadsForCategory"
-        );
-        setForwardData(GetTenorWiseForwardSpreadsForCategory);
-      }
-    }
-  }, [categoryID]);
   //handle select CategoryID
   const handleSelectCategory = async (selectedCategory) => {
     setCategoryID(selectedCategory);
-
-    // SpreadManagementSchema((prevState) => ({
-    //   ...prevState,
-    //   categoryID: { ...prevState.categoryID, value: selectedCategory.value },
-    // }));
+    dispatch(
+      GetSpotSpreadsForCategoryAPI(navigate, {
+        CategoryID: selectedCategory.categoryID,
+      })
+    );
+    dispatch(
+      GetCrossRateSpreadsForCategoryAPI(navigate, {
+        CategoryID: selectedCategory.categoryID,
+      })
+    );
+    dispatch(
+      GetTenorWiseForwardSpreadsForCategoryAPI(navigate, {
+        CategoryID: selectedCategory.categoryID,
+      })
+    );
   };
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
@@ -289,20 +220,14 @@ const SpreadManagement = () => {
                 <span className={style["ParitySpotHeading"]}>
                   Against USD (bps)
                 </span>
-                <ParitySpotTable
-                  data={paritySpotData}
-                  onInputChange={handleParitySpotInputChange}
-                />
+                <ParitySpotTable />
               </Col>
 
               <Col lg={6} md={6} sm={12}>
                 <span className={style["ParitySpotHeading"]}>
                   Against PKR (bps)
                 </span>
-                <CrossRateTable
-                  data={crossRateData}
-                  onInputChange={handleCrossRateInputChange}
-                />
+                <CrossRateTable />
               </Col>
             </Row>
 
@@ -333,10 +258,7 @@ const SpreadManagement = () => {
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <span className={style["ForwardLabel"]}>Forward (bps)</span>
-                <ForwardTable
-                  data={forwardData}
-                  onInputChange={handleForwardInputChange}
-                />
+                <ForwardTable />
               </Col>
             </Row>
 

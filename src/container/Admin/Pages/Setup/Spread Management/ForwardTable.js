@@ -1,281 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "antd";
 import "./SpreadManagement.module.css";
 import { Table } from "../../../../../components/elements";
+import { useSelector } from "react-redux";
+import { createColumns, generateData } from "./testCode";
 
-const ForwardTable = ({ data, onInputChange }) => {
-  console.log("data in FOrwardTable", data);
+const ForwardTable = () => {
+  const [forwardData, setForwardData] = useState([]);
+  const [forwardColumns, setForwardColumns] = useState([]);
+
+  const GetTenorWiseForwardSpreadsForCategory = useSelector(
+    (state) =>
+      state.SpreadManagementReducer.GetTenorWiseForwardSpreadsForCategory
+  );
+  // Function to handle input changes in Forward table
+  const handleForwardInputChange = (index, field, value) => {
+    let validateValue = value.replace(/[^0-9.]/g, "");
+    const updatedData = [...forwardData];
+    updatedData[index][field] = validateValue;
+    setForwardData(updatedData);
+  };
+  useEffect(() => {
+    if (GetTenorWiseForwardSpreadsForCategory !== null) {
+      try {
+        let { forwardsRates } = generateData(3);
+        console.log(forwardsRates, "getDatagetData");
+        const columnData = createColumns(forwardsRates, 2);
+        setForwardColumns(columnData);
+        setForwardData(forwardsRates);
+        console.log(columnData, "getDatagetData");
+
+        // setForwardData(GetTenorWiseForwardSpreadsForCategory.forwardSpreads);
+      } catch (error) {}
+    }
+  }, [GetTenorWiseForwardSpreadsForCategory]);
   //Forward Table
-  const columns = [
-    {
-      title: "Tenor",
-      dataIndex: "tenor",
-      key: "tenor",
-      fixed: "left",
-      align: "center",
-      ecllipse: true,
-      width: 100,
-      render: (text) => {
-        return (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-            {text}
-          </span>
-        );
-      },
-    },
-    {
-      title: "USD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "usdBid",
-          key: "usdBid",
-          align: "center",
-          width: 100,
-          ecllipse: true,
 
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "usdBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "usdAsk",
-          align: "center",
-          key: "usdAsk",
-          width: 100,
-
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "usdAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "EUR",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "eurBid",
-          align: "center",
-          key: "eurBid",
-          width: 100,
-
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "eurBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "eurAsk",
-          align: "center",
-          key: "eurAsk",
-          width: 100,
-
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "eurAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "GBP",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "gbpBid",
-          key: "gbpBid",
-          align: "center",
-          width: 100,
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "gbpBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "gbpAsk",
-          key: "gbpAsk",
-          align: "center",
-          width: 100,
-
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "gbpAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "HKD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "hkdBid",
-          key: "hkdBid",
-          align: "center",
-          width: 100,
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "hkdBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "hkdAsk",
-          width: 100,
-          align: "center",
-          key: "hkdAsk",
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "hkdAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "JPY",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "jpyBid",
-          key: "jpyBid",
-          width: 100,
-          align: "center",
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "jpyBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "jpyAsk",
-          key: "jpyAsk",
-          width: 100,
-          align: "center",
-          ecllipse: true,
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "jpyAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-  ];
+  console.log({ forwardData, forwardColumns }, "forwardColumnsforwardColumns");
 
   return (
     <Table
-      column={columns}
-      rows={data}
+      rows={forwardData}
+      column={forwardColumns}
       bordered
       pagination={false}
       prefixCls="groupTable"

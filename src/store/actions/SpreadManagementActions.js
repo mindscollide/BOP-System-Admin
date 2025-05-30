@@ -60,7 +60,7 @@ const GetSpotSpreadsForCategoryAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllSpreadManagementForCategory_01".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetSpotSpreadsForCategory_01".toLowerCase()
                 )
             ) {
               dispatch(
@@ -73,7 +73,7 @@ const GetSpotSpreadsForCategoryAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllSpreadManagementForCategory_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetSpotSpreadsForCategory_02".toLowerCase()
                 )
             ) {
               dispatch(GetSpotSpreadsForCategoryFail("No Data Available."));
@@ -81,10 +81,10 @@ const GetSpotSpreadsForCategoryAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllSpreadManagementForCategory_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetSpotSpreadsForCategory_03".toLowerCase()
                 )
             ) {
-              dispatch(GetSpotSpreadsForCategoryFail("Exception."));
+              dispatch(GetSpotSpreadsForCategoryFail("Exception"));
             }
           } else {
             dispatch(GetSpotSpreadsForCategoryFail("Something went wrong"));

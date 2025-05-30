@@ -15,6 +15,7 @@ import {
   GetAllBranches,
   LogoutRM,
   UpdateBranchCategoryMappingapi,
+  GetAllCorporatesData,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -719,6 +720,93 @@ const getAllCorporatesCategory = (navigate) => {
     axios({
       method: "POST",
       url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(getAllCorporatesCategory(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            console.log(response.data.responseResult, "responseResult");
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                getAllCorporatesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_02".toLowerCase()
+            ) {
+              dispatch(getAllCorporatesFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_04".toLowerCase()
+                )
+            ) {
+              dispatch(getAllCorporatesFail("Exception"));
+            }
+          } else {
+            dispatch(getAllCorporatesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(getAllCorporatesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(getAllCorporatesFail("something went wrong"));
+      });
+  };
+};
+
+const GetAllCorporatesDataInit = () => {
+  return {
+    type: actions.GET_ALL_CORPORATES_INIT,
+  };
+};
+
+const GetAllCorporatesDataSuccess = (response, message) => {
+  console.log(response, "responseresponse");
+  return {
+    type: actions.GET_ALL_CORPORATES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllCorporatesDataFail = (message) => {
+  return {
+    type: actions.GET_ALL_CORPORATES_FAIL,
+    message: message,
+  };
+};
+
+const GetAllCorporatesDataAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(getAllCoporatesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllCorporatesData.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
       data: form,
       headers: {
         _token: token,
