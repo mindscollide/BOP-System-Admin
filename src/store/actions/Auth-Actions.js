@@ -177,7 +177,6 @@ const UpdatecorporateMapping = (navigate, data) => {
                   "Record Updated"
                 )
               );
-              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -286,7 +285,6 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
                   "Category Cannot be delete It is mapped with a corporate"
                 )
               );
-              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1412,7 +1410,6 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
                   "Record Updated"
                 )
               );
-              await dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
