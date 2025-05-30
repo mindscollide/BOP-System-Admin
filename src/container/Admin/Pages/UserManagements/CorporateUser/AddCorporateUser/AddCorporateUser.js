@@ -15,7 +15,7 @@ import {
   CorporateUsersBulkListAPI,
   CreateCorporateUserRequestAPI,
 } from "../../../../../../store/actions/BOPSystemAdminActions";
-import { getAllCorporatesCategory } from "../../../../../../store/actions/Auth-Actions";
+import { GetAllCorporatesDataAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
   Button,
   Checkbox,
@@ -46,9 +46,7 @@ const AddCorporateUser = () => {
   const [modalState, setModalState] = useState(0);
 
   // get all corporates (company name)
-  const GetAllCorporates = useSelector(
-    (state) => state.auth.GetAllCorporatesData
-  );
+  const GetAllCorporates = useSelector((state) => state.auth.GetAllCorporates);
 
   //Corporate User State
   const [corporateUser, setCorporateUser] = useState({
@@ -261,7 +259,7 @@ const AddCorporateUser = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllCorporatesCategory(navigate, null));
+    dispatch(GetAllCorporatesDataAPI(navigate));
   }, []);
 
   useEffect(() => {
@@ -441,7 +439,12 @@ const AddCorporateUser = () => {
                 <Row>
                   <Col lg={12} md={12} sm={12}>
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>
                           Name
                           <span className={styles["aesterick-color"]}>*</span>
@@ -464,7 +467,12 @@ const AddCorporateUser = () => {
                     {/* <Row className="mt-3"></Row> */}
 
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>
                           Email
                           <span className={styles["aesterick-color"]}>*</span>
@@ -520,7 +528,12 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3 position-relative">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank2"]}>
                           Company Name
                           <span className={styles["aesterick-color"]}>*</span>
@@ -548,7 +561,12 @@ const AddCorporateUser = () => {
                       </Col>
                     </Row>
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>
                           Category
                           <span className={styles["aesterick-color"]}>*</span>
@@ -566,7 +584,12 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>Chat</span>
                       </Col>
                       <Col lg={6} md={6} sm={12} className="m-0 p-0">
@@ -582,7 +605,12 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>
                           FE / Non-FE
                         </span>
@@ -610,7 +638,12 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>
                           RFQ Timer
                           <span className={styles["aesterick-color"]}>*</span>
@@ -651,7 +684,12 @@ const AddCorporateUser = () => {
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
+                      <Col
+                        lg={1}
+                        md={1}
+                        sm={12}
+                        className={styles["AddCorporateLabel"]}
+                      >
                         <span className={styles["labels-add-bank"]}>
                           Nature of the Client
                           <span className={styles["aesterick-color"]}>*</span>

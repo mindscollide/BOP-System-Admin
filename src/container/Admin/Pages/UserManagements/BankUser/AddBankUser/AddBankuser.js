@@ -585,109 +585,114 @@ const AddBankUser = () => {
           <Row className="mt-1">
             <Col lg={12} md={12} sm={12} className="m-0 p-0">
               <Paper className={styles["bankuser-paper"]}>
-                <Row>
-                  <Col lg={12} md={12} sm={12}>
-                    <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          Employee ID
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-
-                      <Col lg={6} md={6} sm={12}>
-                        <TextField
-                          name={"EmployeeID"}
-                          labelClass="d-none"
-                          value={addBankUser.EmployeeID.value}
-                          maxLength={4}
-                          onBlur={(event) =>
-                            console.log(
-                              "addBankUserValidateHandleraddBankUserValidateHandler",
-                              event.target.value
-                            )
-                          }
-                          onChange={addBankUserValidateHandler}
-                        />
-                        {addBankUser.EmployeeID.errorStatus && (
-                          <Row>
-                            <Col className="d-flex justify-content-start">
-                              <p className={styles["bankErrorMessage"]}>
-                                {addBankUser.EmployeeID.errorMessage}
-                              </p>
-                            </Col>
-                          </Row>
-                        )}
-                      </Col>
-
-                      <Col lg={5} md={5} sm={12}>
-                        <CustomUpload change={HandleFileUpload} />
-                        {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          Treasury Person Name
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <TextField
-                          name={"firstName"}
-                          value={addBankUser.firstName.value}
-                          maxLength={50}
-                          onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
-                        />
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          User Role
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <Select
-                          options={rolesOptions}
-                          value={role}
-                          onChange={bankSelectRoleHandler}
-                          isSearchable={true}
-                          classNamePrefix={"selectCateogyCorporateList"}
-                        />
-                      </Col>
-                    </Row>
-
-                    {role.value === 9 && (
-                      <>
-                        <Row className="mt-3 position-relative">
-                          <Col lg={1} md={1} sm={12}>
-                            <span className={styles["labels-add-bank"]}>
-                              Select Branch
-                              <span className={styles["aesterick-color"]}>
-                                *
-                              </span>
-                            </span>
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12} className="d-flex">
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Employee ID
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        name={"EmployeeID"}
+                        labelClass="d-none"
+                        formParentClass={"MainClass"}
+                        className={styles["InputFieldClass"]}
+                        value={addBankUser.EmployeeID.value}
+                        maxLength={4}
+                        onBlur={(event) =>
+                          console.log(
+                            "addBankUserValidateHandleraddBankUserValidateHandler",
+                            event.target.value
+                          )
+                        }
+                        onChange={addBankUserValidateHandler}
+                      />
+                      {addBankUser.EmployeeID.errorStatus && (
+                        <Row>
+                          <Col className="d-flex justify-content-start">
+                            <p className={styles["bankErrorMessage"]}>
+                              {addBankUser.EmployeeID.errorMessage}
+                            </p>
                           </Col>
+                        </Row>
+                      )}
+                    </div>
+                  </Col>
 
-                          <Col
-                            lg={6}
-                            md={6}
-                            sm={12}
-                            className="position-relative"
-                          >
+                  <Col lg={4} md={4} sm={12}>
+                    <CustomUpload change={HandleFileUpload} />
+                    {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
+                  </Col>
+                </Row>
+
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Treasury Person Name
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        name={"firstName"}
+                        formParentClass={"MainClass"}
+                        className={styles["InputFieldClass"]}
+                        value={addBankUser.firstName.value}
+                        maxLength={50}
+                        onChange={addBankUserValidateHandler}
+                        labelClass="d-none"
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        User Role
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <Select
+                        options={rolesOptions}
+                        value={role}
+                        onChange={bankSelectRoleHandler}
+                        isSearchable={true}
+                        className={styles["InputFieldClass"]}
+                        classNamePrefix={"selectCateogyCorporateList"}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                {role.value === 9 && (
+                  <>
+                    <Row className="mt-3 position-relative">
+                      <Col lg={7} md={7} sm={12}>
+                        <div className="d-flex justify-content-start align-items-start w-100">
+                          <span className={styles["labels-add-bank"]}>
+                            Select Branch
+                            <span className={styles["aesterick-color"]}>*</span>
+                          </span>
+
+                          <Col className="position-relative">
                             <Select
                               options={branchOptions}
                               placeholder="Select Branch"
                               value={branchRole.value !== 0 ? branchRole : null}
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
-                              classNamePrefix="selectCateogyCorporateList"
+                              // classNamePrefix="selectCateogyCorporateList"
+                              className={styles["InputFieldClass"]}
+                              classNamePrefix={"selectCateogyCorporateList"}
                               menuPortalTarget={document.body}
+                            />
+
+                            <Button
+                              className={styles["EditButton"]}
+                              icon={<i className={"icon-edit "}></i>}
+                              onClick={() =>
+                                handleOpenEditBankUserModal(branchRole)
+                              }
                             />
                             <Button
                               className={styles["PlusButton"]}
@@ -696,115 +701,111 @@ const AddBankUser = () => {
                               }
                               onClick={handleOpenAddBankUserModal}
                             />
-                            <Button
-                              className={styles["EditButton"]}
-                              icon={<i className={"icon-edit color-blue"}></i>}
-                              onClick={() =>
-                                handleOpenEditBankUserModal(branchRole)
-                              }
-                            />
                           </Col>
-                        </Row>
-
-                        <Row className="mt-3">
-                          <Col lg={1} md={1} sm={12}>
-                            <span className={styles["labels-add-bank"]}>
-                              Category
-                              <span className={styles["aesterick-color"]}>
-                                *
-                              </span>
-                            </span>
-                          </Col>
-                          <Col lg={6} md={6} sm={12}>
-                            <TextField
-                              className={styles["disableText"]}
-                              name={"cateogry"}
-                              value={addBankUser.category.value}
-                              maxLength={50}
-                              disable
-                              // onChange={addBankUserValidateHandler}
-                              labelClass="d-none"
-                            />
-                          </Col>
-                        </Row>
-                      </>
-                    )}
-
-                    <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          Email
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <TextField
-                          name={"email"}
-                          value={addBankUser.email.value}
-                          onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
-                          // maxLength={50}
-                        />
-                        {addBankUser.email.errorStatus && (
-                          <Row>
-                            <Col className="d-flex justify-content-start">
-                              <p className={styles["bankErrorMessage"]}>
-                                {addBankUser.email.errorMessage}
-                              </p>
-                            </Col>
-                          </Row>
-                        )}
+                        </div>
                       </Col>
                     </Row>
 
                     <Row className="mt-3">
-                      <Col lg={1} md={1} sm={12}>
-                        <span className={styles["labels-add-bank"]}>
-                          Contact
-                          <span className={styles["aesterick-color"]}>*</span>
-                        </span>
-                      </Col>
-                      <Col lg={6} md={6} sm={12}>
-                        <TextField
-                          name={"Contact"}
-                          value={addBankUser.Contact.value}
-                          onChange={addBankUserValidateHandler}
-                          labelClass="d-none"
-                          maxLength={20}
-                        />
+                      <Col lg={7} md={7} sm={12}>
+                        <div className="d-flex justify-content-start align-items-start w-100">
+                          <span className={styles["labels-add-bank"]}>
+                            Category
+                            <span className={styles["aesterick-color"]}>*</span>
+                          </span>
+                          <TextField
+                            // className={styles["disableText"]}
+                            name={"cateogry"}
+                            value={addBankUser.category.value}
+                            maxLength={50}
+                            disable
+                            labelClass="d-none"
+                            formParentClass={"MainClass"}
+                            className={styles["disableText"]}
+                          />
+                        </div>
                       </Col>
                     </Row>
+                  </>
+                )}
 
-                    <Row className="mt-3 mb-5">
-                      <Col
-                        lg={9}
-                        md={9}
-                        sm={12}
-                        className="d-flex justify-content-center gap-2"
-                      >
-                        <Button
-                          icon={<i className="icon-check icon-check-space"></i>}
-                          text="Activate"
-                          onClick={handleActivateButton}
-                          className={styles["Active-btn"]}
-                          disableBtn={
-                            role.value !== 0 &&
-                            addBankUser.EmployeeID.value !== "" &&
-                            addBankUser.firstName.value !== "" &&
-                            addBankUser.email.value !== "" &&
-                            addBankUser.Contact.value !== ""
-                              ? false
-                              : true
-                          }
-                        />
-                        <Button
-                          icon={<i className="icon-close icon-check-space"></i>}
-                          text="Cancel"
-                          onClick={handleCancelButton}
-                          className={styles["Cancel-btn-AddBankUser"]}
-                        />
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Email
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        name={"email"}
+                        value={addBankUser.email.value}
+                        onChange={addBankUserValidateHandler}
+                        labelClass="d-none"
+                        formParentClass={"MainClass"}
+                        className={styles["InputFieldClass"]}
+                        // maxLength={50}
+                      />
+                    </div>
+                  </Col>
+                  {addBankUser.email.errorStatus && (
+                    <Row>
+                      <Col className="d-flex justify-content-start">
+                        <p className={styles["bankErrorMessage"]}>
+                          {addBankUser.email.errorMessage}
+                        </p>
                       </Col>
                     </Row>
+                  )}
+                </Row>
+
+                <Row className="mt-3">
+                  <Col lg={7} md={7} sm={12}>
+                    <div className="d-flex justify-content-start align-items-start w-100">
+                      <span className={styles["labels-add-bank"]}>
+                        Contact
+                        <span className={styles["aesterick-color"]}>*</span>
+                      </span>
+                      <TextField
+                        name={"Contact"}
+                        value={addBankUser.Contact.value}
+                        onChange={addBankUserValidateHandler}
+                        labelClass="d-none"
+                        maxLength={20}
+                        formParentClass={"MainClass"}
+                        className={styles["InputFieldClass"]}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3 mb-5">
+                  <Col
+                    lg={9}
+                    md={9}
+                    sm={12}
+                    className="d-flex justify-content-center gap-2"
+                  >
+                    <Button
+                      icon={<i className="icon-check icon-check-space"></i>}
+                      text="Activate"
+                      onClick={handleActivateButton}
+                      className={styles["Active-btn"]}
+                      disableBtn={
+                        role.value !== 0 &&
+                        addBankUser.EmployeeID.value !== "" &&
+                        addBankUser.firstName.value !== "" &&
+                        addBankUser.email.value !== "" &&
+                        addBankUser.Contact.value !== ""
+                          ? false
+                          : true
+                      }
+                    />
+                    <Button
+                      icon={<i className="icon-close icon-check-space"></i>}
+                      text="Cancel"
+                      onClick={handleCancelButton}
+                      className={styles["Cancel-btn-AddBankUser"]}
+                    />
                   </Col>
                 </Row>
               </Paper>

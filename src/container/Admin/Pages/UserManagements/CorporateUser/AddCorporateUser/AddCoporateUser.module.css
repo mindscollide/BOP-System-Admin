@@ -14,6 +14,10 @@
   background-color: #ffffff !important;
 }
 
+.AddCorporateLabel {
+  min-width: 130px !important;
+}
+
 .active-cancel-btn-col {
   display: flex;
   justify-content: center !important;

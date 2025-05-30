@@ -48,7 +48,7 @@
   display: flex !important;
   gap: 6px !important;
   align-items: center !important;
-  padding: 4px 8px !important;
+  /* padding: 4px 8px !important; */
 }
 
 .Search-btn-spreadManagement {

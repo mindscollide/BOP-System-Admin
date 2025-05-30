@@ -776,14 +776,14 @@ const getAllCorporatesCategory = (navigate) => {
 
 const GetAllCorporatesDataInit = () => {
   return {
-    type: actions.GET_ALL_CORPORATES_INIT,
+    type: actions.GET_ALL_CORPORATES_DATA_INIT,
   };
 };
 
 const GetAllCorporatesDataSuccess = (response, message) => {
   console.log(response, "responseresponse");
   return {
-    type: actions.GET_ALL_CORPORATES_SUCCESS,
+    type: actions.GET_ALL_CORPORATES_DATA_SUCCESS,
     response: response,
     message: message,
   };
@@ -791,7 +791,7 @@ const GetAllCorporatesDataSuccess = (response, message) => {
 
 const GetAllCorporatesDataFail = (message) => {
   return {
-    type: actions.GET_ALL_CORPORATES_FAIL,
+    type: actions.GET_ALL_CORPORATES_DATA_FAIL,
     message: message,
   };
 };
@@ -799,7 +799,7 @@ const GetAllCorporatesDataFail = (message) => {
 const GetAllCorporatesDataAPI = (navigate) => {
   let token = localStorage.getItem("token");
   return async (dispatch) => {
-    dispatch(getAllCoporatesInit());
+    dispatch(GetAllCorporatesDataInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllCorporatesData.RequestMethod);
     axios({
@@ -817,7 +817,7 @@ const GetAllCorporatesDataAPI = (navigate) => {
         }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(getAllCorporatesCategory(navigate));
+          dispatch(GetAllCorporatesDataAPI(navigate));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             console.log(response.data.responseResult, "responseResult");
@@ -825,38 +825,46 @@ const GetAllCorporatesDataAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
                 )
             ) {
               dispatch(
-                getAllCorporatesSuccess(
+                GetAllCorporatesDataSuccess(
                   response.data.responseResult,
                   "Data Available"
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_02".toLowerCase()
+              "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
             ) {
-              dispatch(getAllCorporatesFail("No Data Available"));
+              dispatch(GetAllCorporatesDataFail("No Data Available"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_04".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
                 )
             ) {
-              dispatch(getAllCorporatesFail("Exception"));
+              dispatch(GetAllCorporatesDataFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCorporatesDataFail("Exception"));
             }
           } else {
-            dispatch(getAllCorporatesFail("Something went wrong"));
+            dispatch(GetAllCorporatesDataFail("Something went wrong"));
           }
         } else {
-          dispatch(getAllCorporatesFail("Something went wrong"));
+          dispatch(GetAllCorporatesDataFail("Something went wrong"));
         }
       })
       .catch((response) => {
-        dispatch(getAllCorporatesFail("something went wrong"));
+        dispatch(GetAllCorporatesDataFail("something went wrong"));
       });
   };
 };
@@ -1459,4 +1467,5 @@ export {
   GetAllInstrumentTypesAPI,
   GetAllBranchesAPI,
   UpdateBranchCataegoryMappingAPI,
+  GetAllCorporatesDataAPI,
 };

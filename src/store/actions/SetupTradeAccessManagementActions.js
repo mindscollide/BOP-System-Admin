@@ -668,6 +668,120 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
       });
   };
 };
+
+//GetTenorWiseFEDiscountingSpreadsForCategory
+const GetTenorWiseFEDiscountingSpreadsForCategoryInit = () => {
+  return {
+    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_INIT,
+  };
+};
+
+const GetTenorWiseFEDiscountingSpreadsForCategorySuccess = (
+  response,
+  message
+) => {
+  return {
+    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetTenorWiseFEDiscountingSpreadsForCategoryFail = (message) => {
+  return {
+    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_FAIL,
+    message: message,
+  };
+};
+
+const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetTenorWiseFEDiscountingSpreadsForCategoryInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", GetBranchTradeRights.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            GetTenorWiseFEDiscountingSpreadsForCategoryAPI(navigate, data)
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetTenorWiseFEDiscountingSpreadsForCategorySuccess(
+                  response.data.responseResult,
+                  "Data Available."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_02".toLowerCase()
+            ) {
+              dispatch(
+                GetTenorWiseFEDiscountingSpreadsForCategoryFail(
+                  "No Data Available."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_04".toLowerCase()
+            ) {
+              dispatch(
+                GetTenorWiseFEDiscountingSpreadsForCategoryFail("Exception")
+              );
+            } else {
+              dispatch(
+                GetTenorWiseFEDiscountingSpreadsForCategoryFail(
+                  "Something went wrong"
+                )
+              );
+            }
+          } else {
+            dispatch(
+              GetTenorWiseFEDiscountingSpreadsForCategoryFail(
+                "Something went wrong"
+              )
+            );
+          }
+        } else {
+          dispatch(
+            GetTenorWiseFEDiscountingSpreadsForCategoryFail(
+              "Something went wrong"
+            )
+          );
+        }
+      })
+      .catch((response) => {
+        dispatch(
+          GetTenorWiseFEDiscountingSpreadsForCategoryFail(
+            "Something went wrong"
+          )
+        );
+      });
+  };
+};
 export {
   GetCorporatesWithStatusAPI,
   GetBranchesWithStatusAPI,
@@ -677,4 +791,5 @@ export {
   GetBranchTradeRightsAPI,
   UpdateBranchTradeRightsAPI,
   UpdateCorporateTradeRightsAPI,
+  GetTenorWiseFEDiscountingSpreadsForCategoryAPI,
 };

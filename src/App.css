@@ -363,6 +363,10 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   padding: 8px !important;
 }
 
+.selectCateogyCorporateList {
+  width: 100% !important;
+}
+
 .selectCateogyCorporateList__menu.css-1nmdiq5-menu {
   z-index: 999999 !important;
   /* max-height: 30vh; */

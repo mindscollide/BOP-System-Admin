@@ -8,3 +8,7 @@
 .form-control2:focus {
   box-shadow: none !important;
 }
+.MainClass {
+  display: block;
+  width: 100% !important;
+}

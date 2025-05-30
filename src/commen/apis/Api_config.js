@@ -270,6 +270,9 @@ const GetCrossRateSpreadsForCategory = {
 const GetTenorWiseForwardSpreadsForCategory = {
   RequestMethod: "ServiceManager.GetTenorWiseForwardSpreadsForCategory",
 };
+const GetTenorWiseFEDiscountingSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetTenorWiseFEDiscountingSpreadsForCategory",
+};
 
 export {
   LogoutRM,
@@ -337,4 +340,5 @@ export {
   GetCrossRateSpreadsForCategory,
   GetTenorWiseForwardSpreadsForCategory,
   GetAllCorporatesData,
+  GetTenorWiseFEDiscountingSpreadsForCategory,
 };
