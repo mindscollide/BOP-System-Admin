@@ -28,11 +28,20 @@ import {
   DeleteCategoryModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {
+    categoryAdded,
+    categoryUpdate,
+    categoryDeleted,
+    counterpartyChnaged,
+    counterpartyBranchChnaged,
+  } = useMqtt();
+
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
@@ -43,8 +52,6 @@ const CategoryManagement = () => {
   const DeleteCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.deleteCategoryModal
   );
-
-  console.log(DeleteCategoryGobalState, "DeleteCategoryGobalState");
 
   //Global state for All Categories Data
   const AllCategories = useSelector(
@@ -69,6 +76,7 @@ const CategoryManagement = () => {
       })),
     }));
   };
+
   const [categoryupdate, setCategoryUpdate] = useState({
     category: {
       value: "",
@@ -123,7 +131,165 @@ const CategoryManagement = () => {
     }
   }, [AllCategories]);
 
-  console.log(corporates, "corporatescorporatescorporates");
+  // Append newly added category to corporates
+  useEffect(() => {
+    if (categoryAdded?.category) {
+      const newCat = categoryAdded.category;
+
+      // Manually transform this simple object
+      const transformedNewCategory = {
+        categoryID: `cat-${newCat.categoryId}`,
+        categoryName: newCat.category, // adjust if needed
+        bidSpread: newCat.bidSpread,
+        offerSpread: newCat.offerSpread,
+        CatID: newCat.categoryId,
+        CounterParties: [], // assume empty, since not sent in the payload
+      };
+
+      setCorporates((prev) => [...prev, transformedNewCategory]);
+    }
+  }, [categoryAdded]);
+
+  // Update  category to corporates
+  useEffect(() => {
+    if (categoryUpdate?.category) {
+      const updatedCat = categoryUpdate.category;
+
+      setCorporates((prev) =>
+        prev.map((corp) => {
+          if (corp.CatID === updatedCat.categoryId) {
+            return {
+              ...corp,
+              categoryName: updatedCat.category,
+              bidSpread: updatedCat.bidSpread,
+              offerSpread: updatedCat.offerSpread,
+            };
+          }
+          return corp;
+        })
+      );
+    }
+  }, [categoryUpdate]);
+
+  //Delete the category
+  useEffect(() => {
+    if (categoryDeleted?.categoryID) {
+      const idToDelete = categoryDeleted.categoryID;
+
+      setCorporates((prev) => prev.filter((corp) => corp.CatID !== idToDelete));
+    }
+  }, [categoryDeleted]);
+
+  // When CounterParty Corporate Is mapped
+  useEffect(() => {
+    if (
+      counterpartyChnaged?.categoryID &&
+      counterpartyChnaged?.counterPartyID
+    ) {
+      const { categoryID, counterPartyID, counterPartyType } =
+        counterpartyChnaged;
+
+      setCorporates((prev) => {
+        // Flatten all to find actual data
+        const actualCounterParty = AllCategories?.categories
+          ?.flatMap((cat) => cat.counterParties || [])
+          .find((cp) => cp.counterPartyID === counterPartyID);
+        console.log(actualCounterParty, "saif");
+        // Shape new item
+        const newCounterParty = {
+          CounterpartyID: `corp-${counterPartyID}`,
+          CounterPartyType: counterPartyType,
+          CounterPartyName: actualCounterParty?.counterPartyName || "Unknown",
+          CounterPartyUsers:
+            actualCounterParty?.users?.map((u) => ({ email: u.email })) || [],
+        };
+
+        return prev.map((category) => {
+          const isTargetCategory =
+            String(category.CatID) === String(categoryID);
+
+          // Filter out this counterparty from all categories
+          const updatedCounterParties = (category.CounterParties || []).filter(
+            (cp) => cp.CounterpartyID !== `corp-${counterPartyID}`
+          );
+
+          // If this is the category we want to add it to, add it
+          if (isTargetCategory) {
+            const alreadyExists = updatedCounterParties.some(
+              (cp) => cp.CounterpartyID === `corp-${counterPartyID}`
+            );
+
+            if (!alreadyExists) {
+              updatedCounterParties.push(newCounterParty);
+            }
+          }
+
+          return {
+            ...category,
+            CounterParties: updatedCounterParties,
+          };
+        });
+      });
+    }
+  }, [counterpartyChnaged]);
+
+  // When CounterParty Branch Is mapped
+  useEffect(() => {
+    if (
+      counterpartyBranchChnaged?.categoryID &&
+      counterpartyBranchChnaged?.counterPartyID &&
+      counterpartyBranchChnaged?.counterPartyType === 2 // Ensure it's type 2 only
+    ) {
+      const { categoryID, counterPartyID, counterPartyType } =
+        counterpartyBranchChnaged;
+
+      setCorporates((prev) => {
+        // Find the correct counterparty with matching ID and type
+        const actualCounterParty = AllCategories?.categories
+          ?.flatMap((cat) => cat.counterParties || [])
+          .find(
+            (cp) =>
+              cp.counterPartyID === counterPartyID &&
+              cp.counterPartyType === counterPartyType
+          );
+
+        console.log(actualCounterParty, "saif");
+
+        const newCounterParty = {
+          CounterpartyID: `corp-${counterPartyID}`,
+          CounterPartyType: counterPartyType,
+          CounterPartyName: actualCounterParty?.counterPartyName || "Unknown",
+          CounterPartyUsers:
+            actualCounterParty?.users?.map((u) => ({ email: u.email })) || [],
+        };
+
+        return prev.map((category) => {
+          const isTargetCategory =
+            String(category.CatID) === String(categoryID);
+
+          const updatedCounterParties = (category.CounterParties || []).filter(
+            (cp) => cp.CounterpartyID !== `corp-${counterPartyID}`
+          );
+
+          if (isTargetCategory) {
+            const alreadyExists = updatedCounterParties.some(
+              (cp) => cp.CounterpartyID === `corp-${counterPartyID}`
+            );
+
+            if (!alreadyExists) {
+              updatedCounterParties.push(newCounterParty);
+            }
+          }
+
+          return {
+            ...category,
+            CounterParties: updatedCounterParties,
+          };
+        });
+      });
+    }
+  }, [counterpartyBranchChnaged]);
+
   //for Auto focus
   const NameRef = useRef(null);
 
@@ -153,6 +319,7 @@ const CategoryManagement = () => {
 
   //This is for the corporate shown inside the main card i.e Corporate and branches
   const showCards = (data) => {
+    console.log(data, "datadata");
     if (!data || Object.keys(data).length === 0) return null;
 
     return (
@@ -170,8 +337,8 @@ const CategoryManagement = () => {
           >
             {data.CounterParties.map((client, index) => (
               <Draggable
-                key={`${data.categoryID}-${client.CounterpartyID}`}
-                draggableId={`${data.categoryID}-${client.CounterpartyID}`}
+                key={`${data.categoryID}-${client.CounterpartyID}-${client.CounterPartyType}`}
+                draggableId={`${data.categoryID}-${client.CounterpartyID}-${client.CounterPartyType}`}
                 index={index}
                 type="DEFAULT"
               >
@@ -264,8 +431,14 @@ const CategoryManagement = () => {
 
       if (sourceCategory && Array.isArray(sourceCategory.CounterParties)) {
         const client = sourceCategory.CounterParties.find(
-          (c) => c.CounterpartyID === draggableId.replace(/^cat-\d+-/, "")
+          (c) =>
+            c.CounterpartyID ===
+            draggableId.replace(/^cat-\d+-(.+)-[^-]+$/, "$1")
         );
+
+        console.log(client, "resultsresultsresults");
+        console.log(draggableId, "resultsresultsresults");
+        console.log(sourceCategory.CounterParties, "resultsresultsresults");
         if (
           client &&
           client.CounterPartyType !== undefined &&
@@ -617,7 +790,6 @@ const CategoryManagement = () => {
                   {Array.isArray(corporates) && corporates.length > 0 ? (
                     <>
                       {corporates.map((data, index) => {
-                        console.log(data, "datadata");
                         return (
                           <>
                             {checkForEdit(data.categoryID) ? (

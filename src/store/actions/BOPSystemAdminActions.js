@@ -2110,7 +2110,6 @@ const UpdateCategoryAPI = (navigate, data) => {
                   "category Updated"
                 )
               );
-              dispatch(getAllCorporatesCategory(navigate));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

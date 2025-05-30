@@ -10,6 +10,7 @@ body {
 
 .Scroller-x-resolution {
   width: 100% !important;
+  height: 100% !important;
   display: flex !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
