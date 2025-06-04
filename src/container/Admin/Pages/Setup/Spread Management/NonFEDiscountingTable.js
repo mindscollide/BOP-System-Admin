@@ -4,7 +4,7 @@ import { Input } from "antd";
 import "./SpreadManagement.module.css";
 import { Table } from "../../../../../components/elements";
 
-const DiscountingTable = ({ data, onInputChange }) => {
+const NonFEDiscountingTable = ({ data, onInputChange }) => {
   //Discounting Table
   const columns = [
     {
@@ -156,4 +156,4 @@ const DiscountingTable = ({ data, onInputChange }) => {
   );
 };
 
-export default DiscountingTable;
+export default NonFEDiscountingTable;

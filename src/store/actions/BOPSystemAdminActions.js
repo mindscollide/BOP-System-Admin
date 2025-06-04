@@ -24,7 +24,10 @@ import {
   SearchAllUserLoginHistory,
   GetCounterPartyList,
 } from "../../commen/apis/Api_config";
-import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
+import {
+  authenticationAPI,
+  systemAdminAPI,
+} from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
 import {
   GetAllBranchesAPI,
@@ -2262,7 +2265,7 @@ const GetAllInstrumentsAPI = (navigate) => {
     form.append("RequestMethod", GetAllInstruments.RequestMethod);
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: authenticationAPI,
       data: form,
       headers: {
         _token: token,
@@ -2282,7 +2285,7 @@ const GetAllInstrumentsAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllInstruments_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllInstruments_01".toLowerCase()
                 )
             ) {
               dispatch(
@@ -2295,10 +2298,20 @@ const GetAllInstrumentsAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllInstruments_04".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllInstruments_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllInstrumentsFail("Data UnAvailable"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllInstruments_03".toLowerCase()
                 )
             ) {
               dispatch(GetAllInstrumentsFail("Exception"));
+            } else {
+              dispatch(GetAllInstrumentsFail("Something went wrong"));
             }
           } else {
             dispatch(GetAllInstrumentsFail("Something went wrong"));

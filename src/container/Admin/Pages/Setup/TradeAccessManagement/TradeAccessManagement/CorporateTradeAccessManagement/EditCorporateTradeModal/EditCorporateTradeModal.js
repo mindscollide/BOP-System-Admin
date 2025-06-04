@@ -20,7 +20,6 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateCorporateTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
-import { Border } from "react-bootstrap-icons";
 const EditCorporateTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,6 +34,8 @@ const EditCorporateTradeModal = ({ info }) => {
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
+
+  console.log(GetAllInstruments, "GetAllInstruments");
 
   const [modalState, setModalState] = useState(0);
   const [instrumentOptions, setInstrumentOptions] = useState([]);
@@ -56,56 +57,113 @@ const EditCorporateTradeModal = ({ info }) => {
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
 
+  // useEffect(() => {
+  //   if (GetCorporateTradeRights !== null) {
+  //     try {
+  //       if (
+  //         GetCorporateTradeRights.listOfInstruments !== null &&
+  //         GetCorporateTradeRights.listOfInstruments !== undefined &&
+  //         GetCorporateTradeRights.listOfInstruments.length > 0
+  //       ) {
+  //         if (
+  //           GetAllInstruments !== null &&
+  //           GetAllInstruments.instruments.length > 0
+  //         ) {
+  //           const newDataMaping = GetCorporateTradeRights.listOfInstruments.map(
+  //             (rowTableData, index) => {
+  //               let findInstrumentName = GetAllInstruments.instruments.find(
+  //                 (instrumentName, index) =>
+  //                   instrumentName.instrumentID === rowTableData.instrumentID
+  //               );
+  //               if (findInstrumentName !== undefined) {
+  //                 return {
+  //                   ...rowTableData,
+  //                   instrumentName: findInstrumentName.instrumentName,
+  //                 };
+  //               }
+  //               return rowTableData;
+  //             }
+  //           );
+  //           // let listInstruments = newDataMaping.map((list, index) => {
+  //           //   return {
+  //           //     value: list.instrumentID,
+  //           //     label: list.instrumentName,
+  //           //   };
+  //           // });
+
+  //           setInstrumentDataSource(newDataMaping);
+  //           setTradeRightsData({
+  //             maxTransactionLimit: {
+  //               value: GetCorporateTradeRights.maxTransactionLimit,
+  //             },
+  //             minTransactionLimit: {
+  //               value: GetCorporateTradeRights.minTransactionLimit,
+  //             },
+  //             totalLimit: { value: GetCorporateTradeRights.totalLimit },
+  //           });
+  //         }
+  //       }
+  //     } catch (error) {}
+  //   }
+  // }, [GetCorporateTradeRights, GetAllInstruments]);
+  //checkbox value change method
+
   useEffect(() => {
-    if (GetCorporateTradeRights !== null) {
+    if (GetCorporateTradeRights !== null && GetAllInstruments !== null) {
       try {
         if (
-          GetCorporateTradeRights.listOfInstruments !== null &&
-          GetCorporateTradeRights.listOfInstruments !== undefined &&
-          GetCorporateTradeRights.listOfInstruments.length > 0
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
         ) {
-          if (
-            GetAllInstruments !== null &&
-            GetAllInstruments.instruments.length > 0
-          ) {
-            const newDataMaping = GetCorporateTradeRights.listOfInstruments.map(
-              (rowTableData, index) => {
-                let findInstrumentName = GetAllInstruments.instruments.find(
-                  (instrumentName, index) =>
-                    instrumentName.instrumentID === rowTableData.instrumentID
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                GetCorporateTradeRights.listOfInstruments?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
                 );
-                if (findInstrumentName !== undefined) {
-                  return {
-                    ...rowTableData,
-                    instrumentName: findInstrumentName.instrumentName,
-                  };
-                }
-                return rowTableData;
-              }
-            );
-            // let listInstruments = newDataMaping.map((list, index) => {
-            //   return {
-            //     value: list.instrumentID,
-            //     label: list.instrumentName,
-            //   };
-            // });
 
-            setInstrumentDataSource(newDataMaping);
-            setTradeRightsData({
-              maxTransactionLimit: {
-                value: GetCorporateTradeRights.maxTransactionLimit,
-              },
-              minTransactionLimit: {
-                value: GetCorporateTradeRights.minTransactionLimit,
-              },
-              totalLimit: { value: GetCorporateTradeRights.totalLimit },
-            });
-          }
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                isCrossRateBuy: false,
+                isCrossRateSell: false,
+                isDiscounting: false,
+                isForward: false,
+                isParityBuy: false,
+                isParitySell: false,
+                isActive: false,
+                isViewOnly: true,
+              };
+            }
+          );
+
+          setInstrumentDataSource(newDataMapping);
+
+          setTradeRightsData({
+            maxTransactionLimit: {
+              value: GetCorporateTradeRights.maxTransactionLimit,
+            },
+            minTransactionLimit: {
+              value: GetCorporateTradeRights.minTransactionLimit,
+            },
+            totalLimit: { value: GetCorporateTradeRights.totalLimit },
+          });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error in mapping instrument data:", error);
+      }
     }
   }, [GetCorporateTradeRights, GetAllInstruments]);
-  //checkbox value change method
+
   const handleCheckboxChange = (record, field, event) => {
     try {
       if (field === "isViewOnly") {
@@ -369,47 +427,23 @@ const EditCorporateTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    //Validation rules
-    const validateInput = {
-      totalLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-      minTransactionLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-      maxTransactionLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-    };
-    const isFieldEmpty = (val) => val === "";
-    // Update field function
-    const updateField = (fieldName, fieldValue) => {
-      const validValue = validateInput[fieldName]
-        ? validateInput[fieldName](fieldValue)
-        : fieldValue;
+    // Allow: digits, optional one dot
+    const validString = value
+      .replace(/[^0-9.]/g, "")
+      .replace(/^([^.]*\.)|\./g, "$1");
 
-      const hasError = isFieldEmpty(validValue);
+    // No error if value is not empty and a valid number format
+    const hasError = validString.trim() === "";
 
-      setTradeRightsData((prevState) => ({
-        ...prevState,
-        [fieldName]: {
-          value: validValue,
-          errorMessage: hasError ? "This field is required" : "",
-          errorStatus: hasError,
-        },
-      }));
-    };
-
-    // Update the specific field
-    updateField(name, value);
+    setTradeRightsData((prevState) => ({
+      ...prevState,
+      [name]: {
+        value: validString, // Keep string while typing
+        errorMessage: hasError ? "This field is required" : "",
+        errorStatus: hasError,
+      },
+    }));
   };
-
   // show error message When user hit activate btn
   const handleSaveChangesButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -425,14 +459,25 @@ const EditCorporateTradeModal = ({ info }) => {
         TotalLimit: Number(tradeRightsData.totalLimit.value),
         MinTransactionLimit: Number(tradeRightsData.minTransactionLimit.value),
         MaxTransactionLimit: Number(tradeRightsData.maxTransactionLimit.value),
-        ListOfInstruments: instrumentDataSource.map(
-          ({ instrumentName, ...rest }) => rest
-        ),
+        ListOfInstruments: instrumentDataSource.map((item) => ({
+          InstrumentID: item.instrumentID,
+          IsCrossRateBuy: item.isCrossRateBuy,
+          IsCrossRateSell: item.isCrossRateSell,
+          IsDiscounting: item.isDiscounting,
+          IsForward: item.isForward,
+          IsParityBuy: item.isParityBuy,
+          IsParitySell: item.isParitySell,
+          IsActive: item.isActive,
+          IsViewOnly: item.isViewOnly,
+        })),
       };
 
       dispatch(UpdateCorporateTradeRightsAPI(navigate, updatedData));
-    } else if (modalState === 2) {
     }
+    // else if (modalState === 2) {
+    // }
+    setModalState(0);
+    handleNoButton();
   };
 
   useEffect(() => {

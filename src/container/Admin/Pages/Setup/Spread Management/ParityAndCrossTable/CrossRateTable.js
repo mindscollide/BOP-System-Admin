@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Input } from "antd";
-import "./SpreadManagement.module.css";
-import { Table } from "../../../../../components/elements";
+import "../SpreadManagement.module.css";
 import { useSelector } from "react-redux";
+import { Table } from "../../../../../../components/elements";
 
-const CrossRateTable = () => {
-  const [crossRateData, setCrossRateData] = useState([]);
-
-  const GetCrossRateSpreadsForCategory = useSelector(
-    (state) => state.SpreadManagementReducer.GetCrossRateSpreadsForCategory
-  );
+const CrossRateTable = ({
+  crossRateData,
+  setCrossRateData,
+  GetCrossRateSpreadsForCategory,
+}) => {
   console.log("GetCrossRateSpreadsForCategory", GetCrossRateSpreadsForCategory);
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
+
   const handleCrossRateInputChange = (index, field, value) => {
     let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = [...crossRateData];
-    updatedData[index][field] = validateValue;
+
+    // Create a deep copy of the data before modifying
+    const updatedData = crossRateData.map((item) => ({ ...item }));
+    updatedData[index] = {
+      ...updatedData[index],
+      [field]: Number(validateValue),
+    };
+
     setCrossRateData(updatedData);
   };
-  useEffect(() => {
-    if (GetCrossRateSpreadsForCategory !== null) {
-      try {
-        setCrossRateData(GetCrossRateSpreadsForCategory.crossRatesSpreads);
-      } catch (error) {}
-    }
-  }, [GetCrossRateSpreadsForCategory]);
+
   const columns = [
     {
       title: <label className="bottom-table-header">Currency</label>,
@@ -36,8 +36,8 @@ const CrossRateTable = () => {
       ellipsis: true,
       align: "center",
       render: (val, record) => {
-        const matchedInstrument = GetAllInstruments.instruments?.find(
-          (instrument) => instrument.instrumentID === val
+        const matchedInstrument = GetAllInstruments?.instruments?.find(
+          (instrument) => instrument?.instrumentID === val
         );
         console.log("matchedInstrumentmatchedInstrument", matchedInstrument);
         return matchedInstrument ? matchedInstrument.instrumentName : val;

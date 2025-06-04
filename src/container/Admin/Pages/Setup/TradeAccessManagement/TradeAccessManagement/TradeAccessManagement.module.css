@@ -2,7 +2,7 @@
   border-radius: 4px;
   width: 100% !important;
   overflow: hidden !important;
-  padding: 16px 13px !important;
+  padding: 10px 13px !important;
   background-color: #ffffff !important;
 }
 
@@ -25,4 +25,21 @@
   border: none !important;
   padding: 0 !important;
   margin: 0 !important;
+}
+
+/* Trade Access Management */
+.BranchNameTradeAccessManagement_inputSearch {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.BranchNameTradeAccessManagement_inputSearchIcon {
+  position: absolute;
+  display: block !important;
+  top: 7px;
+  right: 15px;
+  bottom: 0;
+  z-index: 3;
+  width: auto;
+  cursor: pointer;
 }

@@ -218,8 +218,11 @@ const VolMeter = () => {
                       name="volatilityMeter"
                       type="text"
                       value={volMeterFields.volatilityMeter.value}
-                      onChange={onChanngeVolMterValidation}
+                      // onChange={onChanngeVolMterValidation}
+                      // disabled by mehdi
+                      disable={true}
                       labelClass="d-none"
+                      className={style["disableText"]}
                     />
                   </Col>
                   <Col

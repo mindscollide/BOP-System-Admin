@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./TradeAccessManagement.module.css";
 import {
   CustomPaper,
@@ -9,11 +9,19 @@ import {
 import { Col, Row } from "react-bootstrap";
 import { Select } from "antd";
 import { useSelector } from "react-redux";
-// import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
 import BranchTrade from "./BranchTradeAccessManagement.js/BranchTrade";
 import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
+import { useDispatch } from "react-redux";
+import {
+  GetBranchesWithStatusAPI,
+  GetCorporatesWithStatusAPI,
+} from "../../../../../../store/actions/SetupTradeAccessManagementActions";
+import { useNavigate } from "react-router-dom";
 const TradeAccessManagement = () => {
   const { Option } = Select;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [crossIcon, setCrossIcon] = useState(false);
 
   const Loading = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.Loading
@@ -45,10 +53,12 @@ const TradeAccessManagement = () => {
   const handleChange = (e) => {
     console.log("radio checked", e, e.target.value);
     if (e.target.value === "Branch") {
+      setCrossIcon(false);
       setBranchName({
         Name: { value: "", errorMessage: "", errorStatus: false },
       });
     } else {
+      setCrossIcon(false);
       setCorporateName({
         Name: { value: "", errorMessage: "", errorStatus: false },
       });
@@ -61,6 +71,44 @@ const TradeAccessManagement = () => {
     { label: "Corporate", value: "Corporate" },
     { label: "Branch", value: "Branch" },
   ];
+
+  const handleEmptySearchState = () => {
+    if (radioValue === "Branch") {
+      let data = {
+        BranchName: "",
+        sRow: 0,
+        Length: 10,
+      };
+      dispatch(GetBranchesWithStatusAPI(navigate, data));
+
+      setBranchName({
+        Name: {
+          value: "",
+          errorMessage: "",
+          errorStatus: false,
+        },
+      });
+
+      setCrossIcon(false);
+    } else if (radioValue === "Corporate") {
+      let data = {
+        CorporateName: "",
+        sRow: 0,
+        Length: 10,
+      };
+      dispatch(GetCorporatesWithStatusAPI(navigate, data));
+
+      setCorporateName({
+        Name: {
+          value: "",
+          errorMessage: "",
+          errorStatus: false,
+        },
+      });
+
+      setCrossIcon(false);
+    }
+  };
 
   //Banker List validate handler
   const TradeAccessManagementValidateHandler = (e) => {
@@ -119,6 +167,39 @@ const TradeAccessManagement = () => {
     }
   };
 
+  const handleBlur = (event) => {
+    if (event.key === "Enter") {
+      console.log("handleBlurhandleBlur", event.key, radioValue);
+      if (radioValue === "Corporate") {
+        if (corporateName.Name.value.length >= 3) {
+          let data = {
+            CorporateName: corporateName.Name.value
+              ? corporateName.Name.value
+              : "",
+            sRow: 0,
+            Length: 10,
+          };
+
+          setCrossIcon(true);
+          dispatch(GetCorporatesWithStatusAPI(navigate, data));
+        }
+      } else {
+        console.log("handleBlurhandleBlur", radioValue);
+
+        if (branchName.Name.value.length >= 3) {
+          let data = {
+            BranchName: branchName.Name.value ? branchName.Name.value : "",
+            sRow: 0,
+            Length: 10,
+          };
+          setCrossIcon(true);
+
+          dispatch(GetBranchesWithStatusAPI(navigate, data));
+        }
+      }
+    }
+  };
+
   return (
     <section className={styles["TradeAccessmangementStyles"]}>
       <Row className="mt-3">
@@ -141,21 +222,59 @@ const TradeAccessManagement = () => {
                 />
                 {radioValue === "Corporate" ? (
                   <TextField
+                    formParentClass={
+                      "BranchNameTradeAccessManagement_inputSearchBar"
+                    }
                     placeholder="Corporate Name"
                     labelClass={"d-none"}
                     name={"corporateName"}
                     value={corporateName.Name.value}
                     onChange={TradeAccessManagementValidateHandler}
-                    className={"BranchNameTradeAccessManagement"}
+                    handleKeyDown={handleBlur}
+                    inputIcon={
+                      crossIcon ? (
+                        <i
+                          className="icon-close"
+                          onClick={handleEmptySearchState}
+                        />
+                      ) : (
+                        ""
+                      )
+                    }
+                    iconClassName={
+                      styles["BranchNameTradeAccessManagement_inputSearchIcon"]
+                    }
+                    className={
+                      styles["BranchNameTradeAccessManagement_inputSearch"]
+                    }
                   />
                 ) : radioValue === "Branch" ? (
                   <TextField
+                    formParentClass={
+                      "BranchNameTradeAccessManagement_inputSearchBar"
+                    }
                     placeholder="Branch Name"
                     labelClass={"d-none"}
                     name={"branchName"}
                     value={branchName.Name.value}
                     onChange={TradeAccessManagementValidateHandler}
-                    className={"BranchNameTradeAccessManagement"}
+                    handleKeyDown={handleBlur}
+                    inputIcon={
+                      crossIcon ? (
+                        <i
+                          className="icon-close"
+                          onClick={handleEmptySearchState}
+                        />
+                      ) : (
+                        ""
+                      )
+                    }
+                    iconClassName={
+                      styles["BranchNameTradeAccessManagement_inputSearchIcon"]
+                    }
+                    className={
+                      styles["BranchNameTradeAccessManagement_inputSearch"]
+                    }
                   />
                 ) : (
                   ""

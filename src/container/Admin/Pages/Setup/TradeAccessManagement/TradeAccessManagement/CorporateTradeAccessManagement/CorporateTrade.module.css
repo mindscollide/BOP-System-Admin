@@ -26,3 +26,6 @@
   padding: 0 !important;
   margin: 0 !important;
 }
+.edit-icon i {
+  color: var(--color-secondary);
+}

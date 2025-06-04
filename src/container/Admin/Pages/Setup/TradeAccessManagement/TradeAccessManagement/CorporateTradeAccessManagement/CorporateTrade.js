@@ -10,8 +10,6 @@ import {
 import {
   Button,
   CustomSwitch,
-  Loader,
-  // Loader,
   Table,
 } from "../../../../../../../components/elements";
 
@@ -179,13 +177,13 @@ const CorporateTrade = () => {
             pagination={false}
             rows={corporateTableData}
             className={"TradeAccessManagement"}
+            // scroll={{ y: 300, x: "scroll" }}
           />
         </Col>
       </Row>
       {EditTradeAccessManagementModalGobalState && (
         <EditCorporateTradeModal info={corporateInfo} />
       )}
-      {Loading && <Loader />}
     </>
   );
 };

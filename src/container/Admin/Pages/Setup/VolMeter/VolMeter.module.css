@@ -89,3 +89,9 @@
   max-width: 100px;
   min-width: 100px;
 }
+.disableText {
+  color: var(--disabled-font);
+  background: var(--disabled-field) !important;
+  width: 100% !important;
+  flex: 1 !important;
+}

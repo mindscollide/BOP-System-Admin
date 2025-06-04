@@ -745,16 +745,15 @@ const AddBankUser = () => {
                         // maxLength={50}
                       />
                     </div>
-                  </Col>
-                  {addBankUser.email.errorStatus && (
-                    <Row>
-                      <Col className="d-flex justify-content-start">
+
+                    {addBankUser.email.errorStatus && (
+                      <Row className="ml-3">
                         <p className={styles["bankErrorMessage"]}>
                           {addBankUser.email.errorMessage}
                         </p>
-                      </Col>
-                    </Row>
-                  )}
+                      </Row>
+                    )}
+                  </Col>
                 </Row>
 
                 <Row className="mt-3">

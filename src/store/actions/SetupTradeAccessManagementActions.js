@@ -1,22 +1,16 @@
 import axios from "axios";
 import * as actions from "../action_types";
 import {
-  GetAllTenors,
   GetBranchesWithStatus,
   GetBranchTradeRights,
   GetCorporatesWithStatus,
   GetCorporateTradeRights,
-  GetTenorWiseFEDiscountingSpreadsForCategory,
-  GetTenorWiseNonFEDiscountingSpreadsForCategory,
   UpdateBranchStatus,
   UpdateBranchTradeRights,
   UpdateCorporateStatus,
   UpdateCorporateTradeRights,
 } from "../../commen/apis/Api_config";
-import {
-  systemAdminAPI,
-  uploadRateAPI,
-} from "../../commen/apis/Api_ends_points";
+import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
 import { RefreshToken } from "./Auth-Actions";
 import {
   ConfirmationModalSystemAdmin,
@@ -86,9 +80,16 @@ const GetCorporatesWithStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCorporatesWithStatus_02".toLowerCase()
+            ) {
+              dispatch(GetCorporatesWithStatusFail("No Data Available."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporatesWithStatus_04".toLowerCase()
             ) {
               dispatch(GetCorporatesWithStatusFail("Exception."));
+            } else {
+              dispatch(GetCorporatesWithStatusFail("Something went wrong"));
             }
           } else {
             dispatch(GetCorporatesWithStatusFail("Something went wrong"));
@@ -166,9 +167,21 @@ const UpdateCorporateStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCorporateStatus_02".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateStatusFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCorporateStatus_03".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateStatusFail("Corporate Not Found."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateCorporateStatus_04".toLowerCase()
             ) {
               dispatch(UpdateCorporateStatusFail("Exception."));
+            } else {
+              dispatch(UpdateCorporateStatusFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateCorporateStatusFail("Something went wrong"));
@@ -247,9 +260,16 @@ const GetBranchesWithStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetBranchesWithStatus_02".toLowerCase()
+            ) {
+              dispatch(GetBranchesWithStatusFail("No Data Available."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetBranchesWithStatus_04".toLowerCase()
             ) {
               dispatch(GetBranchesWithStatusFail("Exception."));
+            } else {
+              dispatch(GetBranchesWithStatusFail("Something went wrong"));
             }
           } else {
             dispatch(GetBranchesWithStatusFail("Something went wrong"));
@@ -327,9 +347,21 @@ const UpdateBranchStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchStatus_02".toLowerCase()
+            ) {
+              dispatch(UpdateBranchStatusFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchStatus_03".toLowerCase()
+            ) {
+              dispatch(UpdateBranchStatusFail("Branch not found."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateBranchStatus_04".toLowerCase()
             ) {
               dispatch(UpdateBranchStatusFail("Exception."));
+            } else {
+              dispatch(UpdateBranchStatusFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateBranchStatusFail("Something went wrong"));
@@ -403,6 +435,17 @@ const GetCorporateTradeRightsAPI = (navigate, data) => {
                 GetCorporateTradeRightsSuccess(
                   response.data.responseResult,
                   "Data Available."
+                )
+              );
+              dispatch(editTradeAccessManagementModalSystemAdmin(true));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCorporateTradeRights_02".toLowerCase()
+            ) {
+              dispatch(
+                GetCorporateTradeRightsSuccess(
+                  response.data.responseResult,
+                  "No Data Available."
                 )
               );
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
@@ -486,6 +529,17 @@ const GetBranchTradeRightsAPI = (navigate, data) => {
                 GetBranchTradeRightsSuccess(
                   response.data.responseResult,
                   "Data Available."
+                )
+              );
+              dispatch(editTradeAccessManagementModalSystemAdmin(true));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetBranchTradeRights_02".toLowerCase()
+            ) {
+              dispatch(
+                GetBranchTradeRightsSuccess(
+                  response.data.responseResult,
+                  "No Data Available."
                 )
               );
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
@@ -577,9 +631,16 @@ const UpdateBranchTradeRightsAPI = (navigate, data, handleCloseModal) => {
               handleCloseModal();
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchTradeRights_02".toLowerCase()
+            ) {
+              dispatch(UpdateBranchTradeRightsFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateBranchTradeRights_04".toLowerCase()
             ) {
               dispatch(UpdateBranchTradeRightsFail("Exception."));
+            } else {
+              dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
@@ -646,6 +707,7 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
+                  // "SystemAdmin_SystemAdminManager_UpdateCorporateTradeRights_01".toLowerCase()
                   "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_01".toLowerCase()
                 )
             ) {
@@ -658,9 +720,18 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
               await dispatch(ConfirmationModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              // "SystemAdmin_SystemAdminManager_UpdateCorporateTradeRights_02".toLowerCase()
+              "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_02".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateTradeRightsFail("Exception."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              // "SystemAdmin_SystemAdminManager_UpdateCorporateTradeRights_04".toLowerCase()
               "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_04".toLowerCase()
             ) {
               dispatch(UpdateCorporateTradeRightsFail("Exception."));
+            } else {
+              dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
@@ -675,336 +746,7 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
   };
 };
 
-//GetTenorWiseFEDiscountingSpreadsForCategory
-const GetTenorWiseFEDiscountingSpreadsForCategoryInit = () => {
-  return {
-    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_INIT,
-  };
-};
-
-const GetTenorWiseFEDiscountingSpreadsForCategorySuccess = (
-  response,
-  message
-) => {
-  return {
-    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const GetTenorWiseFEDiscountingSpreadsForCategoryFail = (message) => {
-  return {
-    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_FAIL,
-    message: message,
-  };
-};
-
-const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
-  let token = localStorage.getItem("token");
-  return async (dispatch) => {
-    dispatch(GetTenorWiseFEDiscountingSpreadsForCategoryInit());
-
-    let form = new FormData();
-    form.append(
-      "RequestMethod",
-      GetTenorWiseFEDiscountingSpreadsForCategory.RequestMethod
-    );
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        _token: token,
-      },
-    })
-      .then(async (response) => {
-        if (response.data?.responseCode === 401) {
-          navigate("/");
-          localStorage.clear();
-        }
-        if (response.data?.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(
-            GetTenorWiseFEDiscountingSpreadsForCategoryAPI(navigate, data)
-          );
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_01".toLowerCase()
-                )
-            ) {
-              dispatch(
-                GetTenorWiseFEDiscountingSpreadsForCategorySuccess(
-                  response.data.responseResult,
-                  "Data Available."
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_02".toLowerCase()
-            ) {
-              dispatch(
-                GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-                  "No Data Available."
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_04".toLowerCase()
-            ) {
-              dispatch(
-                GetTenorWiseFEDiscountingSpreadsForCategoryFail("Exception")
-              );
-            } else {
-              dispatch(
-                GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-                  "Something went wrong"
-                )
-              );
-            }
-          } else {
-            dispatch(
-              GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-                "Something went wrong"
-              )
-            );
-          }
-        } else {
-          dispatch(
-            GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-              "Something went wrong"
-            )
-          );
-        }
-      })
-      .catch((response) => {
-        dispatch(
-          GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-            "Something went wrong"
-          )
-        );
-      });
-  };
-};
-//GetAllTenors
-const GetAllTenorsInit = () => {
-  return {
-    type: actions.GET_ALL_TENORS_INIT,
-  };
-};
-
-const GetAllTenorsSuccess = (response, message) => {
-  return {
-    type: actions.GET_ALL_TENORS_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const GetAllTenorsFail = (message) => {
-  return {
-    type: actions.GET_ALL_TENORS_FAIL,
-    message: message,
-  };
-};
-
-const GetAllTenorsAPI = (navigate) => {
-  let token = localStorage.getItem("token");
-  return async (dispatch) => {
-    dispatch(GetAllTenorsInit());
-
-    let form = new FormData();
-    form.append("RequestMethod", GetAllTenors.RequestMethod);
-    axios({
-      method: "POST",
-      url: uploadRateAPI,
-      data: form,
-      headers: {
-        _token: token,
-      },
-    })
-      .then(async (response) => {
-        if (response.data?.responseCode === 401) {
-          navigate("/");
-          localStorage.clear();
-        }
-        if (response.data?.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(GetAllTenorsAPI(navigate));
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "UploadRate_UploadRateServiceManager_GetAllTenors_01".toLowerCase()
-                )
-            ) {
-              dispatch(
-                GetAllTenorsSuccess(
-                  response.data.responseResult,
-                  "API executed successfully."
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
-            ) {
-              dispatch(GetAllTenorsFail("No Data Available."));
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
-            ) {
-              dispatch(GetAllTenorsFail("Role doesn’t matched."));
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_03".toLowerCase()
-            ) {
-              dispatch(GetAllTenorsFail("Exception has been occurred."));
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_04".toLowerCase()
-            ) {
-              dispatch(GetAllTenorsFail("DB Error."));
-            } else {
-              dispatch(GetAllTenorsFail("Something went wrong"));
-            }
-          } else {
-            dispatch(GetAllTenorsFail("Something went wrong"));
-          }
-        } else {
-          dispatch(GetAllTenorsFail("Something went wrong"));
-        }
-      })
-      .catch((response) => {
-        dispatch(GetAllTenorsFail("Something went wrong"));
-      });
-  };
-};
-
-//GetTenorWiseNonFEDiscountingSpreadsForCategory
-const GetTenorWiseNonFEDiscountingSpreadsForCategoryInit = () => {
-  return {
-    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_INIT,
-  };
-};
-
-const GetTenorWiseNonFEDiscountingSpreadsForCategorySuccess = (
-  response,
-  message
-) => {
-  return {
-    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_SUCCESS,
-    response: response,
-    message: message,
-  };
-};
-
-const GetTenorWiseNonFEDiscountingSpreadsForCategoryFail = (message) => {
-  return {
-    type: actions.GET_TENOR_WISE_FE_DISCOUNTING_SPREADS_FOR_CATEGORY_FAIL,
-    message: message,
-  };
-};
-
-const GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
-  let token = localStorage.getItem("token");
-  return async (dispatch) => {
-    dispatch(GetTenorWiseNonFEDiscountingSpreadsForCategoryInit());
-
-    let form = new FormData();
-    form.append(
-      "RequestMethod",
-      GetTenorWiseNonFEDiscountingSpreadsForCategory.RequestMethod
-    );
-    form.append("RequestData", JSON.stringify(data));
-    axios({
-      method: "POST",
-      url: systemAdminAPI,
-      data: form,
-      headers: {
-        _token: token,
-      },
-    })
-      .then(async (response) => {
-        if (response.data?.responseCode === 401) {
-          navigate("/");
-          localStorage.clear();
-        }
-        if (response.data?.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(
-            GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI(navigate, data)
-          );
-        } else if (response.data.responseCode === 200) {
-          if (response.data.responseResult.isExecuted === true) {
-            if (
-              response.data.responseResult.responseMessage
-                .toLowerCase()
-                .includes(
-                  "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_01".toLowerCase()
-                )
-            ) {
-              dispatch(
-                GetTenorWiseNonFEDiscountingSpreadsForCategorySuccess(
-                  response.data.responseResult,
-                  "Data Available."
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_02".toLowerCase()
-            ) {
-              dispatch(
-                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
-                  "No Data Available."
-                )
-              );
-            } else if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_04".toLowerCase()
-            ) {
-              dispatch(
-                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail("Exception")
-              );
-            } else {
-              dispatch(
-                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
-                  "Something went wrong"
-                )
-              );
-            }
-          } else {
-            dispatch(
-              GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
-                "Something went wrong"
-              )
-            );
-          }
-        } else {
-          dispatch(
-            GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
-              "Something went wrong"
-            )
-          );
-        }
-      })
-      .catch((response) => {
-        dispatch(
-          GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
-            "Something went wrong"
-          )
-        );
-      });
-  };
-};
 export {
-  GetAllTenorsAPI,
   GetCorporatesWithStatusAPI,
   GetBranchesWithStatusAPI,
   UpdateCorporateStatusAPI,
@@ -1013,6 +755,4 @@ export {
   GetBranchTradeRightsAPI,
   UpdateBranchTradeRightsAPI,
   UpdateCorporateTradeRightsAPI,
-  GetTenorWiseFEDiscountingSpreadsForCategoryAPI,
-  GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI,
 };

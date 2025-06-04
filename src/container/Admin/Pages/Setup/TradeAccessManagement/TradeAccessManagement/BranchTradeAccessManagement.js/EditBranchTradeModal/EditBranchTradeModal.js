@@ -55,53 +55,109 @@ const EditBranchTradeModal = ({ info }) => {
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
 
+  // useEffect(() => {
+  //   if (GetBranchTradeRights !== null) {
+  //     try {
+  //       if (
+  //         GetBranchTradeRights.listOfInstruments !== null &&
+  //         GetBranchTradeRights.listOfInstruments !== undefined &&
+  //         GetBranchTradeRights.listOfInstruments.length > 0
+  //       ) {
+  //         if (
+  //           GetAllInstruments !== null &&
+  //           GetAllInstruments.instruments.length > 0
+  //         ) {
+  //           const newDataMaping = GetBranchTradeRights.listOfInstruments.map(
+  //             (rowTableData, index) => {
+  //               let findInstrumentName = GetAllInstruments.instruments.find(
+  //                 (instrumentName, index) =>
+  //                   instrumentName.instrumentID === rowTableData.instrumentID
+  //               );
+  //               if (findInstrumentName !== undefined) {
+  //                 return {
+  //                   ...rowTableData,
+  //                   instrumentName: findInstrumentName.instrumentName,
+  //                 };
+  //               }
+  //               return rowTableData;
+  //             }
+  //           );
+  //           // let listInstruments = newDataMaping.map((list, index) => {
+  //           //   return {
+  //           //     value: list.instrumentID,
+  //           //     label: list.instrumentName,
+  //           //   };
+  //           // });
+
+  //           setInstrumentDataSource(newDataMaping);
+  //           setTradeRightsData({
+  //             maxTransactionLimit: {
+  //               value: GetBranchTradeRights.maxTransactionLimit,
+  //             },
+  //             minTransactionLimit: {
+  //               value: GetBranchTradeRights.minTransactionLimit,
+  //             },
+  //             totalLimit: { value: GetBranchTradeRights.totalLimit },
+  //           });
+  //         }
+  //       }
+  //     } catch (error) {}
+  //   }
+  // }, [GetBranchTradeRights, GetAllInstruments]);
+
   useEffect(() => {
-    if (GetBranchTradeRights !== null) {
+    if (GetBranchTradeRights !== null && GetAllInstruments !== null) {
       try {
         if (
-          GetBranchTradeRights.listOfInstruments !== null &&
-          GetBranchTradeRights.listOfInstruments !== undefined &&
-          GetBranchTradeRights.listOfInstruments.length > 0
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
         ) {
-          if (
-            GetAllInstruments !== null &&
-            GetAllInstruments.instruments.length > 0
-          ) {
-            const newDataMaping = GetBranchTradeRights.listOfInstruments.map(
-              (rowTableData, index) => {
-                let findInstrumentName = GetAllInstruments.instruments.find(
-                  (instrumentName, index) =>
-                    instrumentName.instrumentID === rowTableData.instrumentID
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                GetBranchTradeRights.listOfInstruments?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
                 );
-                if (findInstrumentName !== undefined) {
-                  return {
-                    ...rowTableData,
-                    instrumentName: findInstrumentName.instrumentName,
-                  };
-                }
-                return rowTableData;
-              }
-            );
-            // let listInstruments = newDataMaping.map((list, index) => {
-            //   return {
-            //     value: list.instrumentID,
-            //     label: list.instrumentName,
-            //   };
-            // });
 
-            setInstrumentDataSource(newDataMaping);
-            setTradeRightsData({
-              maxTransactionLimit: {
-                value: GetBranchTradeRights.maxTransactionLimit,
-              },
-              minTransactionLimit: {
-                value: GetBranchTradeRights.minTransactionLimit,
-              },
-              totalLimit: { value: GetBranchTradeRights.totalLimit },
-            });
-          }
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                isCrossRateBuy: false,
+                isCrossRateSell: false,
+                isDiscounting: false,
+                isForward: false,
+                isParityBuy: false,
+                isParitySell: false,
+                isActive: false,
+                isViewOnly: true,
+              };
+            }
+          );
+
+          setInstrumentDataSource(newDataMapping);
+
+          setTradeRightsData({
+            maxTransactionLimit: {
+              value: GetBranchTradeRights.maxTransactionLimit,
+            },
+            minTransactionLimit: {
+              value: GetBranchTradeRights.minTransactionLimit,
+            },
+            totalLimit: { value: GetBranchTradeRights.totalLimit },
+          });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error in mapping instrument data:", error);
+      }
     }
   }, [GetBranchTradeRights, GetAllInstruments]);
   //checkbox value change method
@@ -367,45 +423,22 @@ const EditBranchTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    //Validation rules
-    const validateInput = {
-      totalLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-      minTransactionLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-      maxTransactionLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-    };
-    const isFieldEmpty = (val) => val === "";
-    // Update field function
-    const updateField = (fieldName, fieldValue) => {
-      const validValue = validateInput[fieldName]
-        ? validateInput[fieldName](fieldValue)
-        : fieldValue;
+    // Allow: digits, optional one dot
+    const validString = value
+      .replace(/[^0-9.]/g, "")
+      .replace(/^([^.]*\.)|\./g, "$1");
 
-      const hasError = isFieldEmpty(validValue);
+    // No error if value is not empty and a valid number format
+    const hasError = validString.trim() === "";
 
-      setTradeRightsData((prevState) => ({
-        ...prevState,
-        [fieldName]: {
-          value: validValue,
-          errorMessage: hasError ? "This field is required" : "",
-          errorStatus: hasError,
-        },
-      }));
-    };
-
-    // Update the specific field
-    updateField(name, value);
+    setTradeRightsData((prevState) => ({
+      ...prevState,
+      [name]: {
+        value: validString, // Keep string while typing
+        errorMessage: hasError ? "This field is required" : "",
+        errorStatus: hasError,
+      },
+    }));
   };
 
   // show error message When user hit activate btn
@@ -423,14 +456,25 @@ const EditBranchTradeModal = ({ info }) => {
         TotalLimit: Number(tradeRightsData.totalLimit.value),
         MinTransactionLimit: Number(tradeRightsData.minTransactionLimit.value),
         MaxTransactionLimit: Number(tradeRightsData.maxTransactionLimit.value),
-        ListOfInstruments: instrumentDataSource.map(
-          ({ instrumentName, ...rest }) => rest
-        ),
+        ListOfInstruments: instrumentDataSource.map((item) => ({
+          InstrumentID: item.instrumentID,
+          IsCrossRateBuy: item.isCrossRateBuy,
+          IsCrossRateSell: item.isCrossRateSell,
+          IsDiscounting: item.isDiscounting,
+          IsForward: item.isForward,
+          IsParityBuy: item.isParityBuy,
+          IsParitySell: item.isParitySell,
+          IsActive: item.isActive,
+          IsViewOnly: item.isViewOnly,
+        })),
       };
 
       dispatch(UpdateBranchTradeRightsAPI(navigate, updatedData));
-    } else if (modalState === 2) {
     }
+    // else if (modalState === 2) {
+    // }
+    setModalState(0);
+    handleNoButton();
   };
 
   useEffect(() => {

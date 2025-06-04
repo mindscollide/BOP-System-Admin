@@ -1433,9 +1433,7 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_04".toLowerCase()
                 )
             ) {
-              dispatch(
-                updateBranchCataegoryFailed("Exception Something went wrong")
-              );
+              dispatch(updateBranchCataegoryFailed("Exception."));
             }
           } else {
             dispatch(updateBranchCataegoryFailed("Something went wrong"));

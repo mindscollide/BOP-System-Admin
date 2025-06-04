@@ -3,19 +3,13 @@ import style from "./SpreadManagement.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
 import {
-  crossData,
   initialDiscountingState,
   initialForwardState,
-  parityData,
 } from "./SpreadManagementColumns";
-import ParitySpotTable from "./ParitySpotTable";
-import CrossRateTable from "./CrossRateTable.js";
 import ForwardTable from "./ForwardTable.js";
-import DiscountingTable from "./DiscountingTable.js";
 import { useDispatch } from "react-redux";
 import { ConfirmationModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions.js";
 
-import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal.js";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { GetAllCategoriesAPI } from "../../../../../store/actions/Auth-Actions.js";
@@ -29,12 +23,14 @@ import {
   GetCrossRateSpreadsForCategoryAPI,
   GetSpotSpreadsForCategoryAPI,
   GetTenorWiseForwardSpreadsForCategoryAPI,
-} from "../../../../../store/actions/SpreadManagementActions.js";
-import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions.js";
-import {
   GetAllTenorsAPI,
   GetTenorWiseFEDiscountingSpreadsForCategoryAPI,
-} from "../../../../../store/actions/SetupTradeAccessManagementActions.js";
+  GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI,
+} from "../../../../../store/actions/SpreadManagementActions.js";
+import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions.js";
+import FEDiscountingTable from "./FEDiscountingTable.js";
+import NonFEDiscountingTable from "./NonFEDiscountingTable.js";
+import ParityAndCross from "./ParityAndCrossTable/ParityAndCrossTable.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,23 +39,10 @@ const SpreadManagement = () => {
     (state) => state.SpreadManagementReducer.Loading
   );
 
+  const LoadingCategoryDtate = useSelector((state) => state.auth.Loading);
+  console.log(LoadingCategoryDtate, "LoadingCategoryDtate");
+
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
-  console.log("getAllCategories", getAllCategories);
-
-  const GetTenorWiseForwardSpreadsForCategory = useSelector(
-    (state) =>
-      state.SpreadManagementReducer.GetTenorWiseForwardSpreadsForCategory
-  );
-
-  const GetTenorWiseFEDiscountingSpreadsForCategory = useSelector(
-    (state) =>
-      state.SpreadManagementReducer.GetTenorWiseFEDiscountingSpreadsForCategory
-  );
-
-  console.log(
-    "GetTenorWiseFEDiscountingSpreadsForCategory",
-    GetTenorWiseFEDiscountingSpreadsForCategory
-  );
 
   const [discountingData, setDiscountingData] = useState(
     initialDiscountingState
@@ -72,8 +55,6 @@ const SpreadManagement = () => {
     label: "",
   });
 
-  // Function to handle input changes in Cross Rate table
-
   // Function to handle input changes in Discounting table
   const handleDiscountingInputChange = (index, field, value) => {
     let validateValue = value.replace(/[^0-9.]/g, "");
@@ -84,17 +65,6 @@ const SpreadManagement = () => {
 
   // Save action placeholder (can be extended to API calls)
   const saveData = (dataType) => {};
-
-  //reset Parity and Cross Rate to 0.0
-  const handleResetParityAndCross = () => {
-    setResetOrSaveComponent("resetPartyAndCrossTable");
-    dispatch(ConfirmationModalSystemAdmin(true));
-  };
-
-  const handleSaveParityAndCross = () => {
-    setResetOrSaveComponent("savePartyAndCrossTable");
-    dispatch(ConfirmationModalSystemAdmin(true));
-  };
 
   const handleResetForward = () => {
     setResetOrSaveComponent("resetForwardTable");
@@ -160,7 +130,6 @@ const SpreadManagement = () => {
     jpyBid: "0.0",
     jpyAsk: "0.0",
   }));
-  // useEffect(() => {}, [resetTableData]);
 
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
@@ -179,6 +148,13 @@ const SpreadManagement = () => {
           };
         });
         setCategoryOptions(newCategoriesData);
+        if (newCategoriesData.length > 0) {
+          setCategoryID({
+            label: newCategoriesData[0].categoryName,
+            value: newCategoriesData[0].categoryID,
+          });
+          handleSelectCategory(newCategoriesData[0]);
+        }
       } catch (error) {}
     }
   }, [getAllCategories]);
@@ -206,6 +182,11 @@ const SpreadManagement = () => {
         CategoryID: selectedCategory.categoryID,
       })
     );
+    dispatch(
+      GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI(navigate, {
+        CategoryID: selectedCategory.categoryID,
+      })
+    );
   };
   return (
     <section className={style["SpreadManagementOverAllStyles"]}>
@@ -218,7 +199,6 @@ const SpreadManagement = () => {
         <Col lg={3} md={3} sm={12}></Col>
         <Col lg={3} md={3} sm={12}>
           <Select
-            // name="category"
             placeholder={"Select Category"}
             classNamePrefix={"selectCateogyCorporateList"}
             options={categoryOptions}
@@ -231,54 +211,17 @@ const SpreadManagement = () => {
       <Row className="mt-3">
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={style["SpreadManagmentPaper"]}>
-            <Row>
-              <Col lg={6} md={6} sm={12}>
-                <span className={style["ParitySpotHeading"]}>
-                  Against USD (bps)
-                </span>
-                <ParitySpotTable />
-              </Col>
-
-              <Col lg={6} md={6} sm={12}>
-                <span className={style["ParitySpotHeading"]}>
-                  Against PKR (bps)
-                </span>
-                <CrossRateTable />
-              </Col>
-            </Row>
-
-            <Row className="mt-4 mb-5">
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex justify-content-center gap-2"
-              >
-                <Button
-                  icon={<i className="icon-refresh"></i>}
-                  className={style["Reset-btn-spreadManagement"]}
-                  text="Reset"
-                  onClick={handleResetParityAndCross}
-                />
-                <Button
-                  icon={<i className="icon-save"></i>}
-                  className={style["Search-btn-spreadManagement"]}
-                  text="Save"
-                  // onClick={() => saveData()}
-                  onClick={handleSaveParityAndCross}
-                />
-              </Col>
-            </Row>
+            <ParityAndCross categoryID={categoryID.categoryID} />
 
             {/* Forward Table  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <span className={style["ForwardLabel"]}>Forward (bps)</span>
-                <ForwardTable />
+                <ForwardTable categoryID={categoryID.categoryID} />
               </Col>
             </Row>
 
-            <Row className="mt-4 mb-5">
+            {/* <Row className="mt-4 mb-5">
               <Col
                 lg={12}
                 md={12}
@@ -298,7 +241,7 @@ const SpreadManagement = () => {
                   text="Save"
                 />
               </Col>
-            </Row>
+            </Row> */}
 
             {/* FE Discounting (%)  */}
             <Row>
@@ -306,7 +249,7 @@ const SpreadManagement = () => {
                 <span className={style["ForwardLabel"]}>
                   FE Discounting (%)
                 </span>
-                <DiscountingTable
+                <FEDiscountingTable
                   data={discountingData}
                   onInputChange={handleDiscountingInputChange}
                 />
@@ -342,7 +285,7 @@ const SpreadManagement = () => {
                 <span className={style["ForwardLabel"]}>
                   Non-FE Discounting (%)
                 </span>
-                <DiscountingTable
+                <NonFEDiscountingTable
                   data={discountingData}
                   onInputChange={handleDiscountingInputChange}
                 />
@@ -374,9 +317,8 @@ const SpreadManagement = () => {
           </CustomPaper>
         </Col>
       </Row>
+      {LoadingCategoryDtate && <Loader />}
       {LoadingState && <Loader />}
-      {<ActivateConfirmationModal onConfirm={handleResetOrSave} />}
-      {/* {<ActivateConfirmationModal onConfirm={handleResetForwardYes} />} */}
     </section>
   );
 };

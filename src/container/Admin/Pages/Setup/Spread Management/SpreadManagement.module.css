@@ -89,8 +89,12 @@
   text-align: center !important;
 }
 
-.WidthInputParitySpot {
-  width: 30px !important;
+.InputParitySpot {
+  justify-self: center;
+  width: 70px;
+  text-align: center;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 .CategorySpreadManagement li {
   display: flex;

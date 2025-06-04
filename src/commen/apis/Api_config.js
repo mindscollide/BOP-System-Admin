@@ -283,6 +283,18 @@ const GetTenorWiseNonFEDiscountingSpreadsForCategory = {
     "ServiceManager.GetTenorWiseNonFEDiscountingSpreadsForCategory",
 };
 
+const SaveCategoryParitySpot = {
+  RequestMethod: "ServiceManager.SaveCategoryParitySpot",
+};
+
+const SaveCategoryCrossRates = {
+  RequestMethod: "ServiceManager.SaveCategoryCrossRates",
+};
+
+const SaveCategoryForwards = {
+  RequestMethod: "ServiceManager.SaveCategoryForwards",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -352,4 +364,7 @@ export {
   GetTenorWiseFEDiscountingSpreadsForCategory,
   GetAllTenors,
   GetTenorWiseNonFEDiscountingSpreadsForCategory,
+  SaveCategoryParitySpot,
+  SaveCategoryCrossRates,
+  SaveCategoryForwards,
 };

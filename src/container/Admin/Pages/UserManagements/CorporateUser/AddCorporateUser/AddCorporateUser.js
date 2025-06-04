@@ -34,12 +34,7 @@ const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {
-    corporateCreated,
-    setCorporateCreated,
-    corporateUpdated,
-    setCorporateUpdated,
-  } = useMqtt();
+  const { corporateCreated, setCorporateCreated, corporateUpdated } = useMqtt();
 
   const { setBulkUploadClicked, setEditCompanyData } = useCorporateUser();
 
@@ -684,7 +679,7 @@ const AddCorporateUser = () => {
         </Col>
       </Row>
 
-      {showActivationModal === true && (
+      {showActivationModal && (
         <ActivateConfirmationModal
           handleYesButton={handleConfirmationYes}
           handleNoButton={handleNoButton}

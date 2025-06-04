@@ -128,7 +128,7 @@ const BranchTrade = () => {
               >
                 <Button
                   className={styles["edit-icon"]}
-                  icon={<i className="icon-edit color-blue"></i>}
+                  icon={<i className="icon-edit"></i>}
                   onClick={() => handleEditBranchTrade(record)}
                 />
               </Col>
