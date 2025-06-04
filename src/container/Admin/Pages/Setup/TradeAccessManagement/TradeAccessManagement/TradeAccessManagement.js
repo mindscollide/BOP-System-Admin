@@ -281,7 +281,7 @@ const TradeAccessManagement = () => {
                 )}
               </Col>
             </Row>
-            <Row className="mt-4">
+            <Row className="mt-3">
               <Col
                 lg={12}
                 md={12}

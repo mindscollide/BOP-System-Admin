@@ -30,6 +30,7 @@ const CorporateTrade = () => {
     (state) => state.SetupTradeAccessManagementReducer.Loading
   );
   console.log("Loading", Loading);
+
   const [corporateInfo, setCorporateInfo] = useState(null);
 
   const handleEditCorporateTrade = (record) => {
