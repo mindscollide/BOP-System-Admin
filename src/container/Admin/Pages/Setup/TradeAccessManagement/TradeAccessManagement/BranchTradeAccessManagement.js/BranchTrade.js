@@ -27,7 +27,6 @@ const BranchTrade = () => {
   const GetBranchesWithStatus = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetBranchesWithStatus
   );
-  console.log("GetBranchesWithStatus", GetBranchesWithStatus);
 
   // Add Bank  Use Modal Calling
   const EditTradeAccessManagementModalGobalState = useSelector(
@@ -45,7 +44,6 @@ const BranchTrade = () => {
   // };
 
   const handleEditBranchTrade = (record) => {
-    console.log("handleEditBranchTrade", record);
     setBranchInfo({
       id: record.branchID,
       name: record.branchName,
@@ -55,7 +53,6 @@ const BranchTrade = () => {
   };
 
   const handleToggle = (e, record, columnName) => {
-    console.log(e, record, columnName, "handleTogglehandleToggle");
     if (columnName === "isActive") {
       let updatedActiveData = {
         BranchID: record.branchID,
@@ -116,7 +113,6 @@ const BranchTrade = () => {
       ellipsis: true,
       align: "center",
       render: (text, record) => {
-        console.log(record, "recordrecord");
         return (
           <>
             <Row>

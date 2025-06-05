@@ -17,6 +17,7 @@ import {
   GetCorporatesWithStatusAPI,
 } from "../../../../../../store/actions/SetupTradeAccessManagementActions";
 import { useNavigate } from "react-router-dom";
+
 const TradeAccessManagement = () => {
   const { Option } = Select;
   const dispatch = useDispatch();
@@ -31,36 +32,30 @@ const TradeAccessManagement = () => {
   const [branchName, setBranchName] = useState({
     Name: {
       value: "",
-      errorMessage: "",
-      errorStatus: false,
     },
   });
   const [corporateName, setCorporateName] = useState({
     Name: {
       value: "",
-      errorMessage: "",
-      errorStatus: false,
     },
   });
   const [dropdownvalue, setDropdownvalue] = useState(25);
 
   const handleChangeDropDown = (value) => {
-    console.log(`selected ${value}`);
     setDropdownvalue(value);
   };
 
   //Radio Buttons Management
   const handleChange = (e) => {
-    console.log("radio checked", e, e.target.value);
     if (e.target.value === "Branch") {
       setCrossIcon(false);
       setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
     } else {
       setCrossIcon(false);
       setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
     }
     setRadioValue(e.target.value);
@@ -75,34 +70,30 @@ const TradeAccessManagement = () => {
   const handleEmptySearchState = () => {
     if (radioValue === "Branch") {
       let data = {
-        BranchName: "",
+        BranchName: branchName.Name.value,
         sRow: 0,
-        Length: 10,
+        Length: 25,
       };
       dispatch(GetBranchesWithStatusAPI(navigate, data));
 
       setBranchName({
         Name: {
           value: "",
-          errorMessage: "",
-          errorStatus: false,
         },
       });
 
       setCrossIcon(false);
     } else if (radioValue === "Corporate") {
       let data = {
-        CorporateName: "",
+        CorporateName: corporateName.Name.value,
         sRow: 0,
-        Length: 10,
+        Length: 25,
       };
       dispatch(GetCorporatesWithStatusAPI(navigate, data));
 
       setCorporateName({
         Name: {
           value: "",
-          errorMessage: "",
-          errorStatus: false,
         },
       });
 
@@ -118,7 +109,7 @@ const TradeAccessManagement = () => {
     //Branch Name
     if (name === "branchName" && value !== "") {
       setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
       if (valueCheck !== "") {
@@ -126,24 +117,22 @@ const TradeAccessManagement = () => {
           ...branchName,
           Name: {
             value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
           },
         });
       }
     } else if (name === "branchName" && value === "") {
       setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       setBranchName({
         ...branchName,
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
     }
     //Branch Name
     if (name === "corporateName" && value !== "") {
       setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
       if (valueCheck !== "") {
@@ -151,25 +140,22 @@ const TradeAccessManagement = () => {
           ...corporateName,
           Name: {
             value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
           },
         });
       }
     } else if (name === "corporateName" && value === "") {
       setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       setCorporateName({
         ...corporateName,
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
     }
   };
 
   const handleBlur = (event) => {
     if (event.key === "Enter") {
-      console.log("handleBlurhandleBlur", event.key, radioValue);
       if (radioValue === "Corporate") {
         if (corporateName.Name.value.length >= 3) {
           let data = {
@@ -184,8 +170,6 @@ const TradeAccessManagement = () => {
           dispatch(GetCorporatesWithStatusAPI(navigate, data));
         }
       } else {
-        console.log("handleBlurhandleBlur", radioValue);
-
         if (branchName.Name.value.length >= 3) {
           let data = {
             BranchName: branchName.Name.value ? branchName.Name.value : "",

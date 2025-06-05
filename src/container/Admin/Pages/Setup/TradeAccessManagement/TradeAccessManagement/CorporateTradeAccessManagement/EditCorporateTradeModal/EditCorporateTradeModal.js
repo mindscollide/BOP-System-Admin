@@ -35,8 +35,6 @@ const EditCorporateTradeModal = ({ info }) => {
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
 
-  console.log(GetAllInstruments, "GetAllInstruments");
-
   const [modalState, setModalState] = useState(0);
   const [instrumentOptions, setInstrumentOptions] = useState([]);
 
@@ -516,7 +514,6 @@ const EditCorporateTradeModal = ({ info }) => {
       selectedInstrument.some((data2) => data2.value === newData.instrumentID)
     );
   }, [selectedInstrument, instrumentDataSource]);
-  console.log(filterRows, "filterRowsfilterRows");
 
   const closeModal = useCallback(() => {
     setTradeRightsData({

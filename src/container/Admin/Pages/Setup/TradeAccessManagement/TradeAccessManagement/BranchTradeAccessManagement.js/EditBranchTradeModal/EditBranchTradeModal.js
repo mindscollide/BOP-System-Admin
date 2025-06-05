@@ -514,8 +514,6 @@ const EditBranchTradeModal = ({ info }) => {
     );
   }, [selectedInstrument, instrumentDataSource]);
 
-  console.log(filterRows, "filterRowsfilterRows");
-
   const closeModal = useCallback(() => {
     setTradeRightsData({
       listOfInstruments: [],

@@ -26,11 +26,6 @@ const CorporateTrade = () => {
     (state) => state.SetupTradeAccessManagementReducer.GetCorporatesWithStatus
   );
 
-  const Loading = useSelector(
-    (state) => state.SetupTradeAccessManagementReducer.Loading
-  );
-  console.log("Loading", Loading);
-
   const [corporateInfo, setCorporateInfo] = useState(null);
 
   const handleEditCorporateTrade = (record) => {
@@ -49,14 +44,12 @@ const CorporateTrade = () => {
   );
 
   const handleToggle = (e, record, columnName) => {
-    console.log(e, record, columnName, "handleTogglehandleToggle");
     if (columnName === "isActive") {
       let updatedActiveData = {
         CorporateID: record.corporateID,
         IsActive: !record.isActive,
         IsTradeActive: record.isTrade,
       };
-      console.log("updatedActiveData", updatedActiveData);
       dispatch(UpdateCorporateStatusAPI(navigate, updatedActiveData));
     } else if (columnName === "isTrade") {
       let updatedTradeData = {
@@ -79,7 +72,6 @@ const CorporateTrade = () => {
 
   useEffect(() => {
     if (GetCorporatesWithStatus !== null) {
-      console.log("GetCorporatesWithStatus", GetCorporatesWithStatus);
       try {
         const { corporates } = GetCorporatesWithStatus;
         if (corporates.length > 0) {
