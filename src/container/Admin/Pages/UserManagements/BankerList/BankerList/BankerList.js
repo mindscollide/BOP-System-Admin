@@ -293,6 +293,7 @@ const BankerList = () => {
       setModalState(0);
     }
   }, [modalState]);
+
   // show error message When user hit activate btn
   const handleReset = () => {
     dispatch(ConfirmationModalSystemAdmin(true));

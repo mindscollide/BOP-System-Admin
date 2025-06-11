@@ -20,9 +20,12 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateCorporateTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
+import { useMqtt } from "../../../../../../../../context/MQTTContext";
 const EditCorporateTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { corporateTradeRightsUpdated, setCorporateTradeRightsUpdated } =
+    useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateTradeRights = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetCorporateTradeRights
@@ -54,57 +57,6 @@ const EditCorporateTradeModal = ({ info }) => {
 
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
-
-  // useEffect(() => {
-  //   if (GetCorporateTradeRights !== null) {
-  //     try {
-  //       if (
-  //         GetCorporateTradeRights.listOfInstruments !== null &&
-  //         GetCorporateTradeRights.listOfInstruments !== undefined &&
-  //         GetCorporateTradeRights.listOfInstruments.length > 0
-  //       ) {
-  //         if (
-  //           GetAllInstruments !== null &&
-  //           GetAllInstruments.instruments.length > 0
-  //         ) {
-  //           const newDataMaping = GetCorporateTradeRights.listOfInstruments.map(
-  //             (rowTableData, index) => {
-  //               let findInstrumentName = GetAllInstruments.instruments.find(
-  //                 (instrumentName, index) =>
-  //                   instrumentName.instrumentID === rowTableData.instrumentID
-  //               );
-  //               if (findInstrumentName !== undefined) {
-  //                 return {
-  //                   ...rowTableData,
-  //                   instrumentName: findInstrumentName.instrumentName,
-  //                 };
-  //               }
-  //               return rowTableData;
-  //             }
-  //           );
-  //           // let listInstruments = newDataMaping.map((list, index) => {
-  //           //   return {
-  //           //     value: list.instrumentID,
-  //           //     label: list.instrumentName,
-  //           //   };
-  //           // });
-
-  //           setInstrumentDataSource(newDataMaping);
-  //           setTradeRightsData({
-  //             maxTransactionLimit: {
-  //               value: GetCorporateTradeRights.maxTransactionLimit,
-  //             },
-  //             minTransactionLimit: {
-  //               value: GetCorporateTradeRights.minTransactionLimit,
-  //             },
-  //             totalLimit: { value: GetCorporateTradeRights.totalLimit },
-  //           });
-  //         }
-  //       }
-  //     } catch (error) {}
-  //   }
-  // }, [GetCorporateTradeRights, GetAllInstruments]);
-  //checkbox value change method
 
   useEffect(() => {
     if (GetCorporateTradeRights !== null && GetAllInstruments !== null) {
@@ -218,6 +170,34 @@ const EditCorporateTradeModal = ({ info }) => {
     } catch (error) {}
   };
 
+  useEffect(() => {
+    if (corporateTradeRightsUpdated !== null) {
+      console.log(
+        {
+          corporateTradeRightsUpdated: corporateTradeRightsUpdated,
+          tradeRightsData: tradeRightsData,
+          info: info,
+        },
+        "corporateTradeRightsUpdated"
+      );
+      try {
+        const { corporateTradeRights } = corporateTradeRightsUpdated;
+        if (info.id === corporateTradeRights.corporateID) {
+          setTradeRightsData({
+            maxTransactionLimit: {
+              value: corporateTradeRights.maxTransactionLimit,
+            },
+            minTransactionLimit: {
+              value: corporateTradeRights.minTransactionLimit,
+            },
+            totalLimit: {
+              value: corporateTradeRights.totalLimit,
+            },
+          });
+        }
+      } catch (error) {}
+    }
+  }, [corporateTradeRightsUpdated]);
   //table columns for corporate
   const columns = [
     {
@@ -472,8 +452,7 @@ const EditCorporateTradeModal = ({ info }) => {
 
       dispatch(UpdateCorporateTradeRightsAPI(navigate, updatedData));
     }
-    // else if (modalState === 2) {
-    // }
+
     setModalState(0);
     handleNoButton();
   };

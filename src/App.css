@@ -108,9 +108,9 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* Trade Access Management Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
 .TradeAccessManagement {
-  max-height: 70vh !important;
+  /* max-height: 70vh !important; */
 
-  max-width: 76vw;
+  max-width: 100%;
   width: 100%;
   box-sizing: border-box !important;
   overflow-x: auto !important;
@@ -150,7 +150,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 }
 
 /* Table Responsiveness Handler */
-@media (max-width: 1300px) {
+/* @media (max-width: 1300px) {
   .TradeAccessManagement {
     max-height: 45vh !important;
     max-width: 75vw;
@@ -208,7 +208,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
     border-radius: 0px !important;
     overflow-x: scroll !important;
   }
-}
+} */
 
 /* Seperate Bank User Table of Gray Header CSS */
 .GrayHeader-table {

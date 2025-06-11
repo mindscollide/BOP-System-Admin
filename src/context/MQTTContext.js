@@ -41,7 +41,16 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
   const [counterpartyChnaged, setCounterpartyChnaged] = useState(null);
   const [counterpartyBranchChnaged, setCounterpartyBranchChnaged] =
     useState(null);
-
+  const [corporateStatusUpdated, setCorporateStatusUpdated] = useState(null);
+  const [branchStatusUpdated, setBranchStatusUpdated] = useState(null);
+  const [corporateTradeStatusUpdated, setCorporateTradeStatusUpdated] =
+    useState(null);
+  const [branchTradeStatusUpdated, setBranchTradeStatusUpdated] =
+    useState(null);
+  const [corporateTradeRightsUpdated, setCorporateTradeRightsUpdated] =
+    useState(null);
+  const [branchTradeRightsUpdated, setBranchTradeRightsUpdated] =
+    useState(null);
   const connectToMqtt = () => {
     if (!subscribeID) {
       console.error("No subscribeID provided for MQTT connection.");
@@ -150,6 +159,30 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         case "BRANCH_CATEGORY_CHANGED":
           setCounterpartyBranchChnaged(data.payload);
           break;
+        // When Corporate Status is Updated (Active / Trade)
+        case "CORPORATE_STATUS_UPDATED":
+          setCorporateStatusUpdated(data.payload);
+          break;
+        // When Branch Status is Updated (Active / Trade)
+        case "BRANCH_STATUS_UPDATED":
+          setBranchStatusUpdated(data.payload);
+          break;
+        // When Corporate Trade Status is Updated (Active / Trade)
+        case "CORPORATE_TRADE_STATUS_UPDATED":
+          setCorporateTradeStatusUpdated(data.payload);
+          break;
+        // When Branch Trade Status is Updated (Active / Trade)
+        case "BRANCH_TRADE_STATUS_UPDATED":
+          setBranchTradeStatusUpdated(data.payload);
+          break;
+        // When Corporate Trade Rights Updated
+        case "CORPORATE_TRADE_RIGHTS_UPDATED":
+          setCorporateTradeRightsUpdated(data.payload);
+          break;
+        // When Branch Trade Rights Updated
+        case "BRANCH_TRADE_RIGHTS_UPDATED":
+          setBranchTradeRightsUpdated(data.payload);
+          break;
         default:
           break;
       }
@@ -224,6 +257,18 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setCounterpartyChnaged,
         counterpartyBranchChnaged,
         setCounterpartyBranchChnaged,
+        corporateStatusUpdated,
+        setCorporateStatusUpdated,
+        branchStatusUpdated,
+        setBranchStatusUpdated,
+        corporateTradeStatusUpdated,
+        setCorporateTradeStatusUpdated,
+        branchTradeStatusUpdated,
+        setBranchTradeStatusUpdated,
+        corporateTradeRightsUpdated,
+        setCorporateTradeRightsUpdated,
+        branchTradeRightsUpdated,
+        setBranchTradeRightsUpdated,
       }}
     >
       {children}

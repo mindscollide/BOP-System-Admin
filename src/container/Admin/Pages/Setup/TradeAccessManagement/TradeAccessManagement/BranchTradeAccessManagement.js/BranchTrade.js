@@ -15,12 +15,31 @@ import { Col, Row } from "react-bootstrap";
 import styles from "./BranchTrade.module.css";
 import { useDispatch } from "react-redux";
 import EditBranchTradeModal from "./EditBranchTradeModal/EditBranchTradeModal";
+import { useMqtt } from "../../../../../../../context/MQTTContext";
 
-const BranchTrade = () => {
+const BranchTrade = ({
+  hasReachedBottom,
+  setHasReachedBottom,
+  branchTableData,
+  setBranchTableData,
+  setSRow,
+  setBranchRecordLength,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {
+    branchCreated,
+    setBranchCreated,
+    branchUpdated,
+    setBranchUpdated,
+    branchStatusUpdated,
+    setBranchStatusUpdated,
+    branchTradeStatusUpdated,
+    setBranchTradeStatusUpdated,
+  } = useMqtt();
+
   //Table for Branche data
-  const [branchTableData, setBranchTableData] = useState([]);
+  // const [branchTableData, setBranchTableData] = useState([]);
 
   const [branchInfo, setBranchInfo] = useState(null);
 
@@ -32,16 +51,6 @@ const BranchTrade = () => {
   const EditTradeAccessManagementModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editModalTradeAccessManagement
   );
-
-  // const GetBranchTradeRights = useSelector(
-  //   (state) => state.SetupTradeAccessManagementReducer.GetBranchTradeRights
-  // );
-
-  // const handleEditTradeAccessManagementModal = (record) => {
-  //   console.log("recordrecord", record);
-  //   // let userID = record.counterPartyID;
-  //   dispatch(editTradeAccessManagementModalSystemAdmin(true));
-  // };
 
   const handleEditBranchTrade = (record) => {
     setBranchInfo({
@@ -74,7 +83,7 @@ const BranchTrade = () => {
     let data = {
       BranchName: "",
       sRow: 0,
-      Length: 10,
+      Length: 25,
     };
     dispatch(GetBranchesWithStatusAPI(navigate, data));
   }, []);
@@ -82,19 +91,108 @@ const BranchTrade = () => {
   useEffect(() => {
     if (GetBranchesWithStatus !== null) {
       try {
-        const { branches } = GetBranchesWithStatus;
-        if (branches.length > 0) {
+        const { branches, totalRecords } = GetBranchesWithStatus;
+        if (hasReachedBottom) {
+          setHasReachedBottom(false);
+          setBranchRecordLength(totalRecords);
+          setBranchTableData([...branchTableData, ...branches]);
+          setSRow(branchTableData.length + branches.length);
+        } else {
+          setHasReachedBottom(false);
           setBranchTableData(branches);
+          setBranchRecordLength(totalRecords);
+          setSRow(branches.length);
         }
       } catch (error) {}
+    } else if (GetBranchesWithStatus === null) {
+      if (!hasReachedBottom) {
+        setHasReachedBottom(false);
+        setBranchTableData([]);
+        setBranchRecordLength(0);
+        setSRow(0);
+      }
     }
   }, [GetBranchesWithStatus]);
+  useEffect(() => {
+    if (branchCreated !== null) {
+      try {
+        const { branch } = branchCreated;
+        let findIsExist = branchTableData.find(
+          (tableRow, index) => tableRow.branchID === branch.branchID
+        );
+        if (findIsExist === undefined) {
+          let newBranch = {
+            branchName: branch.branchName,
+            branchID: branch.branchID,
+            isActive: false,
+            isTrade: false,
+          };
+          setBranchTableData((prevState) => [newBranch, ...prevState]);
+        }
+        setBranchCreated(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [branchCreated]);
 
-  // useEffect(() => {
-  //   if (GetBranchTradeRights !== null) {
-  //     setUserData(GetBranchTradeRights);
-  //   }
-  // }, [GetBranchTradeRights]);
+  useEffect(() => {
+    if (branchUpdated !== null) {
+      try {
+        const { branch } = branchUpdated;
+        const updatedBranch = branchTableData.map((item) => {
+          if (item.branchID === branch.branchID) {
+            return {
+              ...item,
+              branchName: branch.branchName,
+            };
+          }
+          return item;
+        });
+        setBranchTableData(updatedBranch);
+        setBranchUpdated(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [branchUpdated]);
+
+  useEffect(() => {
+    if (branchStatusUpdated !== null) {
+      try {
+        const updatedTableData = branchTableData.map((branch) => {
+          if (branch.branchID === branchStatusUpdated.branchID) {
+            return {
+              ...branch,
+              isActive: branchStatusUpdated.isActive,
+            };
+          }
+          return branch;
+        });
+        setBranchTableData(updatedTableData);
+        setBranchStatusUpdated(null);
+      } catch (error) {}
+    }
+  }, [branchStatusUpdated]);
+
+  useEffect(() => {
+    if (branchTradeStatusUpdated !== null) {
+      try {
+        const updatedTableData = branchTableData.map((branch) => {
+          if (branch.branchID === branchTradeStatusUpdated.branchID) {
+            return {
+              ...branch,
+              isTrade: branchTradeStatusUpdated.isTrade,
+            };
+          }
+          return branch;
+        });
+        setBranchTableData(updatedTableData);
+        setBranchTradeStatusUpdated(null);
+      } catch (error) {}
+    }
+  }, [branchTradeStatusUpdated]);
+
   //Table columns for TradeAccess Management List
   const branchColumns = [
     {
@@ -182,6 +280,7 @@ const BranchTrade = () => {
             column={branchColumns}
             pagination={false}
             rows={branchTableData}
+            scroll={{ y: 400, x: "scroll" }}
             className={"TradeAccessManagement"}
           />
         </Col>

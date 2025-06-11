@@ -17,9 +17,13 @@ import {
   GetCorporatesWithStatusAPI,
 } from "../../../../../../store/actions/SetupTradeAccessManagementActions";
 import { useNavigate } from "react-router-dom";
+import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
 
 const TradeAccessManagement = () => {
   const { Option } = Select;
+  const [corporateTableData, setCorporateTableData] = useState([]);
+  const [branchTableData, setBranchTableData] = useState([]);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [crossIcon, setCrossIcon] = useState(false);
@@ -27,6 +31,12 @@ const TradeAccessManagement = () => {
   const Loading = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.Loading
   );
+
+  //row length on scroll
+  const [sRow, setSRow] = useState(0);
+  const [corporateRecordsLength, setCorporateRecordLength] = useState(0);
+  const [branchRecordsLength, setBranchRecordLength] = useState(0);
+
   //States
   const [radioValue, setRadioValue] = useState("Corporate");
   const [branchName, setBranchName] = useState({
@@ -69,8 +79,12 @@ const TradeAccessManagement = () => {
 
   const handleEmptySearchState = () => {
     if (radioValue === "Branch") {
+      setHasReachedBottom(false);
+      setBranchRecordLength(0);
+      setSRow(0);
+      setBranchTableData([]);
       let data = {
-        BranchName: branchName.Name.value,
+        BranchName: "",
         sRow: 0,
         Length: 25,
       };
@@ -84,8 +98,12 @@ const TradeAccessManagement = () => {
 
       setCrossIcon(false);
     } else if (radioValue === "Corporate") {
+      setHasReachedBottom(false);
+      setCorporateRecordLength(0);
+      setSRow(0);
+      setCorporateTableData([]);
       let data = {
-        CorporateName: corporateName.Name.value,
+        CorporateName: "",
         sRow: 0,
         Length: 25,
       };
@@ -100,7 +118,30 @@ const TradeAccessManagement = () => {
       setCrossIcon(false);
     }
   };
-
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (radioValue === "Corporate") {
+      if (corporateRecordsLength !== corporateTableData.length) {
+        let data = {
+          CorporateName: corporateName.Name.value,
+          sRow: sRow,
+          Length: 25,
+        };
+        dispatch(GetCorporatesWithStatusAPI(navigate, data));
+      }
+    } else if (radioValue === "Branch") {
+      if (branchRecordsLength !== branchTableData.length) {
+        let data = {
+          BranchName: branchName.Name.value,
+          sRow: sRow,
+          Length: 25,
+        };
+        dispatch(GetBranchesWithStatusAPI(navigate, data));
+      }
+    }
+  });
   //Banker List validate handler
   const TradeAccessManagementValidateHandler = (e) => {
     let name = e.target.name;
@@ -154,30 +195,54 @@ const TradeAccessManagement = () => {
     }
   };
 
+  // scroll (2)
   const handleBlur = (event) => {
     if (event.key === "Enter") {
       if (radioValue === "Corporate") {
-        if (corporateName.Name.value.length >= 3) {
+        if (
+          corporateName.Name.value.length >= 3 ||
+          corporateName.Name.value.length === 0
+        ) {
+          if (corporateName.Name.value.length === 0) {
+            setCrossIcon(false);
+          }
+          if (corporateName.Name.value.length >= 3) {
+            setCrossIcon(true);
+          }
+          setSRow(0);
+          setHasReachedBottom(false);
+          setCorporateTableData([]);
+          setCorporateRecordLength(0);
           let data = {
             CorporateName: corporateName.Name.value
               ? corporateName.Name.value
               : "",
             sRow: 0,
-            Length: 10,
+            Length: 25,
           };
 
-          setCrossIcon(true);
           dispatch(GetCorporatesWithStatusAPI(navigate, data));
         }
       } else {
-        if (branchName.Name.value.length >= 3) {
+        if (
+          branchName.Name.value.length >= 3 ||
+          branchName.Name.value.length === 0
+        ) {
+          if (branchName.Name.value.length === 0) {
+            setCrossIcon(false);
+          }
+          if (branchName.Name.value.length >= 3) {
+            setCrossIcon(true);
+          }
+          setSRow(0);
+          setHasReachedBottom(false);
+          setBranchTableData([]);
+          setBranchRecordLength(0);
           let data = {
             BranchName: branchName.Name.value ? branchName.Name.value : "",
             sRow: 0,
-            Length: 10,
+            Length: 25,
           };
-          setCrossIcon(true);
-
           dispatch(GetBranchesWithStatusAPI(navigate, data));
         }
       }
@@ -289,9 +354,23 @@ const TradeAccessManagement = () => {
               </Col>
             </Row>
             {radioValue === "Corporate" ? (
-              <CorporateTrade />
+              <CorporateTrade
+                hasReachedBottom={hasReachedBottom}
+                setHasReachedBottom={setHasReachedBottom}
+                corporateTableData={corporateTableData}
+                setCorporateTableData={setCorporateTableData}
+                setSRow={setSRow}
+                setCorporateRecordLength={setCorporateRecordLength}
+              />
             ) : radioValue === "Branch" ? (
-              <BranchTrade />
+              <BranchTrade
+                hasReachedBottom={hasReachedBottom}
+                setHasReachedBottom={setHasReachedBottom}
+                branchTableData={branchTableData}
+                setBranchTableData={setBranchTableData}
+                setSRow={setSRow}
+                setBranchRecordLength={setBranchRecordLength}
+              />
             ) : (
               ""
             )}
