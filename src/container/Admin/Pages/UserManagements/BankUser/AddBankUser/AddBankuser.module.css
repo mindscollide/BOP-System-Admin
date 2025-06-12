@@ -26,6 +26,7 @@
   width: 97% !important;
   margin: 0 auto !important;
 }
+
 .AddBankLabel {
   min-width: 130px !important;
 }
@@ -132,6 +133,7 @@
 }
 
 .bankErrorMessage {
+  margin-left: 130px;
   height: 0px;
   margin-top: 0px !important;
   font-size: 12px !important;

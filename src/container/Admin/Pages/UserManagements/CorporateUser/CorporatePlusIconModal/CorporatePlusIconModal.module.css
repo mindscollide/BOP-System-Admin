@@ -44,7 +44,7 @@
   justify-content: flex-end !important;
 }
 
-.AddButton {
+.AddCorporateButton {
   font-family: "Poppins", sans-serif;
   cursor: pointer;
   border-radius: 4px;
@@ -60,7 +60,7 @@
   gap: 4px !important;
 }
 
-.AddButton:is(:hover, :active, :focus, :focus-visible) {
+.AddCorporateButton:is(:hover, :active, :focus, :focus-visible) {
   font-family: "Poppins", sans-serif;
   cursor: pointer;
   border-radius: 4px;
@@ -69,6 +69,20 @@
   transition: all 0.3s ease-in;
   -webkit-transition: all 0.3s ease-in;
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.AddCorporateButton:disabled {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: var(--disabled-button) !important;
   border: none !important;
   display: flex !important;
   align-items: center !important;
@@ -103,7 +117,7 @@
   border: none !important;
   display: flex !important;
   align-items: center !important;
-  gap: 4px !important;
+  gap: 5px !important;
 }
 .companyErrorMessage {
   height: 0px;

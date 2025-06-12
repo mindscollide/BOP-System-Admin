@@ -66,6 +66,8 @@
   border: 1px solid #dbd7d5 !important;
   width: 100% !important;
   overflow: hidden !important;
+  max-width: 90% !important;
+  margin: 0 auto;
   /* padding: 10px !important; */
 }
 

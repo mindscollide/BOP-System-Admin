@@ -409,11 +409,11 @@ const loginSystemAdminAPI = (navigate, data) => {
 
               localStorage.setItem(
                 "userID",
-                response.data.responseResult.userID
+                response.data.responseResult.user.userID
               );
               localStorage.setItem(
                 "userName",
-                response.data.responseResult.userName
+                response.data.responseResult.user.firstName
               );
               navigate("/BOP/AddBankUser");
             } else if (

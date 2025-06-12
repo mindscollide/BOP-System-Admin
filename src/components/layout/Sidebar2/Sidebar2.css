@@ -131,7 +131,7 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child.menu-items-side
 }
 
 li.ant-menu-item.ant-menu-item-only-child.menu-items-sidebar:hover {
-  background: #096fed !important;
+  background: none !important;
   color: #fff !important;
 }
 

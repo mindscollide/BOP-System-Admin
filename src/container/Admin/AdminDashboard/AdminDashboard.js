@@ -12,10 +12,10 @@ const AdminDashboard = () => {
     <>
       <Layout className="mainLayoutContent">
         <Header2 />
-        <Layout prefixCls="layout-chil">
+        <Layout>
           <Sider
             style={{ background: "none" }}
-            prefixCls="sideBarNew"
+            // prefixCls="sideBarNew"
             width={260}
           >
             <Sidebar2 />

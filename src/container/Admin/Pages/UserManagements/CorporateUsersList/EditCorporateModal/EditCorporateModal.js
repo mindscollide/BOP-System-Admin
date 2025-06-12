@@ -318,7 +318,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               <Button
                 icon={<i className="icon-refresh"></i>}
                 text={"Update"}
-                className={styles["AddBranchClass"]}
+                className={styles["EditCorpUserBtn"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleUpdateButton}
                 disableBtn={

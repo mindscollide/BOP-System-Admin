@@ -131,6 +131,8 @@ const AddCorporateUser = () => {
               },
               CorporateID: companyRoleID.corporateID,
               IsChatActive: corporateUser.isChatActive.value,
+              IsFEEnabled: corporateUser.isFEActive.value,
+              IsNonFEEnabled: corporateUser.isNonFEActive.value,
             };
 
             dispatch(
@@ -185,32 +187,30 @@ const AddCorporateUser = () => {
     setEditCompanyData(companyRoleID);
   };
 
-  const changeActiveTick = () => {
-    let opposeTick = !corporateUser.isChatActive.value;
+  const changeActiveTick = (event) => {
     setCorporateUser((prevState) => ({
       ...prevState,
       isChatActive: {
-        value: opposeTick,
+        value: event.target.checked,
       },
     }));
   };
 
-  const changeFETick = () => {
-    let opposeTick = !corporateUser.isFEActive.value;
+  const changeFETick = (event) => {
+    console.log(event, "event");
     setCorporateUser((prevState) => ({
       ...prevState,
       isFEActive: {
-        value: opposeTick,
+        value: event.target.checked,
       },
     }));
   };
 
-  const changeNonFETick = () => {
-    let opposeTick = !corporateUser.isNonFEActive.value;
+  const changeNonFETick = (event) => {
     setCorporateUser((prevState) => ({
       ...prevState,
       isNonFEActive: {
-        value: opposeTick,
+        value: event.target.checked,
       },
     }));
   };
@@ -236,6 +236,12 @@ const AddCorporateUser = () => {
         value: "",
       },
       isChatActive: {
+        value: false,
+      },
+      isFEActive: {
+        value: false,
+      },
+      isNonFEActive: {
         value: false,
       },
     }));
@@ -656,7 +662,7 @@ const AddCorporateUser = () => {
                     <Button
                       icon={<i className="icon-check icon-check-space"></i>}
                       text="Activate"
-                      className={styles["Active-btn"]}
+                      className={styles["Active-btn-Corp"]}
                       onClick={handleActivateButton}
                       disableBtn={
                         corporateUser.firstName.value !== "" &&

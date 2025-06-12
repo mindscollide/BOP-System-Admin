@@ -295,6 +295,9 @@ const SaveCategoryForwards = {
   RequestMethod: "ServiceManager.SaveCategoryForwards",
 };
 
+const GetAllTrades = {
+  RequestMethod: "ServiceManager.GetAllTrades",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -367,4 +370,5 @@ export {
   SaveCategoryParitySpot,
   SaveCategoryCrossRates,
   SaveCategoryForwards,
+  GetAllTrades,
 };

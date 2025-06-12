@@ -23,6 +23,7 @@ import {
   BankUsersBulkList,
   SearchAllUserLoginHistory,
   GetCounterPartyList,
+  GetAllTrades,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -2492,6 +2493,85 @@ const GetCounterPartyListAPI = (navigate) => {
       });
   };
 };
+//GetCounterPartyList
+const GetAllTradesInit = () => {
+  return {
+    type: actions.GET_ALL_TRADES_INIT,
+  };
+};
+const GetAllTradesSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_TRADES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllTradesFail = (message) => {
+  return {
+    type: actions.GET_ALL_TRADES_FAIL,
+    message: message,
+  };
+};
+
+const GetAllTradesAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllTradesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllTrades.RequestMethod);
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllTradesAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllTrades_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllTradesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllTrades_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllTradesFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllTradesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllTradesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllTradesFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -2517,4 +2597,5 @@ export {
   GetAllInstrumentsAPI,
   SearchAllUserLoginHistoryAPI,
   GetCounterPartyListAPI,
+  GetAllTradesAPI,
 };

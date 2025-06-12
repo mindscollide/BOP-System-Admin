@@ -607,15 +607,6 @@ const AddBankUser = () => {
                         }
                         onChange={addBankUserValidateHandler}
                       />
-                      {addBankUser.EmployeeID.errorStatus && (
-                        <Row>
-                          <Col className="d-flex justify-content-start">
-                            <p className={styles["bankErrorMessage"]}>
-                              {addBankUser.EmployeeID.errorMessage}
-                            </p>
-                          </Col>
-                        </Row>
-                      )}
                     </div>
                   </Col>
 
@@ -623,6 +614,13 @@ const AddBankUser = () => {
                     <CustomUpload change={HandleFileUpload} />
                     {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
                   </Col>
+                  {addBankUser.EmployeeID.errorStatus && (
+                    <Row>
+                      <p className={styles["bankErrorMessage"]}>
+                        {addBankUser.EmployeeID.errorMessage}
+                      </p>
+                    </Row>
+                  )}
                 </Row>
 
                 <Row className="mt-3">
@@ -747,11 +745,9 @@ const AddBankUser = () => {
                     </div>
 
                     {addBankUser.email.errorStatus && (
-                      <Row className="ml-3">
-                        <p className={styles["bankErrorMessage"]}>
-                          {addBankUser.email.errorMessage}
-                        </p>
-                      </Row>
+                      <p className={styles["bankErrorMessage"]}>
+                        {addBankUser.email.errorMessage}
+                      </p>
                     )}
                   </Col>
                 </Row>

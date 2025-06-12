@@ -30,7 +30,7 @@
   margin: 0 auto !important;
 }
 
-.Active-btn {
+.Active-btn-Corp {
   font-size: 14px;
   margin-left: 10px;
   border-radius: 4px !important;
@@ -43,13 +43,22 @@
   background: #0d6efd !important;
 }
 
-.Active-btn:hover {
+.Active-btn-Corp:hover {
   border: none;
   display: flex !important;
   align-items: center !important;
   gap: 4px !important;
   font-family: "Poppins", sans-serif;
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+}
+
+.Active-btn-Corp:disabled {
+  border: none;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-family: "Poppins", sans-serif;
+  background: var(--disabled-button) !important;
 }
 
 .upload-btn {

@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { GetAllNatureAPI } from "../../../../../../store/actions/Auth-Actions";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import CommentModal from "../CommentModal/CommentModal";
+import { GetAllTradesAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,11 @@ const TradeCount = () => {
   const getAllNatureOfBuisness = useSelector(
     (state) => state.auth.getAllNatureOfBuisness
   );
+
+  const GetAllTrades = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllTrades
+  );
+  console.log(GetAllTrades, "GetAllTrades");
 
   //Trade Count States
   const [tradeCount, setTradeCount] = useState({ ...tradeCountSchema });
@@ -440,6 +446,7 @@ const TradeCount = () => {
   // Fetch categories on component mount
   useEffect(() => {
     dispatch(GetAllNatureAPI(navigate));
+    dispatch(GetAllTradesAPI(navigate));
   }, []);
   useEffect(() => {
     if (getAllNatureOfBuisness !== null) {
@@ -593,6 +600,13 @@ const TradeCount = () => {
                   icon={<i className="icon-download-excel"></i>}
                   className={styles["tradeCount-Download-Excel-btn"]}
                 /> */}
+
+                <Button
+                  icon={<i className="icon-refresh icon-check-space"></i>}
+                  className={styles["Banklist-Reset-btn"]}
+                  text="Reset"
+                  onClick={handleResetEventButton}
+                />
                 <Popover
                   content={
                     <div className={styles["export-options"]}>
@@ -623,12 +637,6 @@ const TradeCount = () => {
                     onClick={toggleExportOptions}
                   />
                 </Popover>
-                <Button
-                  icon={<i className="icon-refresh icon-check-space"></i>}
-                  className={styles["Banklist-Reset-btn"]}
-                  text="Reset"
-                  onClick={handleResetEventButton}
-                />
               </Col>
             </Row>
 

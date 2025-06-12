@@ -391,7 +391,7 @@ const CorporatePlusIconModal = () => {
               <Button
                 text={"Add"}
                 icon={<i className="icon-users"></i>}
-                className={styles["AddButton"]}
+                className={styles["AddCorporateButton"]}
                 onClick={handleAddCorporateCompany}
                 disableBtn={
                   categoryID.value !== 0 &&
