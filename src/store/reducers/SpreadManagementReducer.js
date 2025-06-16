@@ -11,6 +11,8 @@ const initalState = {
   SaveCategoryParitySpot: null,
   SaveCategoryCrossRates: null,
   SaveCategoryForwards: null,
+  SaveCategoryFEDiscounts: null,
+  SaveCategoryNonFEDiscounts: null,
 };
 
 const SpreadManagementReducer = (state = initalState, action) => {
@@ -166,6 +168,44 @@ const SpreadManagementReducer = (state = initalState, action) => {
         ...state,
         Loading: false,
         SaveCategoryForwards: null,
+        ResponseMessage: action.message,
+      };
+    case actions.SAVE_CATEGORY_FE_DISCOUNTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.SAVE_CATEGORY_FE_DISCOUNTS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        SaveCategoryFEDiscounts: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.SAVE_CATEGORY_FE_DISCOUNTS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        SaveCategoryFEDiscounts: null,
+        ResponseMessage: action.message,
+      };
+    case actions.SAVE_CATEGORY_NON_FE_DISCOUNTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.SAVE_CATEGORY_NON_FE_DISCOUNTS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        SaveCategoryNonFEDiscounts: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.SAVE_CATEGORY_NON_FE_DISCOUNTS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        SaveCategoryNonFEDiscounts: null,
         ResponseMessage: action.message,
       };
     default:

@@ -135,7 +135,10 @@ li.ant-menu-item.ant-menu-item-only-child.menu-items-sidebar:hover {
   color: #fff !important;
 }
 
-li.ant-menu-submenu.ant-menu-submenu-inline.submenu-sidebar-icons.ant-menu-submenu-selected {
+/* li.ant-menu-submenu.ant-menu-submenu-inline.submenu-sidebar-icons.ant-menu-submenu-selected {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+} */
+.submenu-sidebar-icons {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 /* :where(.css-k7429z).ant-layout .ant-layout-sider {

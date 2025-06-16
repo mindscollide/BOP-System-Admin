@@ -1,27 +1,15 @@
-import React, { useEffect } from "react";
-import { Input } from "antd";
-import "../SpreadManagement.module.css";
-import { useSelector } from "react-redux";
-import { Table } from "../../../../../../components/elements";
+import React from "react";
+import styles from "../SpreadManagement.module.css";
+import { Table, TextField } from "../../../../../../components/elements";
+import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
 
-const CrossRateTable = ({
-  crossRateData,
-  setCrossRateData,
-  GetCrossRateSpreadsForCategory,
-}) => {
-  console.log("GetCrossRateSpreadsForCategory", GetCrossRateSpreadsForCategory);
-  const GetAllInstruments = useSelector(
-    (state) => state.BOPSystemAdminReducer.GetAllInstruments
-  );
-
+const CrossRateTable = ({ crossRateData, setCrossRateData }) => {
   const handleCrossRateInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
-
     // Create a deep copy of the data before modifying
     const updatedData = crossRateData.map((item) => ({ ...item }));
     updatedData[index] = {
       ...updatedData[index],
-      [field]: Number(validateValue),
+      [field]: formatCurrencyInput(value),
     };
 
     setCrossRateData(updatedData);
@@ -30,18 +18,11 @@ const CrossRateTable = ({
   const columns = [
     {
       title: <label className="bottom-table-header">Currency</label>,
-      dataIndex: "instrumentID",
-      key: "instrumentID",
+      dataIndex: "instrumentName",
+      key: "instrumentName",
       width: "100px",
       ellipsis: true,
       align: "center",
-      render: (val, record) => {
-        const matchedInstrument = GetAllInstruments?.instruments?.find(
-          (instrument) => instrument?.instrumentID === val
-        );
-        console.log("matchedInstrumentmatchedInstrument", matchedInstrument);
-        return matchedInstrument ? matchedInstrument.instrumentName : val;
-      },
     },
     {
       title: <label className="bottom-table-header">Bid Spread</label>,
@@ -51,10 +32,9 @@ const CrossRateTable = ({
       align: "center",
       ellipsis: true,
       render: (text, record, index) => (
-        <Input
+        <TextField
           maxLength={5}
-          style={{ width: "60px", textAlign: "center" }}
-          className="WidthInputParitySpot"
+          className={styles["InputParitySpot"]}
           value={text}
           onChange={(e) =>
             handleCrossRateInputChange(index, "bidSpread", e.target.value)
@@ -70,10 +50,9 @@ const CrossRateTable = ({
       ellipsis: true,
       align: "center",
       render: (text, record, index) => (
-        <Input
-          className="WidthInputParitySpot"
+        <TextField
+          className={styles["InputParitySpot"]}
           maxLength={5}
-          style={{ width: "60px", textAlign: "center" }}
           value={text}
           onChange={(e) =>
             handleCrossRateInputChange(index, "askSpread", e.target.value)

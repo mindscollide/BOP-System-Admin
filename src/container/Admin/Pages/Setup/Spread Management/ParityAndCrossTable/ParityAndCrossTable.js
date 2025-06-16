@@ -12,11 +12,11 @@ import {
   SaveCategoryParitySpotAPI,
 } from "../../../../../../store/actions/SpreadManagementActions";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import { ConfirmationModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 
 const ParityAndCross = ({ categoryID }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [confirmationModal, setConfirmationModal] = useState(false);
   const [modalState, setModalState] = useState(0);
   const [paritySpotData, setParitySpotData] = useState([]);
   const GetSpotSpreadsForCategory = useSelector(
@@ -26,108 +26,163 @@ const ParityAndCross = ({ categoryID }) => {
   const GetCrossRateSpreadsForCategory = useSelector(
     (state) => state.SpreadManagementReducer.GetCrossRateSpreadsForCategory
   );
-  //state for save and cancel button
-  const showActivationModal = useSelector(
-    (state) => state.BOPSystemAdminModal.confirmationModal
+  console.log(categoryID, "categoryIDcategoryIDcategoryID");
+
+  const GetAllInstruments = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
 
   useEffect(() => {
-    if (GetSpotSpreadsForCategory !== null) {
+    if (GetSpotSpreadsForCategory !== null && GetAllInstruments !== null) {
       try {
-        setParitySpotData(GetSpotSpreadsForCategory.paritySpotSpreads);
-      } catch (error) {}
+        if (
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
+        ) {
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                GetSpotSpreadsForCategory.paritySpotSpreads?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
+                );
+
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                bidSpread: 0,
+                askSpread: 0,
+              };
+            }
+          );
+          setParitySpotData(newDataMapping);
+        }
+      } catch (error) {
+        console.error("Error in mapping instrument data:", error);
+      }
     }
-  }, [GetSpotSpreadsForCategory]);
+  }, [GetSpotSpreadsForCategory, GetAllInstruments]);
 
   useEffect(() => {
-    if (GetCrossRateSpreadsForCategory !== null) {
+    if (GetCrossRateSpreadsForCategory !== null && GetAllInstruments !== null) {
       try {
-        setCrossRateData(GetCrossRateSpreadsForCategory.crossRatesSpreads);
+        if (
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
+        ) {
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                GetCrossRateSpreadsForCategory.crossRatesSpreads?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
+                );
+
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                bidSpread: 0,
+                askSpread: 0,
+              };
+            }
+          );
+
+          setCrossRateData(newDataMapping);
+        }
       } catch (error) {
         console.error("Error setting cross rate data:", error);
       }
     }
-  }, [GetCrossRateSpreadsForCategory]);
+  }, [GetCrossRateSpreadsForCategory, GetAllInstruments]);
 
   const handleSaveParityAndCross = () => {
-    dispatch(ConfirmationModalSystemAdmin(true));
+    setConfirmationModal(true);
     setModalState(1);
-    console.log("in this method");
   };
-  const handleSaveParityAndCrossYes = useCallback(() => {
-    console.log("object");
-    try {
-      if (modalState === 1) {
-        if (paritySpotData || paritySpotData.length > 0) {
-          const parityData = {
-            CategoryID: categoryID.categoryID || categoryID.value, // Use the selected category
-            ParitySpotSpreads: paritySpotData.map((item) => ({
-              InstrumentID: item.instrumentID,
-              BidSpread: item.bidSpread,
-              AskSpread: item.askSpread,
-            })),
-          };
-          console.log("Data to be saved:", parityData);
-          dispatch(SaveCategoryParitySpotAPI(navigate, parityData));
-        }
-        if (crossRateData || crossRateData.length > 0) {
-          const crossData = {
-            CategoryID: categoryID.categoryID || categoryID.value, // Use the selected category
-            CrossRatesSpreads: crossRateData.map((item) => ({
-              InstrumentID: item.instrumentID,
-              BidSpread: item.bidSpread,
-              AskSpread: item.askSpread,
-            })),
-          };
-          dispatch(SaveCategoryCrossRatesAPI(navigate, crossData));
-        }
-        dispatch(ConfirmationModalSystemAdmin(false));
-      } else if (modalState === 2) {
-        dispatch(ConfirmationModalSystemAdmin(false));
-        setModalState(0);
-        handleResetParityAndCrossYes();
-      }
-    } catch (error) {
-      console.log("error in saving Parity or Corss Data: ", error);
-    }
-  }, [modalState, paritySpotData, crossRateData, showActivationModal]);
 
   const handleNoButton = useCallback(() => {
-    console.log("object");
     if (modalState === 1) {
-      dispatch(ConfirmationModalSystemAdmin(false));
+      setConfirmationModal(false);
       setModalState(0);
     } else if (modalState === 2) {
-      dispatch(ConfirmationModalSystemAdmin(false));
+      setConfirmationModal(false);
       setModalState(0);
     }
   }, [modalState]);
 
   const handleResetParityAndCross = () => {
-    console.log("object");
-    dispatch(ConfirmationModalSystemAdmin(true));
+    console.log("handleResetParityAndCross clicked");
+    setConfirmationModal(true);
     setModalState(2);
   };
 
-  const handleResetParityAndCrossYes = () => {
+  const handleConfirmationYes = useCallback(() => {
+    console.log("reached here");
     console.log(paritySpotData, crossRateData, "paritySpotData");
-    setCrossRateData((prevData) => {
-      return prevData.map((item) => ({
-        ...item,
-        bidSpread: 0.0,
-        askSpread: 0.0,
-      }));
-    });
-    setParitySpotData((prevData) => {
-      return prevData.map((item) => ({
-        ...item,
-        bidSpread: 0.0,
-        askSpread: 0.0,
-      }));
-    });
-  };
+    if (modalState === 1) {
+      if (paritySpotData || paritySpotData.length > 0) {
+        const parityData = {
+          CategoryID: categoryID, // Use the selected category
+          ParitySpotSpreads: paritySpotData.map((item) => ({
+            InstrumentID: item.instrumentID,
+            BidSpread: item.bidSpread,
+            AskSpread: item.askSpread,
+          })),
+        };
+        console.log("parityData Data to be saved:", parityData);
+        dispatch(SaveCategoryParitySpotAPI(navigate, parityData));
+      }
+      if (crossRateData || crossRateData.length > 0) {
+        const crossData = {
+          CategoryID: categoryID, // Use the selected category
+          CrossRatesSpreads: crossRateData.map((item) => ({
+            InstrumentID: item.instrumentID,
+            BidSpread: item.bidSpread,
+            AskSpread: item.askSpread,
+          })),
+        };
+        console.log("crossData Data to be saved:", crossData);
 
-  console.log("object");
+        dispatch(SaveCategoryCrossRatesAPI(navigate, crossData));
+      }
+      setConfirmationModal(false);
+    } else if (modalState === 2) {
+      setConfirmationModal(false);
+
+      setModalState(0);
+      setCrossRateData((prevData) => {
+        return prevData.map((item) => ({
+          ...item,
+          bidSpread: 0.0,
+          askSpread: 0.0,
+        }));
+      });
+      setParitySpotData((prevData) => {
+        return prevData.map((item) => ({
+          ...item,
+          bidSpread: 0.0,
+          askSpread: 0.0,
+        }));
+      });
+    }
+  }, [crossRateData, modalState, paritySpotData]);
+
   return (
     <>
       <Row>
@@ -148,7 +203,7 @@ const ParityAndCross = ({ categoryID }) => {
         </Col>
       </Row>
 
-      <Row className="mt-4 mb-5">
+      <Row className="mt-2 mb-5">
         <Col
           lg={12}
           md={12}
@@ -169,10 +224,11 @@ const ParityAndCross = ({ categoryID }) => {
           />
         </Col>
       </Row>
-      {showActivationModal === true && (
+      {confirmationModal === true && (
         <ActivateConfirmationModal
-          handleYesButton={handleSaveParityAndCrossYes}
+          handleYesButton={handleConfirmationYes}
           handleNoButton={handleNoButton}
+          show={confirmationModal}
         />
       )}
     </>

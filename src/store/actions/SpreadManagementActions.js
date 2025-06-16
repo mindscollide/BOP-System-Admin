@@ -8,7 +8,9 @@ import {
   GetTenorWiseForwardSpreadsForCategory,
   GetTenorWiseNonFEDiscountingSpreadsForCategory,
   SaveCategoryCrossRates,
+  SaveCategoryFEDiscounts,
   SaveCategoryForwards,
+  SaveCategoryNonFEDiscounts,
   SaveCategoryParitySpot,
 } from "../../commen/apis/Api_config";
 import {
@@ -377,11 +379,66 @@ const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_02".toLowerCase()
             ) {
+              let data = {
+                feDiscountingSpreads: [
+                  {
+                    instrumentID: 21,
+                    tenorID: 1,
+                    spread: 0.4,
+                  },
+                  {
+                    instrumentID: 22,
+                    tenorID: 1,
+                    spread: 0.7,
+                  },
+                  {
+                    instrumentID: 23,
+                    tenorID: 1,
+                    spread: 0.35,
+                  },
+                  {
+                    instrumentID: 21,
+                    tenorID: 2,
+                    spread: 0.4,
+                  },
+                  {
+                    instrumentID: 22,
+                    tenorID: 2,
+                    spread: 0.7,
+                  },
+                  {
+                    instrumentID: 23,
+                    tenorID: 2,
+                    spread: 0.5,
+                  },
+                  {
+                    instrumentID: 21,
+                    tenorID: 3,
+                    spread: 0.86,
+                  },
+                  {
+                    instrumentID: 22,
+                    tenorID: 3,
+                    spread: 1.9,
+                  },
+                  {
+                    instrumentID: 23,
+                    tenorID: 3,
+                    spread: 0.98,
+                  },
+                ],
+              };
               dispatch(
-                GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-                  "No Data Available."
+                GetTenorWiseFEDiscountingSpreadsForCategorySuccess(
+                  data,
+                  "Data Available."
                 )
               );
+              // dispatch(
+              //   GetTenorWiseFEDiscountingSpreadsForCategoryFail(
+              //     "No Data Available."
+              //   )
+              // );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_04".toLowerCase()
@@ -911,6 +968,191 @@ const SaveCategoryForwardsAPI = (navigate, data) => {
       });
   };
 };
+
+const SaveCategoryFEDiscountsInit = () => {
+  return {
+    type: actions.SAVE_CATEGORY_FE_DISCOUNTS_INIT,
+  };
+};
+
+const SaveCategoryFEDiscountsSuccess = (response, message) => {
+  return {
+    type: actions.SAVE_CATEGORY_FE_DISCOUNTS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SaveCategoryFEDiscountsFail = (message) => {
+  return {
+    type: actions.SAVE_CATEGORY_FE_DISCOUNTS_FAIL,
+    message: message,
+  };
+};
+
+const SaveCategoryFEDiscountsAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(SaveCategoryFEDiscountsInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", SaveCategoryFEDiscounts.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(SaveCategoryFEDiscountsAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveCategoryFEDiscounts_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                SaveCategoryFEDiscountsSuccess(
+                  response.data.responseResult,
+                  "Successful."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveCategoryFEDiscounts_02".toLowerCase()
+                )
+            ) {
+              dispatch(SaveCategoryFEDiscountsFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveCategoryFEDiscounts_04".toLowerCase()
+                )
+            ) {
+              dispatch(SaveCategoryFEDiscountsFail("Exception."));
+            } else {
+              dispatch(SaveCategoryFEDiscountsFail("Something went wrong"));
+            }
+          } else {
+            dispatch(SaveCategoryFEDiscountsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SaveCategoryFEDiscountsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SaveCategoryFEDiscountsFail("Something went wrong"));
+      });
+  };
+};
+
+const SaveCategoryNonFEDiscountsInit = () => {
+  return {
+    type: actions.SAVE_CATEGORY_NON_FE_DISCOUNTS_INIT,
+  };
+};
+
+const SaveCategoryNonFEDiscountsSuccess = (response, message) => {
+  return {
+    type: actions.SAVE_CATEGORY_NON_FE_DISCOUNTS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SaveCategoryNonFEDiscountsFail = (message) => {
+  return {
+    type: actions.SAVE_CATEGORY_NON_FE_DISCOUNTS_FAIL,
+    message: message,
+  };
+};
+
+const SaveCategoryNonFEDiscountsAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(SaveCategoryNonFEDiscountsInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", SaveCategoryNonFEDiscounts.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(SaveCategoryNonFEDiscountsAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveCategoryNonFEDiscounts_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                SaveCategoryNonFEDiscountsSuccess(
+                  response.data.responseResult,
+                  "Successful."
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveCategoryNonFEDiscounts_02".toLowerCase()
+                )
+            ) {
+              dispatch(SaveCategoryNonFEDiscountsFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveCategoryNonFEDiscounts_04".toLowerCase()
+                )
+            ) {
+              dispatch(SaveCategoryNonFEDiscountsFail("Exception."));
+            } else {
+              dispatch(SaveCategoryNonFEDiscountsFail("Something went wrong"));
+            }
+          } else {
+            dispatch(SaveCategoryNonFEDiscountsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SaveCategoryNonFEDiscountsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SaveCategoryNonFEDiscountsFail("Something went wrong"));
+      });
+  };
+};
+
 export {
   GetSpotSpreadsForCategoryAPI,
   GetCrossRateSpreadsForCategoryAPI,
@@ -921,4 +1163,6 @@ export {
   SaveCategoryParitySpotAPI,
   SaveCategoryCrossRatesAPI,
   SaveCategoryForwardsAPI,
+  SaveCategoryFEDiscountsAPI,
+  SaveCategoryNonFEDiscountsAPI,
 };

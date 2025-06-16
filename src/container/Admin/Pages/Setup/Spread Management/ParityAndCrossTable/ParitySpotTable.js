@@ -1,57 +1,37 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "../SpreadManagement.module.css";
-import { useSelector } from "react-redux";
 import { Table, TextField } from "../../../../../../components/elements";
+import { isValidAmount } from "../../../../../../helpers/reusableMethods";
 
-const ParitySpotTable = ({
-  paritySpotData,
-  setParitySpotData,
-  GetSpotSpreadsForCategory,
-}) => {
-  const GetAllInstruments = useSelector(
-    (state) => state.BOPSystemAdminReducer.GetAllInstruments
-  );
-
+const ParitySpotTable = ({ paritySpotData, setParitySpotData }) => {
   // Function to handle input changes in Parity Spot table
   const handleParitySpotInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
+    // let validateValue = value.replace(/[^0-9.]/g, "");
 
-    // Create a deep copy of the array and the specific item being modified
-    const updatedData = paritySpotData.map((item, i) => {
-      if (i === index) {
-        return {
-          ...item,
-          [field]: Number(validateValue),
-        };
-      }
-      return { ...item };
-    });
+    if (isValidAmount(value)) {
+      // Create a deep copy of the array and the specific item being modified
+      const updatedData = paritySpotData.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            [field]: value,
+          };
+        }
+        return { ...item };
+      });
 
-    setParitySpotData(updatedData);
-  };
-  useEffect(() => {
-    if (GetSpotSpreadsForCategory !== null) {
-      try {
-        setParitySpotData(GetSpotSpreadsForCategory.paritySpotSpreads);
-      } catch (error) {}
+      setParitySpotData(updatedData);
     }
-  }, [GetSpotSpreadsForCategory]);
+  };
 
   const columns = [
     {
       title: <label>Currency</label>,
-      dataIndex: "instrumentID",
-      key: "instrumentID",
+      dataIndex: "instrumentName",
+      key: "instrumentName",
       width: "100px",
       ellipsis: true,
       align: "center",
-      render: (val, record) => {
-        const matchedInstrument = GetAllInstruments?.instruments?.find(
-          (instrument) => instrument.instrumentID === val
-        );
-        console.log("matchedInstrumentmatchedInstrument", matchedInstrument);
-        return matchedInstrument ? matchedInstrument.instrumentName : val;
-      },
     },
     {
       title: <label>Bid Spread</label>,

@@ -1,23 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import style from "./SpreadManagement.module.css";
-import { Button, Table } from "../../../../../components/elements";
+import { Button, Table, TextField } from "../../../../../components/elements";
 import { useSelector } from "react-redux";
-import { createColumns, generateData } from "./testCode";
 import { Row, Col } from "react-bootstrap";
-import { ConfirmationModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { SaveCategoryForwardsAPI } from "../../../../../store/actions/SpreadManagementActions";
+import {
+  buildForwardsTable,
+  convertToForwardSpreads,
+} from "../../../../../helpers/generateColumnsData";
 
-const ForwardTable = () => {
+const ForwardTable = ({ categoryID }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [confirmationModal, setConfirmationModal] = useState(false);
   const [modalState, setModalState] = useState(0);
-  //state for save and cancel button
-  const showActivationModal = useSelector(
-    (state) => state.BOPSystemAdminModal.confirmationModal
-  );
   const [forwardData, setForwardData] = useState([]);
   const [forwardColumns, setForwardColumns] = useState([]);
 
@@ -28,91 +27,141 @@ const ForwardTable = () => {
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
-  console.log("GetAllInstrumentsGetAllInstruments", GetAllInstruments);
   const GetAllTenors = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
   );
-  console.log(
-    "GetTenorWiseForwardSpreadsForCategory",
-    GetTenorWiseForwardSpreadsForCategory?.forwardSpreads
-  );
 
-  console.log("GetAllTenors", GetAllTenors?.tenors);
-  // Function to handle input changes in Forward table
-  const handleForwardInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = [...forwardData];
-    updatedData[index][field] = validateValue;
-    setForwardData(updatedData);
-  };
-
-  const handleResetForward = () => {
-    // setResetOrSaveComponent("resetForwardTable");
-    dispatch(ConfirmationModalSystemAdmin(true));
-  };
   useEffect(() => {
-    if (
-      GetAllInstruments !== null &&
-      GetAllTenors !== null &&
-      GetTenorWiseForwardSpreadsForCategory !== null
-    ) {
-      try {
-        let tenors = GetAllTenors.tenors;
-        let instruments = GetAllInstruments.instruments;
-        let forwardSpreadsData =
-          GetTenorWiseForwardSpreadsForCategory.forwardSpreads;
+    if (GetAllInstruments !== null && GetAllTenors !== null) {
+      if (GetTenorWiseForwardSpreadsForCategory !== null) {
+        try {
+          const { forwardSpreads } = GetTenorWiseForwardSpreadsForCategory;
 
-        let { forwardsRates } = generateData(
-          4,
-          tenors,
-          instruments,
-          forwardSpreadsData
-        );
-        const columnData = createColumns(forwardsRates, 2);
-        setForwardColumns(columnData);
-        setForwardData(forwardsRates);
-      } catch (error) {}
+          const { rowData, columnsData } = buildForwardsTable(
+            2,
+            forwardSpreads,
+            GetAllTenors,
+            GetAllInstruments,
+            TextField,
+            handleChangeForwards
+          );
+          if (rowData.length > 0) {
+            setForwardData(rowData);
+            setForwardColumns(columnsData);
+          }
+        } catch (error) {
+          console.log(error, "Error while building discounting table");
+        }
+      } else {
+        try {
+          const { rowData, columnsData } = buildForwardsTable(
+            2,
+            [],
+            GetAllTenors,
+            GetAllInstruments,
+            TextField,
+            handleChangeForwards
+          );
+          if (rowData.length > 0) {
+            setForwardData(rowData);
+            setForwardColumns(columnsData);
+          }
+        } catch (error) {}
+      }
     }
   }, [GetTenorWiseForwardSpreadsForCategory, GetAllInstruments, GetAllTenors]);
-  //Forward Table
+
+  const handleChangeForwards = (value, record, columnName, instrumentName) => {
+    setForwardData((prevState) =>
+      prevState.map((stateData) => {
+        // Match by tenorID
+        if (stateData.tenorID !== record.tenorID) return stateData;
+
+        // Loop through instrument name keys in the object
+        const instrumentMatched = Object.keys(stateData).find((key) => {
+          // Find keys like InstrumentName_XXX
+          if (key.startsWith("InstrumentName_")) {
+            return stateData[key] === instrumentName;
+          }
+          return false;
+        });
+
+        if (instrumentMatched) {
+          return {
+            ...stateData,
+            [`${columnName}_${instrumentName}`]: Number(value),
+          };
+        }
+
+        return stateData; // No match
+      })
+    );
+  };
+
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      setConfirmationModal(false);
+      setModalState(0);
+    } else if (modalState === 2) {
+      setConfirmationModal(false);
+      setModalState(0);
+    }
+  }, [modalState]);
+
+  const handleResetForward = () => {
+    setConfirmationModal(true);
+    setModalState(2);
+  };
   const handleSave = () => {
-    dispatch(ConfirmationModalSystemAdmin(true));
+    setConfirmationModal(true);
     setModalState(1);
   };
-  const handleSaveYes = useCallback(() => {
+  const handleConfirmationYes = useCallback(() => {
     try {
       if (modalState === 1) {
+        let forWardsData = convertToForwardSpreads(forwardData);
         let data = {
-          CategoryID: 5,
-          ForwardSpreads: [
-            { InstrumentID: 101, TenorID: 1, BidSpread: 0.05, AskSpread: 0.07 },
-            { InstrumentID: 102, TenorID: 2, BidSpread: 0.06, AskSpread: 0.08 },
-            { InstrumentID: 103, TenorID: 3, BidSpread: 0.07, AskSpread: 0.09 },
-          ],
+          CategoryID: categoryID,
+          ForwardSpreads: forWardsData,
         };
         dispatch(SaveCategoryForwardsAPI(navigate, data));
-        dispatch(ConfirmationModalSystemAdmin(false));
-      } else if (modalState === 2) {
-        dispatch(ConfirmationModalSystemAdmin(false));
         setModalState(0);
+        setConfirmationModal(false);
+      } else if (modalState === 2) {
+        setConfirmationModal(false);
+        setModalState(0);
+        let updatedData = forwardData.map((entry) => {
+          const newEntry = { ...entry };
+
+          for (const key in newEntry) {
+            if (key.startsWith("bid_") || key.startsWith("ask_")) {
+              newEntry[key] = 0;
+            }
+          }
+
+          return newEntry;
+        });
+        setForwardData(updatedData);
         // handleResetParityAndCrossYes();
       }
     } catch (error) {}
-  }, [modalState]);
+  }, [forwardData, modalState]);
 
   return (
     <>
-      <Table
-        rows={forwardData}
-        column={forwardColumns}
-        bordered
-        pagination={false}
-        scroll={{ y: 200, x: "100%" }}
-        prefixCls="groupTable"
-        // className={"GrayHeader-table"}
-        // className={"Forward-table"}
-      />
-      <Row className="mt-4 mb-5">
+      <Row>
+        <Table
+          rows={forwardData}
+          column={forwardColumns}
+          bordered
+          pagination={false}
+          scroll={{ y: 350, x: "scroll" }}
+          prefixCls="groupTable1"
+          // className={"GrayHeader-table"}
+          // className={"Forward-table"}
+        />
+      </Row>
+      <Row className="mt-2 mb-5">
         <Col
           lg={12}
           md={12}
@@ -133,10 +182,11 @@ const ForwardTable = () => {
           />
         </Col>
       </Row>
-      {showActivationModal === true && (
+      {confirmationModal === true && (
         <ActivateConfirmationModal
-          handleYesButton={handleSaveYes}
-          // handleNoButton={handleNoButton}
+          handleYesButton={handleConfirmationYes}
+          handleNoButton={handleNoButton}
+          show={confirmationModal}
         />
       )}
     </>

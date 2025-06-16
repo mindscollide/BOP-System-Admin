@@ -2,23 +2,14 @@ import React, { useEffect, useState } from "react";
 import style from "./SpreadManagement.module.css";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
-import {
-  initialDiscountingState,
-  initialForwardState,
-} from "./SpreadManagementColumns";
 import ForwardTable from "./ForwardTable.js";
 import { useDispatch } from "react-redux";
-import { ConfirmationModalSystemAdmin } from "../../../../../store/actions/BOPSystemAdminModalsActions.js";
 
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { GetAllCategoriesAPI } from "../../../../../store/actions/Auth-Actions.js";
 
-import {
-  Button,
-  CustomPaper,
-  Loader,
-} from "../../../../../components/elements";
+import { CustomPaper, Loader } from "../../../../../components/elements";
 import {
   GetCrossRateSpreadsForCategoryAPI,
   GetSpotSpreadsForCategoryAPI,
@@ -29,8 +20,8 @@ import {
 } from "../../../../../store/actions/SpreadManagementActions.js";
 import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdminActions.js";
 import FEDiscountingTable from "./FEDiscountingTable.js";
-import NonFEDiscountingTable from "./NonFEDiscountingTable.js";
 import ParityAndCross from "./ParityAndCrossTable/ParityAndCrossTable.js";
+import NonFEDiscountingTable from "./NonFEDiscountingTable.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,97 +30,17 @@ const SpreadManagement = () => {
     (state) => state.SpreadManagementReducer.Loading
   );
 
-  const LoadingCategoryDtate = useSelector((state) => state.auth.Loading);
-  console.log(LoadingCategoryDtate, "LoadingCategoryDtate");
+  const LoadingCategoryState = useSelector((state) => state.auth.Loading);
+  console.log(LoadingCategoryState, "LoadingCategoryDtate");
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
 
-  const [discountingData, setDiscountingData] = useState(
-    initialDiscountingState
-  );
-  const [resetOrSaveComponent, setResetOrSaveComponent] = useState("");
   const [categoryOptions, setCategoryOptions] = useState([]);
   //State for dropdown
   const [categoryID, setCategoryID] = useState({
     value: 0,
     label: "",
   });
-
-  // Function to handle input changes in Discounting table
-  const handleDiscountingInputChange = (index, field, value) => {
-    let validateValue = value.replace(/[^0-9.]/g, "");
-    const updatedData = [...discountingData];
-    updatedData[index][field] = validateValue;
-    setDiscountingData(updatedData);
-  };
-
-  // Save action placeholder (can be extended to API calls)
-  const saveData = (dataType) => {};
-
-  const handleResetForward = () => {
-    setResetOrSaveComponent("resetForwardTable");
-    dispatch(ConfirmationModalSystemAdmin(true));
-  };
-
-  const handleResetFEDiscounting = () => {
-    setResetOrSaveComponent("resetDiscountingTable");
-    dispatch(ConfirmationModalSystemAdmin(true));
-  };
-  const handleResetNonFEDiscounting = () => {
-    setResetOrSaveComponent("resetDiscountingTable");
-    dispatch(ConfirmationModalSystemAdmin(true));
-  };
-  const handleResetOrSave = () => {
-    // if (resetOrSaveComponent === "resetForwardTable") {
-    //   setForwardData(resetForwardState);
-    // }
-    if (resetOrSaveComponent === "resetPartyAndCrossTable") {
-      // setCrossRateData(
-      //   crossData.map((row) => ({
-      //     ...row,
-      //     bidSpread: "0.0",
-      //     askSpread: "0.0",
-      //   }))
-      // );
-    }
-    if (resetOrSaveComponent === "resetDiscountingTable") {
-      setDiscountingData(resetDiscountingState);
-    }
-    if (resetOrSaveComponent === "savePartyAndCrossTable") {
-      console.log("here i am now");
-      saveData();
-    }
-  };
-
-  //Reset Discouting Table to 0
-  const resetDiscountingState = initialDiscountingState.map((row) => ({
-    ...row,
-    usdBid: "0.0",
-    usdAsk: "0.0",
-    eurBid: "0.0",
-    eurAsk: "0.0",
-    gbpBid: "0.0",
-    gbpAsk: "0.0",
-    hkdBid: "0.0",
-    hkdAsk: "0.0",
-    jpyBid: "0.0",
-    jpyAsk: "0.0",
-  }));
-
-  //Reset Forward Table to 0
-  const resetForwardState = initialForwardState.map((row) => ({
-    ...row,
-    usdBid: "0.0",
-    usdAsk: "0.0",
-    eurBid: "0.0",
-    eurAsk: "0.0",
-    gbpBid: "0.0",
-    gbpAsk: "0.0",
-    hkdBid: "0.0",
-    hkdAsk: "0.0",
-    jpyBid: "0.0",
-    jpyAsk: "0.0",
-  }));
 
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
@@ -221,61 +132,13 @@ const SpreadManagement = () => {
               </Col>
             </Row>
 
-            {/* <Row className="mt-4 mb-5">
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex justify-content-center gap-2"
-              >
-                <Button
-                  icon={<i className="icon-refresh"></i>}
-                  className={style["Reset-btn-spreadManagement"]}
-                  text="Reset"
-                  onClick={handleResetForward}
-                  disableBtn={true}
-                />
-                <Button
-                  icon={<i className="icon-save"></i>}
-                  className={style["Search-btn-spreadManagement"]}
-                  text="Save"
-                />
-              </Col>
-            </Row> */}
-
             {/* FE Discounting (%)  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
                 <span className={style["ForwardLabel"]}>
                   FE Discounting (%)
                 </span>
-                <FEDiscountingTable
-                  data={discountingData}
-                  onInputChange={handleDiscountingInputChange}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mt-4 mb-5">
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex justify-content-center gap-2"
-              >
-                <Button
-                  icon={<i className="icon-refresh"></i>}
-                  className={style["Reset-btn-spreadManagement"]}
-                  text="Reset"
-                  // onClick={() => setDiscountingData(resetDiscountingState)}
-                  onClick={handleResetFEDiscounting}
-                  disableBtn={true}
-                />
-                <Button
-                  icon={<i className="icon-save"></i>}
-                  className={style["Search-btn-spreadManagement"]}
-                  text="Save"
-                />
+                <FEDiscountingTable categoryID={categoryID.categoryID} />
               </Col>
             </Row>
 
@@ -285,40 +148,14 @@ const SpreadManagement = () => {
                 <span className={style["ForwardLabel"]}>
                   Non-FE Discounting (%)
                 </span>
-                <NonFEDiscountingTable
-                  data={discountingData}
-                  onInputChange={handleDiscountingInputChange}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mt-4 mb-5">
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex justify-content-center gap-2"
-              >
-                <Button
-                  icon={<i className="icon-refresh"></i>}
-                  className={style["Reset-btn-spreadManagement"]}
-                  text="Reset"
-                  // onClick={() => setDiscountingData(resetDiscountingState)}
-                  onClick={handleResetNonFEDiscounting}
-                  disableBtn={true}
-                />
-                <Button
-                  icon={<i className="icon-save"></i>}
-                  className={style["Search-btn-spreadManagement"]}
-                  text="Save"
-                />
+                <NonFEDiscountingTable categoryID={categoryID.categoryID} />
               </Col>
             </Row>
           </CustomPaper>
         </Col>
       </Row>
-      {LoadingCategoryDtate && <Loader />}
-      {LoadingState && <Loader />}
+      {LoadingCategoryState && LoadingState && <Loader />}
+      {/* {LoadingState && <Loader />} */}
     </section>
   );
 };

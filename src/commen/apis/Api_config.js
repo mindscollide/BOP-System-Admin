@@ -298,6 +298,14 @@ const SaveCategoryForwards = {
 const GetAllTrades = {
   RequestMethod: "ServiceManager.GetAllTrades",
 };
+
+const SaveCategoryFEDiscounts = {
+  RequestMethod: "ServiceManager.SaveCategoryFEDiscounts",
+};
+
+const SaveCategoryNonFEDiscounts = {
+  RequestMethod: "ServiceManager.SaveCategoryNonFEDiscounts",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -371,4 +379,6 @@ export {
   SaveCategoryCrossRates,
   SaveCategoryForwards,
   GetAllTrades,
+  SaveCategoryFEDiscounts,
+  SaveCategoryNonFEDiscounts,
 };
