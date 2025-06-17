@@ -10,28 +10,41 @@ import {
 import {
   Button,
   CustomSwitch,
-  Loader,
-  // Loader,
   Table,
 } from "../../../../../../../components/elements";
 
 import styles from "./CorporateTrade.module.css";
 import { Col, Row } from "react-bootstrap";
 import EditCorporateTradeModal from "./EditCorporateTradeModal/EditCorporateTradeModal";
+import { useMqtt } from "../../../../../../../context/MQTTContext";
 
-const CorporateTrade = () => {
+const CorporateTrade = ({
+  hasReachedBottom,
+  setHasReachedBottom,
+  corporateTableData,
+  setCorporateTableData,
+  setSRow,
+  setCorporateRecordLength,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {
+    corporateCreated,
+    setCorporateCreated,
+    corporateUpdated,
+    setCorporateUpdated,
+    corporateStatusUpdated,
+    setCorporateStatusUpdated,
+    corporateTradeStatusUpdated,
+    setCorporateTradeStatusUpdated,
+  } = useMqtt();
+
   //table for corporate
-  const [corporateTableData, setCorporateTableData] = useState([]);
+  // const [corporateTableData, setCorporateTableData] = useState([]);
   const GetCorporatesWithStatus = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetCorporatesWithStatus
   );
 
-  const Loading = useSelector(
-    (state) => state.SetupTradeAccessManagementReducer.Loading
-  );
-  console.log("Loading", Loading);
   const [corporateInfo, setCorporateInfo] = useState(null);
 
   const handleEditCorporateTrade = (record) => {
@@ -50,14 +63,16 @@ const CorporateTrade = () => {
   );
 
   const handleToggle = (e, record, columnName) => {
-    console.log(e, record, columnName, "handleTogglehandleToggle");
+    console.log(
+      { columnName, isActive: record.isActive, isTrade: record.isTrade },
+      "columnName"
+    );
     if (columnName === "isActive") {
       let updatedActiveData = {
         CorporateID: record.corporateID,
         IsActive: !record.isActive,
         IsTradeActive: record.isTrade,
       };
-      console.log("updatedActiveData", updatedActiveData);
       dispatch(UpdateCorporateStatusAPI(navigate, updatedActiveData));
     } else if (columnName === "isTrade") {
       let updatedTradeData = {
@@ -73,22 +88,115 @@ const CorporateTrade = () => {
     let data = {
       CorporateName: "",
       sRow: 0,
-      Length: 10,
+      Length: 25,
     };
     dispatch(GetCorporatesWithStatusAPI(navigate, data));
   }, []);
 
   useEffect(() => {
     if (GetCorporatesWithStatus !== null) {
-      console.log("GetCorporatesWithStatus", GetCorporatesWithStatus);
       try {
-        const { corporates } = GetCorporatesWithStatus;
-        if (corporates.length > 0) {
+        const { corporates, totalRecords } = GetCorporatesWithStatus;
+        if (hasReachedBottom) {
+          setHasReachedBottom(false);
+          setCorporateRecordLength(totalRecords);
+          setCorporateTableData([...corporateTableData, ...corporates]);
+          setSRow(corporateTableData.length + corporates.length);
+        } else {
+          setHasReachedBottom(false);
           setCorporateTableData(corporates);
+          setCorporateRecordLength(totalRecords);
+          setSRow(corporates.length);
         }
       } catch (error) {}
+    } else if (GetCorporatesWithStatus === null) {
+      if (!hasReachedBottom) {
+        setHasReachedBottom(false);
+        setCorporateTableData([]);
+        setCorporateRecordLength(0);
+        setSRow(0);
+      }
     }
   }, [GetCorporatesWithStatus]);
+
+  useEffect(() => {
+    if (corporateCreated !== null) {
+      try {
+        const { corporate } = corporateCreated;
+        let findIsExist = corporateTableData.find(
+          (tableRow, index) => tableRow.corporateID === corporate.corporateID
+        );
+        if (findIsExist === undefined) {
+          let newCorporate = {
+            corporateName: corporate.corporateName,
+            corporateID: corporate.corporateID,
+          };
+          setCorporateTableData((prevState) => [newCorporate, ...prevState]);
+        }
+        setCorporateCreated(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [corporateCreated]);
+
+  useEffect(() => {
+    if (corporateUpdated !== null) {
+      const updatedTableData = corporateTableData.map((corporate) => {
+        if (corporate.corporateID === corporateUpdated.corporate.corporateID) {
+          return {
+            ...corporate,
+            corporateName: corporateUpdated.corporate.corporateName,
+          };
+        }
+        return corporate;
+      });
+      setCorporateTableData(updatedTableData);
+      setCorporateUpdated(null);
+    }
+  }, [corporateUpdated]);
+
+  useEffect(() => {
+    if (corporateStatusUpdated !== null) {
+      try {
+        const updatedTableData = corporateTableData.map((corporate) => {
+          if (corporate.corporateID === corporateStatusUpdated.corporateID) {
+            return {
+              ...corporate,
+              isActive: corporateStatusUpdated.isActive,
+            };
+          }
+          return corporate;
+        });
+        setCorporateTableData(updatedTableData);
+        setCorporateStatusUpdated(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [corporateStatusUpdated]);
+
+  useEffect(() => {
+    if (corporateTradeStatusUpdated !== null) {
+      try {
+        const updatedTableData = corporateTableData.map((corporate) => {
+          if (
+            corporate.corporateID === corporateTradeStatusUpdated.corporateID
+          ) {
+            return {
+              ...corporate,
+              isTrade: corporateTradeStatusUpdated.isTrade,
+            };
+          }
+          return corporate;
+        });
+        setCorporateTableData(updatedTableData);
+        setCorporateTradeStatusUpdated(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [corporateTradeStatusUpdated]);
 
   //Table columns for TradeAccess Management List
   const corporateColumns = [
@@ -179,13 +287,13 @@ const CorporateTrade = () => {
             pagination={false}
             rows={corporateTableData}
             className={"TradeAccessManagement"}
+            scroll={{ y: 400, x: "scroll" }}
           />
         </Col>
       </Row>
       {EditTradeAccessManagementModalGobalState && (
         <EditCorporateTradeModal info={corporateInfo} />
       )}
-      {Loading && <Loader />}
     </>
   );
 };

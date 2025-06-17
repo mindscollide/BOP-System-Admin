@@ -1,287 +1,208 @@
-import React from "react";
-import { Input } from "antd";
-import "./SpreadManagement.module.css";
-import { Table } from "../../../../../components/elements";
+import React, { useCallback, useEffect, useState } from "react";
+import style from "./SpreadManagement.module.css";
+import { Button, Table, TextField } from "../../../../../components/elements";
+import { useSelector } from "react-redux";
+import { Row, Col } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
+import { SaveCategoryForwardsAPI } from "../../../../../store/actions/SpreadManagementActions";
+import {
+  buildForwardsTable,
+  convertToForwardSpreads,
+} from "../../../../../helpers/generateColumnsData";
+import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
 
-const ForwardTable = ({ data, onInputChange }) => {
-  console.log("data in FOrwardTable", data);
-  //Forward Table
-  const columns = [
-    {
-      title: "Tenor",
-      dataIndex: "tenor",
-      key: "tenor",
-      fixed: "left",
-      align: "center",
-      ecllipse: true,
-      width: 100,
-      render: (text) => {
-        return (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-            {text}
-          </span>
-        );
-      },
-    },
-    {
-      title: "USD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "usdBid",
-          key: "usdBid",
-          align: "center",
-          width: 100,
-          ecllipse: true,
+const ForwardTable = ({ categoryID }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [modalState, setModalState] = useState(0);
+  const [forwardData, setForwardData] = useState([]);
+  const [forwardColumns, setForwardColumns] = useState([]);
 
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "usdBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "usdAsk",
-          align: "center",
-          key: "usdAsk",
-          width: 100,
+  const GetTenorWiseForwardSpreadsForCategory = useSelector(
+    (state) =>
+      state.SpreadManagementReducer.GetTenorWiseForwardSpreadsForCategory
+  );
+  const GetAllInstruments = useSelector(
+    (state) => state.BOPSystemAdminReducer.GetAllInstruments
+  );
+  const GetAllTenors = useSelector(
+    (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
+  );
 
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "usdAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "EUR",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "eurBid",
-          align: "center",
-          key: "eurBid",
-          width: 100,
+  useEffect(() => {
+    if (GetAllInstruments !== null && GetAllTenors !== null) {
+      if (GetTenorWiseForwardSpreadsForCategory !== null) {
+        try {
+          const { forwardSpreads } = GetTenorWiseForwardSpreadsForCategory;
 
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "eurBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "eurAsk",
-          align: "center",
-          key: "eurAsk",
-          width: 100,
+          const { rowData, columnsData } = buildForwardsTable(
+            2,
+            forwardSpreads,
+            GetAllTenors,
+            GetAllInstruments,
+            TextField,
+            handleChangeForwards
+          );
+          if (rowData.length > 0) {
+            setForwardData(rowData);
+            setForwardColumns(columnsData);
+          }
+        } catch (error) {
+          console.log(error, "Error while building discounting table");
+        }
+      } else {
+        try {
+          const { rowData, columnsData } = buildForwardsTable(
+            2,
+            [],
+            GetAllTenors,
+            GetAllInstruments,
+            TextField,
+            handleChangeForwards
+          );
+          if (rowData.length > 0) {
+            setForwardData(rowData);
+            setForwardColumns(columnsData);
+          }
+        } catch (error) {}
+      }
+    }
+  }, [GetTenorWiseForwardSpreadsForCategory, GetAllInstruments, GetAllTenors]);
 
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "eurAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "GBP",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "gbpBid",
-          key: "gbpBid",
-          align: "center",
-          width: 100,
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "gbpBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "gbpAsk",
-          key: "gbpAsk",
-          align: "center",
-          width: 100,
+  const handleChangeForwards = (value, record, columnName, instrumentName) => {
+    if (isValidNumberUnderMax(value, "", 1000)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : // Remove leading "0" (e.g., "09" → "9")
+            value;
+      setForwardData((prevState) =>
+        prevState.map((stateData) => {
+          // Match by tenorID
+          if (stateData.tenorID !== record.tenorID) return stateData;
 
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "gbpAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "HKD",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "hkdBid",
-          key: "hkdBid",
-          align: "center",
-          width: 100,
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "hkdBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "hkdAsk",
-          width: 100,
-          align: "center",
-          key: "hkdAsk",
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "hkdAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      title: "JPY",
-      align: "center",
-      children: [
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Bid Spread
-              </span>
-            </>
-          ),
-          dataIndex: "jpyBid",
-          key: "jpyBid",
-          width: 100,
-          align: "center",
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "jpyBid", e.target.value)}
-            />
-          ),
-        },
-        {
-          title: (
-            <>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                Ask Spread
-              </span>
-            </>
-          ),
-          dataIndex: "jpyAsk",
-          key: "jpyAsk",
-          width: 100,
-          align: "center",
-          ecllipse: true,
-          render: (text, record, index) => (
-            <Input
-              maxLength={5}
-              style={{ width: "60px", textAlign: "center" }}
-              value={text}
-              onChange={(e) => onInputChange(index, "jpyAsk", e.target.value)}
-            />
-          ),
-        },
-      ],
-    },
-  ];
+          // Loop through instrument name keys in the object
+          const instrumentMatched = Object.keys(stateData).find((key) => {
+            // Find keys like InstrumentName_XXX
+            if (key.startsWith("InstrumentName_")) {
+              return stateData[key] === instrumentName;
+            }
+            return false;
+          });
+
+          if (instrumentMatched) {
+            return {
+              ...stateData,
+              [`${columnName}_${instrumentName}`]: sanitizedValue,
+            };
+          }
+
+          return stateData; // No match
+        })
+      );
+    }
+  };
+
+  const handleNoButton = useCallback(() => {
+    if (modalState === 1) {
+      setConfirmationModal(false);
+      setModalState(0);
+    } else if (modalState === 2) {
+      setConfirmationModal(false);
+      setModalState(0);
+    }
+  }, [modalState]);
+
+  const handleResetForward = () => {
+    setConfirmationModal(true);
+    setModalState(2);
+  };
+  const handleSave = () => {
+    setConfirmationModal(true);
+    setModalState(1);
+  };
+  const handleConfirmationYes = useCallback(() => {
+    try {
+      if (modalState === 1) {
+        let forWardsData = convertToForwardSpreads(forwardData);
+        let data = {
+          CategoryID: categoryID,
+          ForwardSpreads: forWardsData,
+        };
+        dispatch(SaveCategoryForwardsAPI(navigate, data));
+        setModalState(0);
+        setConfirmationModal(false);
+      } else if (modalState === 2) {
+        setConfirmationModal(false);
+        setModalState(0);
+        let updatedData = forwardData.map((entry) => {
+          const newEntry = { ...entry };
+
+          for (const key in newEntry) {
+            if (key.startsWith("bid_") || key.startsWith("ask_")) {
+              newEntry[key] = 0;
+            }
+          }
+
+          return newEntry;
+        });
+        setForwardData(updatedData);
+        // handleResetParityAndCrossYes();
+      }
+    } catch (error) {}
+  }, [forwardData, modalState]);
 
   return (
-    <Table
-      column={columns}
-      rows={data}
-      bordered
-      pagination={false}
-      prefixCls="groupTable"
-      // className={"GrayHeader-table"}
-      className={"Forward-table"}
-    />
+    <>
+      <Row>
+        <Table
+          rows={forwardData}
+          column={forwardColumns}
+          bordered
+          pagination={false}
+          scroll={{ y: 350, x: "scroll" }}
+          prefixCls="groupTable1"
+          // className={"GrayHeader-table"}
+          // className={"Forward-table"}
+        />
+      </Row>
+      <Row className="mt-2 mb-5">
+        <Col
+          lg={12}
+          md={12}
+          sm={12}
+          className="d-flex justify-content-center gap-2"
+        >
+          <Button
+            icon={<i className="icon-refresh"></i>}
+            className={style["Reset-btn-spreadManagement"]}
+            text="Reset"
+            onClick={handleResetForward}
+          />
+          <Button
+            icon={<i className="icon-save"></i>}
+            className={style["Search-btn-spreadManagement"]}
+            text="Save"
+            onClick={handleSave}
+          />
+        </Col>
+      </Row>
+      {confirmationModal === true && (
+        <ActivateConfirmationModal
+          handleYesButton={handleConfirmationYes}
+          handleNoButton={handleNoButton}
+          show={confirmationModal}
+        />
+      )}
+    </>
   );
 };
 

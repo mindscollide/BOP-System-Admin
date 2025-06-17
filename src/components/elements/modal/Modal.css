@@ -66,6 +66,8 @@
   border: 1px solid #dbd7d5 !important;
   width: 100% !important;
   overflow: hidden !important;
+  max-width: 90% !important;
+  margin: 0 auto;
   /* padding: 10px !important; */
 }
 
@@ -76,7 +78,7 @@
   margin-left: 90px !important;
   overflow: hidden !important;
   overflow-x: hidden !important;
-  padding: 10px !important;
+  padding: 0 10px 10px 10px !important;
 }
 
 .userDetailsCorporateList .modal-content {

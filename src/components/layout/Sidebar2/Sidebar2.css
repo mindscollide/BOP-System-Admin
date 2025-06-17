@@ -62,6 +62,10 @@
 :where(.css-dev-only-do-not-override-1e3x2xa).ant-layout .ant-layout-sider {
   background: #ffffff !important;
 }
+:where(.css-dev-only-do-not-override-k7429z).ant-menu-inline
+  .ant-menu-item:not(:last-child) {
+  margin-bottom: -4px;
+}
 
 .menuMain > ant-menu-submenu-arrow,
 .ant-menu-submenu-arrow {
@@ -127,10 +131,16 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child.menu-items-side
 }
 
 li.ant-menu-item.ant-menu-item-only-child.menu-items-sidebar:hover {
-  background: #096fed !important;
+  background: none !important;
   color: #fff !important;
 }
 
-li.ant-menu-submenu.ant-menu-submenu-inline.submenu-sidebar-icons.ant-menu-submenu-selected {
+/* li.ant-menu-submenu.ant-menu-submenu-inline.submenu-sidebar-icons.ant-menu-submenu-selected {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+} */
+.submenu-sidebar-icons {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
+/* :where(.css-k7429z).ant-layout .ant-layout-sider {
+  background: none !important;
+} */

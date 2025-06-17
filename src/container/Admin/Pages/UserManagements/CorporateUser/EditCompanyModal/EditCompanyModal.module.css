@@ -34,9 +34,9 @@
   color: #cf5b5b !important;
 }
 
-.AddButton {
+.EditCompany {
   font-family: "Poppins", sans-serif;
-  cursor: pointer;
+
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
@@ -50,7 +50,7 @@
   gap: 4px !important;
 }
 
-.AddButton:is(:hover, :active, :focus, :focus-visible) {
+.EditCompany:is(:hover, :active, :focus, :focus-visible) {
   font-family: "Poppins", sans-serif;
   cursor: pointer;
   border-radius: 4px;
@@ -65,6 +65,20 @@
   gap: 4px !important;
 }
 
+.EditCompany:disabled {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: var(--disabled-button) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
 .CancelButton {
   font-family: "Poppins", sans-serif;
   cursor: pointer;

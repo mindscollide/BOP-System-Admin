@@ -15,6 +15,7 @@ import {
   GetAllBranches,
   LogoutRM,
   UpdateBranchCategoryMappingapi,
+  GetAllCorporatesData,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -408,11 +409,11 @@ const loginSystemAdminAPI = (navigate, data) => {
 
               localStorage.setItem(
                 "userID",
-                response.data.responseResult.userID
+                response.data.responseResult.user.userID
               );
               localStorage.setItem(
                 "userName",
-                response.data.responseResult.userName
+                response.data.responseResult.user.firstName
               );
               navigate("/BOP/AddBankUser");
             } else if (
@@ -769,6 +770,101 @@ const getAllCorporatesCategory = (navigate) => {
       })
       .catch((response) => {
         dispatch(getAllCorporatesFail("something went wrong"));
+      });
+  };
+};
+
+const GetAllCorporatesDataInit = () => {
+  return {
+    type: actions.GET_ALL_CORPORATES_DATA_INIT,
+  };
+};
+
+const GetAllCorporatesDataSuccess = (response, message) => {
+  console.log(response, "responseresponse");
+  return {
+    type: actions.GET_ALL_CORPORATES_DATA_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllCorporatesDataFail = (message) => {
+  return {
+    type: actions.GET_ALL_CORPORATES_DATA_FAIL,
+    message: message,
+  };
+};
+
+const GetAllCorporatesDataAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllCorporatesDataInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllCorporatesData.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllCorporatesDataAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            console.log(response.data.responseResult, "responseResult");
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllCorporatesDataSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+            ) {
+              dispatch(GetAllCorporatesDataFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCorporatesDataFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCorporatesDataFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllCorporatesDataFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllCorporatesDataFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllCorporatesDataFail("something went wrong"));
       });
   };
 };
@@ -1337,9 +1433,7 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_04".toLowerCase()
                 )
             ) {
-              dispatch(
-                updateBranchCataegoryFailed("Exception Something went wrong")
-              );
+              dispatch(updateBranchCataegoryFailed("Exception."));
             }
           } else {
             dispatch(updateBranchCataegoryFailed("Something went wrong"));
@@ -1371,4 +1465,5 @@ export {
   GetAllInstrumentTypesAPI,
   GetAllBranchesAPI,
   UpdateBranchCataegoryMappingAPI,
+  GetAllCorporatesDataAPI,
 };

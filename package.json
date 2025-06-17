@@ -35,7 +35,8 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.7.3",
     "redux-devtools-extension": "^2.13.9",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zod": "^3.25.64"
   },
   "scripts": {
     "start": "react-scripts start",

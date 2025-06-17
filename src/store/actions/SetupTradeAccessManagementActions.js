@@ -80,9 +80,16 @@ const GetCorporatesWithStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCorporatesWithStatus_02".toLowerCase()
+            ) {
+              dispatch(GetCorporatesWithStatusFail("No Data Available."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporatesWithStatus_04".toLowerCase()
             ) {
               dispatch(GetCorporatesWithStatusFail("Exception."));
+            } else {
+              dispatch(GetCorporatesWithStatusFail("Something went wrong"));
             }
           } else {
             dispatch(GetCorporatesWithStatusFail("Something went wrong"));
@@ -160,9 +167,21 @@ const UpdateCorporateStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCorporateStatus_02".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateStatusFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateCorporateStatus_03".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateStatusFail("Corporate Not Found."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateCorporateStatus_04".toLowerCase()
             ) {
               dispatch(UpdateCorporateStatusFail("Exception."));
+            } else {
+              dispatch(UpdateCorporateStatusFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateCorporateStatusFail("Something went wrong"));
@@ -241,9 +260,16 @@ const GetBranchesWithStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetBranchesWithStatus_02".toLowerCase()
+            ) {
+              dispatch(GetBranchesWithStatusFail("No Data Available."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetBranchesWithStatus_04".toLowerCase()
             ) {
               dispatch(GetBranchesWithStatusFail("Exception."));
+            } else {
+              dispatch(GetBranchesWithStatusFail("Something went wrong"));
             }
           } else {
             dispatch(GetBranchesWithStatusFail("Something went wrong"));
@@ -321,9 +347,21 @@ const UpdateBranchStatusAPI = (navigate, data) => {
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchStatus_02".toLowerCase()
+            ) {
+              dispatch(UpdateBranchStatusFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchStatus_03".toLowerCase()
+            ) {
+              dispatch(UpdateBranchStatusFail("Branch not found."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateBranchStatus_04".toLowerCase()
             ) {
               dispatch(UpdateBranchStatusFail("Exception."));
+            } else {
+              dispatch(UpdateBranchStatusFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateBranchStatusFail("Something went wrong"));
@@ -402,9 +440,22 @@ const GetCorporateTradeRightsAPI = (navigate, data) => {
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetCorporateTradeRights_02".toLowerCase()
+            ) {
+              dispatch(
+                GetCorporateTradeRightsSuccess(
+                  response.data.responseResult,
+                  "No Data Available."
+                )
+              );
+              dispatch(editTradeAccessManagementModalSystemAdmin(true));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporateTradeRights_04".toLowerCase()
             ) {
               dispatch(GetCorporateTradeRightsFail("Exception."));
+            } else {
+              dispatch(GetCorporateTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(GetCorporateTradeRightsFail("Something went wrong"));
@@ -483,9 +534,22 @@ const GetBranchTradeRightsAPI = (navigate, data) => {
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetBranchTradeRights_02".toLowerCase()
+            ) {
+              dispatch(
+                GetBranchTradeRightsSuccess(
+                  response.data.responseResult,
+                  "No Data Available."
+                )
+              );
+              dispatch(editTradeAccessManagementModalSystemAdmin(true));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetBranchTradeRights_04".toLowerCase()
             ) {
               dispatch(GetBranchTradeRightsFail("Exception."));
+            } else {
+              dispatch(GetBranchTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(GetBranchTradeRightsFail("Something went wrong"));
@@ -567,9 +631,16 @@ const UpdateBranchTradeRightsAPI = (navigate, data, handleCloseModal) => {
               handleCloseModal();
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_UpdateBranchTradeRights_02".toLowerCase()
+            ) {
+              dispatch(UpdateBranchTradeRightsFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_UpdateBranchTradeRights_04".toLowerCase()
             ) {
               dispatch(UpdateBranchTradeRightsFail("Exception."));
+            } else {
+              dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateBranchTradeRightsFail("Something went wrong"));
@@ -636,6 +707,7 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
+                  // "SystemAdmin_SystemAdminManager_UpdateCorporateTradeRights_01".toLowerCase()
                   "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_01".toLowerCase()
                 )
             ) {
@@ -648,9 +720,18 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
               await dispatch(ConfirmationModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
+              // "SystemAdmin_SystemAdminManager_UpdateCorporateTradeRights_02".toLowerCase()
+              "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_02".toLowerCase()
+            ) {
+              dispatch(UpdateCorporateTradeRightsFail("Exception."));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              // "SystemAdmin_SystemAdminManager_UpdateCorporateTradeRights_04".toLowerCase()
               "SystemAdmin_SystemAdminManager_UpdateCoporateTradeRights_04".toLowerCase()
             ) {
               dispatch(UpdateCorporateTradeRightsFail("Exception."));
+            } else {
+              dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
             }
           } else {
             dispatch(UpdateCorporateTradeRightsFail("Something went wrong"));
@@ -664,6 +745,7 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
       });
   };
 };
+
 export {
   GetCorporatesWithStatusAPI,
   GetBranchesWithStatusAPI,

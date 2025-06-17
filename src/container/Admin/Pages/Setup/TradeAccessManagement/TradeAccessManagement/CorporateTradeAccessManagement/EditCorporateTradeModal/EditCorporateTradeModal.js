@@ -20,10 +20,12 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateCorporateTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
-import { Border } from "react-bootstrap-icons";
+import { useMqtt } from "../../../../../../../../context/MQTTContext";
 const EditCorporateTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { corporateTradeRightsUpdated, setCorporateTradeRightsUpdated } =
+    useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateTradeRights = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetCorporateTradeRights
@@ -57,55 +59,62 @@ const EditCorporateTradeModal = ({ info }) => {
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
 
   useEffect(() => {
-    if (GetCorporateTradeRights !== null) {
+    if (GetCorporateTradeRights !== null && GetAllInstruments !== null) {
       try {
         if (
-          GetCorporateTradeRights.listOfInstruments !== null &&
-          GetCorporateTradeRights.listOfInstruments !== undefined &&
-          GetCorporateTradeRights.listOfInstruments.length > 0
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
         ) {
-          if (
-            GetAllInstruments !== null &&
-            GetAllInstruments.instruments.length > 0
-          ) {
-            const newDataMaping = GetCorporateTradeRights.listOfInstruments.map(
-              (rowTableData, index) => {
-                let findInstrumentName = GetAllInstruments.instruments.find(
-                  (instrumentName, index) =>
-                    instrumentName.instrumentID === rowTableData.instrumentID
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                GetCorporateTradeRights.listOfInstruments?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
                 );
-                if (findInstrumentName !== undefined) {
-                  return {
-                    ...rowTableData,
-                    instrumentName: findInstrumentName.instrumentName,
-                  };
-                }
-                return rowTableData;
-              }
-            );
-            // let listInstruments = newDataMaping.map((list, index) => {
-            //   return {
-            //     value: list.instrumentID,
-            //     label: list.instrumentName,
-            //   };
-            // });
 
-            setInstrumentDataSource(newDataMaping);
-            setTradeRightsData({
-              maxTransactionLimit: {
-                value: GetCorporateTradeRights.maxTransactionLimit,
-              },
-              minTransactionLimit: {
-                value: GetCorporateTradeRights.minTransactionLimit,
-              },
-              totalLimit: { value: GetCorporateTradeRights.totalLimit },
-            });
-          }
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                isCrossRateBuy: false,
+                isCrossRateSell: false,
+                isDiscounting: false,
+                isForwardBuy: false,
+                isForwardSell: false,
+                isParityBuy: false,
+                isParitySell: false,
+                isActive: false,
+                isViewOnly: true,
+              };
+            }
+          );
+
+          setInstrumentDataSource(newDataMapping);
+
+          setTradeRightsData({
+            maxTransactionLimit: {
+              value: GetCorporateTradeRights.maxTransactionLimit,
+            },
+            minTransactionLimit: {
+              value: GetCorporateTradeRights.minTransactionLimit,
+            },
+            totalLimit: { value: GetCorporateTradeRights.totalLimit },
+          });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error in mapping instrument data:", error);
+      }
     }
   }, [GetCorporateTradeRights, GetAllInstruments]);
-  //checkbox value change method
+
   const handleCheckboxChange = (record, field, event) => {
     try {
       if (field === "isViewOnly") {
@@ -117,7 +126,8 @@ const EditCorporateTradeModal = ({ info }) => {
                 isCrossRateBuy: event && false,
                 isCrossRateSell: event && false,
                 isDiscounting: event && false,
-                isForward: event && false,
+                isForwardBuy: event && false,
+                isForwardSell: event && false,
                 isParityBuy: event && false,
                 isParitySell: event && false,
                 isActive: event ? false : true,
@@ -136,7 +146,8 @@ const EditCorporateTradeModal = ({ info }) => {
                 isCrossRateBuy: !event && false,
                 isCrossRateSell: !event && false,
                 isDiscounting: !event && false,
-                isForward: !event && false,
+                isForwardBuy: !event && false,
+                isForwardSell: !event && false,
                 isParityBuy: !event && false,
                 isParitySell: !event && false,
                 isActive: event,
@@ -161,6 +172,65 @@ const EditCorporateTradeModal = ({ info }) => {
       }
     } catch (error) {}
   };
+
+  useEffect(() => {
+    if (corporateTradeRightsUpdated !== null) {
+      // console.log(
+      //   {
+      //     corporateTradeRightsUpdated: corporateTradeRightsUpdated,
+      //     tradeRightsData: tradeRightsData,
+      //     info: info,
+      //   },
+      //   "corporateTradeRightsUpdated"
+      // );
+      try {
+        const { corporateTradeRights } = corporateTradeRightsUpdated;
+        if (info.id === corporateTradeRights.corporateID) {
+          // Update the limits
+          setTradeRightsData({
+            maxTransactionLimit: {
+              value: corporateTradeRights.maxTransactionLimit,
+            },
+            minTransactionLimit: {
+              value: corporateTradeRights.minTransactionLimit,
+            },
+            totalLimit: {
+              value: corporateTradeRights.totalLimit,
+            },
+          });
+
+          // Update the instrument checkboxes
+          setInstrumentDataSource((prevData) => {
+            return prevData.map((instrument) => {
+              const updatedInstrument =
+                corporateTradeRights.listOfInstruments.find(
+                  (item) => item.instrumentID === instrument.instrumentID
+                );
+
+              if (updatedInstrument) {
+                return {
+                  ...instrument,
+                  isCrossRateBuy: updatedInstrument.isCrossRateBuy,
+                  isCrossRateSell: updatedInstrument.isCrossRateSell,
+                  isDiscounting: updatedInstrument.isDiscounting,
+                  isForwardBuy: updatedInstrument.isForwardBuy,
+                  isForwardSell: updatedInstrument.isForwardSell,
+                  isParityBuy: updatedInstrument.isParityBuy,
+                  isParitySell: updatedInstrument.isParitySell,
+                  isActive: updatedInstrument.isActive,
+                  isViewOnly: updatedInstrument.isViewOnly,
+                };
+              }
+              return instrument;
+            });
+          });
+        }
+        setCorporateTradeRightsUpdated(null);
+      } catch (error) {
+        console.error("Error updating from MQTT:", error);
+      }
+    }
+  }, [corporateTradeRightsUpdated]);
 
   //table columns for corporate
   const columns = [
@@ -190,7 +260,6 @@ const EditCorporateTradeModal = ({ info }) => {
           align: "center",
           render: (_, record) => (
             <Checkbox
-              // size="md"
               checked={record.isCrossRateBuy}
               disabled={record.isViewOnly ? true : false}
               onChange={(event) =>
@@ -269,28 +338,72 @@ const EditCorporateTradeModal = ({ info }) => {
       ],
     },
     {
-      // title: "",
-      // key: "",
-      // dataIndex: "",
-      // align: "center",
+      title: "Forward",
+      key: "Forward",
       children: [
         {
-          title: "Forward",
-          dataIndex: "isForward",
-          key: "isForward",
+          title: "Buy",
+          dataIndex: "isForwardBuy",
+          key: "isForwardBuy",
           align: "center",
           render: (_, record) => (
             <Checkbox
-              checked={record.isForward}
+              checked={record.isForwardBuy}
               disabled={record.isViewOnly ? true : false}
               onChange={(event) =>
-                handleCheckboxChange(record, "isForward", event.target.checked)
+                handleCheckboxChange(
+                  record,
+                  "isForwardBuy",
+                  event.target.checked
+                )
+              }
+            />
+          ),
+        },
+        {
+          title: "Sell",
+          dataIndex: "isForwardSell",
+          key: "isForwardSell",
+          align: "center",
+          render: (_, record) => (
+            <Checkbox
+              checked={record.isForwardSell}
+              disabled={record.isViewOnly ? true : false}
+              onChange={(event) =>
+                handleCheckboxChange(
+                  record,
+                  "isForwardSell",
+                  event.target.checked
+                )
               }
             />
           ),
         },
       ],
     },
+    // {
+    //   // title: "",
+    //   // key: "",
+    //   // dataIndex: "",
+    //   // align: "center",
+    //   children: [
+    //     {
+    //       title: "Forward",
+    //       dataIndex: "isForward",
+    //       key: "isForward",
+    //       align: "center",
+    //       render: (_, record) => (
+    //         <Checkbox
+    //           checked={record.isForward}
+    //           disabled={record.isViewOnly ? true : false}
+    //           onChange={(event) =>
+    //             handleCheckboxChange(record, "isForward", event.target.checked)
+    //           }
+    //         />
+    //       ),
+    //     },
+    //   ],
+    // },
     {
       title: "",
       children: [
@@ -328,7 +441,6 @@ const EditCorporateTradeModal = ({ info }) => {
           align: "center",
           render: (_, record) => (
             <CustomSwitch
-              size="medium"
               checked={record.isActive}
               onChange={(event) =>
                 handleCheckboxChange(record, "isActive", event)
@@ -351,7 +463,6 @@ const EditCorporateTradeModal = ({ info }) => {
           align: "center",
           render: (_, record) => (
             <CustomSwitch
-              size="medium"
               checked={record.isViewOnly}
               onChange={(event) =>
                 handleCheckboxChange(record, "isViewOnly", event)
@@ -369,47 +480,51 @@ const EditCorporateTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    //Validation rules
-    const validateInput = {
-      totalLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-      minTransactionLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-      maxTransactionLimit: (val) =>
-        val
-          .replace(/[^\d.]/g, "") // Allow only digits and dots
-          .replace(/^\./, "0.") // If user types "." first, convert to "0."
-          .replace(/(\..*)\./g, "$1"),
-    };
-    const isFieldEmpty = (val) => val === "";
-    // Update field function
-    const updateField = (fieldName, fieldValue) => {
-      const validValue = validateInput[fieldName]
-        ? validateInput[fieldName](fieldValue)
-        : fieldValue;
+    // Allow: digits, optional one dot
+    const validString = value
+      .replace(/[^0-9.]/g, "")
+      .replace(/^([^.]*\.)|\./g, "$1");
 
-      const hasError = isFieldEmpty(validValue);
+    // No error if value is not empty and a valid number format
+    const hasError = validString.trim() === "";
+    const numericValue = Number(validString);
 
-      setTradeRightsData((prevState) => ({
+    // First update the changed field
+    setTradeRightsData((prevState) => {
+      const updatedState = {
         ...prevState,
-        [fieldName]: {
-          value: validValue,
+        [name]: {
+          value: numericValue,
           errorMessage: hasError ? "This field is required" : "",
           errorStatus: hasError,
         },
-      }));
-    };
+      };
 
-    // Update the specific field
-    updateField(name, value);
+      // Then check min/max relationship
+      const minLimit = updatedState.minTransactionLimit.value;
+      const maxLimit = updatedState.maxTransactionLimit.value;
+
+      const limitError = minLimit > maxLimit;
+
+      return {
+        ...updatedState,
+        minTransactionLimit: {
+          ...updatedState.minTransactionLimit,
+          errorMessage: limitError
+            ? "Min limit cannot be greater than max limit"
+            : "",
+          errorStatus: limitError,
+        },
+        maxTransactionLimit: {
+          ...updatedState.maxTransactionLimit,
+          errorMessage: limitError
+            ? "Max limit cannot be less than min limit"
+            : "",
+          errorStatus: limitError,
+        },
+      };
+    });
   };
-
   // show error message When user hit activate btn
   const handleSaveChangesButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -422,17 +537,28 @@ const EditCorporateTradeModal = ({ info }) => {
       dispatch(editTradeAccessManagementModalSystemAdmin(false));
       let updatedData = {
         CorporateID: info.id,
-        TotalLimit: Number(tradeRightsData.totalLimit.value),
-        MinTransactionLimit: Number(tradeRightsData.minTransactionLimit.value),
-        MaxTransactionLimit: Number(tradeRightsData.maxTransactionLimit.value),
-        ListOfInstruments: instrumentDataSource.map(
-          ({ instrumentName, ...rest }) => rest
-        ),
+        TotalLimit: tradeRightsData.totalLimit.value,
+        MinTransactionLimit: tradeRightsData.minTransactionLimit.value,
+        MaxTransactionLimit: tradeRightsData.maxTransactionLimit.value,
+        ListOfInstruments: instrumentDataSource.map((item) => ({
+          InstrumentID: item.instrumentID,
+          IsCrossRateBuy: item.isCrossRateBuy,
+          IsCrossRateSell: item.isCrossRateSell,
+          IsDiscounting: item.isDiscounting,
+          IsForwardBuy: item.isForwardBuy,
+          IsForwardSell: item.isForwardSell,
+          IsParityBuy: item.isParityBuy,
+          IsParitySell: item.isParitySell,
+          IsActive: item.isActive,
+          IsViewOnly: item.isViewOnly,
+        })),
       };
 
       dispatch(UpdateCorporateTradeRightsAPI(navigate, updatedData));
-    } else if (modalState === 2) {
     }
+
+    setModalState(0);
+    handleNoButton();
   };
 
   useEffect(() => {
@@ -514,10 +640,9 @@ const EditCorporateTradeModal = ({ info }) => {
             </Col>
           </Row>
           <Row>
-            <Col lg={2} md={2} sm={12}></Col>
-            <Col lg={8} md={8} sm={12}>
+            <Col lg={9} md={9} sm={12} className="mx-auto">
               <Row>
-                <Col lg={6} md={6} sm={6}>
+                <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
                     Total Limit (PKR)
                     <span className={styles["aesterick-color"]}>*</span>
@@ -558,7 +683,7 @@ const EditCorporateTradeModal = ({ info }) => {
                   </span>
                 </Col>
               </Row>
-              <Row className="mt-3">
+              <Row className="mt-1">
                 <Col lg={6} md={6} sm={6}>
                   <TextField
                     name={"minTransactionLimit"}
@@ -586,10 +711,18 @@ const EditCorporateTradeModal = ({ info }) => {
                     onChange={handleValueChange}
                     maxLength={10}
                   />
+                  {tradeRightsData.maxTransactionLimit.errorStatus && (
+                    <Row>
+                      <Col className="d-flex justify-content-start">
+                        <p className={styles["corporateErrorMessage"]}>
+                          {tradeRightsData.maxTransactionLimit.errorMessage}
+                        </p>
+                      </Col>
+                    </Row>
+                  )}
                 </Col>
               </Row>
             </Col>
-            <Col lg={2} md={2} sm={12}></Col>
           </Row>
           <Row className="mt-3">
             <Col lg={12} md={12} sm={12}>
@@ -597,7 +730,7 @@ const EditCorporateTradeModal = ({ info }) => {
                 column={columns}
                 pagination={false}
                 rows={filterRows}
-                scroll={{ y: 500 }}
+                scroll={{ y: 200 }}
                 className={"TradeAccessManagementEdit"}
               />
             </Col>
@@ -606,7 +739,7 @@ const EditCorporateTradeModal = ({ info }) => {
       }
       ModalFooter={
         <>
-          <Row className="mt-5">
+          <Row className="mt-3">
             <Col
               lg={12}
               md={12}
@@ -616,10 +749,15 @@ const EditCorporateTradeModal = ({ info }) => {
               <Button
                 icon={<i className="icon-refresh"></i>}
                 text={"Save Changes"}
-                className={styles["AddBranchClass"]}
+                className={styles["SaveCorpChangeBtn"]}
                 iconClass={styles["IconClass"]}
                 onClick={handleSaveChangesButton}
-                // disableBtn={!enableButton}
+                disableBtn={
+                  tradeRightsData.minTransactionLimit.value >
+                  tradeRightsData.maxTransactionLimit.value
+                    ? true
+                    : false
+                }
               />
 
               <Button

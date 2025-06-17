@@ -161,6 +161,10 @@ const GetAllCorporates = {
   RequestMethod: "ServiceManager.GetAllCategoryDetailsWithCounterParties",
 };
 
+const GetAllCorporatesData = {
+  RequestMethod: "ServiceManager.GetAllCorporates",
+};
+
 const GetAllNatureOfBussiness = {
   RequestMethod: "ServiceManager.GetAllNatureOfBussiness",
 };
@@ -266,7 +270,42 @@ const GetCrossRateSpreadsForCategory = {
 const GetTenorWiseForwardSpreadsForCategory = {
   RequestMethod: "ServiceManager.GetTenorWiseForwardSpreadsForCategory",
 };
+const GetTenorWiseFEDiscountingSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetTenorWiseFEDiscountingSpreadsForCategory",
+};
 
+const GetAllTenors = {
+  RequestMethod: "ServiceManager.GetAllTenors",
+};
+
+const GetTenorWiseNonFEDiscountingSpreadsForCategory = {
+  RequestMethod:
+    "ServiceManager.GetTenorWiseNonFEDiscountingSpreadsForCategory",
+};
+
+const SaveCategoryParitySpot = {
+  RequestMethod: "ServiceManager.SaveCategoryParitySpot",
+};
+
+const SaveCategoryCrossRates = {
+  RequestMethod: "ServiceManager.SaveCategoryCrossRates",
+};
+
+const SaveCategoryForwards = {
+  RequestMethod: "ServiceManager.SaveCategoryForwards",
+};
+
+const GetAllTrades = {
+  RequestMethod: "ServiceManager.GetAllTrades",
+};
+
+const SaveCategoryFEDiscounts = {
+  RequestMethod: "ServiceManager.SaveCategoryFEDiscounts",
+};
+
+const SaveCategoryNonFEDiscounts = {
+  RequestMethod: "ServiceManager.SaveCategoryNonFEDiscounts",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -332,4 +371,14 @@ export {
   GetSpotSpreadsForCategory,
   GetCrossRateSpreadsForCategory,
   GetTenorWiseForwardSpreadsForCategory,
+  GetAllCorporatesData,
+  GetTenorWiseFEDiscountingSpreadsForCategory,
+  GetAllTenors,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory,
+  SaveCategoryParitySpot,
+  SaveCategoryCrossRates,
+  SaveCategoryForwards,
+  GetAllTrades,
+  SaveCategoryFEDiscounts,
+  SaveCategoryNonFEDiscounts,
 };

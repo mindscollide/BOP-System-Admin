@@ -8,7 +8,7 @@
 
 .bankuser-paper {
   border-radius: 4px;
-  padding: 16px 13px !important;
+  padding: 11px 20px !important;
   width: 100% !important;
   overflow: hidden !important;
   background-color: #ffffff !important;
@@ -25,6 +25,10 @@
 .Container_bank_user {
   width: 97% !important;
   margin: 0 auto !important;
+}
+
+.AddBankLabel {
+  min-width: 130px !important;
 }
 
 .Active-btn {
@@ -101,7 +105,7 @@
   font-size: 12px !important;
   color: #004990 !important;
   font-weight: 500;
-  white-space: nowrap !important;
+  min-width: 130px;
 }
 
 .aesterick-color {
@@ -129,6 +133,7 @@
 }
 
 .bankErrorMessage {
+  margin-left: 130px;
   height: 0px;
   margin-top: 0px !important;
   font-size: 12px !important;
@@ -148,23 +153,23 @@
   width: 40px;
   position: absolute !important;
   top: 0px;
-  right: 12px !important;
+  right: 0px !important;
   height: 100% !important;
-  align-items: center !important;
   background-color: #e9ecef;
   border: 1px solid #ced4da;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 4px !important;
   border-bottom-right-radius: 4px !important ;
+  align-items: center;
 }
 
 .PlusButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
-  right: 12px !important;
+  right: 0px !important;
   height: 100% !important;
-  align-items: center !important;
+  /* align-items: center !important; */
   background-color: #e9ecef;
   border: 1px solid #ced4da;
   border-top-left-radius: 0;
@@ -179,13 +184,15 @@
   margin-top: -12px !important;
   display: flex;
   justify-content: center;
+  align-items: center !important;
+  padding-top: 2px !important;
 }
 
 .EditButton {
   width: 40px;
   position: absolute !important;
   top: 0px;
-  right: 52px !important;
+  right: 40px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
@@ -196,12 +203,15 @@
 .EditButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
-  right: 52px !important;
+  right: 40px !important;
   height: 100% !important;
   align-items: center !important;
   background-color: #e9ecef;
   border: 1px solid #ced4da;
   border-radius: 0px !important;
+}
+.EditButton i {
+  color: var(--color-secondary);
 }
 .branchName-field {
   z-index: 99px !important;
@@ -209,6 +219,8 @@
 .disableText {
   color: var(--disabled-font);
   background: var(--disabled-field) !important;
+  width: 100% !important;
+  flex: 1 !important;
 }
 
 @media (max-width: 1024px) {
@@ -225,4 +237,9 @@
     width: 30px;
     right: 35% !important;
   }
+}
+
+.InputFieldClass {
+  width: 100% !important;
+  flex: 1 !important;
 }

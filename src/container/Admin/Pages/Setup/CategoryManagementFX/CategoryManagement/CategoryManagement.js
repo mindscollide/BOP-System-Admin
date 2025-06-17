@@ -29,6 +29,7 @@ import {
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import { useMqtt } from "../../../../../../context/MQTTContext";
+import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
@@ -39,9 +40,8 @@ const CategoryManagement = () => {
     categoryUpdate,
     categoryDeleted,
     counterpartyChnaged,
+    counterpartyBranchChnaged,
   } = useMqtt();
-
-  console.log(counterpartyChnaged, "categoryAdded");
 
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
@@ -58,8 +58,6 @@ const CategoryManagement = () => {
   const AllCategories = useSelector(
     (state) => state.auth?.GetAllCorporatesData ?? null
   );
-
-  console.log(AllCategories, "AllCategories");
 
   //Transforming Data for React Beautiful DND
   const transformAPIData = (apiData) => {
@@ -79,6 +77,7 @@ const CategoryManagement = () => {
       })),
     }));
   };
+
   const [categoryupdate, setCategoryUpdate] = useState({
     category: {
       value: "",
@@ -182,6 +181,7 @@ const CategoryManagement = () => {
     }
   }, [categoryDeleted]);
 
+  // When CounterParty Corporate Is mapped
   useEffect(() => {
     if (
       counterpartyChnaged?.categoryID &&
@@ -233,6 +233,63 @@ const CategoryManagement = () => {
       });
     }
   }, [counterpartyChnaged]);
+
+  // When CounterParty Branch Is mapped
+  useEffect(() => {
+    if (
+      counterpartyBranchChnaged?.categoryID &&
+      counterpartyBranchChnaged?.counterPartyID &&
+      counterpartyBranchChnaged?.counterPartyType === 2 // Ensure it's type 2 only
+    ) {
+      const { categoryID, counterPartyID, counterPartyType } =
+        counterpartyBranchChnaged;
+
+      setCorporates((prev) => {
+        // Find the correct counterparty with matching ID and type
+        const actualCounterParty = AllCategories?.categories
+          ?.flatMap((cat) => cat.counterParties || [])
+          .find(
+            (cp) =>
+              cp.counterPartyID === counterPartyID &&
+              cp.counterPartyType === counterPartyType
+          );
+
+        console.log(actualCounterParty, "saif");
+
+        const newCounterParty = {
+          CounterpartyID: `corp-${counterPartyID}`,
+          CounterPartyType: counterPartyType,
+          CounterPartyName: actualCounterParty?.counterPartyName || "Unknown",
+          CounterPartyUsers:
+            actualCounterParty?.users?.map((u) => ({ email: u.email })) || [],
+        };
+
+        return prev.map((category) => {
+          const isTargetCategory =
+            String(category.CatID) === String(categoryID);
+
+          const updatedCounterParties = (category.CounterParties || []).filter(
+            (cp) => cp.CounterpartyID !== `corp-${counterPartyID}`
+          );
+
+          if (isTargetCategory) {
+            const alreadyExists = updatedCounterParties.some(
+              (cp) => cp.CounterpartyID === `corp-${counterPartyID}`
+            );
+
+            if (!alreadyExists) {
+              updatedCounterParties.push(newCounterParty);
+            }
+          }
+
+          return {
+            ...category,
+            CounterParties: updatedCounterParties,
+          };
+        });
+      });
+    }
+  }, [counterpartyBranchChnaged]);
 
   //for Auto focus
   const NameRef = useRef(null);
@@ -479,53 +536,100 @@ const CategoryManagement = () => {
       });
     }
 
-    if (name === "Bidupdated" && value !== "") {
-      if (forNumbersOnly(value.trimStart()) !== "") {
-        if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-          setCategoryUpdate({
-            ...categoryupdate,
-            bidSpread: {
-              value: numberformatgerWithFourDecimalValues(value.trimStart()),
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
+    // if (name === "Bidupdated" && value !== "") {
+    //   if (forNumbersOnly(value.trimStart()) !== "") {
+    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+    //       setCategoryUpdate({
+    //         ...categoryupdate,
+    //         bidSpread: {
+    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
+    //           errorMessage: "",
+    //           errorStatus: false,
+    //         },
+    //       });
+    //     }
+    //   }
+    // } else if (name === "Bidupdated" && value === "") {
+    //   setCategoryUpdate({
+    //     ...categoryupdate,
+    //     bidSpread: {
+    //       value: "",
+    //       errorMessage: "",
+    //       errorStatus: true,
+    //     },
+    //   });
+    // }
+    if (name === "Bidupdated") {
+      if (isValidNumberUnderMax(value, "", 1000)) {
+        const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+        const sanitizedValue =
+          value === "" || value === "."
+            ? "0"
+            : regular_ex.test(value)
+            ? value.slice(1)
+            : value === "0.0"
+            ? "0.1"
+            : // Remove leading "0" (e.g., "09" → "9")
+              value;
+        // if (forNumbersOnly(value.trimStart()) !== "") {
+        //   if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+        setCategoryUpdate({
+          ...categoryupdate,
+          bidSpread: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
       }
-    } else if (name === "Bidupdated" && value === "") {
-      setCategoryUpdate({
-        ...categoryupdate,
-        bidSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
     }
-
-    if (name === "Offerupdate" && value !== "") {
-      if (forNumbersOnly(value.trimStart()) !== "") {
-        if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-          setCategoryUpdate({
-            ...categoryupdate,
-            offerSpread: {
-              value: numberformatgerWithFourDecimalValues(value.trimStart()),
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
+    if (name === "Offerupdate") {
+      if (isValidNumberUnderMax(value, "", 1000)) {
+        const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+        const sanitizedValue =
+          value === "" || value === "."
+            ? "0"
+            : regular_ex.test(value)
+            ? value.slice(1)
+            : value === "0.0"
+            ? "0.1"
+            : // Remove leading "0" (e.g., "09" → "9")
+              value;
+        // if (forNumbersOnly(value.trimStart()) !== "") {
+        //   if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+        setCategoryUpdate({
+          ...categoryupdate,
+          offerSpread: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
       }
-    } else if (name === "Offerupdate" && value === "") {
-      setCategoryUpdate({
-        ...categoryupdate,
-        offerSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
     }
+    // if (name === "Offerupdate" && value !== "") {
+    //   if (forNumbersOnly(value.trimStart()) !== "") {
+    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+    //       setCategoryUpdate({
+    //         ...categoryupdate,
+    //         offerSpread: {
+    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
+    //           errorMessage: "",
+    //           errorStatus: false,
+    //         },
+    //       });
+    //     }
+    //   }
+    // } else if (name === "Offerupdate" && value === "") {
+    //   setCategoryUpdate({
+    //     ...categoryupdate,
+    //     offerSpread: {
+    //       value: "",
+    //       errorMessage: "",
+    //       errorStatus: true,
+    //     },
+    //   });
+    // }
   };
 
   //Update Category API Function

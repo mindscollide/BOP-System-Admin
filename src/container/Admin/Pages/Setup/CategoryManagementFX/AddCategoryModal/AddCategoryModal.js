@@ -13,7 +13,10 @@ import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { addCategroyModalSchema } from "../../../../../../utils/schemas";
 import { Addcategory } from "../../../../../../store/actions/AddCategoryActions";
-import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
+import {
+  formatCurrencyInput,
+  isValidNumberUnderMax,
+} from "../../../../../../helpers/reusableMethods";
 
 const AddCategoryModal = () => {
   const dispatch = useDispatch();
@@ -44,37 +47,101 @@ const AddCategoryModal = () => {
   };
 
   // Handle Onchange for text fields
+  const handleNameChange = (e) => {
+    const { value } = e.target;
+    let validName = value.replace(/[^a-zA-Z0-9 ]/g, "").trimStart();
+
+    // const validateInput = (val) => val;
+    const isFieldEmpty = (val) => val === "";
+
+    const hasError = isFieldEmpty(validName);
+
+    setAddCategory((prevState) => ({
+      ...prevState,
+      Name: {
+        value: validName,
+        errorMessage: hasError ? "This field is required" : "",
+        errorStatus: hasError,
+      },
+    }));
+    // };
+    // Update field function
+    // const updateField = (fieldName, fieldValue) => {
+    //   const validValue = validateInput[fieldName]
+    //     ? validateInput[fieldName](fieldValue)
+    //     : fieldValue;
+
+    //   const hasError = isFieldEmpty(validValue);
+
+    //   setAddCategory((prevState) => ({
+    //     ...prevState,
+    //     [fieldName]: {
+    //       value: validValue,
+    //       errorMessage: hasError ? "This field is required" : "",
+    //       errorStatus: hasError,
+    //     },
+    //   }));
+    // };
+
+    // // Update the specific field
+    // updateField(name, value);
+  };
+
+  // Handle Onchange for text fields
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    const validateInput = {
-      Name: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
-      // Bid: (val) => val.replace(/[^0-9]/g, "").trimStart(),
-      Bid: (val) => formatCurrencyInput(val),
-      Offer: (val) => formatCurrencyInput(val),
-    };
-    const isFieldEmpty = (val) => val === "";
+    // const validateInput = {
+    //   Name: (val) => val.replace(/[^a-zA-Z ]/g, "").trimStart(),
+    //   // Bid: (val) => val.replace(/[^0-9]/g, "").trimStart(),
+    //   Bid: (val) => formatCurrencyInput(val),
+    //   Offer: (val) => formatCurrencyInput(val),
+    // };
+    if (isValidNumberUnderMax(value, "", 1000)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : // Remove leading "0" (e.g., "09" → "9")
+            value;
+      if (name === "Bid") {
+        setAddCategory((prevState) => ({
+          ...prevState,
+          Bid: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        }));
+      }
+      if (name === "Offer") {
+        setAddCategory((prevState) => ({
+          ...prevState,
+          Offer: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        }));
+      }
+    }
+    // const isFieldEmpty = (val) => val === "";
 
     // Update field function
-    const updateField = (fieldName, fieldValue) => {
-      const validValue = validateInput[fieldName]
-        ? validateInput[fieldName](fieldValue)
-        : fieldValue;
+    // const updateField = (fieldName, fieldValue) => {
+    //   const validValue = validateInput[fieldName]
+    //     ? validateInput[fieldName](fieldValue)
+    //     : fieldValue;
 
-      const hasError = isFieldEmpty(validValue);
+    //   const hasError = isFieldEmpty(validValue);
 
-      setAddCategory((prevState) => ({
-        ...prevState,
-        [fieldName]: {
-          value: validValue,
-          errorMessage: hasError ? "This field is required" : "",
-          errorStatus: hasError,
-        },
-      }));
-    };
+    // };
 
     // Update the specific field
-    updateField(name, value);
   };
 
   return (
@@ -115,7 +182,7 @@ const AddCategoryModal = () => {
                 labelClass={"d-none"}
                 name={"Name"}
                 value={addCategory.Name.value}
-                onChange={handleValueChange}
+                onChange={handleNameChange}
                 maxLength={25}
               />
             </Col>

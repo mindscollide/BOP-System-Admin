@@ -32,6 +32,7 @@ const TextField = ({
   autoFocus,
   onPaste,
   onCopy,
+  handleKeyDown,
 }) => {
   return (
     <>
@@ -61,6 +62,7 @@ const TextField = ({
           autoFocus={autoFocus}
           onPaste={onPaste}
           onCopy={onCopy}
+          onKeyDown={handleKeyDown}
         />
         <FormControl.Feedback className={iconClassName} onClick={clickIcon}>
           {inputIcon}

@@ -34,6 +34,7 @@ const initialState = {
   GetAllBranchesData: null,
   userLogout: null,
   updatedBranchCategoryData: null,
+  GetAllCorporates: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -501,6 +502,28 @@ const authReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         updatedBranchCategoryData: null,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_CORPORATES_DATA_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_CORPORATES_DATA_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllCorporates: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_CORPORATES_DATA_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllCorporates: null,
         ResponseMessage: action.message,
       };
 

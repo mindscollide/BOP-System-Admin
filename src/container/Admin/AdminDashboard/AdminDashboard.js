@@ -13,7 +13,11 @@ const AdminDashboard = () => {
       <Layout className="mainLayoutContent">
         <Header2 />
         <Layout>
-          <Sider width={260}>
+          <Sider
+            style={{ background: "none" }}
+            // prefixCls="sideBarNew"
+            width={260}
+          >
             <Sidebar2 />
           </Sider>
           <Content className="w-100 overflow-auto">

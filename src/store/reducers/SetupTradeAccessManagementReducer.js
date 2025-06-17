@@ -10,10 +10,35 @@ const initialState = {
   GetCorporateTradeRights: null,
   UpdateBranchTradeRights: null,
   UpdateCorporateTradeRights: null,
+  GetTenorWiseFEDiscountingSpreadsForCategory: null,
+  GetAllTenors: null,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory: null,
 };
 
 const SetupTradeAccessManagementReducer = (state = initialState, action) => {
   switch (action.type) {
+    //GetAllTenors  reducer
+    case actions.GET_ALL_TENORS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_TENORS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTenors: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_TENORS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTenors: null,
+        ResponseMessage: action.message,
+      };
     //Get GetCorporatesWithStatus reducer
     case actions.GET_CORPORATES_WITH_STATUS_INTI:
       return {
@@ -197,6 +222,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
         UpdateCorporateTradeRights: null,
         ResponseMessage: action.message,
       };
+
     default:
       return { ...state };
   }
