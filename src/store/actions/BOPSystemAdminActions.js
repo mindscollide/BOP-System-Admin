@@ -2514,12 +2514,14 @@ const GetAllTradesFail = (message) => {
   };
 };
 
-const GetAllTradesAPI = (navigate) => {
+const GetAllTradesAPI = (navigate, data) => {
   let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(GetAllTradesInit());
     let form = new FormData();
     form.append("RequestMethod", GetAllTrades.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+
     axios({
       method: "POST",
       url: systemAdminAPI,
@@ -2535,7 +2537,7 @@ const GetAllTradesAPI = (navigate) => {
         }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
-          dispatch(GetAllTradesAPI(navigate));
+          dispatch(GetAllTradesAPI(navigate, data));
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (

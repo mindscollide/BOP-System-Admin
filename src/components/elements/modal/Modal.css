@@ -78,7 +78,7 @@
   margin-left: 90px !important;
   overflow: hidden !important;
   overflow-x: hidden !important;
-  padding: 10px !important;
+  padding: 0 10px 10px 10px !important;
 }
 
 .userDetailsCorporateList .modal-content {

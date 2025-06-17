@@ -1,4 +1,3 @@
-// import * as actions from "../action_types";
 import * as actions from "../action_types";
 
 const initalState = {

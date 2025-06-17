@@ -12,7 +12,10 @@ import DatePicker from "react-multi-date-picker";
 // import ExportShowComponent from "../BankerList/ExportShowComponent";
 import { tradeCountSchema } from "../../../../../../utils/schemas";
 import { transactionSide } from "../../../../../../helpers/Dropdown";
-import { formatDate } from "../../../../../../helpers/reusableMethods";
+import {
+  formatDate,
+  formatDateAndTimeFromString,
+} from "../../../../../../helpers/reusableMethods";
 import { useDispatch } from "react-redux";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import {
@@ -30,6 +33,8 @@ import { GetAllNatureAPI } from "../../../../../../store/actions/Auth-Actions";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import CommentModal from "../CommentModal/CommentModal";
 import { GetAllTradesAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
+import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
+import moment from "moment";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
@@ -51,14 +56,17 @@ const TradeCount = () => {
   const showActivationModal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
+  const [tableData, setTableData] = useState([]);
   const [modalState, setModalState] = useState(0);
   //Sate For Side
-  const [side, setSide] = useState("");
+  const [side, setSide] = useState({ value: 0, label: "" });
   const [natureOptions, setNatureOptions] = useState([]);
   const [natureID, setNatureID] = useState({
     value: 0,
     label: "",
-  });
+  }); //row length on scroll
+  const [sRow, setSRow] = useState(0);
+  const [recordsLength, setRecordLength] = useState(0);
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
@@ -81,21 +89,61 @@ const TradeCount = () => {
   const toggleExportOptions = () => {
     setShowExportOptions(!showExportOptions);
   };
+  // Fetch categories on component mount
+  useEffect(() => {
+    dispatch(GetAllNatureAPI(navigate));
+    let data = {
+      TxnID: "",
+      CorporateName: "",
+      AccountNumber: "",
+      FromDate: "",
+      ToDate: "",
+      LCNumber: "",
+      IsBuySide: false,
+      NatureOfTransactionID: 0,
+      Amount: 0.0,
+      sRow: 0,
+      Length: 10,
+    };
+
+    dispatch(GetAllTradesAPI(navigate, data));
+  }, []);
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (recordsLength !== tableData.length) {
+      let Data = {
+        TxnID: "",
+        CorporateName: "",
+        AccountNumber: "",
+        FromDate: "",
+        ToDate: "",
+        LCNumber: "",
+        IsBuySide: false,
+        NatureOfTransactionID: 0,
+        Amount: 0.0,
+        sRow: sRow,
+        Length: 10,
+      };
+      dispatch(GetAllTradesAPI(navigate, Data));
+    }
+  });
 
   // column for LoginHistory
   const tradeColumns = [
     {
       title: <label className="bottom-table-header">TXN ID</label>,
-      dataIndex: "transactionID",
-      key: "transactionID",
+      dataIndex: "txnID",
+      key: "txnID",
       width: "100px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Client</label>,
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "corporateName",
+      key: "corporateName",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -110,16 +158,16 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Nature</label>,
-      dataIndex: "nature",
-      key: "nature",
+      dataIndex: "natureOfTransactionID",
+      key: "natureOfTransactionID",
       width: "200px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">CCY1</label>,
-      dataIndex: "CCY1",
-      key: "CCY1",
+      dataIndex: "ccY1",
+      key: "ccY1",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -142,8 +190,8 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">CCY2</label>,
-      dataIndex: "CCY2",
-      key: "CCY2",
+      dataIndex: "ccY2",
+      key: "ccY2",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -159,32 +207,48 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Date</label>,
-      dataIndex: "tradeDate",
-      key: "tradeDate",
+      dataIndex: "transactionDateTime",
+      key: "transactionDateTime",
       width: "120px",
       align: "center",
       ellipsis: true,
+      render: (transactionDateTime) => {
+        // Format the date and time
+        return transactionDateTime !== "-"
+          ? moment(formatDateAndTimeFromString(transactionDateTime)).format(
+              "DD-MM-YYYY"
+            )
+          : "-";
+      },
     },
     {
       title: <label className="bottom-table-header">Time</label>,
-      dataIndex: "time",
-      key: "time",
+      dataIndex: "transactionDateTime",
+      key: "transactionDateTime",
       width: "100px",
       align: "center",
       ellipsis: true,
+      render: (transactionDateTime) => {
+        // Format the date and time
+        return transactionDateTime !== "-"
+          ? moment(formatDateAndTimeFromString(transactionDateTime)).format(
+              "h:mm a"
+            )
+          : "-";
+      },
     },
     {
       title: <label className="bottom-table-header">LC #</label>,
-      dataIndex: "LC",
-      key: "LC",
+      dataIndex: "lcNumber",
+      key: "lcNumber",
       width: "100px",
       align: "center",
       ellipsis: true,
     },
     {
       title: <label className="bottom-table-header">Account #</label>,
-      dataIndex: "account",
-      key: "account",
+      dataIndex: "accountNumber",
+      key: "accountNumber",
       width: "200px",
       align: "center",
       ellipsis: true,
@@ -222,8 +286,8 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Status</label>,
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "statusID",
+      key: "statusID",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -296,10 +360,10 @@ const TradeCount = () => {
         updateField("Amount", /[^\d]/g, value);
         break;
       case "AccountNumber":
-        updateField("AccountNumber", /[^\d]/g, value);
+        updateField("AccountNumber", /[^a-zA-Z0-9]/g, value);
         break;
       case "LC":
-        updateField("LC", /[^\d]/g, value);
+        updateField("LC", /[^a-zA-Z0-9]/g, value);
         break;
       default:
         break;
@@ -341,20 +405,40 @@ const TradeCount = () => {
   };
 
   const handleSearchEventButton = () => {
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
+    // let searchData = {
+    //   TxnID: tradeCount.TxnID.value,
+    //   CorporateName: tradeCount.clientName.value,
+    //   side: tradeCount.side.value,
+    //   Amount: tradeCount.Amount.value,
+    //   LC: tradeCount.LC.value,
+    //   AccountNumber: tradeCount.AccountNumber.value,
+    //   Nature: tradeCount.natureOfClient.value,
+    //   From: formatDate(tradeCount.dateFrom.value),
+    //   To: formatDate(tradeCount.dateTo.value),
+    // };
+
     let searchData = {
       TxnID: tradeCount.TxnID.value,
-      clientName: tradeCount.clientName.value,
-      side: tradeCount.side.value,
-      Amount: tradeCount.Amount.value,
-      LC: tradeCount.LC.value,
+      CorporateName: tradeCount.clientName.value,
       AccountNumber: tradeCount.AccountNumber.value,
-      Nature: tradeCount.Nature.value,
-      From: formatDate(tradeCount.dateFrom.value),
-      To: formatDate(tradeCount.dateTo.value),
+      FromDate: formatDate(tradeCount.dateFrom.value),
+      ToDate: formatDate(tradeCount.dateTo.value),
+      LCNumber: tradeCount.LC.value,
+      IsBuySide: tradeCount.side.value,
+      NatureOfTransactionID: tradeCount.natureOfClient.value,
+      Amount: tradeCount.Amount.value,
+      sRow: 0,
+      Length: 10,
     };
 
     console.log("searchData is", searchData);
+    dispatch(GetAllTradesAPI(navigate, searchData));
   };
+
   //Table columns for customer List
   const handleNoButton = useCallback(() => {
     if (modalState === 1) {
@@ -372,6 +456,10 @@ const TradeCount = () => {
   };
 
   const handleResetYes = () => {
+    setHasReachedBottom(false);
+    setRecordLength(0);
+    setSRow(0);
+    setTableData([]);
     if (modalState === 2) {
       dispatch(ConfirmationModalSystemAdmin(false));
       setModalState(0);
@@ -393,6 +481,21 @@ const TradeCount = () => {
       setSide("");
       setNatureID("");
     }
+    let data = {
+      TxnID: "",
+      CorporateName: "",
+      AccountNumber: "",
+      FromDate: "",
+      ToDate: "",
+      LCNumber: "",
+      IsBuySide: false,
+      NatureOfTransactionID: 0,
+      Amount: 0.0,
+      sRow: 0,
+      Length: 10,
+    };
+
+    dispatch(GetAllTradesAPI(navigate, data));
   };
 
   //Handle Select Change
@@ -401,9 +504,11 @@ const TradeCount = () => {
     setter(value); // Set the state
     userField.value = value.value; // Update the corporateUser object
   };
+
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
+
   const handleExport = (format) => {
     if (format === "excel") {
       exportToExcel();
@@ -443,11 +548,21 @@ const TradeCount = () => {
       },
     }));
   };
-  // Fetch categories on component mount
-  useEffect(() => {
-    dispatch(GetAllNatureAPI(navigate));
-    dispatch(GetAllTradesAPI(navigate));
-  }, []);
+
+  //handle select categoryID
+  const handleSelectSide = async (selectedSide) => {
+    console.log(selectedSide.value, "selectedCategoryselectedCategory");
+    setSide(selectedSide);
+
+    setTradeCount((prevState) => ({
+      ...prevState,
+      side: {
+        ...prevState.side,
+        value: selectedSide.value,
+      },
+    }));
+  };
+
   useEffect(() => {
     if (getAllNatureOfBuisness !== null) {
       try {
@@ -464,6 +579,34 @@ const TradeCount = () => {
       } catch (error) {}
     }
   }, [getAllNatureOfBuisness]);
+
+  //handelled scrolling here (4)
+  useEffect(() => {
+    if (GetAllTrades !== null) {
+      try {
+        const { transactions, totalRecords } = GetAllTrades;
+        if (hasReachedBottom) {
+          setHasReachedBottom(false);
+          setRecordLength(totalRecords);
+          setTableData([...tableData, ...transactions]);
+          setSRow(tableData.length + transactions.length);
+        } else {
+          setHasReachedBottom(false);
+          setTableData(transactions);
+          setRecordLength(totalRecords);
+          setSRow(transactions.length);
+        }
+      } catch (error) {}
+    } else if (GetAllTrades === null) {
+      if (!hasReachedBottom) {
+        setHasReachedBottom(false);
+        setTableData([]);
+        setRecordLength(0);
+        setSRow(0);
+      }
+    }
+  }, [GetAllTrades]);
+
   return (
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
@@ -501,11 +644,9 @@ const TradeCount = () => {
                   name="side"
                   placeholder="Select Side"
                   options={transactionSide}
-                  value={side}
+                  value={side.value !== 0 ? side : null}
                   isSearchable
-                  onChange={(e) =>
-                    handleDropdownChange("side", e, setSide, tradeCount.side)
-                  }
+                  onChange={handleSelectSide}
                 ></Select>
               </Col>
 
@@ -651,7 +792,7 @@ const TradeCount = () => {
                 <Table
                   column={tradeColumns}
                   pagination={false}
-                  rows={data}
+                  rows={tableData}
                   scroll={{ x: "scroll" }}
                   className={"BankUserList-table"}
                 />

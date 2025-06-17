@@ -29,7 +29,8 @@ const SpreadManagement = () => {
   const LoadingState = useSelector(
     (state) => state.SpreadManagementReducer.Loading
   );
-
+  const LoadingTradeState = useSelector((state) => state.uploadReducer.Loading);
+  console.log(LoadingTradeState, "LoadingTradeState");
   const LoadingCategoryState = useSelector((state) => state.auth.Loading);
   console.log(LoadingCategoryState, "LoadingCategoryDtate");
 
@@ -154,8 +155,9 @@ const SpreadManagement = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {LoadingCategoryState && LoadingState && <Loader />}
-      {/* {LoadingState && <Loader />} */}
+      {(LoadingCategoryState && <Loader />) ||
+        (LoadingState && <Loader />) ||
+        (LoadingTradeState && <Loader />)}
     </section>
   );
 };

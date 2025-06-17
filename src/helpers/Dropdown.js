@@ -34,8 +34,8 @@ export const natureOfClientOptions = [
 ];
 
 export const transactionSide = [
-  { value: "Buy", label: "Buy" },
-  { value: "Sell", label: "Sell" },
+  { value: 1, label: "Buy" },
+  { value: 2, label: "Sell" },
 ];
 
 export const instrumentType = [
