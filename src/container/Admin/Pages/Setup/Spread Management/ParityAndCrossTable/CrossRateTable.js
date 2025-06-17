@@ -1,18 +1,29 @@
 import React from "react";
 import styles from "../SpreadManagement.module.css";
 import { Table, TextField } from "../../../../../../components/elements";
-import { formatCurrencyInput } from "../../../../../../helpers/reusableMethods";
+import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 
 const CrossRateTable = ({ crossRateData, setCrossRateData }) => {
   const handleCrossRateInputChange = (index, field, value) => {
-    // Create a deep copy of the data before modifying
-    const updatedData = crossRateData.map((item) => ({ ...item }));
-    updatedData[index] = {
-      ...updatedData[index],
-      [field]: formatCurrencyInput(value),
-    };
+    if (isValidNumberUnderMax(value, "", 1000)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : value;
+      const updatedData = crossRateData.map((item) => ({ ...item }));
+      updatedData[index] = {
+        ...updatedData[index],
+        [field]: sanitizedValue,
+      };
 
-    setCrossRateData(updatedData);
+      setCrossRateData(updatedData);
+    }
+    // Create a deep copy of the data before modifying
   };
 
   const columns = [
@@ -33,7 +44,7 @@ const CrossRateTable = ({ crossRateData, setCrossRateData }) => {
       ellipsis: true,
       render: (text, record, index) => (
         <TextField
-          maxLength={5}
+          maxLength={6}
           className={styles["InputParitySpot"]}
           value={text}
           onChange={(e) =>
@@ -52,7 +63,7 @@ const CrossRateTable = ({ crossRateData, setCrossRateData }) => {
       render: (text, record, index) => (
         <TextField
           className={styles["InputParitySpot"]}
-          maxLength={5}
+          maxLength={6}
           value={text}
           onChange={(e) =>
             handleCrossRateInputChange(index, "askSpread", e.target.value)

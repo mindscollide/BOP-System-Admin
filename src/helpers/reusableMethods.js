@@ -1,6 +1,5 @@
 import moment from "moment";
 import React from "react";
-import { z } from "zod";
 
 //Date
 export const formatDate = (date) =>
@@ -70,273 +69,7 @@ export const IndexCell = React.memo(({ value, record, CellClassName }) => {
   return <span className={CellClassName}>{value}</span>;
 });
 
-// export const generateData = (
-//   Data,
-//   columnValue,
-//   tenors = [],
-//   instruments = [],
-//   forwardRates = [],
-//   discountRates = []
-// ) => {
-//   let discountRatesResult = [];
-//   let forwardsRatesResult = [];
-
-//   console.log(tenors, "tenorstenorstenors");
-//   console.log(instruments, "tenorstenorstenors");
-//   console.log(forwardRates, "tenorstenorstenors");
-//   console.log(discountRates, "tenorstenorstenors");
-
-//   if (columnValue === 1) {
-//     discountRates.map((discValue, index) => {
-//       let findTenorName = tenors.find(
-//         (tenorsData) => tenorsData.tenorID === discValue.tenorID
-//       );
-//       let findInstrumentName = instruments.find(
-//         (insturmentData) =>
-//           insturmentData.instrumentID === discValue.instrumentID
-//       );
-
-//       const discountRateValue = {
-//         key: `index ${index + 1}`,
-//         Tenor: findTenorName ? findTenorName.tenorName : "",
-//         TenorID: findTenorName ? findTenorName.tenorID : 0,
-//         tenorDays: findTenorName ? findTenorName.tenorDays : "",
-//         instrumentTitle: findInstrumentName
-//           ? findInstrumentName.instrumentName
-//           : "",
-//         InstrumentID: findInstrumentName ? findInstrumentName.instrumentID : 0,
-//         value: discValue.rate,
-//       };
-
-//       discountRatesResult.push(discountRateValue);
-//     });
-//   } else if (columnValue === 2) {
-//     Data.discountRates.map((discValue, index) => {
-//       let findTenorName = Data.tenors.find(
-//         (tenorsData) => tenorsData.tenorID === discValue.tenorID
-//       );
-//       let findInstrumentName = Data.instruments.find(
-//         (insturmentData) =>
-//           insturmentData.instrumentID === discValue.instrumentID
-//       );
-
-//       const discountRateValue = {
-//         key: `index ${index + 1}`,
-//         Tenor: findTenorName ? findTenorName.tenorName : "",
-//         TenorID: findTenorName ? findTenorName.tenorID : 0,
-//         tenorDays: findTenorName ? findTenorName.tenorDays : "",
-//         instrumentTitle: findInstrumentName
-//           ? findInstrumentName.instrumentName
-//           : "",
-//         InstrumentID: findInstrumentName ? findInstrumentName.instrumentID : 0,
-//         value: discValue.rate,
-//       };
-
-//       discountRatesResult.push(discountRateValue);
-//     });
-//   } else if (columnValue === 3) {
-//     // Dummy Data
-//     Data.forwardRates.map((forwData, index) => {
-//       let findTenorName = Data.tenors.find(
-//         (tenorsData) => tenorsData.tenorID === forwData.tenorID
-//       );
-//       let findInstrumentName = Data.instruments.find(
-//         (insturmentData) =>
-//           insturmentData.instrumentID === forwData.instrumentID
-//       );
-
-//       const forwardRateData = {
-//         key: `index ${index + 1}`,
-//         Tenor: findTenorName ? findTenorName.tenorName : "",
-//         TenorID: findTenorName ? findTenorName.tenorID : 0,
-//         tenorDays: findTenorName ? findTenorName.tenorDays : "",
-//         instrumentName: findInstrumentName
-//           ? findInstrumentName.instrumentName
-//           : "",
-//         InstrumentID: findInstrumentName ? findInstrumentName.instrumentID : 0,
-
-//         ask: forwData.ask,
-//         bid: forwData.bid,
-//       };
-
-//       forwardsRatesResult.push(forwardRateData);
-//     });
-//   } else if (columnValue === 4) {
-//     forwardRates.map((forwData, index) => {
-//       let findTenorName = tenors.find(
-//         (tenorsData) => tenorsData.tenorID === forwData.tenorID
-//       );
-//       let findInstrumentName = instruments.find(
-//         (insturmentData) =>
-//           insturmentData.instrumentID === forwData.instrumentID
-//       );
-
-//       const forwardRateData = {
-//         key: `index ${index + 1}`,
-//         Tenor: findTenorName ? findTenorName.tenorName : "",
-//         TenorID: findTenorName ? findTenorName.tenorID : 0,
-//         tenorDays: findTenorName ? findTenorName.tenorDays : "",
-//         instrumentName: findInstrumentName
-//           ? findInstrumentName.instrumentName
-//           : "",
-//         InstrumentID: findInstrumentName ? findInstrumentName.instrumentID : 0,
-
-//         ask: forwData.ask,
-//         bid: forwData.bid,
-//       };
-
-//       forwardsRatesResult.push(forwardRateData);
-//     });
-//   }
-
-//   return {
-//     discountRates: discountRatesResult,
-//     forwardsRates: forwardsRatesResult,
-//   };
-// };
-
-/**
- * Creates dynamic columns for an Ant Design table based on provided data and type.
- *
- * @param {Array} data - The data used to generate columns, containing instrument information.
- * @param {number} value - Determines the type of columns to create (1 for Discount, others for Forwards).
- * @returns {Array} - An array of column configurations for the Ant Design table.
- */
-
-// export const createColumns = (data, value) => {
-//   let baseColumns;
-//   if (value === 3) {
-//     baseColumns = [
-//       {
-//         title: "", // Empty title for a merged header style
-//         dataIndex: "", // No data index for this parent column
-//         key: "", // Key for the parent column
-//         align: "", // Alignment (empty for this parent column)
-//         width: 80, // Set column width
-//         children: [
-//           {
-//             title: "Tenor", // Header name for the child column
-//             dataIndex: "Tenor", // Data key from the dataset for Tenor
-//             key: "tenor", // Unique key for the child column
-//             align: "center", // Center align the content
-//             width: 80, // Set column width
-//           },
-//         ],
-//       },
-//       {
-//         title: "", // Empty title for a merged header style
-//         dataIndex: "", // No data index for this parent column
-//         key: "", // Key for the parent column
-//         align: "", // Alignment (empty for this parent column)
-//         width: 80, // Set column width
-//         children: [
-//           {
-//             title: "Days", // Header name for the child column
-//             dataIndex: "tenorDays", // Data key from the dataset for Tenor
-//             key: "tenorDays", // Unique key for the child column
-//             align: "center", // Center align the content
-//             width: 80, // Set column width
-//           },
-//         ],
-//       },
-//     ];
-//   } else {
-//     // Base column that will always be present, containing the Tenor column
-//     baseColumns = [
-//       {
-//         title: "", // Empty title for a merged header style
-//         dataIndex: "", // No data index for this parent column
-//         key: "", // Key for the parent column
-//         align: "", // Alignment (empty for this parent column)
-//         width: 80, // Set column width
-//         children: [
-//           {
-//             title: "Tenor", // Header name for the child column
-//             dataIndex: "Tenor", // Data key from the dataset for Tenor
-//             key: "tenor", // Unique key for the child column
-//             align: "center", // Center align the content
-//             width: 80, // Set column width
-//           },
-//         ],
-//       },
-//     ];
-//   }
-
-//   let instrumentColumns = [];
-
-//   try {
-//     // Check if value is 1 to create Discount columns, otherwise create Forwards columns
-//     if (value === 1) {
-//       // Create Discount columns
-//       instrumentColumns = data.reduce((acc, item) => {
-//         const instrument = item.instrumentTitle;
-
-//         // Check if the instrument column already exists in acc
-//         if (!acc.find((col) => col.title === instrument)) {
-//           acc.push({
-//             title: instrument, // Title of the instrument column
-//             key: instrument, // Unique key for the instrument column
-//             width: 100, // Set column width
-
-//             children: [
-//               {
-//                 title: "Value", // Title for the child column
-//                 dataIndex: "value", // Data key for Value from the dataset
-//                 key: `${instrument}-value`, // Unique key for the child column
-//                 align: "center", // Center align the content
-//                 width: 100, // Set column width
-//               },
-//             ],
-//           });
-//         }
-
-//         return acc; // Return the accumulator with newly added column if applicable
-//       }, []);
-//     } else if (value === 2 || value === 3) {
-//       // Create Forwards columns
-//       instrumentColumns = data.reduce((acc, item) => {
-//         const instrument = item.instrumentTitle || item.instrumentName;
-
-//         // Check if the instrument column already exists in acc
-//         if (!acc.find((col) => col.title === instrument)) {
-//           acc.push({
-//             title: instrument, // Title of the instrument column
-//             key: instrument, // Unique key for the instrument column
-
-//             children: [
-//               {
-//                 title: "Bid", // Title for the Bid child column
-//                 dataIndex: "bid", // Data key for Bid from the dataset
-//                 key: `${instrument}-bid`, // Unique key for the Bid child column
-//                 align: "center", // Center align the content
-//                 width: 100, // Set column width
-//               },
-//               {
-//                 title: "Ask", // Title for the Ask child column
-//                 dataIndex: "ask", // Data key for Ask from the dataset
-//                 key: `${instrument}-ask`, // Unique key for the Ask child column
-//                 align: "center", // Center align the content
-//                 width: 100, // Set column width
-//               },
-//             ],
-//           });
-//         }
-
-//         return acc; // Return the accumulator with newly added column if applicable
-//       }, []);
-//     }
-//   } catch (error) {
-//     console.error("Error creating columns:", error);
-//     // Handle error appropriately here, e.g., log error, return a default column structure, etc.
-//     // For example, returning only baseColumns in case of error
-//     return baseColumns;
-//   }
-
-//   // Combine base columns and dynamically generated instrument columns
-//   return [...baseColumns, ...instrumentColumns];
-// };
-
-export function isValidNumberUnder100(value, previousValue) {
+export function isValidNumberUnderMax(value, previousValue, max = 100) {
   if (/\s/.test(value)) return false; // 🚫 Blocks spacebar input
   if (value === "" || value === null || value === undefined) return true;
 
@@ -350,54 +83,24 @@ export function isValidNumberUnder100(value, previousValue) {
     return trimmed; // Returns "5" instead of "05"
   }
 
-  // Updated regex to allow max 2 decimal digits
-  const regex = /^(100(\.0{0,2})?|\d{1,2}(\.\d{0,2})?)$/;
+  // Build regex dynamically based on max value
+  // Accept up to 2 decimal places
+  const maxInt = Math.floor(max);
+  const regex = new RegExp(
+    `^(${maxInt}(\\.0{0,2})?|\\d{1,${
+      maxInt.toString().length - 1
+    }}(\\.\\d{0,2})?)$`
+  );
 
   if (!regex.test(trimmed)) return false;
 
-  // Parse and validate range (0-100)
   const number = parseFloat(trimmed);
   if (!isNaN(number)) {
-    return number >= 0 && number <= 100;
+    return number >= 0 && number <= max;
   }
 
   return true;
 }
-
-export const numberUnder100Schema = z
-  .string()
-  .refine((val) => val.trim() === "." || !isNaN(Number(val)), {
-    message: "Must be a valid number",
-  })
-  .transform((val) => val.trim())
-  .refine((val) => {
-    // Allow "." as intermediate input
-    if (val === ".") return true;
-
-    // Replace "0x" with "x" (e.g., "05" → "5")
-    if (/^0[1-9]$/.test(val)) return val.slice(1);
-
-    return val;
-  })
-  .refine(
-    (val) => {
-      // Check if it's a valid number (0-100, max 2 decimals)
-      const num = Number(val);
-      return !isNaN(num) && num >= 0 && num <= 100;
-    },
-    {
-      message: "Must be between 0 and 100",
-    }
-  )
-  .refine(
-    (val) => {
-      // Enforce max 2 decimal places
-      return !val.includes(".") || val.split(".")[1].length <= 2;
-    },
-    {
-      message: "Max 2 decimal places allowed",
-    }
-  );
 
 /**
  * Validates if a value is a positive number with optional decimal places

@@ -226,12 +226,9 @@ export const buildDiscountingTable = (
     // Step 2: Create a map using composite key (instrumentID-tenorID)
     const rateMap = {};
     Data?.forEach((rate) => {
-      console.log({ rate }, "rateMaprateMap");
-
       const key = `${rate.instrumentID}_${rate.tenorID}`;
       rateMap[key] = rate.spread;
     });
-    console.log({ rateMap }, "rateMaprateMap");
     // Step 3: Build the row data
     const rowData = applicableTenors.map((tenor) => {
       const row = {
@@ -242,8 +239,6 @@ export const buildDiscountingTable = (
 
       applicableInstruments.forEach((instrument) => {
         const compositeKey = `${instrument.instrumentID}_${tenor.tenorID}`;
-        console.log({ compositeKey }, "rateMaprateMap");
-
         const rateValue = rateMap[compositeKey] ?? 0;
 
         row[`rate_${instrument.instrumentName}`] = rateValue;
@@ -262,6 +257,7 @@ export const buildDiscountingTable = (
           title: "Tenor",
           dataIndex: "tenorName",
           key: "tenorName",
+          className: "font-bold",
           width: 80,
         },
         ...applicableInstruments.map((inst) => ({
@@ -287,6 +283,8 @@ export const buildDiscountingTable = (
           title: "Tenor",
           dataIndex: "tenorName",
           key: "tenorName",
+          className: "font-bold",
+
           width: 120,
         },
         ...applicableInstruments.map((inst) => ({

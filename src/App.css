@@ -323,8 +323,14 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   color: #fff !important;
   padding: 8px !important;
   margin: 0;
+  border-radius: 0 !important;
 }
-
+/* :where(.css-dev-only-do-not-override-k7429z).groupTable1-wrapper
+  .groupTable1-thead
+  > tr
+  > td {
+  background: #575351 !important;
+} */
 .groupTable.groupTable-bordered
   > .groupTable-container
   > .groupTable-content

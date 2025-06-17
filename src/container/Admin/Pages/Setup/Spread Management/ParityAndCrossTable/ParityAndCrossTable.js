@@ -141,8 +141,8 @@ const ParityAndCross = ({ categoryID }) => {
           CategoryID: categoryID, // Use the selected category
           ParitySpotSpreads: paritySpotData.map((item) => ({
             InstrumentID: item.instrumentID,
-            BidSpread: item.bidSpread,
-            AskSpread: item.askSpread,
+            BidSpread: Number(item.bidSpread),
+            AskSpread: Number(item.askSpread),
           })),
         };
         console.log("parityData Data to be saved:", parityData);
@@ -153,8 +153,8 @@ const ParityAndCross = ({ categoryID }) => {
           CategoryID: categoryID, // Use the selected category
           CrossRatesSpreads: crossRateData.map((item) => ({
             InstrumentID: item.instrumentID,
-            BidSpread: item.bidSpread,
-            AskSpread: item.askSpread,
+            BidSpread: Number(item.bidSpread),
+            AskSpread: Number(item.askSpread),
           })),
         };
         console.log("crossData Data to be saved:", crossData);

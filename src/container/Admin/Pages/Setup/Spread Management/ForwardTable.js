@@ -11,6 +11,7 @@ import {
   buildForwardsTable,
   convertToForwardSpreads,
 } from "../../../../../helpers/generateColumnsData";
+import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
 
 const ForwardTable = ({ categoryID }) => {
   const dispatch = useDispatch();
@@ -72,30 +73,42 @@ const ForwardTable = ({ categoryID }) => {
   }, [GetTenorWiseForwardSpreadsForCategory, GetAllInstruments, GetAllTenors]);
 
   const handleChangeForwards = (value, record, columnName, instrumentName) => {
-    setForwardData((prevState) =>
-      prevState.map((stateData) => {
-        // Match by tenorID
-        if (stateData.tenorID !== record.tenorID) return stateData;
+    if (isValidNumberUnderMax(value, "", 1000)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : // Remove leading "0" (e.g., "09" → "9")
+            value;
+      setForwardData((prevState) =>
+        prevState.map((stateData) => {
+          // Match by tenorID
+          if (stateData.tenorID !== record.tenorID) return stateData;
 
-        // Loop through instrument name keys in the object
-        const instrumentMatched = Object.keys(stateData).find((key) => {
-          // Find keys like InstrumentName_XXX
-          if (key.startsWith("InstrumentName_")) {
-            return stateData[key] === instrumentName;
+          // Loop through instrument name keys in the object
+          const instrumentMatched = Object.keys(stateData).find((key) => {
+            // Find keys like InstrumentName_XXX
+            if (key.startsWith("InstrumentName_")) {
+              return stateData[key] === instrumentName;
+            }
+            return false;
+          });
+
+          if (instrumentMatched) {
+            return {
+              ...stateData,
+              [`${columnName}_${instrumentName}`]: sanitizedValue,
+            };
           }
-          return false;
-        });
 
-        if (instrumentMatched) {
-          return {
-            ...stateData,
-            [`${columnName}_${instrumentName}`]: Number(value),
-          };
-        }
-
-        return stateData; // No match
-      })
-    );
+          return stateData; // No match
+        })
+      );
+    }
   };
 
   const handleNoButton = useCallback(() => {

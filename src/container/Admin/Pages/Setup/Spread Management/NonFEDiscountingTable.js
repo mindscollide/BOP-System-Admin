@@ -11,7 +11,7 @@ import {
 import { SaveCategoryNonFEDiscountsAPI } from "../../../../../store/actions/SpreadManagementActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { isValidNumberUnder100 } from "../../../../../helpers/reusableMethods";
+import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
 
 const NonFEDiscountingTable = ({ categoryID }) => {
   const dispatch = useDispatch();
@@ -73,8 +73,17 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   ]);
 
   const handleChangeDiscounting = (value, record, instrumentName) => {
-    if (isValidNumberUnder100(value)) {
-      const sanitizedValue = value === "" || value === "." ? "0" : value;
+    if (isValidNumberUnderMax(value, "", 100)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : // Remove leading "0" (e.g., "09" → "9")
+            value;
       setNonFEDiscoutingData((prevState) =>
         prevState.map((stateData) => {
           // Match by tenorID

@@ -1,20 +1,30 @@
 import React from "react";
 import styles from "../SpreadManagement.module.css";
 import { Table, TextField } from "../../../../../../components/elements";
-import { isValidAmount } from "../../../../../../helpers/reusableMethods";
+import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 
 const ParitySpotTable = ({ paritySpotData, setParitySpotData }) => {
   // Function to handle input changes in Parity Spot table
   const handleParitySpotInputChange = (index, field, value) => {
     // let validateValue = value.replace(/[^0-9.]/g, "");
 
-    if (isValidAmount(value)) {
+    if (isValidNumberUnderMax(value, "", 1000)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : // Remove leading "0" (e.g., "09" → "9")
+            value;
       // Create a deep copy of the array and the specific item being modified
       const updatedData = paritySpotData.map((item, i) => {
         if (i === index) {
           return {
             ...item,
-            [field]: value,
+            [field]: sanitizedValue,
           };
         }
         return { ...item };
@@ -42,7 +52,7 @@ const ParitySpotTable = ({ paritySpotData, setParitySpotData }) => {
       ellipsis: true,
       render: (text, record, index) => (
         <TextField
-          maxLength={5}
+          maxLength={6}
           className={styles["InputParitySpot"]}
           value={text}
           onChange={(e) =>
@@ -61,7 +71,7 @@ const ParitySpotTable = ({ paritySpotData, setParitySpotData }) => {
       render: (text, record, index) => (
         <TextField
           className={styles["InputParitySpot"]}
-          maxLength={5}
+          maxLength={6}
           value={text}
           onChange={(e) =>
             handleParitySpotInputChange(index, "askSpread", e.target.value)

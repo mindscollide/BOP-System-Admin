@@ -29,6 +29,7 @@ import {
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import { useMqtt } from "../../../../../../context/MQTTContext";
+import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
@@ -535,53 +536,100 @@ const CategoryManagement = () => {
       });
     }
 
-    if (name === "Bidupdated" && value !== "") {
-      if (forNumbersOnly(value.trimStart()) !== "") {
-        if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-          setCategoryUpdate({
-            ...categoryupdate,
-            bidSpread: {
-              value: numberformatgerWithFourDecimalValues(value.trimStart()),
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
+    // if (name === "Bidupdated" && value !== "") {
+    //   if (forNumbersOnly(value.trimStart()) !== "") {
+    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+    //       setCategoryUpdate({
+    //         ...categoryupdate,
+    //         bidSpread: {
+    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
+    //           errorMessage: "",
+    //           errorStatus: false,
+    //         },
+    //       });
+    //     }
+    //   }
+    // } else if (name === "Bidupdated" && value === "") {
+    //   setCategoryUpdate({
+    //     ...categoryupdate,
+    //     bidSpread: {
+    //       value: "",
+    //       errorMessage: "",
+    //       errorStatus: true,
+    //     },
+    //   });
+    // }
+    if (name === "Bidupdated") {
+      if (isValidNumberUnderMax(value, "", 1000)) {
+        const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+        const sanitizedValue =
+          value === "" || value === "."
+            ? "0"
+            : regular_ex.test(value)
+            ? value.slice(1)
+            : value === "0.0"
+            ? "0.1"
+            : // Remove leading "0" (e.g., "09" → "9")
+              value;
+        // if (forNumbersOnly(value.trimStart()) !== "") {
+        //   if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+        setCategoryUpdate({
+          ...categoryupdate,
+          bidSpread: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
       }
-    } else if (name === "Bidupdated" && value === "") {
-      setCategoryUpdate({
-        ...categoryupdate,
-        bidSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
     }
-
-    if (name === "Offerupdate" && value !== "") {
-      if (forNumbersOnly(value.trimStart()) !== "") {
-        if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-          setCategoryUpdate({
-            ...categoryupdate,
-            offerSpread: {
-              value: numberformatgerWithFourDecimalValues(value.trimStart()),
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
+    if (name === "Offerupdate") {
+      if (isValidNumberUnderMax(value, "", 1000)) {
+        const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+        const sanitizedValue =
+          value === "" || value === "."
+            ? "0"
+            : regular_ex.test(value)
+            ? value.slice(1)
+            : value === "0.0"
+            ? "0.1"
+            : // Remove leading "0" (e.g., "09" → "9")
+              value;
+        // if (forNumbersOnly(value.trimStart()) !== "") {
+        //   if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+        setCategoryUpdate({
+          ...categoryupdate,
+          offerSpread: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
       }
-    } else if (name === "Offerupdate" && value === "") {
-      setCategoryUpdate({
-        ...categoryupdate,
-        offerSpread: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
     }
+    // if (name === "Offerupdate" && value !== "") {
+    //   if (forNumbersOnly(value.trimStart()) !== "") {
+    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
+    //       setCategoryUpdate({
+    //         ...categoryupdate,
+    //         offerSpread: {
+    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
+    //           errorMessage: "",
+    //           errorStatus: false,
+    //         },
+    //       });
+    //     }
+    //   }
+    // } else if (name === "Offerupdate" && value === "") {
+    //   setCategoryUpdate({
+    //     ...categoryupdate,
+    //     offerSpread: {
+    //       value: "",
+    //       errorMessage: "",
+    //       errorStatus: true,
+    //     },
+    //   });
+    // }
   };
 
   //Update Category API Function
