@@ -13,8 +13,8 @@ const uploadRatePort = ":13010/UploadRate";
 const authenticationAPI = baseURL + authenticationPort;
 const systemAdminAPI = baseURL + systemAdminPort;
 const securityAdminAPI = baseURL + securityAdminPort;
-//const downloadReportAPI = baseURL + downloadReportPort;
-const downloadReportAPI = "https://localhost:44325/ExcelReport";
+const downloadReportAPI = baseURL + downloadReportPort;
+//const downloadReportAPI = "https://localhost:44325/ExcelReport";
 const settingsAPI = baseURL + settingsPort;
 const uploadRateAPI = baseURL + uploadRatePort;
 

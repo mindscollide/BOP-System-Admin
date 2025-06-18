@@ -4,6 +4,7 @@ const initialState = {
   Loading: false,
   ResponseMessage: "",
   corporateUserlistReportData: null,
+  BankUserlistReportData: null,
 };
 
 const downloadReducer = (state = initialState, action) => {
@@ -51,6 +52,28 @@ const downloadReducer = (state = initialState, action) => {
         state,
         Loading: false,
         corporateUserlistReportData: null,
+        ResponseMessage: action.message,
+      };
+
+    //Corporate User List Report
+    case actions.BANK_USERlIST_REPORT_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.BANK_USERlIST_REPORT_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        BankUserlistReportData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.BANK_USERlIST_REPORT_FAIL:
+      return {
+        state,
+        Loading: false,
+        BankUserlistReportData: null,
         ResponseMessage: action.message,
       };
 
