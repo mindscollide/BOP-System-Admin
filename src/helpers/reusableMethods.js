@@ -68,3 +68,59 @@ export const IndexCell = React.memo(({ value, record, CellClassName }) => {
   console.log("Rendering IndexCell:", record, value);
   return <span className={CellClassName}>{value}</span>;
 });
+
+export function isValidNumberUnderMax(value, previousValue, max = 100) {
+  if (/\s/.test(value)) return false; // 🚫 Blocks spacebar input
+  if (value === "" || value === null || value === undefined) return true;
+
+  const trimmed = value.trim();
+
+  // Allow just "." — intermediate input
+  if (trimmed === ".") return true;
+
+  // If previous value was "0" and new input is a digit (1-9), replace "0" with the new digit
+  if (previousValue === "0" && /^[1-9]$/.test(trimmed)) {
+    return trimmed; // Returns "5" instead of "05"
+  }
+
+  // Build regex dynamically based on max value
+  // Accept up to 2 decimal places
+  const maxInt = Math.floor(max);
+  const regex = new RegExp(
+    `^(${maxInt}(\\.0{0,2})?|\\d{1,${
+      maxInt.toString().length - 1
+    }}(\\.\\d{0,2})?)$`
+  );
+
+  if (!regex.test(trimmed)) return false;
+
+  const number = parseFloat(trimmed);
+  if (!isNaN(number)) {
+    return number >= 0 && number <= max;
+  }
+
+  return true;
+}
+
+/**
+ * Validates if a value is a positive number with optional decimal places
+ * @param {string|number} value - The value to validate
+ * @param {number} [maxDecimalPlaces=2] - Maximum allowed decimal places
+ * @returns {boolean} - True if valid, false otherwise
+ */
+export const isValidAmount = (value, maxDecimalPlaces = 2) => {
+  if (value === null || value === undefined || value === "") return false;
+
+  // Convert to number if it's a string
+  const num = Number(value);
+  if (isNaN(num)) return false;
+
+  // Check if positive
+  if (num < 0) return false;
+
+  // Check decimal places
+  const decimalPart = value.toString().split(".")[1];
+  if (decimalPart && decimalPart.length > maxDecimalPlaces) return false;
+
+  return true;
+};

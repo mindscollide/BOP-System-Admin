@@ -459,6 +459,42 @@ export const parityData = [
     bidSpread: "3.3",
     askSpread: "3.3",
   },
+  {
+    key: "7",
+    currency: "EUR",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "8",
+    currency: "USD",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "9",
+    currency: "CAD",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "10",
+    currency: "GBP",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "11",
+    currency: "HKD",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "12",
+    currency: "JPY",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
 ];
 
 // Dummy data for the table
@@ -495,6 +531,42 @@ export const crossData = [
   },
   {
     key: "6",
+    currency: "JPY",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "7",
+    currency: "EUR",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "8",
+    currency: "USD",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "9",
+    currency: "CAD",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "10",
+    currency: "GBP",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "11",
+    currency: "HKD",
+    bidSpread: "3.3",
+    askSpread: "3.3",
+  },
+  {
+    key: "12",
     currency: "JPY",
     bidSpread: "3.3",
     askSpread: "3.3",

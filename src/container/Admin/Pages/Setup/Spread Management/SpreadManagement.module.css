@@ -11,11 +11,14 @@
 }
 
 .SpreadManagmentPaper {
+  background-color: #fff !important;
   border-radius: 4px;
-  width: 100% !important;
-  overflow: hidden !important;
+  height: 100%;
+  max-height: calc(100vh - 75px) !important;
+  overflow-x: hidden;
+  overflow-y: auto !important;
   padding: 16px 13px !important;
-  background-color: #ffffff !important;
+  width: 100% !important;
 }
 
 .ParitySpotHeading {
@@ -48,6 +51,7 @@
   display: flex !important;
   gap: 6px !important;
   align-items: center !important;
+  /* padding: 4px 8px !important; */
 }
 
 .Search-btn-spreadManagement {
@@ -88,8 +92,13 @@
   text-align: center !important;
 }
 
-.WidthInputParitySpot {
-  width: 30px !important;
+.InputParitySpot {
+  justify-self: center;
+  width: 70px;
+  max-height: 32px;
+  text-align: center;
+  margin-top: -19px !important;
+  padding: 0px !important;
 }
 .CategorySpreadManagement li {
   display: flex;
@@ -100,4 +109,51 @@
   color: #096fed;
   border: 1px solid salmon;
   margin-top: 1000px;
+}
+.parity-cross-style {
+  min-height: 1000px;
+  height: 1000px;
+  max-height: 1000px;
+}
+/* Bank Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
+.Forward-table {
+  /* max-height: 45vh !important; */
+  /* height: 45vh; */
+  /* max-width: 76vw; */
+  width: 100%;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  /* overflow-x: auto !important; */
+  border-radius: 0px !important;
+}
+
+.Forward-table th.ant-table-cell {
+  color: #ffffff !important;
+  border-radius: 0% !important;
+  position: sticky !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  /* top: 0 !important; */
+  z-index: 10;
+  background: #f26522 !important;
+}
+
+.Forward-table::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.Forward-table::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #ccc;
+  margin-left: -15px;
+}
+
+.Forward-table .ant-table-thead > tr > th {
+  height: 100% !important;
+  line-height: 30px;
+  padding: 0;
 }

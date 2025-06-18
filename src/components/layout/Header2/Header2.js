@@ -22,8 +22,7 @@ const Header = () => {
     navigate("/BOP/AddBankUser");
   };
   function handelLogout() {
-    dispatch(logOutApi(navigate))
-
+    dispatch(logOutApi(navigate));
   }
   return (
     <>
@@ -51,12 +50,12 @@ const Header = () => {
               >
                 <Nav.Link>
                   <i className="icon-settings me-1"></i>
-                  <label className="dropdown-select-labels">Setting</label>
+                  <label>Setting</label>
                 </Nav.Link>
               </Dropdown.Item>
               <Dropdown.Item onClick={handelLogout}>
                 <i className="icon-logout me-1"></i>
-                <label className="dropdown-select-labels">Logout</label>
+                <label>Logout</label>
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

@@ -18,6 +18,10 @@
 .EditCompany_modal-crossIcon {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+.cross-icon-style {
+  font-size: 20px !important;
 }
 .labels-add-bank {
   font-size: 12px !important;
@@ -30,9 +34,9 @@
   color: #cf5b5b !important;
 }
 
-.AddButton {
+.EditCompany {
   font-family: "Poppins", sans-serif;
-  cursor: pointer;
+
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
@@ -46,7 +50,7 @@
   gap: 4px !important;
 }
 
-.AddButton:is(:hover, :active, :focus, :focus-visible) {
+.EditCompany:is(:hover, :active, :focus, :focus-visible) {
   font-family: "Poppins", sans-serif;
   cursor: pointer;
   border-radius: 4px;
@@ -61,6 +65,20 @@
   gap: 4px !important;
 }
 
+.EditCompany:disabled {
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  background: var(--disabled-button) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
 .CancelButton {
   font-family: "Poppins", sans-serif;
   cursor: pointer;
@@ -105,4 +123,10 @@
   margin: 0;
   height: 16px;
   color: #f16b6b !important;
+}
+.eidtCompany-inputField {
+  margin-left: 28px;
+  min-width: 335px;
+  max-width: 335px;
+  margin-right: 0px !important;
 }

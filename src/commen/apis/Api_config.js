@@ -161,6 +161,10 @@ const GetAllCorporates = {
   RequestMethod: "ServiceManager.GetAllCategoryDetailsWithCounterParties",
 };
 
+const GetAllCorporatesData = {
+  RequestMethod: "ServiceManager.GetAllCorporates",
+};
+
 const GetAllNatureOfBussiness = {
   RequestMethod: "ServiceManager.GetAllNatureOfBussiness",
 };
@@ -245,8 +249,74 @@ const GetBranchTradeRights = {
   RequestMethod: "ServiceManager.GetBranchTradeRights",
 };
 
+const UpdateBranchTradeRights = {
+  RequestMethod: "ServiceManager.UpdateBranchTradeRights",
+};
+
+const UpdateCorporateTradeRights = {
+  RequestMethod: "ServiceManager.UpdateCorporateTradeRights",
+};
 const UpdateBranchCategoryMappingapi = {
   RequestMethod: "ServiceManager.UpdateBranchCategoryMapping",
+};
+
+const GetSpotSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetSpotSpreadsForCategory",
+};
+const GetCrossRateSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetCrossRateSpreadsForCategory",
+};
+
+const GetTenorWiseForwardSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetTenorWiseForwardSpreadsForCategory",
+};
+const GetTenorWiseFEDiscountingSpreadsForCategory = {
+  RequestMethod: "ServiceManager.GetTenorWiseFEDiscountingSpreadsForCategory",
+};
+
+const GetAllTenors = {
+  RequestMethod: "ServiceManager.GetAllTenors",
+};
+
+const GetTenorWiseNonFEDiscountingSpreadsForCategory = {
+  RequestMethod:
+    "ServiceManager.GetTenorWiseNonFEDiscountingSpreadsForCategory",
+};
+
+const SaveCategoryParitySpot = {
+  RequestMethod: "ServiceManager.SaveCategoryParitySpot",
+};
+
+const SaveCategoryCrossRates = {
+  RequestMethod: "ServiceManager.SaveCategoryCrossRates",
+};
+
+const SaveCategoryForwards = {
+  RequestMethod: "ServiceManager.SaveCategoryForwards",
+};
+
+const GetAllTrades = {
+  RequestMethod: "ServiceManager.GetAllTrades",
+};
+
+const SaveCategoryFEDiscounts = {
+  RequestMethod: "ServiceManager.SaveCategoryFEDiscounts",
+};
+
+const SaveCategoryNonFEDiscounts = {
+  RequestMethod: "ServiceManager.SaveCategoryNonFEDiscounts",
+};
+
+const DownloadCorporateUserListSystemAdminReport = {
+  RequestMethod: "ServiceManager.DownloadCorporateUserListSystemAdminReport",
+};
+
+const DownloadBankUserListSystemAdminReport = {
+  RequestMethod: "ServiceManager.DownloadBankUserListSystemAdminReport",
+};
+
+const DownloadLoginHistorySystemAdminReport = {
+  RequestMethod: "ServiceManager.DownloadUserLoginHistorySystemAdminReport",
 };
 
 export {
@@ -308,5 +378,23 @@ export {
   UpdateBranchStatus,
   GetCorporateTradeRights,
   GetBranchTradeRights,
+  UpdateBranchTradeRights,
+  UpdateCorporateTradeRights,
   UpdateBranchCategoryMappingapi,
+  GetSpotSpreadsForCategory,
+  GetCrossRateSpreadsForCategory,
+  GetTenorWiseForwardSpreadsForCategory,
+  GetAllCorporatesData,
+  GetTenorWiseFEDiscountingSpreadsForCategory,
+  GetAllTenors,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory,
+  SaveCategoryParitySpot,
+  SaveCategoryCrossRates,
+  SaveCategoryForwards,
+  GetAllTrades,
+  SaveCategoryFEDiscounts,
+  SaveCategoryNonFEDiscounts,
+  DownloadCorporateUserListSystemAdminReport,
+  DownloadBankUserListSystemAdminReport,
+  DownloadLoginHistorySystemAdminReport,
 };

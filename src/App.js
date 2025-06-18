@@ -21,12 +21,18 @@ import "@fontsource/poppins/400-italic.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/Routes";
 import { useMqtt } from "./context/MQTTContext";
+import { Loader } from "./components/elements";
 
 function App() {
   const { isConnected, lastMessages } = useMqtt();
   console.log(lastMessages, isConnected, "lastMessageslastMessages");
   console.log("App component rendered", isConnected);
-  return <>{/* <RouterProvider router={router} /> */}</>;
+
+  return (
+    <>
+      <Loader />
+    </>
+  );
 }
 
 export default App;

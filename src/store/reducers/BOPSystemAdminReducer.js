@@ -33,6 +33,7 @@ const initialState = {
   SearchAllUserLoginHistory: null,
   GetCounterPartyList: null,
   updateCateogryData: null,
+  GetAllTrades: null,
 };
 
 const BOPSystemAdminReducer = (state = initialState, action) => {
@@ -585,6 +586,26 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         updateCateogryData: null,
+        ResponseMessage: action.message,
+      };
+    //GetAllTrades
+    case actions.GET_ALL_TRADES_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_ALL_TRADES_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTrades: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_ALL_TRADES_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTrades: null,
         ResponseMessage: action.message,
       };
     default:

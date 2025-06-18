@@ -20,12 +20,55 @@
   padding: 10px !important;
 }
 
+.UniversalBOPModalStylesBankUser .modal-content {
+  background: #f3f2f1 !important;
+  border: 1px solid #dbd7d5 !important;
+  max-width: 500px !important;
+  min-height: 320px;
+  margin-bottom: 50px;
+  margin-left: 150px !important;
+  overflow: hidden !important;
+  padding-left: 3px !important;
+  padding-right: 3px;
+  font-size: 13px;
+}
+.UniversalBOPModalStylesAddCompany .modal-content {
+  background: #f3f2f1 !important;
+  border: 1px solid #dbd7d5 !important;
+  max-width: 500px !important;
+  min-height: 325px;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden !important;
+  padding-left: 3px !important;
+  padding-right: 3px;
+  font-size: 13px;
+}
+.UniversalBOPModalStylesEditCompany .modal-content {
+  background: #f3f2f1 !important;
+  border: 1px solid #dbd7d5 !important;
+  max-width: 500px !important;
+  min-height: 325px;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden !important;
+  padding-left: 3px !important;
+  padding-right: 3px;
+  font-size: 13px;
+}
+
 .UniversalBOPModalStylesTradeAccessManagment .modal-content {
   background: #ffffff !important;
   border: 1px solid #dbd7d5 !important;
   width: 100% !important;
   overflow: hidden !important;
-  padding: 10px !important;
+  max-width: 90% !important;
+  margin: 0 auto;
+  /* padding: 10px !important; */
 }
 
 .UniversalBOPModalStylesAddCategory .modal-content {
@@ -35,7 +78,7 @@
   margin-left: 90px !important;
   overflow: hidden !important;
   overflow-x: hidden !important;
-  padding: 10px !important;
+  padding: 0 10px 10px 10px !important;
 }
 
 .userDetailsCorporateList .modal-content {

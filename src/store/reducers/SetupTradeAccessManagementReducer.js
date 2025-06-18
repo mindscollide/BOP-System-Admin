@@ -8,10 +8,37 @@ const initialState = {
   UpdateBranchStatus: null,
   GetBranchTradeRights: null,
   GetCorporateTradeRights: null,
+  UpdateBranchTradeRights: null,
+  UpdateCorporateTradeRights: null,
+  GetTenorWiseFEDiscountingSpreadsForCategory: null,
+  GetAllTenors: null,
+  GetTenorWiseNonFEDiscountingSpreadsForCategory: null,
 };
 
 const SetupTradeAccessManagementReducer = (state = initialState, action) => {
   switch (action.type) {
+    //GetAllTenors  reducer
+    case actions.GET_ALL_TENORS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_TENORS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTenors: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_TENORS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllTenors: null,
+        ResponseMessage: action.message,
+      };
     //Get GetCorporatesWithStatus reducer
     case actions.GET_CORPORATES_WITH_STATUS_INTI:
       return {
@@ -149,6 +176,53 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
         GetBranchTradeRights: null,
         ResponseMessage: action.message,
       };
+
+    //UpdateBranchTradeRights reducer
+    case actions.UPDATE_BRANCH_TRADE_RIGHTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.UPDATE_BRANCH_TRADE_RIGHT_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateBranchTradeRights: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_BRANCH_TRADE_RIGHT_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateBranchTradeRights: null,
+        ResponseMessage: action.message,
+      };
+
+    //UpdateCorporateTradeRights reducer
+    case actions.UPDATE_CORPORATE_TRADE_RIGHTS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.UPDATE_CORPORATE_TRADE_RIGHT_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        UpdateCorporateTradeRights: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.UPDATE_CORPORATE_TRADE_RIGHT_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        UpdateCorporateTradeRights: null,
+        ResponseMessage: action.message,
+      };
+
     default:
       return { ...state };
   }

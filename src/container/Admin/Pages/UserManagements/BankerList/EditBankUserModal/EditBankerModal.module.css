@@ -108,3 +108,7 @@
   height: 16px;
   color: #f16b6b !important;
 }
+.disableText {
+  color: var(--disabled-font);
+  background: var(--disabled-field) !important;
+}

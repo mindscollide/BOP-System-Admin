@@ -207,17 +207,30 @@ const VolMeter = () => {
               <Col lg={3} md={3} sm={12} />
               <Col lg={6} md={6} sm={12}>
                 <Row className={style["vol-meter-fields"]}>
-                  <Col lg={2} md={2} sm={12}>
+                  <Col
+                    lg={2}
+                    md={2}
+                    sm={12}
+                    className={style["VolMeterInputBox"]}
+                  >
                     <span className={style["number-on-textfiels"]}>1</span>
                     <TextField
                       name="volatilityMeter"
                       type="text"
                       value={volMeterFields.volatilityMeter.value}
-                      onChange={onChanngeVolMterValidation}
+                      // onChange={onChanngeVolMterValidation}
+                      // disabled by mehdi
+                      disable={true}
                       labelClass="d-none"
+                      className={style["disableText"]}
                     />
                   </Col>
-                  <Col lg={2} md={2} sm={12}>
+                  <Col
+                    lg={2}
+                    md={2}
+                    sm={12}
+                    className={style["VolMeterInputBox"]}
+                  >
                     <span className={style["number-on-textfiels"]}>2</span>
                     <TextField
                       name="nameVol"
@@ -228,7 +241,12 @@ const VolMeter = () => {
                       maxLength={5}
                     />
                   </Col>
-                  <Col lg={2} md={2} sm={12}>
+                  <Col
+                    lg={2}
+                    md={2}
+                    sm={12}
+                    className={style["VolMeterInputBox"]}
+                  >
                     <span className={style["number-on-textfiels"]}>3</span>
                     <TextField
                       name="volMeter"

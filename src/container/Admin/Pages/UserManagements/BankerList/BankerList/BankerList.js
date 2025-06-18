@@ -35,6 +35,7 @@ import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBo
 import { useMqtt } from "../../../../../../context/MQTTContext";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import EditBankerModal from "../EditBankUserModal/EditBankerModal";
+import { downloadBankUserlistReportApi } from "../../../../../../store/actions/Download-Report";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -293,6 +294,7 @@ const BankerList = () => {
       setModalState(0);
     }
   }, [modalState]);
+
   // show error message When user hit activate btn
   const handleReset = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -624,11 +626,17 @@ const BankerList = () => {
     }));
   };
   const exportToExcel = () => {
-    // const worksheet = XLSX.utils.json_to_sheet(data);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
-    // XLSX.writeFile(workbook, "CorporateList.xlsx");
     console.log("Doc saved as Excel");
+    let data = {
+      EmployeeID:
+        bankList.EmployeeID.value !== "" ? bankList.EmployeeID.value : "",
+      Name: bankList.Name.value !== "" ? bankList.Name.value : "",
+      RoleID: roleID.value !== 0 ? roleID.value : 0,
+      Email: bankList.Email.value !== "" ? bankList.Email.value : "",
+    };
+    console.log(data, "Doc saved as Excel");
+
+    dispatch(downloadBankUserlistReportApi(navigate, data));
   };
 
   const exportToPDF = () => {
@@ -770,11 +778,7 @@ const BankerList = () => {
       {EditBankerModalGobalState && <EditBankerModal />}
 
       {BOPSystemAdminReducer.Loading && <Loader />}
-      {/* {<ActivateConfirmationModal onConfirm={handleResetYes} />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
-      {/* {showExportOptions && (
-        <ExportOptions onClose={() => setShowExportOptions(false)} />
-      )} */}
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleResetYes}

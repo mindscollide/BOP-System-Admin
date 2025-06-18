@@ -4,19 +4,23 @@ import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { Button, Modal } from "../../../components/elements";
 
-const ActivateConfirmationModal = ({ handleYesButton, handleNoButton }) => {
+const ActivateConfirmationModal = ({
+  handleYesButton,
+  handleNoButton,
+  show,
+}) => {
   const showActivationMOdal = useSelector(
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
-
+  console.log(show, showActivationMOdal, "showshowshow");
   return (
     <Modal
-      show={showActivationMOdal}
+      show={show !== null && show !== undefined ? show : showActivationMOdal}
       className="UniversalBOPModalStyles"
       modalHeaderClassName={"d-none"}
       modalFooterClassName="UniversalBOPModalStylesfooter"
       size="md"
-      onHide={handleNoButton}
+      // onHide={handleNoButton}
       ModalBody={
         <>
           <Row>
@@ -42,11 +46,11 @@ const ActivateConfirmationModal = ({ handleYesButton, handleNoButton }) => {
             className="d-flex justify-content-center gap-2"
           >
             <Button
+              onClick={handleYesButton}
               icon={<i className="icon-check"></i>}
               text={"Yes"}
               className={styles["AddBranchClass"]}
               iconClass={styles["IconClass"]}
-              onClick={handleYesButton}
             />
 
             <Button

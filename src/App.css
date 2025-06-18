@@ -4,8 +4,12 @@
 
 body {
   background-color: #f4f4f4 !important;
-  font-family: "Montserrat", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   overflow: hidden !important;
+}
+:where(.css-dev-only-do-not-override-k7429z)[class^="ant-layout"],
+:where(.css-dev-only-do-not-override-k7429z)[class*=" ant-layout"] {
+  font-family: "Roboto", sans-serif !important;
 }
 
 .Scroller-x-resolution {
@@ -104,8 +108,9 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* Trade Access Management Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
 .TradeAccessManagement {
-  max-height: 45vh !important;
-  max-width: 76vw;
+  max-height: 70vh !important;
+
+  /* max-width: 100%; */
   width: 100%;
   box-sizing: border-box !important;
   overflow-x: auto !important;
@@ -145,7 +150,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 }
 
 /* Table Responsiveness Handler */
-@media (max-width: 1300px) {
+/* @media (max-width: 1300px) {
   .TradeAccessManagement {
     max-height: 45vh !important;
     max-width: 75vw;
@@ -203,11 +208,11 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
     border-radius: 0px !important;
     overflow-x: scroll !important;
   }
-}
+} */
 
 /* Seperate Bank User Table of Gray Header CSS */
 .GrayHeader-table {
-  max-height: 45vh !important;
+  max-height: 100vh !important;
   max-width: 76vw;
   width: 100%;
   box-sizing: border-box !important;
@@ -312,7 +317,20 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   background: #575351 !important;
   color: #fff !important;
 }
-
+/* Spread Management Table  */
+.groupTable1-thead tr th {
+  background: #575351 !important;
+  color: #fff !important;
+  padding: 8px !important;
+  margin: 0;
+  border-radius: 0 !important;
+}
+/* :where(.css-dev-only-do-not-override-k7429z).groupTable1-wrapper
+  .groupTable1-thead
+  > tr
+  > td {
+  background: #575351 !important;
+} */
 .groupTable.groupTable-bordered
   > .groupTable-container
   > .groupTable-content
@@ -345,7 +363,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   > tr:not(:last-child)
   > th {
   border-bottom: 1px solid #f0f0f0 !important;
-  padding: 8px !important;
+  /* padding: 8px !important; */
 }
 
 :where(.css-dev-only-do-not-override-k7429z).groupTable-wrapper
@@ -357,6 +375,10 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
   > tr
   > th {
   padding: 8px !important;
+}
+
+.selectCateogyCorporateList {
+  width: 100% !important;
 }
 
 .selectCateogyCorporateList__menu.css-1nmdiq5-menu {
@@ -385,7 +407,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* All TextFileds PlaceHolder Sizes */
 input.form-control {
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-family: "Roboto", sans-serif !important;
   font-weight: 500;
   white-space: nowrap !important;
@@ -405,9 +427,10 @@ input.form-control {
 
 /* TradeAccessManagement Edit Modal Table starts  */
 .TradeAccessManagementEdit {
-  max-height: 45vh !important;
+  /* max-height: 45vh !important; */
   max-width: 76vw;
   width: 100%;
+  margin: 0 auto !important;
   box-sizing: border-box !important;
   overflow-x: auto !important;
   border-radius: 0px !important;
@@ -434,6 +457,12 @@ input.form-control {
 }
 
 .TradeAccessManagementEdit tr:nth-child(1) th.ant-table-cell:nth-child(3) {
+  background: #fff !important;
+  border: 1px solid #e1e1e1 !important;
+  color: #000 !important;
+  font-weight: bold !important;
+}
+.TradeAccessManagementEdit tr:nth-child(1) th.ant-table-cell:nth-child(4) {
   background: #fff !important;
   border: 1px solid #e1e1e1 !important;
   color: #000 !important;
@@ -568,7 +597,7 @@ input.form-control {
   max-width: 90vw;
   width: 100%;
   box-sizing: border-box !important;
-  overflow-x: auto !important;
+  /* overflow-x: auto !important; */
   border-radius: 0px !important;
 }
 
@@ -602,11 +631,23 @@ input.form-control {
   line-height: 30px;
   padding: 0;
 }
-
+/* 
 .WidthInputParitySpot.ant-input {
   width: 70px !important;
-}
+} */
 
 .companyName {
   position: relative !important;
+}
+
+.ValueDiscountingInput {
+  justify-self: center;
+  max-width: 70px !important ;
+  max-height: 32px;
+  text-align: center;
+  padding: 0px !important;
+}
+
+.font-bold {
+  font-weight: 700;
 }

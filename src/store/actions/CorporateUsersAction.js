@@ -51,6 +51,10 @@ const GetAllCorporateUsersAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllCorporateUsersAPI(navigate));
@@ -139,6 +143,10 @@ const GetCorporateUserByUserIDApi = (
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
@@ -234,6 +242,10 @@ const SearchCorporateUsersAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(SearchCorporateUsersAPI(navigate, data));
@@ -317,6 +329,10 @@ const UpdateCorporateUsersAPI = (navigate, data, setCorproateUserId) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateCorporateUsersAPI(navigate, data, setCorproateUserId));

@@ -23,8 +23,12 @@ import {
   BankUsersBulkList,
   SearchAllUserLoginHistory,
   GetCounterPartyList,
+  GetAllTrades,
 } from "../../commen/apis/Api_config";
-import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
+import {
+  authenticationAPI,
+  systemAdminAPI,
+} from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
 import {
   GetAllBranchesAPI,
@@ -78,6 +82,10 @@ const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(CreateNewCorporateAPI(navigate, data, setAddCompnany));
@@ -202,6 +210,10 @@ const UpdateCorporateByCorporateIDAPI = (
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
@@ -308,6 +320,10 @@ const AddBranchAPI = (navigate, data, setAddBranch) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(AddBranchAPI(navigate, data, setAddBranch));
@@ -428,6 +444,10 @@ const UpdateBranchAPI = (navigate, data, setBranchEditError) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateBranchAPI(navigate, data, setBranchEditError));
@@ -554,6 +574,10 @@ const CreateBankUserRequestAPI = (
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
@@ -709,6 +733,10 @@ const CreateBulkBankUserRequestAPI = (navigate, data, setBulkUploadClicked) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
@@ -777,82 +805,6 @@ const CreateBulkBankUserRequestAPI = (navigate, data, setBulkUploadClicked) => {
   };
 };
 
-// //Get All Bank Users
-// const GetAllBankUsersInit = () => {
-//   return {
-//     type: actions.GET_ALL_BRANCHES_INIT,
-//   };
-// };
-
-// const GetAllBankUsersSuccess = (response, message) => {
-//   return {
-//     type: actions.GET_ALL_BRANCHES_SUCCESS,
-//     response: response,
-//     message: message,
-//   };
-// };
-
-// const GetAllBankUsersFail = (message) => {
-//   return {
-//     type: actions.GET_ALL_BRANCHES_FAIL,
-//     message: message,
-//   };
-// };
-
-// const GetAllBankUsersAPI = (navigate, data) => {
-//   // let token = JSON.parse(localStorage.getItem("token"));
-//   return async (dispatch) => {
-//     dispatch(GetAllBankUsersInit());
-//     let form = new FormData();
-//     form.append("RequestMethod", GetAllBankUsers.RequestMethod);
-//     form.append("RequestData", JSON.stringify(data));
-//     axios({
-//       method: "POST",
-//       url: systemAdminAPI,
-//       data: form,
-//       // headers: {
-//       //   _token: token,
-//       // },
-//     })
-//       .then(async (response) => {
-//         if (response.data.responseCode === 417) {
-//           await dispatch(RefreshToken(navigate));
-//           dispatch(GetAllBankUsersAPI(navigate));
-//         } else if (response.data.responseCode === 200) {
-//           if (response.data.responseResult.isExecuted === true) {
-//             if (
-//               response.data.responseResult.responseMessage.toLowerCase() ===
-//               "SystemAdmin_SystemAdminManager_GetAllBankUsers_01".toLowerCase()
-//             ) {
-//               dispatch(
-//                 GetAllBankUsersSuccess(
-//                   response.data.responseResult,
-//                   "Data Available"
-//                 )
-//               );
-//             }
-//             // else if (
-//             //   response.data.responseResult.responseMessage
-//             //     .toLowerCase()
-//             //     .includes(
-//             //       "SystemAdmin_SystemAdminManager_GetAllBranches_03".toLowerCase()
-//             //     )
-//             // ) {
-//             //   dispatch(GetAllBankUsersFail("Exception"));
-//             // }
-//           } else {
-//             dispatch(GetAllBankUsersFail("Something went wrong"));
-//           }
-//         } else {
-//           dispatch(GetAllBankUsersFail("Something went wrong"));
-//         }
-//       })
-//       .catch((response) => {
-//         dispatch(GetAllBankUsersFail("something went wrong"));
-//       });
-//   };
-// };
-
 //Create Corporate User Request
 const CreateCorporateUserRequestInit = () => {
   return {
@@ -897,6 +849,10 @@ const CreateCorporateUserRequestAPI = (
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
@@ -1041,6 +997,10 @@ const CreateBulkCorporateUserRequestAPI = (
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(CreateBulkCorporateUserRequestAPI(navigate, data));
@@ -1171,6 +1131,10 @@ const BankUsersBulkListAPI = (navigate, data, setBulkUploadClicked) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(BankUsersBulkListAPI(navigate, data, setBulkUploadClicked));
@@ -1264,6 +1228,10 @@ const CorporateUsersBulkListAPI = (navigate, data, setBulkUploadClicked) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(
@@ -1366,6 +1334,10 @@ const SearchBankUsersAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(SearchBankUsersAPI(navigate, data));
@@ -1449,6 +1421,10 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetBankUserByUserIDAPI(navigate, data));
@@ -1534,6 +1510,10 @@ const UpdateBankUserByUserIdAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateBankUserByUserIdAPI(navigate, data));
@@ -1619,6 +1599,10 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetVolmeterByBankIDAPI(navigate, data));
@@ -1721,6 +1705,10 @@ const AddUpdateVolmterAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(AddUpdateVolmterAPI(navigate, data));
@@ -1838,6 +1826,10 @@ const UpdateVolmeterByDealerAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateVolmeterByDealerAPI(navigate, data));
@@ -1929,6 +1921,10 @@ const UpdateVolmeterSettingByBankIdAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateVolmeterSettingByBankIdAPI(navigate, data));
@@ -2012,6 +2008,10 @@ const GetVolMeterSettingByBankIdAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetVolMeterSettingByBankIdAPI(navigate, data));
@@ -2095,6 +2095,10 @@ const UpdateCategoryAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateCategoryAPI(navigate, data));
@@ -2194,6 +2198,10 @@ const GetCounterPartyNamesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetCounterPartyNamesAPI(navigate));
@@ -2258,13 +2266,17 @@ const GetAllInstrumentsAPI = (navigate) => {
     form.append("RequestMethod", GetAllInstruments.RequestMethod);
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: authenticationAPI,
       data: form,
       headers: {
         _token: token,
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllInstrumentsAPI(navigate));
@@ -2274,7 +2286,7 @@ const GetAllInstrumentsAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllInstruments_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllInstruments_01".toLowerCase()
                 )
             ) {
               dispatch(
@@ -2287,10 +2299,20 @@ const GetAllInstrumentsAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllInstruments_04".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllInstruments_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllInstrumentsFail("Data UnAvailable"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllInstruments_03".toLowerCase()
                 )
             ) {
               dispatch(GetAllInstrumentsFail("Exception"));
+            } else {
+              dispatch(GetAllInstrumentsFail("Something went wrong"));
             }
           } else {
             dispatch(GetAllInstrumentsFail("Something went wrong"));
@@ -2343,6 +2365,10 @@ const SearchAllUserLoginHistoryAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
@@ -2424,6 +2450,10 @@ const GetCounterPartyListAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetCounterPartyListAPI(navigate));
@@ -2463,6 +2493,87 @@ const GetCounterPartyListAPI = (navigate) => {
       });
   };
 };
+//GetCounterPartyList
+const GetAllTradesInit = () => {
+  return {
+    type: actions.GET_ALL_TRADES_INIT,
+  };
+};
+const GetAllTradesSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_TRADES_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllTradesFail = (message) => {
+  return {
+    type: actions.GET_ALL_TRADES_FAIL,
+    message: message,
+  };
+};
+
+const GetAllTradesAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllTradesInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllTrades.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllTradesAPI(navigate, data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllTrades_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllTradesSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetAllTrades_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllTradesFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllTradesFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllTradesFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllTradesFail("something went wrong"));
+      });
+  };
+};
 export {
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
@@ -2488,4 +2599,5 @@ export {
   GetAllInstrumentsAPI,
   SearchAllUserLoginHistoryAPI,
   GetCounterPartyListAPI,
+  GetAllTradesAPI,
 };

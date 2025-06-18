@@ -1,8 +1,23 @@
 .HeaderNameLabel {
   color: #f26522 !important;
-  font-weight: 500;
   font-size: 1.25rem;
-  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+}
+.EditBranchTrade_modal-crossIcon {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex;
+  justify-content: flex-end;
+}
+.EditBranchTrade_modal-crossIcon:is(:hover, :active, :focus, :focus-visible) {
+  background: none !important;
+  border: none !important;
+  color: black;
+  display: flex !important;
+  justify-content: flex-end !important;
 }
 
 .labels-add-bank {
@@ -15,7 +30,7 @@
   color: #cf5b5b !important;
 }
 
-.AddBranchClass {
+.SaveBranchChangeBtn {
   cursor: pointer !important;
   font-family: "Poppins", sans-serif !important;
   border-radius: 4px !important;
@@ -27,7 +42,7 @@
   border: none !important;
 }
 
-.AddBranchClass:is(:hover, :active, :focus, :focus-visible) {
+.SaveBranchChangeBtn:is(:hover, :active, :focus, :focus-visible) {
   cursor: pointer !important;
   font-family: "Poppins", sans-serif !important;
   border-radius: 4px !important;
@@ -38,6 +53,17 @@
   gap: 5px !important;
   align-items: center !important;
   border: none !important;
+}
+.SaveBranchChangeBtn:disabled {
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+  background: var(--disabled-button) !important;
 }
 
 .CancelButton {
@@ -64,4 +90,19 @@
   gap: 5px !important;
   align-items: center !important;
   border: none !important;
+}
+.branchErrorMessage {
+  height: 0px;
+  margin-top: 0px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #f16b6b;
+  visibility: visible !important;
+}
+
+.branchErrorMessage_hidden {
+  visibility: hidden;
+  margin: 0;
+  height: 16px;
+  color: #f16b6b !important;
 }

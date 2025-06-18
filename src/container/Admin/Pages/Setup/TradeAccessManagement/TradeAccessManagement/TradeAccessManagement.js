@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./TradeAccessManagement.module.css";
 import {
   CustomPaper,
@@ -9,44 +9,65 @@ import {
 import { Col, Row } from "react-bootstrap";
 import { Select } from "antd";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
 import BranchTrade from "./BranchTradeAccessManagement.js/BranchTrade";
+import CorporateTrade from "./CorporateTradeAccessManagement/CorporateTrade";
+import { useDispatch } from "react-redux";
+import {
+  GetBranchesWithStatusAPI,
+  GetCorporatesWithStatusAPI,
+} from "../../../../../../store/actions/SetupTradeAccessManagementActions";
+import { useNavigate } from "react-router-dom";
+import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
+
 const TradeAccessManagement = () => {
   const { Option } = Select;
+  const [corporateTableData, setCorporateTableData] = useState([]);
+  const [branchTableData, setBranchTableData] = useState([]);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [crossIcon, setCrossIcon] = useState(false);
 
   const Loading = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.Loading
   );
+
+  //row length on scroll
+  const [sRow, setSRow] = useState(0);
+  const [corporateRecordsLength, setCorporateRecordLength] = useState(0);
+  const [branchRecordsLength, setBranchRecordLength] = useState(0);
+
   //States
   const [radioValue, setRadioValue] = useState("Corporate");
   const [branchName, setBranchName] = useState({
     Name: {
       value: "",
-      errorMessage: "",
-      errorStatus: false,
     },
   });
   const [corporateName, setCorporateName] = useState({
     Name: {
       value: "",
-      errorMessage: "",
-      errorStatus: false,
     },
   });
   const [dropdownvalue, setDropdownvalue] = useState(25);
 
   const handleChangeDropDown = (value) => {
-    console.log(`selected ${value}`);
     setDropdownvalue(value);
   };
 
   //Radio Buttons Management
   const handleChange = (e) => {
-    console.log("radio checked", e.target.value);
+    if (e.target.value === "Branch") {
+      setCrossIcon(false);
+      setBranchName({
+        Name: { value: "" },
+      });
+    } else {
+      setCrossIcon(false);
+      setCorporateName({
+        Name: { value: "" },
+      });
+    }
     setRadioValue(e.target.value);
   };
 
@@ -56,6 +77,71 @@ const TradeAccessManagement = () => {
     { label: "Branch", value: "Branch" },
   ];
 
+  const handleEmptySearchState = () => {
+    if (radioValue === "Branch") {
+      setHasReachedBottom(false);
+      setBranchRecordLength(0);
+      setSRow(0);
+      setBranchTableData([]);
+      let data = {
+        BranchName: "",
+        sRow: 0,
+        Length: 25,
+      };
+      dispatch(GetBranchesWithStatusAPI(navigate, data));
+
+      setBranchName({
+        Name: {
+          value: "",
+        },
+      });
+
+      setCrossIcon(false);
+    } else if (radioValue === "Corporate") {
+      setHasReachedBottom(false);
+      setCorporateRecordLength(0);
+      setSRow(0);
+      setCorporateTableData([]);
+      let data = {
+        CorporateName: "",
+        sRow: 0,
+        Length: 25,
+      };
+      dispatch(GetCorporatesWithStatusAPI(navigate, data));
+
+      setCorporateName({
+        Name: {
+          value: "",
+        },
+      });
+
+      setCrossIcon(false);
+    }
+  };
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (radioValue === "Corporate") {
+      if (corporateRecordsLength !== corporateTableData.length) {
+        let data = {
+          CorporateName: corporateName.Name.value,
+          sRow: sRow,
+          Length: 25,
+        };
+        dispatch(GetCorporatesWithStatusAPI(navigate, data));
+      }
+    } else if (radioValue === "Branch") {
+      if (branchRecordsLength !== branchTableData.length) {
+        let data = {
+          BranchName: branchName.Name.value,
+          sRow: sRow,
+          Length: 25,
+        };
+        dispatch(GetBranchesWithStatusAPI(navigate, data));
+      }
+    }
+  });
   //Banker List validate handler
   const TradeAccessManagementValidateHandler = (e) => {
     let name = e.target.name;
@@ -64,7 +150,7 @@ const TradeAccessManagement = () => {
     //Branch Name
     if (name === "branchName" && value !== "") {
       setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
       if (valueCheck !== "") {
@@ -72,24 +158,22 @@ const TradeAccessManagement = () => {
           ...branchName,
           Name: {
             value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
           },
         });
       }
     } else if (name === "branchName" && value === "") {
       setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       setBranchName({
         ...branchName,
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
     }
     //Branch Name
     if (name === "corporateName" && value !== "") {
       setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       let valueCheck = value.replace(/[^a-zA-Z ]/g, "");
       if (valueCheck !== "") {
@@ -97,34 +181,73 @@ const TradeAccessManagement = () => {
           ...corporateName,
           Name: {
             value: valueCheck.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
           },
         });
       }
     } else if (name === "corporateName" && value === "") {
       setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
       setCorporateName({
         ...corporateName,
-        Name: { value: "", errorMessage: "", errorStatus: false },
+        Name: { value: "" },
       });
     }
   };
 
-  //useEffect to empty fields value on radio Change
-  useEffect(() => {
-    if (radioValue === "Branch") {
-      setCorporateName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
-      });
-    } else if (radioValue === "Corporate") {
-      setBranchName({
-        Name: { value: "", errorMessage: "", errorStatus: false },
-      });
+  // scroll (2)
+  const handleBlur = (event) => {
+    if (event.key === "Enter") {
+      if (radioValue === "Corporate") {
+        if (
+          corporateName.Name.value.length >= 3 ||
+          corporateName.Name.value.length === 0
+        ) {
+          if (corporateName.Name.value.length === 0) {
+            setCrossIcon(false);
+          }
+          if (corporateName.Name.value.length >= 3) {
+            setCrossIcon(true);
+          }
+          setSRow(0);
+          setHasReachedBottom(false);
+          setCorporateTableData([]);
+          setCorporateRecordLength(0);
+          let data = {
+            CorporateName: corporateName.Name.value
+              ? corporateName.Name.value
+              : "",
+            sRow: 0,
+            Length: 25,
+          };
+
+          dispatch(GetCorporatesWithStatusAPI(navigate, data));
+        }
+      } else {
+        if (
+          branchName.Name.value.length >= 3 ||
+          branchName.Name.value.length === 0
+        ) {
+          if (branchName.Name.value.length === 0) {
+            setCrossIcon(false);
+          }
+          if (branchName.Name.value.length >= 3) {
+            setCrossIcon(true);
+          }
+          setSRow(0);
+          setHasReachedBottom(false);
+          setBranchTableData([]);
+          setBranchRecordLength(0);
+          let data = {
+            BranchName: branchName.Name.value ? branchName.Name.value : "",
+            sRow: 0,
+            Length: 25,
+          };
+          dispatch(GetBranchesWithStatusAPI(navigate, data));
+        }
+      }
     }
-  }, [radioValue]);
+  };
 
   return (
     <section className={styles["TradeAccessmangementStyles"]}>
@@ -148,28 +271,66 @@ const TradeAccessManagement = () => {
                 />
                 {radioValue === "Corporate" ? (
                   <TextField
+                    formParentClass={
+                      "BranchNameTradeAccessManagement_inputSearchBar"
+                    }
                     placeholder="Corporate Name"
                     labelClass={"d-none"}
                     name={"corporateName"}
                     value={corporateName.Name.value}
                     onChange={TradeAccessManagementValidateHandler}
-                    className={"BranchNameTradeAccessManagement"}
+                    handleKeyDown={handleBlur}
+                    inputIcon={
+                      crossIcon ? (
+                        <i
+                          className="icon-close"
+                          onClick={handleEmptySearchState}
+                        />
+                      ) : (
+                        ""
+                      )
+                    }
+                    iconClassName={
+                      styles["BranchNameTradeAccessManagement_inputSearchIcon"]
+                    }
+                    className={
+                      styles["BranchNameTradeAccessManagement_inputSearch"]
+                    }
                   />
                 ) : radioValue === "Branch" ? (
                   <TextField
+                    formParentClass={
+                      "BranchNameTradeAccessManagement_inputSearchBar"
+                    }
                     placeholder="Branch Name"
                     labelClass={"d-none"}
                     name={"branchName"}
                     value={branchName.Name.value}
                     onChange={TradeAccessManagementValidateHandler}
-                    className={"BranchNameTradeAccessManagement"}
+                    handleKeyDown={handleBlur}
+                    inputIcon={
+                      crossIcon ? (
+                        <i
+                          className="icon-close"
+                          onClick={handleEmptySearchState}
+                        />
+                      ) : (
+                        ""
+                      )
+                    }
+                    iconClassName={
+                      styles["BranchNameTradeAccessManagement_inputSearchIcon"]
+                    }
+                    className={
+                      styles["BranchNameTradeAccessManagement_inputSearch"]
+                    }
                   />
                 ) : (
                   ""
                 )}
               </Col>
             </Row>
-            <Row className="mt-4">
+            <Row className="mt-3">
               <Col
                 lg={12}
                 md={12}
@@ -193,9 +354,23 @@ const TradeAccessManagement = () => {
               </Col>
             </Row>
             {radioValue === "Corporate" ? (
-              <CorporateTrade />
+              <CorporateTrade
+                hasReachedBottom={hasReachedBottom}
+                setHasReachedBottom={setHasReachedBottom}
+                corporateTableData={corporateTableData}
+                setCorporateTableData={setCorporateTableData}
+                setSRow={setSRow}
+                setCorporateRecordLength={setCorporateRecordLength}
+              />
             ) : radioValue === "Branch" ? (
-              <BranchTrade />
+              <BranchTrade
+                hasReachedBottom={hasReachedBottom}
+                setHasReachedBottom={setHasReachedBottom}
+                branchTableData={branchTableData}
+                setBranchTableData={setBranchTableData}
+                setSRow={setSRow}
+                setBranchRecordLength={setBranchRecordLength}
+              />
             ) : (
               ""
             )}

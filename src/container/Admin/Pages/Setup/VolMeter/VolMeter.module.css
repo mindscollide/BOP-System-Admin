@@ -31,7 +31,7 @@
 .volMeter-load-heading {
   display: flex;
   justify-content: center;
-  font-size: 19px;
+  font-size: 1.25rem;
   color: #004990;
   font-weight: 400;
 }
@@ -84,4 +84,14 @@
 .icon-update-refresh {
   margin-right: 5px;
   font-size: 16px;
+}
+.VolMeterInputBox {
+  max-width: 100px;
+  min-width: 100px;
+}
+.disableText {
+  color: var(--disabled-font);
+  background: var(--disabled-field) !important;
+  width: 100% !important;
+  flex: 1 !important;
 }

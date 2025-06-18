@@ -15,6 +15,7 @@ import {
   GetAllBranches,
   LogoutRM,
   UpdateBranchCategoryMappingapi,
+  GetAllCorporatesData,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -157,6 +158,10 @@ const UpdatecorporateMapping = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdatecorporateMapping(navigate, data));
@@ -247,6 +252,10 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(DeleteCorporateCategoryAPI(navigate, data));
@@ -353,7 +362,10 @@ const loginSystemAdminAPI = (navigate, data) => {
       data: form,
     })
       .then(async (response) => {
-        console.log("loginSystemAdmin", response);
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(loginSystemAdminAPI(navigate, data));
@@ -386,6 +398,8 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
               console.log("loginSystemAdminSuccess", response);
+              localStorage.setItem("defaultOpenKey", "sub1");
+              localStorage.setItem("defaultSelectedKey", "1");
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
               localStorage.setItem("token", response.data.responseResult.token);
               localStorage.setItem(
@@ -395,11 +409,11 @@ const loginSystemAdminAPI = (navigate, data) => {
 
               localStorage.setItem(
                 "userID",
-                response.data.responseResult.userID
+                response.data.responseResult.user.userID
               );
               localStorage.setItem(
                 "userName",
-                response.data.responseResult.userName
+                response.data.responseResult.user.firstName
               );
               navigate("/BOP/AddBankUser");
             } else if (
@@ -520,6 +534,10 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(SendEmailResetPasswordAPI(navigate, data));
@@ -620,6 +638,10 @@ const GetAllCategoriesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllCategoriesAPI(navigate));
@@ -702,6 +724,10 @@ const getAllCorporatesCategory = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(getAllCorporatesCategory(navigate));
@@ -747,6 +773,101 @@ const getAllCorporatesCategory = (navigate) => {
       });
   };
 };
+
+const GetAllCorporatesDataInit = () => {
+  return {
+    type: actions.GET_ALL_CORPORATES_DATA_INIT,
+  };
+};
+
+const GetAllCorporatesDataSuccess = (response, message) => {
+  console.log(response, "responseresponse");
+  return {
+    type: actions.GET_ALL_CORPORATES_DATA_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllCorporatesDataFail = (message) => {
+  return {
+    type: actions.GET_ALL_CORPORATES_DATA_FAIL,
+    message: message,
+  };
+};
+
+const GetAllCorporatesDataAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllCorporatesDataInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllCorporatesData.RequestMethod);
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllCorporatesDataAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            console.log(response.data.responseResult, "responseResult");
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllCorporatesDataSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+            ) {
+              dispatch(GetAllCorporatesDataFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCorporatesDataFail("No Data Available"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllCorporatesDataFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllCorporatesDataFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllCorporatesDataFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllCorporatesDataFail("something went wrong"));
+      });
+  };
+};
 //Get All Categories
 const GetAllNatureInit = () => {
   return {
@@ -785,6 +906,10 @@ const GetAllNatureAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllNatureAPI(navigate));
@@ -866,6 +991,10 @@ const RoleListAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(RoleListAPI(navigate));
@@ -944,6 +1073,10 @@ const GetBankUserRolesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetBankUserRolesAPI(navigate));
@@ -1023,6 +1156,10 @@ const GetAllInstrumentTypesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllInstrumentTypesInit(navigate));
@@ -1104,6 +1241,10 @@ const GetAllBranchesAPI = (navigate) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data?.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(GetAllBranchesAPI(navigate));
@@ -1184,7 +1325,10 @@ const logOutApi = (navigate) => {
       },
     })
       .then(async (response) => {
-        console.log("logOutApi", response);
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(logOutApi(navigate));
@@ -1255,6 +1399,10 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(UpdateBranchCataegoryMappingAPI(navigate, data));
@@ -1285,9 +1433,7 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_04".toLowerCase()
                 )
             ) {
-              dispatch(
-                updateBranchCataegoryFailed("Exception Something went wrong")
-              );
+              dispatch(updateBranchCataegoryFailed("Exception."));
             }
           } else {
             dispatch(updateBranchCataegoryFailed("Something went wrong"));
@@ -1319,4 +1465,5 @@ export {
   GetAllInstrumentTypesAPI,
   GetAllBranchesAPI,
   UpdateBranchCataegoryMappingAPI,
+  GetAllCorporatesDataAPI,
 };

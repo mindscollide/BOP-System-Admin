@@ -424,6 +424,7 @@ const EditBankerModal = () => {
               <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
                 <span className={styles["labels-add-bank"]}>Email</span>
                 <TextField
+                  className={styles["disableText"]}
                   disable={true}
                   labelClass="d-none"
                   name="email"

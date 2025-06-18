@@ -43,6 +43,10 @@ const Addcategory = (navigate, data) => {
       },
     })
       .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
         if (response.data.responseCode === 417) {
           await dispatch(RefreshToken(navigate));
           dispatch(Addcategory(navigate, data));

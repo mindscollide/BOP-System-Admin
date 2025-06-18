@@ -32,10 +32,21 @@
   font-weight: 500;
 }
 
-.AddBranchClass {
-  display: flex !important;
-  gap: 10px !important;
+.EditCorpUserBtn {
   background: #096fed !important;
+  display: flex !important;
+  gap: 5px !important;
+  border-radius: 4px;
+  border: none !important;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  align-items: center !important;
+}
+.EditCorpUserBtn:disabled {
+  background: var(--disabled-button) !important;
+  display: flex !important;
+  gap: 5px !important;
   border-radius: 4px;
   border: none !important;
   font-size: 14px;
@@ -44,10 +55,10 @@
   align-items: center !important;
 }
 
-.AddBranchClass:is(:hover, :focus, :active, :focus-visible) {
-  display: flex !important;
-  gap: 10px !important;
+.EditCorpUserBtn:is(:hover, :focus, :active, :focus-visible) {
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  display: flex !important;
+  gap: 5px !important;
   border-radius: 4px;
   border: none !important;
   font-size: 14px;
@@ -98,4 +109,8 @@
   margin: 0;
   height: 16px;
   color: #f16b6b !important;
+}
+.disableText {
+  color: var(--disabled-font);
+  background: var(--disabled-field) !important;
 }
