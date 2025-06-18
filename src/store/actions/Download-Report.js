@@ -4,6 +4,7 @@ import {
   downloadCorporateUserLogin,
   downloadBankUserLoginHistory,
   counterPartyDownloadApi,
+  DownloadCorporateUserListSystemAdminReport,
 } from "../../commen/apis/Api_config";
 import { RefreshToken } from "./Auth-Actions";
 import { downloadReportAPI } from "../../commen/apis/Api_ends_points";
@@ -188,8 +189,78 @@ const counterPartyDownloadReport = (downloadCounterReport) => {
   };
 };
 
+// Corporate User List Report
+
+const downloadCorporateUserlistReport_init = () => {
+  return {
+    type: actions.CORPORATE_USERlIST_REPORT_INIT,
+  };
+};
+const downloadCorporateUserlistReport_success = (response, message) => {
+  return {
+    type: actions.CORPORATE_USERlIST_REPORT_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+const downloadCorporateUserlistReport_fail = (message) => {
+  return {
+    type: actions.CORPORATE_USERlIST_REPORT_FAIL,
+    message: message,
+  };
+};
+
+const downloadCorporateUserlistReportApi = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  let form = new FormData();
+  form.append(
+    "RequestMethod",
+    DownloadCorporateUserListSystemAdminReport.RequestMethod
+  );
+  form.append("RequestData", JSON.stringify(Data));
+  return async (dispatch) => {
+    await dispatch(downloadCorporateUserlistReport_init());
+    axios({
+      method: "post",
+      url: downloadReportAPI,
+      data: form,
+      headers: {
+        _token: token,
+        "Content-Disposition": "attachment; filename=template.xlsx",
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+      responseType: "arraybuffer",
+    })
+      .then(async (response) => {
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(downloadCorporateUserlistReportApi(navigate, Data));
+        } else if (response.status === 200) {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Corporate User List.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          dispatch(
+            downloadCorporateUserlistReport_success(
+              response.data.responseResult,
+              "Download-successffuly"
+            )
+          );
+        }
+      })
+      .catch((response) => {
+        dispatch(downloadCorporateUserlistReport_fail(response));
+      });
+  };
+};
+
 export {
   downloadCorporateLoginReports,
   bankUserDownloadReport,
   counterPartyDownloadReport,
+  downloadCorporateUserlistReportApi,
 };

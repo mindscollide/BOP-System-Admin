@@ -3,6 +3,7 @@ import * as actions from "../action_types";
 const initialState = {
   Loading: false,
   ResponseMessage: "",
+  corporateUserlistReportData: null,
 };
 
 const downloadReducer = (state = initialState, action) => {
@@ -29,6 +30,28 @@ const downloadReducer = (state = initialState, action) => {
       return {
         state,
         Loading: true,
+      };
+
+    //Corporate User List Report
+    case actions.CORPORATE_USERlIST_REPORT_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.CORPORATE_USERlIST_REPORT_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        corporateUserlistReportData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.CORPORATE_USERlIST_REPORT_FAIL:
+      return {
+        state,
+        Loading: false,
+        corporateUserlistReportData: null,
+        ResponseMessage: action.message,
       };
 
     default:
