@@ -51,6 +51,9 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
     useState(null);
   const [branchTradeRightsUpdated, setBranchTradeRightsUpdated] =
     useState(null);
+  const [spotSpreadUpdated, setSpotSpreadUpdated] = useState(null);
+  const [spotCrossUpdated, setCrossSpreadUpdated] = useState(null);
+
   const connectToMqtt = () => {
     if (!subscribeID) {
       console.error("No subscribeID provided for MQTT connection.");
@@ -183,6 +186,13 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         case "BRANCH_TRADE_RIGHTS_UPDATED":
           setBranchTradeRightsUpdated(data.payload);
           break;
+        // When CATEGORY_PARITY_SPOT_SPREADS
+        case "CATEGORY_PARITY_SPOT_SPREADS":
+          setSpotSpreadUpdated(data.payload);
+          break;
+
+        case "CATEGORY_CROSS_RATE_SPREADS":
+          setCrossSpreadUpdated(data.payload);
         default:
           break;
       }
@@ -269,6 +279,10 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setCorporateTradeRightsUpdated,
         branchTradeRightsUpdated,
         setBranchTradeRightsUpdated,
+        spotSpreadUpdated,
+        setSpotSpreadUpdated,
+        spotCrossUpdated,
+        setCrossSpreadUpdated,
       }}
     >
       {children}

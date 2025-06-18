@@ -13,10 +13,7 @@ import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { addCategroyModalSchema } from "../../../../../../utils/schemas";
 import { Addcategory } from "../../../../../../store/actions/AddCategoryActions";
-import {
-  formatCurrencyInput,
-  isValidNumberUnderMax,
-} from "../../../../../../helpers/reusableMethods";
+import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 
 const AddCategoryModal = () => {
   const dispatch = useDispatch();

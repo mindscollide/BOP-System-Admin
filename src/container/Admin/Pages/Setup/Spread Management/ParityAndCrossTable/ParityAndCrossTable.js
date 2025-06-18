@@ -12,7 +12,7 @@ import {
   SaveCategoryParitySpotAPI,
 } from "../../../../../../store/actions/SpreadManagementActions";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-
+import { useMqtt } from "../../../../../../context/MQTTContext";
 const ParityAndCross = ({ categoryID }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,6 +31,12 @@ const ParityAndCross = ({ categoryID }) => {
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
+  const {
+    spotSpreadUpdated,
+    setSpotSpreadUpdated,
+    spotCrossUpdated,
+    setCrossSpreadUpdated,
+  } = useMqtt();
 
   useEffect(() => {
     if (GetSpotSpreadsForCategory !== null && GetAllInstruments !== null) {
@@ -72,6 +78,46 @@ const ParityAndCross = ({ categoryID }) => {
   }, [GetSpotSpreadsForCategory, GetAllInstruments]);
 
   useEffect(() => {
+    if (spotSpreadUpdated !== null && GetAllInstruments !== null) {
+      try {
+        if (
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
+        ) {
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                spotSpreadUpdated.categorySpreads.paritySpotSpreads?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
+                );
+
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                bidSpread: 0,
+                askSpread: 0,
+              };
+            }
+          );
+          setParitySpotData(newDataMapping);
+        }
+        setSpotSpreadUpdated(null);
+      } catch (error) {
+        console.error("Error in mapping instrument data:", error);
+      }
+    }
+  }, [spotSpreadUpdated, GetAllInstruments]);
+
+  useEffect(() => {
     if (GetCrossRateSpreadsForCategory !== null && GetAllInstruments !== null) {
       try {
         if (
@@ -110,6 +156,48 @@ const ParityAndCross = ({ categoryID }) => {
       }
     }
   }, [GetCrossRateSpreadsForCategory, GetAllInstruments]);
+
+  //mqtt for cross spread
+  useEffect(() => {
+    if (spotCrossUpdated !== null && GetAllInstruments !== null) {
+      try {
+        if (
+          GetAllInstruments.instruments &&
+          GetAllInstruments.instruments.length > 0
+        ) {
+          const newDataMapping = GetAllInstruments.instruments.map(
+            (instrument) => {
+              const matchedInstrument =
+                spotCrossUpdated.categorySpreads.crossRatesSpreads?.find(
+                  (item) => item.instrumentID === instrument.instrumentID
+                );
+
+              // If match found, merge the data and set instrumentName
+              if (matchedInstrument) {
+                return {
+                  ...matchedInstrument,
+                  instrumentName: instrument.instrumentName,
+                };
+              }
+
+              // If no match, return default values
+              return {
+                instrumentID: instrument.instrumentID,
+                instrumentName: instrument.instrumentName,
+                bidSpread: 0,
+                askSpread: 0,
+              };
+            }
+          );
+
+          setCrossRateData(newDataMapping);
+        }
+        setCrossSpreadUpdated(null);
+      } catch (error) {
+        console.error("Error setting cross rate data:", error);
+      }
+    }
+  }, [spotCrossUpdated, GetAllInstruments]);
 
   const handleSaveParityAndCross = () => {
     setConfirmationModal(true);
