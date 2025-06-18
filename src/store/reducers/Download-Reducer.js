@@ -5,6 +5,7 @@ const initialState = {
   ResponseMessage: "",
   corporateUserlistReportData: null,
   BankUserlistReportData: null,
+  loginHistoryReportData: null,
 };
 
 const downloadReducer = (state = initialState, action) => {
@@ -55,7 +56,7 @@ const downloadReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
-    //Corporate User List Report
+    //Bank User List Report
     case actions.BANK_USERlIST_REPORT_INIT:
       return {
         state,
@@ -74,6 +75,28 @@ const downloadReducer = (state = initialState, action) => {
         state,
         Loading: false,
         BankUserlistReportData: null,
+        ResponseMessage: action.message,
+      };
+
+    //Login History Report
+    case actions.LOGIN_HISTORY_REPORT_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.LOGIN_HISTORY_REPORT_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        loginHistoryReportData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.LOGIN_HISTORY_REPORT_FAIL:
+      return {
+        state,
+        Loading: false,
+        loginHistoryReportData: null,
         ResponseMessage: action.message,
       };
 

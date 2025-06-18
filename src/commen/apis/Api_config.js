@@ -314,6 +314,11 @@ const DownloadCorporateUserListSystemAdminReport = {
 const DownloadBankUserListSystemAdminReport = {
   RequestMethod: "ServiceManager.DownloadBankUserListSystemAdminReport",
 };
+
+const DownloadLoginHistorySystemAdminReport = {
+  RequestMethod: "ServiceManager.DownloadUserLoginHistorySystemAdminReport",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -391,4 +396,5 @@ export {
   SaveCategoryNonFEDiscounts,
   DownloadCorporateUserListSystemAdminReport,
   DownloadBankUserListSystemAdminReport,
+  DownloadLoginHistorySystemAdminReport,
 };
