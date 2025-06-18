@@ -152,29 +152,6 @@ const BankerList = () => {
     }
   }, [branchUpdated]);
 
-  //Metod to perform action of Export options
-  // const ExportOptions = ({ onClose }) => {
-  //   return (
-  //     <div className={styles["export-options"]}>
-  //       <button
-  //         onClick={() => {
-  //           /* Handle CSV export */
-  //         }}
-  //       >
-  //         Export as CSV
-  //       </button>
-  //       <button
-  //         onClick={() => {
-  //           /* Handle PDF export */
-  //         }}
-  //       >
-  //         Export as PDF
-  //       </button>
-  //       <button onClick={onClose}>Close</button>
-  //     </div>
-  //   );
-  // };
-
   //Banker List validate handler
   const BankerListValidateHandler = (e) => {
     let name = e.target.name;

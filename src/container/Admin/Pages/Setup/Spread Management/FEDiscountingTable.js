@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SaveCategoryFEDiscountsAPI } from "../../../../../store/actions/SpreadManagementActions";
 import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
+import { useMqtt } from "../../../../../context/MQTTContext";
 
 const FEDiscountingTable = ({ categoryID }) => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const FEDiscountingTable = ({ categoryID }) => {
   const GetAllTenors = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
   );
+  const { FEDiscoutingSpreadUpdated, setFEDiscoutingSpreadUpdated } = useMqtt();
 
   const handleChangeDiscounting = (value, record, instrumentName) => {
     if (isValidNumberUnderMax(value, "", 100)) {
@@ -107,6 +109,38 @@ const FEDiscountingTable = ({ categoryID }) => {
     GetAllInstruments,
     GetAllTenors,
   ]);
+
+  useEffect(() => {
+    if (GetAllInstruments !== null && GetAllTenors !== null) {
+      if (FEDiscoutingSpreadUpdated !== null) {
+        console.log("FEDiscoutingSpreadUpdated", FEDiscoutingSpreadUpdated);
+        try {
+          console.log("FEDiscoutingSpreadUpdated", FEDiscoutingSpreadUpdated);
+
+          const {
+            categorySpreads: { discountingSpreads },
+          } = FEDiscoutingSpreadUpdated;
+          console.log("FEDiscoutingSpreadUpdated", discountingSpreads);
+
+          const { rowData, columnsData } = buildDiscountingTable(
+            2,
+            discountingSpreads,
+            GetAllTenors,
+            GetAllInstruments,
+            TextField,
+            handleChangeDiscounting
+          );
+          console.log("FEDiscoutingSpreadUpdated", rowData, columnsData);
+
+          setFEDiscoutingColumns(columnsData);
+          setFEDiscoutingData(rowData);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      setFEDiscoutingSpreadUpdated(null);
+    }
+  }, [FEDiscoutingSpreadUpdated, GetAllInstruments, GetAllTenors]);
 
   const handleResetForward = () => {
     setConfirmationModal(true);

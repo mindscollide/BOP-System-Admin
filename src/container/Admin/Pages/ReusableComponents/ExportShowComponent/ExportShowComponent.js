@@ -3,9 +3,9 @@ import React, { useState } from "react";
 // import styles from "./BankerList.module.css";
 import styles from "./ExportShowComponent.module.css";
 import { Col, Row } from "react-bootstrap";
-const ExportShowComponent = () => {
+const ExportShowComponent = ({ dropdownvalue, setDropdownvalue }) => {
   const { Option } = Select;
-  const [dropdownvalue, setDropdownvalue] = useState(50);
+  // const [dropdownvalue, setDropdownvalue] = useState(50);
 
   const handleChangeDropDown = (value) => {
     console.log(`selected ${value}`);
