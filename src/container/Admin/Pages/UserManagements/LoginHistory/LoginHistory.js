@@ -31,6 +31,7 @@ import { SearchAllUserLoginHistoryAPI } from "../../../../../store/actions/BOPSy
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../../helpers/useTableScrollBottom";
 import ExportShowComponent from "../../ReusableComponents/ExportShowComponent/ExportShowComponent";
+import { downloadLoginHistoryReportApi } from "../../../../../store/actions/Download-Report";
 const LoginHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -414,11 +415,26 @@ const LoginHistory = () => {
   };
 
   const exportToExcel = () => {
-    // const worksheet = XLSX.utils.json_to_sheet(data);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
-    // XLSX.writeFile(workbook, "CorporateList.xlsx");
     console.log("Doc saved as Excel");
+    let Data = {
+      UserName: loginHistory.Name.value !== "" ? loginHistory.Name.value : "",
+      CounterPartyName:
+        loginHistory.CounterPartyName.value !== ""
+          ? loginHistory.CounterPartyName.value
+          : "",
+      Email: loginHistory.Email.value !== "" ? loginHistory.Email.value : "",
+      RoleID: roleID.value !== 0 ? roleID.value : 0,
+      StartDateTime:
+        loginHistory.dateFrom.value !== ""
+          ? formatDate(loginHistory.dateFrom.value)
+          : "",
+      EndDateTime:
+        loginHistory.dateTo.value !== ""
+          ? formatDate(loginHistory.dateTo.value)
+          : "",
+    };
+    console.log(Data, "Doc saved as Excel");
+    dispatch(downloadLoginHistoryReportApi(navigate, Data));
   };
 
   const exportToPDF = () => {

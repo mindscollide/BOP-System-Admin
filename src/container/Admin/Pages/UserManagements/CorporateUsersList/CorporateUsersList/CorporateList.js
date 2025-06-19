@@ -39,6 +39,7 @@ import { useMqtt } from "../../../../../../context/MQTTContext";
 import CorporateUserDetailsModal from "../CorporateUserDetailsModal/CorporateUserDetailsModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
+import { downloadCorporateUserlistReportApi } from "../../../../../../store/actions/Download-Report";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -620,11 +621,18 @@ const CorporateList = () => {
     }));
   };
   const exportToExcel = () => {
-    // const worksheet = XLSX.utils.json_to_sheet(data);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
-    // XLSX.writeFile(workbook, "CorporateList.xlsx");
     console.log("Doc saved as Excel");
+    let data = {
+      Name: corporateList.Name.value !== "" ? corporateList.Name.value : "",
+      CorporateName:
+        corporateList.CorporateName.value !== ""
+          ? corporateList.CorporateName.value
+          : "",
+      Email: corporateList.Email.value !== "" ? corporateList.Email.value : "",
+      categoryID: categoryID.value !== 0 ? categoryID.value : 0,
+    };
+    console.log(data, "Doc saved as Excel");
+    dispatch(downloadCorporateUserlistReportApi(navigate, data));
   };
 
   const exportToPDF = () => {
