@@ -95,18 +95,68 @@ const BankerList = () => {
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (recordsLength !== tableData.length) {
+      let Data = {
+        EmployeeID: bankList.EmployeeID.value,
+        Name: bankList.Name.value,
+        Email: bankList.Email.value,
+        RoleID: roleID.roleID ? roleID.roleID : 0,
+        sRow: sRow,
+        Length: dropdownvalue,
+      };
+      dispatch(SearchBankUsersAPI(navigate, Data));
+    }
+  });
+
+  const handlePageSizeChange = (newSize) => {
+    setDropdownvalue(newSize);
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
+
+    let data = {
+      EmployeeID: bankList.EmployeeID.value,
+      Name: bankList.Name.value,
+      Email: bankList.Email.value,
+      RoleID: roleID.roleID ? roleID.roleID : 0,
+      sRow: 0,
+      Length: newSize,
+    };
+
+    dispatch(SearchBankUsersAPI(navigate, data));
+  };
+
+  // useEffect(() => {
+  //   dispatch(GetBankUserRolesAPI(navigate));
+  //   let data = {
+  //     EmployeeID: "",
+  //     Name: "",
+  //     Email: "",
+  //     RoleID: 0,
+  //     sRow: 0,
+  //     Length: 50,
+  //   };
+  //   dispatch(SearchBankUsersAPI(navigate, data));
+  // }, []);
   useEffect(() => {
     dispatch(GetBankUserRolesAPI(navigate));
-    let data = {
-      EmployeeID: "",
-      Name: "",
-      Email: "",
-      RoleID: 0,
-      sRow: 0,
-      Length: 10,
-    };
-    dispatch(SearchBankUsersAPI(navigate, data));
+    // let data = {
+    //   EmployeeID: "",
+    //   Name: "",
+    //   Email: "",
+    //   RoleID: 0,
+    //   sRow: 0,
+    //   Length: dropdownvalue, // Use dropdownvalue instead of hardcoded 10
+    // };
+    // dispatch(SearchBankUsersAPI(navigate, data));
+    handlePageSizeChange(50);
   }, []);
 
   //Role list:
@@ -224,23 +274,6 @@ const BankerList = () => {
     }
   };
 
-  //Custome hook for Scrolling (1)
-  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
-    console.log("🚀 Table reached bottom");
-    // Load more data here if needed
-    if (recordsLength !== tableData.length) {
-      let Data = {
-        EmployeeID: bankList.EmployeeID.value,
-        Name: bankList.Name.value,
-        Email: bankList.Email.value,
-        RoleID: roleID.roleID ? roleID.roleID : 0,
-        sRow: sRow,
-        Length: 10,
-      };
-      dispatch(SearchBankUsersAPI(navigate, Data));
-    }
-  });
-
   //handelled states for scrolling here (2)
   //handle Search Button event
   const handleSearchEventButton = () => {
@@ -255,7 +288,7 @@ const BankerList = () => {
       Email: bankList.Email.value,
       RoleID: roleID.roleID ? roleID.roleID : 0,
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
     dispatch(SearchBankUsersAPI(navigate, data));
   };
@@ -302,7 +335,7 @@ const BankerList = () => {
         Email: "",
         RoleID: 0,
         sRow: 0,
-        Length: 10,
+        Length: dropdownvalue,
       };
 
       // Call API to fetch all records after reset
@@ -727,7 +760,10 @@ const BankerList = () => {
             {/* <Row className="mt-3"></Row> */}
             <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
-                <ExportShowComponent />
+                <ExportShowComponent
+                  value={dropdownvalue}
+                  onChange={handlePageSizeChange}
+                />
               </Col>
             </Row>
 

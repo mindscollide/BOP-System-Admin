@@ -171,3 +171,6 @@
   display: flex; /* Ensures the button stays inline */
   align-items: center; /* Align icon inside the button */
 }
+.spanshowClass {
+  font-family: "Roboto", sans-serif !important;
+}
