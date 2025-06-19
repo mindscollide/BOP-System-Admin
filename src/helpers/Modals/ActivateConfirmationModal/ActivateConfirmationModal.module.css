@@ -9,6 +9,9 @@
   font-size: 1.25rem !important;
   color: #4d4946 !important;
   font-weight: 700 !important;
+  align-items: center;
+  align-self: center;
+  align-content: center;
 }
 
 .AddBranchClass {
