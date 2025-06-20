@@ -64,6 +64,7 @@ const LoginHistory = () => {
     value: 0,
     label: "",
   });
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   //row length on scroll
   const [sRow, setSRow] = useState(0);
@@ -80,6 +81,65 @@ const LoginHistory = () => {
     setShowExportOptions(!showExportOptions);
   };
 
+  //Custome hook for Scrolling (1)
+  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
+    console.log("🚀 Table reached bottom");
+    // Load more data here if needed
+    if (recordsLength !== tableData.length) {
+      let Data = {
+        UserName: loginHistory.Name.value,
+        CounterPartyName: loginHistory?.CounterPartyName?.value,
+        Email: loginHistory.Email.value,
+        RoleID: roleID.value,
+
+        StartDateTime: formatDate(loginHistory.dateFrom.value),
+        EndDateTime: formatDate(loginHistory.dateTo.value),
+        sRow: sRow,
+        Length: dropdownvalue,
+      };
+      dispatch(SearchAllUserLoginHistoryAPI(navigate, Data));
+    }
+  });
+
+  const handlePageSizeChange = (newSize) => {
+    if (newSize !== dropdownvalue) {
+      setDropdownvalue(newSize);
+      setSRow(0);
+      setHasReachedBottom(false);
+      setTableData([]);
+      setRecordLength(0);
+
+      let data = {
+        UserName: loginHistory.Name.value,
+        CounterPartyName: loginHistory?.CounterPartyName?.value,
+        Email: loginHistory.Email.value,
+        RoleID: roleID.value,
+        StartDateTime: formatDate(loginHistory.dateFrom.value),
+        EndDateTime: formatDate(loginHistory.dateTo.value),
+        sRow: 0,
+        Length: newSize,
+      };
+      dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
+    }
+  };
+
+  // Replace the initial useEffect with:
+  useEffect(() => {
+    dispatch(RoleListAPI(navigate));
+
+    // Initial data fetch with default page size (50)
+    let data = {
+      UserName: "",
+      CounterPartyName: "",
+      Email: "",
+      RoleID: 0,
+      StartDateTime: "",
+      EndDateTime: "",
+      sRow: 0,
+      Length: 50, // Use default value directly
+    };
+    dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
+  }, []);
   //Login History validate handler
   const LoginHistoryValidateHandler = (e) => {
     let name = e.target.name;
@@ -255,25 +315,6 @@ const LoginHistory = () => {
       },
     },
   ];
-  //Custome hook for Scrolling (1)
-  const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
-    console.log("🚀 Table reached bottom");
-    // Load more data here if needed
-    if (recordsLength !== tableData.length) {
-      let Data = {
-        UserName: loginHistory.Name.value,
-        CounterPartyName: loginHistory?.CounterPartyName?.value,
-        Email: loginHistory.Email.value,
-        RoleID: roleID.value,
-
-        StartDateTime: formatDate(loginHistory.dateFrom.value),
-        EndDateTime: formatDate(loginHistory.dateTo.value),
-        sRow: sRow,
-        Length: 10,
-      };
-      dispatch(SearchAllUserLoginHistoryAPI(navigate, Data));
-    }
-  });
 
   //handelled states for scrolling here (2)
   //Handle search Button even
@@ -291,10 +332,11 @@ const LoginHistory = () => {
       StartDateTime: formatDate(loginHistory.dateFrom.value),
       EndDateTime: formatDate(loginHistory.dateTo.value),
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
     dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
   };
+
   //Table columns for customer List
   const handleNoButton = useCallback(() => {
     if (modalState === 1) {
@@ -344,7 +386,7 @@ const LoginHistory = () => {
       StartDateTime: "",
       EndDateTime: "",
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
     dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
   };
@@ -426,21 +468,6 @@ const LoginHistory = () => {
       </div>
     );
   };
-
-  useEffect(() => {
-    let data = {
-      Email: "",
-      CounterPartyName: "",
-      UserName: "",
-      RoleID: 0,
-      StartDateTime: "",
-      EndDateTime: "",
-      sRow: 0,
-      Length: 10,
-    };
-    dispatch(SearchAllUserLoginHistoryAPI(navigate, data));
-    dispatch(RoleListAPI(navigate));
-  }, []);
 
   //Role list:
   useEffect(() => {
@@ -621,7 +648,10 @@ const LoginHistory = () => {
 
             <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
-                <ExportShowComponent />
+                <ExportShowComponent
+                  value={dropdownvalue}
+                  onChange={handlePageSizeChange}
+                />
               </Col>
             </Row>
 

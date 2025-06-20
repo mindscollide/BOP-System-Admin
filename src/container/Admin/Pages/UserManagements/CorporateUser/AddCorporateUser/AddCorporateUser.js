@@ -34,7 +34,12 @@ const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { corporateCreated, setCorporateCreated, corporateUpdated } = useMqtt();
+  const {
+    corporateCreated,
+    setCorporateCreated,
+    corporateUpdated,
+    setCorporateUpdated,
+  } = useMqtt();
 
   const { setBulkUploadClicked, setEditCompanyData } = useCorporateUser();
 
@@ -399,6 +404,7 @@ const AddCorporateUser = () => {
           }
         }
       }
+      setCorporateUpdated(null);
     }
   }, [corporateUpdated]);
   // Handle File upload

@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   Table,
+  Loader,
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import DatePicker from "react-multi-date-picker";
@@ -15,12 +16,13 @@ import { transactionSide } from "../../../../../../helpers/Dropdown";
 import {
   formatDate,
   formatDateAndTimeFromString,
+  IndexCell,
 } from "../../../../../../helpers/reusableMethods";
 import { useDispatch } from "react-redux";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import {
   ConfirmationModalSystemAdmin,
-  TradeCountCommentModalSystemAdmin,
+  // TradeCountCommentModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { Popover } from "antd";
 import { useSelector } from "react-redux";
@@ -31,7 +33,7 @@ import excelIcon from "../../../../../../assets/images/excel.png";
 import { useNavigate } from "react-router-dom";
 import { GetAllNatureAPI } from "../../../../../../store/actions/Auth-Actions";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
-import CommentModal from "../CommentModal/CommentModal";
+// import CommentModal from "../CommentModal/CommentModal";
 import { GetAllTradesAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
 import moment from "moment";
@@ -40,9 +42,14 @@ const TradeCount = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const LoadingTrade = useSelector(
+    (state) => state.BOPSystemAdminReducer.Loading
+  );
+  const LoadingAuth = useSelector((state) => state.auth.Loading);
   const getAllNatureOfBuisness = useSelector(
     (state) => state.auth.getAllNatureOfBuisness
   );
+  console.log("getAllNatureOfBuisness", getAllNatureOfBuisness);
 
   const GetAllTrades = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllTrades
@@ -72,16 +79,16 @@ const TradeCount = () => {
   const [open, setOpen] = useState(false);
 
   //UserDetails Corporate Use Modal Calling
-  const TradeCountCommentModalGobalState = useSelector(
-    (state) => state.BOPSystemAdminModal.tradeCountCommentModal
-  );
+  // const TradeCountCommentModalGobalState = useSelector(
+  //   (state) => state.BOPSystemAdminModal.tradeCountCommentModal
+  // );
 
   //handle Edit Corporate
-  const handleEditBanker = () => {
-    // dispatch(editBankUserModalSystemAdmin(true));
-    // dispatch(DeleteCorporateModalSystemAdmin(false));
-    // dispatch(UserDetailsCorporateModalSystemAdmin(false));
-  };
+  // const handleEditBanker = () => {
+  //   // dispatch(editBankUserModalSystemAdmin(true));
+  //   // dispatch(DeleteCorporateModalSystemAdmin(false));
+  //   // dispatch(UserDetailsCorporateModalSystemAdmin(false));
+  // };
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -99,7 +106,7 @@ const TradeCount = () => {
       FromDate: "",
       ToDate: "",
       LCNumber: "",
-      IsBuySide: false,
+      Side: 0,
       NatureOfTransactionID: 0,
       Amount: 0.0,
       sRow: 0,
@@ -120,7 +127,7 @@ const TradeCount = () => {
         FromDate: "",
         ToDate: "",
         LCNumber: "",
-        IsBuySide: false,
+        Side: false,
         NatureOfTransactionID: 0,
         Amount: 0.0,
         sRow: sRow,
@@ -152,9 +159,14 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Side</label>,
       dataIndex: "side",
       key: "side",
-      width: "100px",
+      width: "50px",
       align: "center",
       ellipsis: true,
+      render: (val, record) => {
+        console.log({ record }, "val record");
+        let side = record?.isBuySide === true ? "Buy" : "Sell";
+        return side;
+      },
     },
     {
       title: <label className="bottom-table-header">Nature</label>,
@@ -163,6 +175,19 @@ const TradeCount = () => {
       width: "200px",
       align: "center",
       ellipsis: true,
+      render: (val, record) => {
+        let nature =
+          getAllNatureOfBuisness?.natureofBusinesses?.length > 0 &&
+          getAllNatureOfBuisness?.natureofBusinesses.find(
+            (nature) => nature.pK_NatureOfBusiness === val
+          );
+        return (
+          <IndexCell
+            value={nature !== undefined ? nature.name : ""}
+            record={record}
+          />
+        );
+      },
     },
     {
       title: <label className="bottom-table-header">CCY1</label>,
@@ -174,8 +199,8 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Amount</label>,
-      dataIndex: "CCY1Amount",
-      key: "CCY1Amount",
+      dataIndex: "quantity",
+      key: "quantity",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -199,8 +224,8 @@ const TradeCount = () => {
 
     {
       title: <label className="bottom-table-header">Amount</label>,
-      dataIndex: "CCY2Amount",
-      key: "CCY2Amount",
+      dataIndex: "amount",
+      key: "amount",
       width: "100px",
       align: "center",
       ellipsis: true,
@@ -238,7 +263,7 @@ const TradeCount = () => {
       },
     },
     {
-      title: <label className="bottom-table-header">LC #</label>,
+      title: <label className="bottom-table-header">LC#</label>,
       dataIndex: "lcNumber",
       key: "lcNumber",
       width: "100px",
@@ -246,51 +271,55 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Account #</label>,
+      title: <label className="bottom-table-header">Account#</label>,
       dataIndex: "accountNumber",
       key: "accountNumber",
       width: "200px",
       align: "center",
       ellipsis: true,
     },
-    {
-      title: <label className="bottom-table-header">Comment</label>,
-      dataIndex: "comment",
-      key: "comment",
-      width: "100px",
-      align: "center",
-      ellipsis: true,
-      render: (text) => {
-        return (
-          <>
-            <Row>
-              <Col
-                lg={12}
-                md={12}
-                sm={12}
-                className="d-flex gap-2 justify-content-center align-items-center"
-              >
-                <Button
-                  className={styles["comment-icon"]}
-                  icon={<i className="icon-view-comment color-blue"></i>}
-                  // onClick={handleEditBanker}
-                  // onClick={() => handleClickCommentModal(text)}
-                  onClick={() => handleClickCommentModal(text)}
-                />
-                {/* <span>{text}</span> */}
-              </Col>
-            </Row>
-          </>
-        );
-      },
-    },
+    // {
+    //   title: <label className="bottom-table-header">Comment</label>,
+    //   dataIndex: "comment",
+    //   key: "comment",
+    //   width: "100px",
+    //   align: "center",
+    //   ellipsis: true,
+    //   render: (text) => {
+    //     return (
+    //       <>
+    //         <Row>
+    //           <Col
+    //             lg={12}
+    //             md={12}
+    //             sm={12}
+    //             className="d-flex gap-2 justify-content-center align-items-center"
+    //           >
+    //             <Button
+    //               className={styles["comment-icon"]}
+    //               icon={<i className="icon-view-comment color-blue"></i>}
+    //               // onClick={handleEditBanker}
+    //               // onClick={() => handleClickCommentModal(text)}
+    //               onClick={() => handleClickCommentModal(text)}
+    //             />
+    //             {/* <span>{text}</span> */}
+    //           </Col>
+    //         </Row>
+    //       </>
+    //     );
+    //   },
+    // },
     {
       title: <label className="bottom-table-header">Status</label>,
       dataIndex: "statusID",
       key: "statusID",
       width: "100px",
       align: "center",
+      className: "color-green",
       ellipsis: true,
+      render: (statusID) => {
+        return "Accepted";
+      },
     },
   ];
 
@@ -399,10 +428,10 @@ const TradeCount = () => {
     }
   };
 
-  const handleClickCommentModal = (text) => {
-    dispatch(TradeCountCommentModalSystemAdmin(true));
-    console.log("the comment is", text);
-  };
+  // const handleClickCommentModal = (text) => {
+  //   dispatch(TradeCountCommentModalSystemAdmin(true));
+  //   console.log("the comment is", text);
+  // };
 
   const handleSearchEventButton = () => {
     setSRow(0);
@@ -488,7 +517,7 @@ const TradeCount = () => {
       FromDate: "",
       ToDate: "",
       LCNumber: "",
-      IsBuySide: false,
+      Side: 0,
       NatureOfTransactionID: 0,
       Amount: 0.0,
       sRow: 0,
@@ -500,10 +529,10 @@ const TradeCount = () => {
 
   //Handle Select Change
   // A generic function to handle dropdown changes
-  const handleDropdownChange = (field, value, setter, userField) => {
-    setter(value); // Set the state
-    userField.value = value.value; // Update the corporateUser object
-  };
+  // const handleDropdownChange = (field, value, setter, userField) => {
+  //   setter(value); // Set the state
+  //   userField.value = value.value; // Update the corporateUser object
+  // };
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
@@ -801,13 +830,14 @@ const TradeCount = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {TradeCountCommentModalGobalState && <CommentModal />}
+      {/* {TradeCountCommentModalGobalState && <CommentModal />} */}
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleResetYes}
           handleNoButton={handleNoButton}
         />
       )}
+      {(LoadingTrade && <Loader />) || (LoadingAuth && <Loader />)}
     </section>
   );
 };
