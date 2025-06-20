@@ -39,7 +39,10 @@ import { useMqtt } from "../../../../../../context/MQTTContext";
 import CorporateUserDetailsModal from "../CorporateUserDetailsModal/CorporateUserDetailsModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
-import { downloadCorporateUserlistReportApi } from "../../../../../../store/actions/Download-Report";
+import {
+  downloadCorporateUserlistReportApi,
+  downloadPDFCorporateUserReportApi,
+} from "../../../../../../store/actions/Download-Report";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -636,12 +639,18 @@ const CorporateList = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
+    console.log("Doc saved as Excel");
+    let data = {
+      Name: corporateList.Name.value !== "" ? corporateList.Name.value : "",
+      CorporateName:
+        corporateList.CorporateName.value !== ""
+          ? corporateList.CorporateName.value
+          : "",
+      Email: corporateList.Email.value !== "" ? corporateList.Email.value : "",
+      categoryID: categoryID.value !== 0 ? categoryID.value : 0,
+    };
+    console.log(data, "Doc saved as Excel");
+    dispatch(downloadPDFCorporateUserReportApi(navigate, data));
     console.log("doc saved as pdf");
   };
 
