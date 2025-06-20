@@ -35,7 +35,10 @@ import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBo
 import { useMqtt } from "../../../../../../context/MQTTContext";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import EditBankerModal from "../EditBankUserModal/EditBankerModal";
-import { downloadBankUserlistReportApi } from "../../../../../../store/actions/Download-Report";
+import {
+  downloadBankUserlistReportApi,
+  downloadPDFBankUserReportApi,
+} from "../../../../../../store/actions/Download-Report";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -640,12 +643,16 @@ const BankerList = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
+    let data = {
+      EmployeeID:
+        bankList.EmployeeID.value !== "" ? bankList.EmployeeID.value : "",
+      Name: bankList.Name.value !== "" ? bankList.Name.value : "",
+      RoleID: roleID.value !== 0 ? roleID.value : 0,
+      Email: bankList.Email.value !== "" ? bankList.Email.value : "",
+    };
+    console.log(data, "Doc saved as Excel");
+
+    dispatch(downloadPDFBankUserReportApi(navigate, data));
     console.log("doc saved as pdf");
   };
 

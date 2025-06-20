@@ -31,7 +31,10 @@ import { SearchAllUserLoginHistoryAPI } from "../../../../../store/actions/BOPSy
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../../helpers/useTableScrollBottom";
 import ExportShowComponent from "../../ReusableComponents/ExportShowComponent/ExportShowComponent";
-import { downloadLoginHistoryReportApi } from "../../../../../store/actions/Download-Report";
+import {
+  downloadLoginHistoryReportApi,
+  downloadPDFLoginHistoryReportApi,
+} from "../../../../../store/actions/Download-Report";
 const LoginHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -396,13 +399,26 @@ const LoginHistory = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
-    console.log("doc saved as pdf");
+    console.log("Doc saved as Excel");
+    let Data = {
+      UserName: loginHistory.Name.value !== "" ? loginHistory.Name.value : "",
+      CounterPartyName:
+        loginHistory.CounterPartyName.value !== ""
+          ? loginHistory.CounterPartyName.value
+          : "",
+      Email: loginHistory.Email.value !== "" ? loginHistory.Email.value : "",
+      RoleID: roleID.value !== 0 ? roleID.value : 0,
+      StartDateTime:
+        loginHistory.dateFrom.value !== ""
+          ? formatDate(loginHistory.dateFrom.value)
+          : "",
+      EndDateTime:
+        loginHistory.dateTo.value !== ""
+          ? formatDate(loginHistory.dateTo.value)
+          : "",
+    };
+    console.log(Data, "Doc saved as Excel");
+    dispatch(downloadPDFLoginHistoryReportApi(navigate, Data));
   };
   //Metod to perform action of Export options
   const ExportOptions = ({ onClose }) => {
