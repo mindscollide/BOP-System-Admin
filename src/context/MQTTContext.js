@@ -53,7 +53,11 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
     useState(null);
   const [spotSpreadUpdated, setSpotSpreadUpdated] = useState(null);
   const [spotCrossUpdated, setCrossSpreadUpdated] = useState(null);
-
+  const [forwardSpreadUpdated, setForwardSpreadUpdated] = useState(null);
+  const [FEDiscoutingSpreadUpdated, setFEDiscoutingSpreadUpdated] =
+    useState(null);
+  const [NonFEDiscoutingSpreadUpdated, setNonFEDiscoutingSpreadUpdated] =
+    useState(null);
   const connectToMqtt = () => {
     if (!subscribeID) {
       console.error("No subscribeID provided for MQTT connection.");
@@ -190,9 +194,18 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         case "CATEGORY_PARITY_SPOT_SPREADS":
           setSpotSpreadUpdated(data.payload);
           break;
-
         case "CATEGORY_CROSS_RATE_SPREADS":
           setCrossSpreadUpdated(data.payload);
+          break;
+        case "CATEGORY_FORWARDS_SPREADS":
+          setForwardSpreadUpdated(data.payload);
+          break;
+        case "CATEGORY_FE_DISCOUNTING_SPREADS":
+          setFEDiscoutingSpreadUpdated(data.payload);
+          break;
+        case "CATEGORY_NON_FE_DISCOUNTING_SPREADS":
+          setNonFEDiscoutingSpreadUpdated(data.payload);
+          break;
         default:
           break;
       }
@@ -283,6 +296,12 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
         setSpotSpreadUpdated,
         spotCrossUpdated,
         setCrossSpreadUpdated,
+        forwardSpreadUpdated,
+        setForwardSpreadUpdated,
+        FEDiscoutingSpreadUpdated,
+        setFEDiscoutingSpreadUpdated,
+        NonFEDiscoutingSpreadUpdated,
+        setNonFEDiscoutingSpreadUpdated,
       }}
     >
       {children}

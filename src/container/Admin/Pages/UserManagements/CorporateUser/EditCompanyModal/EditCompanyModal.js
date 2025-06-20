@@ -3,10 +3,7 @@ import styles from "./EditCompanyModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-// import { editCompanyModalSystemAdmin } from "../../../../store/actions/BOPSystemAdminModalsActions";
-// import { Button, Modal, TextField } from "../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
-// import { UpdateCorporateByCorporateIDAPI } from "../../../../store/actions/BOPSystemAdminActions";
 import { useNavigate } from "react-router-dom";
 import { editCompanyModalSystemAdmin } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCorporateByCorporateIDAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
@@ -17,8 +14,6 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
-// import { RFQTimerOptions } from "../../../../helpers/Dropdown";
-// import { GetAllNatureAPI } from "../../../../store/actions/Auth-Actions";
 const EditCompanyModal = ({ editCompanyData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

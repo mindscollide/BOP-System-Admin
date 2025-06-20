@@ -81,6 +81,7 @@ const CorporateList = () => {
     value: 0,
     label: "",
   });
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   //row length on scroll
   const [sRow, setSRow] = useState(0);
@@ -118,24 +119,47 @@ const CorporateList = () => {
         CategoryID: categoryID.categoryID ? categoryID.categoryID : 0,
         Email: corporateList.Email.value,
         sRow: sRow,
-        Length: 10,
+        Length: dropdownvalue,
       };
       dispatch(SearchCorporateUsersAPI(navigate, Data));
     }
   });
+  const handlePageSizeChange = (newSize) => {
+    // Update local state
+    setDropdownvalue(newSize);
 
-  useEffect(() => {
-    dispatch(GetAllCategoriesAPI(navigate));
+    // // Reset pagination state
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
+
+    // Prepare API call data
     let data = {
-      FirstName: "",
-      CompanyName: "",
-      CategoryID: 0,
-      Email: "",
+      FirstName: corporateList.Name.value,
+      CompanyName: corporateList.CorporateName.value,
+      Email: corporateList.Email.value,
+      CategoryID: categoryID.categoryID ? categoryID.categoryID : 0,
       sRow: 0,
-      Length: 10,
+      Length: newSize,
     };
 
+    // Make the API call
     dispatch(SearchCorporateUsersAPI(navigate, data));
+  };
+  useEffect(() => {
+    dispatch(GetAllCategoriesAPI(navigate));
+    handlePageSizeChange(50);
+    // let data = {
+    //   FirstName: "",
+    //   CompanyName: "",
+    //   CategoryID: 0,
+    //   Email: "",
+    //   sRow: 0,
+    //   Length: dropdownvalue,
+    // };
+
+    // dispatch(SearchCorporateUsersAPI(navigate, data));
   }, []);
 
   useEffect(() => {
@@ -385,7 +409,7 @@ const CorporateList = () => {
       Email: corporateList.Email.value,
       CategoryID: categoryID.categoryID ? categoryID.categoryID : 0,
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
 
     dispatch(SearchCorporateUsersAPI(navigate, data));
@@ -431,7 +455,7 @@ const CorporateList = () => {
         CategoryID: 0,
         Email: "",
         sRow: 0,
-        Length: 10,
+        Length: dropdownvalue,
       };
 
       dispatch(SearchCorporateUsersAPI(navigate, data));
@@ -648,6 +672,7 @@ const CorporateList = () => {
                   placeholder="Name"
                   labelClass={"d-none"}
                   name={"Name"}
+                  maxLength={50}
                   value={corporateList.Name.value}
                   onChange={CorporateListValidateHandler}
                 />
@@ -657,6 +682,7 @@ const CorporateList = () => {
                   labelClass={"d-none"}
                   placeholder="Corporate Name"
                   name={"corporateName"}
+                  maxLength={50}
                   value={corporateList.CorporateName.value}
                   onChange={CorporateListValidateHandler}
                 />
@@ -733,35 +759,12 @@ const CorporateList = () => {
               </Col>
             </Row>
 
-            {/* <Row className="mt-3"></Row>
-
-            {showExportOptions && (
-              <Row className="mt-3">
-                <Col
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  className="d-flex justify-content-center gap-1"
-                >
-                //Export as PDF Button
-                  <Button
-                    variant="primary"
-                    text="Export as PDF"
-                    onClick={() => console.log("Exporting as PDF")}
-                  />
-                // Export as Excel Button 
-                  <Button
-                    variant="secondary"
-                    text="Export as Excel"
-                    onClick={() => console.log("Exporting as Excel")}
-                  />
-                </Col>
-              </Row>
-            )} */}
-
             <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
-                <ExportShowComponent />
+                <ExportShowComponent
+                  value={dropdownvalue}
+                  onChange={handlePageSizeChange}
+                />
               </Col>
             </Row>
 

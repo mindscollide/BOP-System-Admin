@@ -177,7 +177,7 @@ const EditBranchModal = ({ editBranchData }) => {
               >
                 <TextField
                   name={"branchCode"}
-                  maxLength={25}
+                  maxLength={4}
                   value={updateBranch.branchCode}
                   onChange={updateBranchUserValidateHandler}
                   labelClass="d-none"
