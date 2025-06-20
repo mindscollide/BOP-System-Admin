@@ -242,11 +242,11 @@
 @media (max-width: 768px) {
   .EditButton,
   .PlusButton {
-    width: 35px !important;
+    /* width: 35px !important;
     right: auto !important;
     margin-left: 8px !important;
     margin-top: 8px !important;
-    position: relative !important;
+    position: relative !important; */
   }
 }
 .InputFieldClass {

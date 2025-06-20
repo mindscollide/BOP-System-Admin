@@ -732,13 +732,7 @@ const BankerList = () => {
                   text="Reset"
                   onClick={handleReset}
                 />
-                {/* <Button
-                  icon={<i className="icon-download"></i>}
-                  className={styles["Export_Button"]}
-                  text="Export"
-                  iconClass={styles["resetIconClass"]}
-                  // onClick={() => setShowExportOptions(!showExportOptions)}
-                /> */}
+
                 <Popover
                   content={
                     <div className={styles["export-options"]}>

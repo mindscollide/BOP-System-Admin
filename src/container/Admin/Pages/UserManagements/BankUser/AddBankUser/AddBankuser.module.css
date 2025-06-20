@@ -12,7 +12,7 @@
   width: 100% !important;
   overflow: hidden !important;
   background-color: #ffffff !important;
-  min-height: 50vh;
+  min-height: 60vh;
 }
 
 .active-cancel-btn-col {
@@ -226,16 +226,16 @@
 @media (max-width: 1024px) {
   .EditButton,
   .PlusButton {
-    width: 35px;
-    right: 40% !important;
+    /* width: 35px;
+    right: auto !important; */
   }
 }
 
 @media (max-width: 768px) {
   .EditButton,
   .PlusButton {
-    width: 30px;
-    right: 35% !important;
+    /* width: 30px;
+    right: 35% !important; */
   }
 }
 

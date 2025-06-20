@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import Paho from "paho-mqtt";
 import { secureRandomString } from "../commen/functions/utils";
+import { useNavigate } from "react-router-dom";
 
 // Create the context
 const MqttContext = createContext();
@@ -16,8 +17,7 @@ export const useMqtt = () => useContext(MqttContext);
 export const MqttProvider = ({ subscribeID, dispatch, children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef(null);
-  const retryCountRef = useRef(0); // Tracks number of retries
-  const MAX_RETRIES = 3;
+
   const randomString = secureRandomString();
   // Related Bank User Request and Created and Rejected
   const [bankUserCreated, setBankUserCreated] = useState(null);
@@ -79,7 +79,6 @@ export const MqttProvider = ({ subscribeID, dispatch, children }) => {
     clientRef.current.onMessageArrived = (message) => {
       console.log("Message arrived:", JSON.parse(message.payloadString));
       let data = JSON.parse(message.payloadString);
-
       console.log("Message arrived:", JSON.parse(message.payloadString));
 
       switch (data.payload.message) {
