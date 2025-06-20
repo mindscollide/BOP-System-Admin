@@ -18,10 +18,19 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 
 const CorporatePlusIconModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {
+    categoryAdded,
+    setCategoryAdded,
+    categoryUpdate,
+    setCategoryUpdate,
+    categoryDeleted,
+    setCategoryDeleted,
+  } = useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -146,7 +155,7 @@ const CorporatePlusIconModal = () => {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
             ...category,
-            value: { value: category.categoryID },
+            value: category.categoryID,
             label: category.categoryName,
           };
         });
@@ -194,13 +203,66 @@ const CorporatePlusIconModal = () => {
     }
   }, [getAllCategories, getAllNatureOfBuisness]);
 
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          setCategoryAdded(null);
+        }
+      }
+    }
+  }, [categoryAdded]);
+
+  useEffect(() => {
+    if (categoryUpdate !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdate.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdate.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdate.category.categoryId,
+                  label: categoryUpdate.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          if (categoryID.value === categoryUpdate.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdate.category.categoryId,
+              label: categoryUpdate.category.category,
+            });
+          }
+
+          setCategoryUpdate(null);
+        }
+      }
+    }
+  }, [categoryUpdate]);
+
   //handle select categoryID
   const handleSelectCategory = async (selectedCategory) => {
     setCategoryID(selectedCategory);
 
     setAddCompnany((prevState) => ({
       ...prevState,
-      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+      categoryID: { ...prevState.category, value: selectedCategory.value },
     }));
   };
 

@@ -24,10 +24,6 @@ import { useMqtt } from "./context/MQTTContext";
 import { Loader } from "./components/elements";
 
 function App() {
-  const { isConnected, lastMessages } = useMqtt();
-  console.log(lastMessages, isConnected, "lastMessageslastMessages");
-  console.log("App component rendered", isConnected);
-
   return (
     <>
       <Loader />

@@ -49,6 +49,10 @@ const CorporateList = () => {
     corporateUpdated,
     setCorporateUpdated,
     corporateUserUpdated,
+    categoryAdded,
+    setCategoryAdded,
+    categoryUpdate,
+    setCategoryUpdate,
   } = useMqtt();
 
   //Global State
@@ -147,16 +151,6 @@ const CorporateList = () => {
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
     handlePageSizeChange(50);
-    // let data = {
-    //   FirstName: "",
-    //   CompanyName: "",
-    //   CategoryID: 0,
-    //   Email: "",
-    //   sRow: 0,
-    //   Length: dropdownvalue,
-    // };
-
-    // dispatch(SearchCorporateUsersAPI(navigate, data));
   }, []);
 
   useEffect(() => {
@@ -165,7 +159,7 @@ const CorporateList = () => {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
             ...category,
-            value: { value: category.categoryID },
+            value: category.categoryID,
             label: category.categoryName,
           };
         });
@@ -173,6 +167,61 @@ const CorporateList = () => {
       } catch (error) {}
     }
   }, [getAllCategories]);
+
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          setCategoryAdded(null);
+        }
+      }
+    }
+  }, [categoryAdded]);
+
+  useEffect(() => {
+    if (categoryUpdate !== null) {
+      console.log(categoryUpdate, "categoryUpdate");
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdate.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdate.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdate.category.categoryId,
+                  label: categoryUpdate.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (categoryID.value === categoryUpdate.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdate.category.categoryId,
+              label: categoryUpdate.category.category,
+            });
+          }
+
+          setCategoryUpdate(null);
+        }
+      }
+    }
+  }, [categoryUpdate]);
 
   //handelled scrolling here (4)
   useEffect(() => {
@@ -264,6 +313,7 @@ const CorporateList = () => {
       setCorporateUpdated(null);
     }
   }, [corporateUpdated]);
+
   //Banker List validate handler
   const CorporateListValidateHandler = (e) => {
     let name = e.target.name;

@@ -15,9 +15,13 @@ import {
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import Select from "react-select";
+import { useMqtt } from "../../../../../../context/MQTTContext";
 const AddBranchModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { categoryAdded, setCategoryAdded, categoryUpdate, setCategoryUpdate } =
+    useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -150,6 +154,7 @@ const AddBranchModal = () => {
       try {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
+            ...category,
             value: category.categoryID,
             label: category.categoryName,
           };
@@ -173,6 +178,62 @@ const AddBranchModal = () => {
     }
   }, [getAllCategories]);
 
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          setCategoryAdded(null);
+        }
+      }
+    }
+  }, [categoryAdded]);
+
+  useEffect(() => {
+    if (categoryUpdate !== null) {
+      console.log(categoryUpdate, "categoryUpdate");
+      console.log(categoryOptions, "categoryUpdate");
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdate.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          console.log("Reached here------");
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdate.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdate.category.categoryId,
+                  label: categoryUpdate.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (categoryID.value === categoryUpdate.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdate.category.categoryId,
+              label: categoryUpdate.category.category,
+            });
+          }
+
+          setCategoryUpdate(null);
+        }
+      }
+    }
+  }, [categoryUpdate]);
   return (
     <>
       <Modal
