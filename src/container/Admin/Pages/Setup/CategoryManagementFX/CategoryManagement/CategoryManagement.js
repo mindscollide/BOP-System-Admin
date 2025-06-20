@@ -28,20 +28,27 @@ import {
   DeleteCategoryModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
-import { useMqtt } from "../../../../../../context/MQTTContext";
 import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    categoryAdded,
-    categoryUpdate,
-    categoryDeleted,
-    counterpartyChnaged,
-    counterpartyBranchChnaged,
-  } = useMqtt();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
+  const categoryDeleted = useSelector(
+    (state) => state.RealtimeActionReducer.categoryDeleted
+  );
+  const counterpartyChanged = useSelector(
+    (state) => state.RealtimeActionReducer.counterpartyChanged
+  );
+  const counterpartyBranchChanged = useSelector(
+    (state) => state.RealtimeActionReducer.counterpartyBranchChanged
+  );
 
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
@@ -153,8 +160,8 @@ const CategoryManagement = () => {
 
   // Update  category to corporates
   useEffect(() => {
-    if (categoryUpdate?.category) {
-      const updatedCat = categoryUpdate.category;
+    if (categoryUpdated?.category) {
+      const updatedCat = categoryUpdated.category;
 
       setCorporates((prev) =>
         prev.map((corp) => {
@@ -170,7 +177,7 @@ const CategoryManagement = () => {
         })
       );
     }
-  }, [categoryUpdate]);
+  }, [categoryUpdated]);
 
   //Delete the category
   useEffect(() => {
@@ -184,11 +191,11 @@ const CategoryManagement = () => {
   // When CounterParty Corporate Is mapped
   useEffect(() => {
     if (
-      counterpartyChnaged?.categoryID &&
-      counterpartyChnaged?.counterPartyID
+      counterpartyChanged?.categoryID &&
+      counterpartyChanged?.counterPartyID
     ) {
       const { categoryID, counterPartyID, counterPartyType } =
-        counterpartyChnaged;
+        counterpartyChanged;
 
       setCorporates((prev) => {
         // Flatten all to find actual data
@@ -232,17 +239,17 @@ const CategoryManagement = () => {
         });
       });
     }
-  }, [counterpartyChnaged]);
+  }, [counterpartyChanged]);
 
   // When CounterParty Branch Is mapped
   useEffect(() => {
     if (
-      counterpartyBranchChnaged?.categoryID &&
-      counterpartyBranchChnaged?.counterPartyID &&
-      counterpartyBranchChnaged?.counterPartyType === 2 // Ensure it's type 2 only
+      counterpartyBranchChanged?.categoryID &&
+      counterpartyBranchChanged?.counterPartyID &&
+      counterpartyBranchChanged?.counterPartyType === 2 // Ensure it's type 2 only
     ) {
       const { categoryID, counterPartyID, counterPartyType } =
-        counterpartyBranchChnaged;
+        counterpartyBranchChanged;
 
       setCorporates((prev) => {
         // Find the correct counterparty with matching ID and type
@@ -289,7 +296,7 @@ const CategoryManagement = () => {
         });
       });
     }
-  }, [counterpartyBranchChnaged]);
+  }, [counterpartyBranchChanged]);
 
   //for Auto focus
   const NameRef = useRef(null);

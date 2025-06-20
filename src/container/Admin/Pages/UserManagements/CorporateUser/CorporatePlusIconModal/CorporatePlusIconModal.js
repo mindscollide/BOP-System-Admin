@@ -18,19 +18,21 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const CorporatePlusIconModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    categoryAdded,
-    setCategoryAdded,
-    categoryUpdate,
-    setCategoryUpdate,
-    categoryDeleted,
-    setCategoryDeleted,
-  } = useMqtt();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
+
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -217,44 +219,44 @@ const CorporatePlusIconModal = () => {
             label: categoryAdded.category.category,
           };
           setCategoryOptions([...categoryOptions, newCategoryhData]);
-          setCategoryAdded(null);
+          dispatch(setCategoryAdded(null));
         }
       }
     }
   }, [categoryAdded]);
 
   useEffect(() => {
-    if (categoryUpdate !== null) {
+    if (categoryUpdated !== null) {
       if (Array.isArray(categoryOptions)) {
         let findCategoryObj = categoryOptions.find(
           (categoryData, index) =>
-            categoryData.categoryID === categoryUpdate.category.categoryId
+            categoryData.categoryID === categoryUpdated.category.categoryId
         );
         if (findCategoryObj !== undefined) {
           setCategoryOptions((prevCategoryData) => {
             return prevCategoryData.map((data4, index) => {
-              if (data4.categoryID === categoryUpdate.category.categoryId) {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
                 return {
                   ...data4,
-                  value: categoryUpdate.category.categoryId,
-                  label: categoryUpdate.category.category,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
                 };
               }
               return data4;
             });
           });
-          if (categoryID.value === categoryUpdate.category.categoryId) {
+          if (categoryID.value === categoryUpdated.category.categoryId) {
             setCategoryID({
-              value: categoryUpdate.category.categoryId,
-              label: categoryUpdate.category.category,
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
             });
           }
 
-          setCategoryUpdate(null);
+          dispatch(setCategoryUpdated(null));
         }
       }
     }
-  }, [categoryUpdate]);
+  }, [categoryUpdated]);
 
   //handle select categoryID
   const handleSelectCategory = async (selectedCategory) => {

@@ -12,7 +12,7 @@ import {
   convertToForwardSpreads,
 } from "../../../../../helpers/generateColumnsData";
 import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
-import { useMqtt } from "../../../../../context/MQTTContext";
+import { setForwardSpreadUpdated } from "../../../../../store/actions/RealtimeActions";
 
 const ForwardTable = ({ categoryID }) => {
   const dispatch = useDispatch();
@@ -21,7 +21,9 @@ const ForwardTable = ({ categoryID }) => {
   const [modalState, setModalState] = useState(0);
   const [forwardData, setForwardData] = useState([]);
   const [forwardColumns, setForwardColumns] = useState([]);
-  const { forwardSpreadUpdated, setForwardSpreadUpdated } = useMqtt();
+  const forwardSpreadUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.forwardSpreadUpdated
+  );
 
   const GetTenorWiseForwardSpreadsForCategory = useSelector(
     (state) =>
@@ -93,13 +95,13 @@ const ForwardTable = ({ categoryID }) => {
             setForwardData(rowData);
             setForwardColumns(columnsData);
           }
-          setForwardSpreadUpdated(null);
+          dispatch(setForwardSpreadUpdated(null));
         } catch (error) {
           console.log(error, "Error while building discounting table");
         }
       }
     }
-    setForwardSpreadUpdated(null);
+    dispatch(setForwardSpreadUpdated(null));
   }, [forwardSpreadUpdated, GetAllInstruments, GetAllTenors]);
 
   const handleChangeForwards = (value, record, columnName, instrumentName) => {

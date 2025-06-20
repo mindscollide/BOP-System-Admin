@@ -12,16 +12,20 @@ import { EditCorporateModalSystemAdmin } from "../../../../../../store/actions/B
 import { updateCorporateUserSchema } from "../../../../../../utils/schemas";
 import { useNavigate } from "react-router-dom";
 import { UpdateCorporateUsersAPI } from "../../../../../../store/actions/CorporateUsersAction";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setCorporateUpdated,
+  setCorporateUserRoleStatusChange,
+} from "../../../../../../store/actions/RealtimeActions";
 const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    corporateUpdated,
-    setCorporateUpdated,
-    corporateUserRoleStatusChange,
-    setCorporateUserRoleStatusChange,
-  } = useMqtt();
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
+  const corporateUserRoleStatusChange = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserRoleStatusChange
+  );
+
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateUserByUserID = useSelector(
     (state) => state.CorporateUsersReducer.GetCorporateUserByUserID
@@ -72,32 +76,44 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
 
   useEffect(() => {
     if (corporateUpdated !== null) {
-      setUpdateCorporate({
-        ...updateCorporate,
-        corporateName: {
-          value: corporateUpdated.corporate.corporateName,
-          categoryID: corporateUpdated.corporate.corporateCategory.categoryID,
-        },
-        RFQTimerCorporate: {
-          value: Number(corporateUpdated.corporate.rfqTimers.corporateRFQTimer),
-        },
-        RFQTimerTreasury: {
-          value: Number(corporateUpdated.corporate.rfqTimers.treasuryRFQTimer),
-        },
-      });
-      setCorporateUpdated(null);
+      try {
+        setUpdateCorporate({
+          ...updateCorporate,
+          corporateName: {
+            value: corporateUpdated.corporate.corporateName,
+            categoryID: corporateUpdated.corporate.corporateCategory.categoryID,
+          },
+          RFQTimerCorporate: {
+            value: Number(
+              corporateUpdated.corporate.rfqTimers.corporateRFQTimer
+            ),
+          },
+          RFQTimerTreasury: {
+            value: Number(
+              corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
+            ),
+          },
+        });
+        dispatch(setCorporateUpdated(null));
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [corporateUpdated]);
 
   useEffect(() => {
     if (corporateUserRoleStatusChange !== null) {
-      setUpdateCorporate({
-        ...updateCorporate,
-        activeUser: {
-          value: corporateUserRoleStatusChange.updatedUser.statusId,
-        },
-      });
-      setCorporateUserRoleStatusChange(null);
+      try {
+        setUpdateCorporate({
+          ...updateCorporate,
+          activeUser: {
+            value: corporateUserRoleStatusChange.updatedUser.statusId,
+          },
+        });
+        dispatch(setCorporateUserRoleStatusChange(null));
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [corporateUserRoleStatusChange]);
 

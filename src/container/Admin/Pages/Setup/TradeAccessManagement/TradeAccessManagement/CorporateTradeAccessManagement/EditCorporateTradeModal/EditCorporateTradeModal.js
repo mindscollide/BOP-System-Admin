@@ -20,12 +20,14 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateCorporateTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
-import { useMqtt } from "../../../../../../../../context/MQTTContext";
+import { setCorporateTradeRightsUpdated } from "../../../../../../../../store/actions/RealtimeActions";
 const EditCorporateTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { corporateTradeRightsUpdated, setCorporateTradeRightsUpdated } =
-    useMqtt();
+  const corporateTradeRightsUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateTradeRightsUpdated
+  );
+
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateTradeRights = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetCorporateTradeRights
@@ -175,14 +177,6 @@ const EditCorporateTradeModal = ({ info }) => {
 
   useEffect(() => {
     if (corporateTradeRightsUpdated !== null) {
-      // console.log(
-      //   {
-      //     corporateTradeRightsUpdated: corporateTradeRightsUpdated,
-      //     tradeRightsData: tradeRightsData,
-      //     info: info,
-      //   },
-      //   "corporateTradeRightsUpdated"
-      // );
       try {
         const { corporateTradeRights } = corporateTradeRightsUpdated;
         if (info.id === corporateTradeRights.corporateID) {
@@ -225,7 +219,7 @@ const EditCorporateTradeModal = ({ info }) => {
             });
           });
         }
-        setCorporateTradeRightsUpdated(null);
+        dispatch(setCorporateTradeRightsUpdated(null));
       } catch (error) {
         console.error("Error updating from MQTT:", error);
       }

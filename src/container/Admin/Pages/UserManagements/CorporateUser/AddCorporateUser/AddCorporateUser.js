@@ -28,18 +28,20 @@ import {
 import { addCorporateUserSchema } from "../../../../../../utils/schemas";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { useCorporateUser } from "../utils/CorporateUserContext";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setCorporateCreated,
+  setCorporateUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const {
-    corporateCreated,
-    setCorporateCreated,
-    corporateUpdated,
-    setCorporateUpdated,
-  } = useMqtt();
+  const corporateCreated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateCreated
+  );
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
 
   const { setBulkUploadClicked, setEditCompanyData } = useCorporateUser();
 
@@ -330,7 +332,7 @@ const AddCorporateUser = () => {
             label: corporateCreated.corporate.corporateName,
           };
           setCompanyNameOptions([...companyNameOptions, newCorporateData]);
-          setCorporateCreated(null);
+          dispatch(setCorporateCreated(null));
         }
       }
     }
@@ -404,7 +406,7 @@ const AddCorporateUser = () => {
           }
         }
       }
-      setCorporateUpdated(null);
+      dispatch(setCorporateUpdated(null));
     }
   }, [corporateUpdated]);
 

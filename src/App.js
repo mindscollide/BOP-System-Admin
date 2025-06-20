@@ -18,9 +18,6 @@ import "@fontsource/poppins";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/400-italic.css";
 
-import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/Routes";
-import { useMqtt } from "./context/MQTTContext";
 import { Loader } from "./components/elements";
 
 function App() {

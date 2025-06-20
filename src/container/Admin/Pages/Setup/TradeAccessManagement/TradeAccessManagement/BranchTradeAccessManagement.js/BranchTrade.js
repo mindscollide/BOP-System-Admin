@@ -15,7 +15,12 @@ import { Col, Row } from "react-bootstrap";
 import styles from "./BranchTrade.module.css";
 import { useDispatch } from "react-redux";
 import EditBranchTradeModal from "./EditBranchTradeModal/EditBranchTradeModal";
-import { useMqtt } from "../../../../../../../context/MQTTContext";
+import {
+  setBranchCreated,
+  setBranchStatusUpdated,
+  setBranchTradeStatusUpdated,
+  setBranchUpdated,
+} from "../../../../../../../store/actions/RealtimeActions";
 
 const BranchTrade = ({
   hasReachedBottom,
@@ -27,16 +32,18 @@ const BranchTrade = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    branchCreated,
-    setBranchCreated,
-    branchUpdated,
-    setBranchUpdated,
-    branchStatusUpdated,
-    setBranchStatusUpdated,
-    branchTradeStatusUpdated,
-    setBranchTradeStatusUpdated,
-  } = useMqtt();
+  const branchCreated = useSelector(
+    (state) => state.RealtimeActionReducer.branchCreated
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
+  const branchStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchStatusUpdated
+  );
+  const branchTradeStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchTradeStatusUpdated
+  );
 
   //Table for Branche data
   // const [branchTableData, setBranchTableData] = useState([]);
@@ -129,7 +136,7 @@ const BranchTrade = ({
           };
           setBranchTableData((prevState) => [newBranch, ...prevState]);
         }
-        setBranchCreated(null);
+        dispatch(setBranchCreated(null));
       } catch (error) {
         console.log(error);
       }
@@ -150,7 +157,7 @@ const BranchTrade = ({
           return item;
         });
         setBranchTableData(updatedBranch);
-        setBranchUpdated(null);
+        dispatch(setBranchUpdated(null));
       } catch (error) {
         console.log(error);
       }
@@ -170,7 +177,7 @@ const BranchTrade = ({
           return branch;
         });
         setBranchTableData(updatedTableData);
-        setBranchStatusUpdated(null);
+        dispatch(setBranchStatusUpdated(null));
       } catch (error) {}
     }
   }, [branchStatusUpdated]);
@@ -188,7 +195,7 @@ const BranchTrade = ({
           return branch;
         });
         setBranchTableData(updatedTableData);
-        setBranchTradeStatusUpdated(null);
+        dispatch(setBranchTradeStatusUpdated(null));
       } catch (error) {}
     }
   }, [branchTradeStatusUpdated]);

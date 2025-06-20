@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SaveCategoryFEDiscountsAPI } from "../../../../../store/actions/SpreadManagementActions";
 import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
-import { useMqtt } from "../../../../../context/MQTTContext";
+import { setFEDiscountingSpreadUpdated } from "../../../../../store/actions/RealtimeActions";
 
 const FEDiscountingTable = ({ categoryID }) => {
   const dispatch = useDispatch();
@@ -33,7 +33,10 @@ const FEDiscountingTable = ({ categoryID }) => {
   const GetAllTenors = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
   );
-  const { FEDiscoutingSpreadUpdated, setFEDiscoutingSpreadUpdated } = useMqtt();
+
+  const FEDiscoutingSpreadUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.FEDiscoutingSpreadUpdated
+  );
 
   const handleChangeDiscounting = (value, record, instrumentName) => {
     if (isValidNumberUnderMax(value, "", 100)) {
@@ -138,7 +141,7 @@ const FEDiscountingTable = ({ categoryID }) => {
           console.log(error);
         }
       }
-      setFEDiscoutingSpreadUpdated(null);
+      dispatch(setFEDiscountingSpreadUpdated(null));
     }
   }, [FEDiscoutingSpreadUpdated, GetAllInstruments, GetAllTenors]);
 

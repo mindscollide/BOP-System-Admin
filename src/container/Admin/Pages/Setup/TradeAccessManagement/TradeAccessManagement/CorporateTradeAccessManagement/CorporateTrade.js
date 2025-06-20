@@ -16,7 +16,12 @@ import {
 import styles from "./CorporateTrade.module.css";
 import { Col, Row } from "react-bootstrap";
 import EditCorporateTradeModal from "./EditCorporateTradeModal/EditCorporateTradeModal";
-import { useMqtt } from "../../../../../../../context/MQTTContext";
+import {
+  setCorporateCreated,
+  setCorporateStatusUpdated,
+  setCorporateTradeStatusUpdated,
+  setCorporateUpdated,
+} from "../../../../../../../store/actions/RealtimeActions";
 
 const CorporateTrade = ({
   hasReachedBottom,
@@ -28,16 +33,18 @@ const CorporateTrade = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    corporateCreated,
-    setCorporateCreated,
-    corporateUpdated,
-    setCorporateUpdated,
-    corporateStatusUpdated,
-    setCorporateStatusUpdated,
-    corporateTradeStatusUpdated,
-    setCorporateTradeStatusUpdated,
-  } = useMqtt();
+  const corporateCreated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateCreated
+  );
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
+  const corporateStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateStatusUpdated
+  );
+  const corporateTradeStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateTradeStatusUpdated
+  );
 
   //table for corporate
   // const [corporateTableData, setCorporateTableData] = useState([]);
@@ -133,7 +140,7 @@ const CorporateTrade = ({
           };
           setCorporateTableData((prevState) => [newCorporate, ...prevState]);
         }
-        setCorporateCreated(null);
+        dispatch(setCorporateCreated(null));
       } catch (error) {
         console.log(error);
       }
@@ -152,7 +159,7 @@ const CorporateTrade = ({
         return corporate;
       });
       setCorporateTableData(updatedTableData);
-      setCorporateUpdated(null);
+      dispatch(setCorporateUpdated(null));
     }
   }, [corporateUpdated]);
 
@@ -169,7 +176,7 @@ const CorporateTrade = ({
           return corporate;
         });
         setCorporateTableData(updatedTableData);
-        setCorporateStatusUpdated(null);
+        dispatch(setCorporateStatusUpdated(null));
       } catch (error) {
         console.log(error);
       }
@@ -191,7 +198,7 @@ const CorporateTrade = ({
           return corporate;
         });
         setCorporateTableData(updatedTableData);
-        setCorporateTradeStatusUpdated(null);
+        dispatch(setCorporateTradeStatusUpdated(null));
       } catch (error) {
         console.log(error);
       }

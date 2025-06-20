@@ -24,18 +24,7 @@ const AddCategory = () => {
               maxLength={100}
               labelClass="d-none"
               required={true}
-              // value={categoryupdate.category.value}
-              // onChange={HandleUpdateChange}
             />
-            {/* <p
-              className={
-                errormessege && categoryupdate.category.value === ""
-                  ? "errorMessage"
-                  : "errorMessage_hidden"
-              }
-            >
-              Please Fill all the credentials
-            </p> */}
           </Col>
         </Row>
 
@@ -63,8 +52,6 @@ const AddCategory = () => {
                   maxLength={100}
                   labelClass="d-none"
                   required={true}
-                  // value={categoryupdate.bidSpread.value}
-                  // onChange={HandleUpdateChange}
                 />
               </Col>
             </Row>
@@ -84,8 +71,6 @@ const AddCategory = () => {
                   maxLength={100}
                   labelClass="d-none"
                   required={true}
-                  // value={categoryupdate.offerSpread.value}
-                  // onChange={HandleUpdateChange}
                 />
               </Col>
             </Row>
