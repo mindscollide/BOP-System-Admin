@@ -6,6 +6,9 @@ const initialState = {
   corporateUserlistReportData: null,
   BankUserlistReportData: null,
   loginHistoryReportData: null,
+  pdfReportBankUserlistData: null,
+  pdfReportCorporateUserlistData: null,
+  pdfReportLoginHistorylistData: null,
 };
 
 const downloadReducer = (state = initialState, action) => {
@@ -97,6 +100,72 @@ const downloadReducer = (state = initialState, action) => {
         state,
         Loading: false,
         loginHistoryReportData: null,
+        ResponseMessage: action.message,
+      };
+
+    //PDF  Report Bank User List
+    case actions.PDF_REPORT_BANK_USER_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.PDF_REPORT_BANK_USER_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        pdfReportBankUserlistData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.PDF_REPORT_BANK_USER_FAIL:
+      return {
+        state,
+        Loading: false,
+        pdfReportBankUserlistData: null,
+        ResponseMessage: action.message,
+      };
+
+    //PDF  Report Bank User List
+    case actions.PDF_REPORT_CORPORATE_USER_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.PDF_REPORT_CORPORATE_USER_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        pdfReportCorporateUserlistData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.PDF_REPORT_CORPORATE_USER_FAIL:
+      return {
+        state,
+        Loading: false,
+        pdfReportCorporateUserlistData: null,
+        ResponseMessage: action.message,
+      };
+
+    //PDF  Report Login History List
+    case actions.PDF_REPORT_LOGINHISTORY_USER_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.PDF_REPORT_LOGINHISTORY_USER_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        pdfReportLoginHistorylistData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.PDF_REPORT_LOGINHISTORY_USER_FAIL:
+      return {
+        state,
+        Loading: false,
+        pdfReportLoginHistorylistData: null,
         ResponseMessage: action.message,
       };
 
