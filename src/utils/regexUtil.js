@@ -4,6 +4,6 @@ export function validateEmail(email) {
 }
 
 export function validateBopEmail(email) {
-  const pattern = /^[^\s@]+@bop\.com$/;
+  const pattern = /^[^\s@]+@bop\.com(\.pk)?$/;
   return pattern.test(email);
 }

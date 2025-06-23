@@ -62,7 +62,7 @@ const AddCorporateUser = () => {
   const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
-
+  console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
   //state for error Message
   const [errorShow, setErrorShow] = useState(false);
 
@@ -255,6 +255,10 @@ const AddCorporateUser = () => {
   };
 
   const CompanySelectHandler = async (selectedCompany) => {
+    console.log(
+      selectedCompany,
+      "selectedCompanyselectedCompanyselectedCompany"
+    );
     setCompanyRole(selectedCompany);
     setCorporateUser((prevState) => ({
       ...prevState,
@@ -320,93 +324,134 @@ const AddCorporateUser = () => {
 
   useEffect(() => {
     if (corporateCreated !== null) {
-      if (Array.isArray(companyNameOptions)) {
-        let findCorporateObj = companyNameOptions.find(
-          (corporateData, index) =>
-            corporateData.corporateID === corporateCreated.corporate.corporateID
-        );
-        if (findCorporateObj === undefined) {
-          let newCorporateData = {
-            ...corporateCreated.corporate,
-            value: corporateCreated.corporate.corporateID,
-            label: corporateCreated.corporate.corporateName,
-          };
-          setCompanyNameOptions([...companyNameOptions, newCorporateData]);
-          dispatch(setCorporateCreated(null));
+      try {
+        if (Array.isArray(companyNameOptions)) {
+          let findCorporateObj = companyNameOptions.find(
+            (corporateData, index) =>
+              corporateData.corporateID ===
+              corporateCreated.corporate.corporateID
+          );
+          if (findCorporateObj === undefined) {
+            const { corporate } = corporateCreated;
+            let newCorporateData = {
+              corporateID: corporate.corporateID,
+              corporateName: corporate.corporateName,
+              natureofBusiness: {
+                pK_NatureOfBusiness:
+                  corporate.natureOFBussiness.natureOfBussinessID,
+                name: corporate.natureOFBussiness.natureOfBussiness,
+              },
+              category: {
+                categoryID: corporate.corporateCategory.categoryID,
+                categoryName: corporate.corporateCategory.categoryName,
+                bidSpread: corporate.corporateCategory.bidSpread,
+                offerSpread: corporate.corporateCategory.offerSpread,
+                fK_AssetTypeID: corporate.corporateCategory.fK_AssetTypeID,
+                fK_UserID: corporate.corporateCategory.fK_UserID,
+                fK_BankID: 1,
+              },
+              rfqTimers: [
+                {
+                  treasuryRFQExpiryInMin: Number(
+                    corporate.rfqTimers.treasuryRFQTimer
+                  ),
+                  corporateRFQExpiryInMin: Number(
+                    corporate.rfqTimers.corporateRFQTimer
+                  ),
+                  corporateID: corporate.corporateCategory.categoryID,
+                },
+              ],
+              value: corporate.corporateID,
+              label: corporate.corporateName,
+            };
+            setCompanyNameOptions([...companyNameOptions, newCorporateData]);
+            dispatch(setCorporateCreated(null));
+          }
         }
+      } catch (error) {
+        console.log(error, "Error in corporate created effect");
       }
     }
   }, [corporateCreated]);
 
   useEffect(() => {
     if (corporateUpdated !== null) {
-      if (Array.isArray(companyNameOptions)) {
-        let findCorporateObj = companyNameOptions.find(
-          (corporateData, index) =>
-            corporateData.corporateID === corporateUpdated.corporate.corporateID
-        );
-        if (findCorporateObj !== undefined) {
-          setCompanyNameOptions((prevCompanyData) => {
-            return prevCompanyData.map((data, index) => {
-              if (data.corporateID === corporateUpdated.corporate.corporateID) {
-                return {
-                  ...data,
-                  value: corporateUpdated.corporate.corporateID,
-                  label: corporateUpdated.corporate.corporateName,
-                  companyID: corporateUpdated.corporate.corporateID,
+      try {
+        if (Array.isArray(companyNameOptions)) {
+          let findCorporateObj = companyNameOptions.find(
+            (corporateData, index) =>
+              corporateData.corporateID ===
+              corporateUpdated.corporate.corporateID
+          );
+          if (findCorporateObj !== undefined) {
+            setCompanyNameOptions((prevCompanyData) => {
+              return prevCompanyData.map((data, index) => {
+                if (
+                  data.corporateID === corporateUpdated.corporate.corporateID
+                ) {
+                  return {
+                    ...data,
+                    value: corporateUpdated.corporate.corporateID,
+                    label: corporateUpdated.corporate.corporateName,
+                    companyID: corporateUpdated.corporate.corporateID,
 
-                  categoryName:
-                    corporateUpdated.corporate.corporateCategory.categoryName,
-                  natureOfClient:
+                    categoryName:
+                      corporateUpdated.corporate.corporateCategory.categoryName,
+                    natureOfClient:
+                      corporateUpdated.corporate.natureOFBussiness
+                        .natureOfBussiness,
+                    rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+                    rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                  };
+                }
+                return data;
+              });
+            });
+            if (
+              companyRoleID.corporateID ===
+              corporateUpdated.corporate.corporateID
+            ) {
+              let corporateRoleData = {
+                corporateID: corporateUpdated.corporate.corporateID,
+                corporateName: corporateUpdated.corporate.corporateName,
+                natureofBusiness: {
+                  pK_NatureOfBusiness:
                     corporateUpdated.corporate.natureOFBussiness
-                      .natureOfBussiness,
-                  rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
-                  rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
-                };
-              }
-              return data;
-            });
-          });
-          if (
-            companyRoleID.corporateID === corporateUpdated.corporate.corporateID
-          ) {
-            let corporateRoleData = {
-              corporateID: corporateUpdated.corporate.corporateID,
-              corporateName: corporateUpdated.corporate.corporateName,
-              natureofBusiness: {
-                pK_NatureOfBusiness:
-                  corporateUpdated.corporate.natureOFBussiness
-                    .natureOfBussinessID,
-                name: corporateUpdated.corporate.natureOFBussiness
-                  .natureOfBussiness,
-              },
-              category: corporateUpdated.corporate.corporateCategory,
-              rfqTimers: [
-                {
-                  treasuryRFQExpiryInMin: Number(
-                    corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
-                  ),
-                  corporateRFQExpiryInMin: Number(
-                    corporateUpdated.corporate.rfqTimers.corporateRFQTimer
-                  ),
-                  corporateID: corporateUpdated.corporate.corporateID,
+                      .natureOfBussinessID,
+                  name: corporateUpdated.corporate.natureOFBussiness
+                    .natureOfBussiness,
                 },
-              ],
-              value: corporateUpdated.corporate.corporateID,
-              label: corporateUpdated.corporate.corporateName,
-            };
-            setCompanyRole(corporateRoleData);
-            setCorporateUser({
-              ...corporateUser,
-              rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
-              rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
-              natureOfClient:
-                corporateUpdated.corporate.natureOFBussiness.natureOfBussiness,
-            });
+                category: corporateUpdated.corporate.corporateCategory,
+                rfqTimers: [
+                  {
+                    treasuryRFQExpiryInMin: Number(
+                      corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
+                    ),
+                    corporateRFQExpiryInMin: Number(
+                      corporateUpdated.corporate.rfqTimers.corporateRFQTimer
+                    ),
+                    corporateID: corporateUpdated.corporate.corporateID,
+                  },
+                ],
+                value: corporateUpdated.corporate.corporateID,
+                label: corporateUpdated.corporate.corporateName,
+              };
+              setCompanyRole(corporateRoleData);
+              setCorporateUser({
+                ...corporateUser,
+                rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+                rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                natureOfClient:
+                  corporateUpdated.corporate.natureOFBussiness
+                    .natureOfBussiness,
+              });
+            }
           }
         }
+        dispatch(setCorporateUpdated(null));
+      } catch (error) {
+        console.log(error, "Error in corporate updated effect");
       }
-      dispatch(setCorporateUpdated(null));
     }
   }, [corporateUpdated]);
 
@@ -436,26 +481,25 @@ const AddCorporateUser = () => {
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-start m-0 p-0"
-            >
+              className='d-flex justify-content-start m-0 p-0'>
               <span className={styles["bank-user-label"]}>
                 Add a Corporate user
               </span>
             </Col>
           </Row>
-          <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="m-0 p-0">
+          <Row className='mt-3'>
+            <Col lg={12} md={12} sm={12} className='m-0 p-0'>
               <Paper className={styles["corporateuser-paper"]}>
-                <Row className="mt-3">
-                  <Col lg={7} md={7} sm={12} className="d-flex">
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                <Row className='mt-3'>
+                  <Col lg={7} md={7} sm={12} className='d-flex'>
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         Name
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
                       <TextField
                         name={"firstName"}
-                        labelClass="d-none"
+                        labelClass='d-none'
                         formParentClass={"MainClass"}
                         className={styles["InputFieldClass"]}
                         value={corporateUser.firstName?.value || ""}
@@ -470,15 +514,15 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         Email
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
                       <TextField
-                        labelClass="d-none"
+                        labelClass='d-none'
                         name={"email"}
                         value={corporateUser.email.value || ""}
                         onChange={addCorporateUserValidateHandler}
@@ -488,7 +532,7 @@ const AddCorporateUser = () => {
                     </div>
                     {corporateUser.email.errorStatus && (
                       <Row>
-                        <Col className="d-flex justify-content-start">
+                        <Col className='d-flex justify-content-start'>
                           <p className={styles["bankErrorMessage"]}>
                             {corporateUser.email.errorMessage}
                           </p>
@@ -501,7 +545,7 @@ const AddCorporateUser = () => {
                       corporateUser.email.value
                     ) ? (
                       <Row>
-                        <Col className="d-flex justify-content-start">
+                        <Col className='d-flex justify-content-start'>
                           <p className={styles["bankErrorMessage"]}>
                             Enter Valid Email Address
                           </p>
@@ -513,15 +557,15 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3 position-relative">
+                <Row className='mt-3 position-relative'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         Company Name
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
 
-                      <Col className="position-relative">
+                      <Col className='position-relative'>
                         <Select
                           options={companyNameOptions}
                           isSearchable={true}
@@ -544,16 +588,16 @@ const AddCorporateUser = () => {
                     </div>
                   </Col>
                 </Row>
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         Category
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
 
                       <TextField
-                        labelClass="d-none"
+                        labelClass='d-none'
                         value={corporateUser.categoryName || ""}
                         maxLength={50}
                         disable={true}
@@ -564,13 +608,13 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>Chat</span>
 
                       <Checkbox
-                        label2="Active"
+                        label2='Active'
                         classNameDiv={styles["CheckboxActive"]}
                         onChange={changeActiveTick}
                         checked={
@@ -582,20 +626,20 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         FE / Non-FE
                       </span>
                       <Checkbox
-                        label2="FE"
+                        label2='FE'
                         classNameDiv={styles["CheckboxActive"]}
                         onChange={changeFETick}
                         checked={corporateUser.isFEActive.value ? true : false}
                       />
                       <Checkbox
-                        label2="Non-FE"
+                        label2='Non-FE'
                         classNameDiv={styles["CheckboxActive"]}
                         onChange={changeNonFETick}
                         checked={
@@ -606,22 +650,22 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         RFQ Timer
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
 
-                      <Col className="me-2">
+                      <Col className='me-2'>
                         <span className={styles["labels-add-bank"]}>
                           Treasury
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                         <TextField
                           className={styles["disableText"]}
-                          labelClass="d-none"
+                          labelClass='d-none'
                           value={corporateUser.rfqTreasury || ""}
                           disable={true}
                         />
@@ -634,7 +678,7 @@ const AddCorporateUser = () => {
                         </span>
                         <TextField
                           className={styles["disableText"]}
-                          labelClass="d-none"
+                          labelClass='d-none'
                           value={corporateUser.rfqCorporate || ""}
                           disable={true}
                         />
@@ -643,16 +687,16 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col lg={7} md={7} sm={12}>
-                    <div className="d-flex justify-content-start align-items-start w-100">
+                    <div className='d-flex justify-content-start align-items-start w-100'>
                       <span className={styles["labels-add-bank"]}>
                         Nature of the Client
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
                       <TextField
                         className={styles["disableText"]}
-                        labelClass="d-none"
+                        labelClass='d-none'
                         value={corporateUser.natureOfClient || ""}
                         disable={true}
                         formParentClass={"MainClass"}
@@ -661,16 +705,15 @@ const AddCorporateUser = () => {
                   </Col>
                 </Row>
 
-                <Row className="mt-3 mb-5">
+                <Row className='mt-3 mb-5'>
                   <Col
                     lg={9}
                     md={9}
                     sm={12}
-                    className="d-flex justify-content-center gap-2"
-                  >
+                    className='d-flex justify-content-center gap-2'>
                     <Button
-                      icon={<i className="icon-check icon-check-space"></i>}
-                      text="Activate"
+                      icon={<i className='icon-check icon-check-space'></i>}
+                      text='Activate'
                       className={styles["Active-btn-Corp"]}
                       onClick={handleActivateButton}
                       disableBtn={
@@ -681,8 +724,8 @@ const AddCorporateUser = () => {
                       }
                     />
                     <Button
-                      icon={<i className="icon-close icon-check-space"></i>}
-                      text="Cancel"
+                      icon={<i className='icon-close icon-check-space'></i>}
+                      text='Cancel'
                       onClick={handleCancelButton}
                       className={styles["Cancel-btn-AddBankUser"]}
                     />

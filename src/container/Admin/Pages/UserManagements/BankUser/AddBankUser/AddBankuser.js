@@ -484,7 +484,7 @@ const AddBankUser = () => {
           ...prevState,
           email: {
             ...prevState.email,
-            errorMessage: "Email should be in email format",
+            errorMessage: "Email Domain should be @bop.com or @bop.com.pk",
             errorStatus: true,
           },
         };
