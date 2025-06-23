@@ -5,7 +5,6 @@ import App from "./App";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import reportWebVitals from "./reportWebVitals";
-import { MqttProvider } from "./context/MQTTContext";
 import { BankUserProvider } from "./container/Admin/Pages/UserManagements/BankUser/utils/BankUserContext";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/Routes";
@@ -17,11 +16,9 @@ root.render(
     <Suspense>
       <BankUserProvider>
         <CorporateUserProvider>
-          <MqttProvider subscribeID={"BOP_SYSTEMADMIN"}>
-            <RouterProvider router={router}>
-              <App />
-            </RouterProvider>
-          </MqttProvider>
+          <RouterProvider router={router}>
+            <App />
+          </RouterProvider>
         </CorporateUserProvider>
       </BankUserProvider>
     </Suspense>

@@ -30,14 +30,21 @@ import {
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useBankUser } from "../utils/BankUserContext";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setBranchCreated,
+  setBranchUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const AddBankUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const branchCreated = useSelector(
+    (state) => state.RealtimeActionReducer.branchCreated
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
 
-  const { branchCreated, branchUpdated, setBranchCreated, setBranchUpdated } =
-    useMqtt();
   const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
 
   const { setEditBranchData, setBulkUploadClicked } = useBankUser();
@@ -167,7 +174,7 @@ const AddBankUser = () => {
             label: branchCreated.branch.branchName,
           };
           setBranchOptions([...branchOptions, newBranchData]);
-          setBranchCreated(null);
+          dispatch(setBranchCreated(null));
         }
       }
     }
@@ -209,7 +216,7 @@ const AddBankUser = () => {
               branchName: branchUpdated.branch.branchName,
             });
           }
-          setBranchUpdated(null);
+          dispatch(setBranchUpdated(null));
         }
       }
     }

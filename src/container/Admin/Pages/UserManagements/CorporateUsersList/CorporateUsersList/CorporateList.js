@@ -35,7 +35,6 @@ import {
   SearchCorporateUsersAPI,
 } from "../../../../../../store/actions/CorporateUsersAction";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
-import { useMqtt } from "../../../../../../context/MQTTContext";
 import CorporateUserDetailsModal from "../CorporateUserDetailsModal/CorporateUserDetailsModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
@@ -43,20 +42,33 @@ import {
   downloadCorporateUserlistReportApi,
   downloadPDFCorporateUserReportApi,
 } from "../../../../../../store/actions/Download-Report";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+  setCorporateUpdated,
+  setCorporateUserCreated,
+} from "../../../../../../store/actions/RealtimeActions";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    corproateUserCreated,
-    corporateUserRoleStatusChange,
-    corporateUpdated,
-    setCorporateUpdated,
-    corporateUserUpdated,
-    categoryAdded,
-    setCategoryAdded,
-    categoryUpdate,
-    setCategoryUpdate,
-  } = useMqtt();
+  const corporateUserCreated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserCreated
+  );
+  const corporateUserRoleStatusChange = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserRoleStatusChange
+  );
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
+  const corporateUserUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserUpdated
+  );
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
   //Global State
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -185,46 +197,45 @@ const CorporateList = () => {
             label: categoryAdded.category.category,
           };
           setCategoryOptions([...categoryOptions, newCategoryhData]);
-          setCategoryAdded(null);
+          dispatch(setCategoryAdded(null));
         }
       }
     }
   }, [categoryAdded]);
 
   useEffect(() => {
-    if (categoryUpdate !== null) {
-      console.log(categoryUpdate, "categoryUpdate");
+    if (categoryUpdated !== null) {
       if (Array.isArray(categoryOptions)) {
         let findCategoryObj = categoryOptions.find(
           (categoryData, index) =>
-            categoryData.categoryID === categoryUpdate.category.categoryId
+            categoryData.categoryID === categoryUpdated.category.categoryId
         );
         if (findCategoryObj !== undefined) {
           setCategoryOptions((prevCategoryData) => {
             return prevCategoryData.map((data4, index) => {
-              if (data4.categoryID === categoryUpdate.category.categoryId) {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
                 return {
                   ...data4,
-                  value: categoryUpdate.category.categoryId,
-                  label: categoryUpdate.category.category,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
                 };
               }
               return data4;
             });
           });
           console.log(categoryID, "categoryIDcategoryIDcategoryID");
-          if (categoryID.value === categoryUpdate.category.categoryId) {
+          if (categoryID.value === categoryUpdated.category.categoryId) {
             setCategoryID({
-              value: categoryUpdate.category.categoryId,
-              label: categoryUpdate.category.category,
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
             });
           }
 
-          setCategoryUpdate(null);
+          dispatch(setCategoryUpdated(null));
         }
       }
     }
-  }, [categoryUpdate]);
+  }, [categoryUpdated]);
 
   //handelled scrolling here (4)
   useEffect(() => {
@@ -276,9 +287,9 @@ const CorporateList = () => {
   }, [corporateUserRoleStatusChange]);
 
   useEffect(() => {
-    if (corproateUserCreated !== null) {
+    if (corporateUserCreated !== null) {
       try {
-        const { user, createdUserID, createdDateTime } = corproateUserCreated;
+        const { user, createdUserID, createdDateTime } = corporateUserCreated;
         let findIsExist = tableData.find(
           (tableRow, index) => tableRow.userID === user.createdUserID
         );
@@ -294,12 +305,13 @@ const CorporateList = () => {
             passwordModificationTime: "",
           };
           setTableData((prevState) => [userData, ...prevState]);
+          dispatch(setCorporateUserCreated(null));
         }
       } catch (error) {
         console.log(error);
       }
     }
-  }, [corproateUserCreated]);
+  }, [corporateUserCreated]);
 
   useEffect(() => {
     if (corporateUpdated !== null) {
@@ -313,7 +325,7 @@ const CorporateList = () => {
         return user;
       });
       setTableData(updatedTableData);
-      setCorporateUpdated(null);
+      dispatch(setCorporateUpdated(null));
     }
   }, [corporateUpdated]);
 

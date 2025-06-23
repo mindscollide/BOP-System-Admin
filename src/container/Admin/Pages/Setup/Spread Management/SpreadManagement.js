@@ -22,19 +22,20 @@ import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdmi
 import FEDiscountingTable from "./FEDiscountingTable.js";
 import ParityAndCross from "./ParityAndCrossTable/ParityAndCrossTable.js";
 import NonFEDiscountingTable from "./NonFEDiscountingTable.js";
-import { useMqtt } from "../../../../../context/MQTTContext.js";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+} from "../../../../../store/actions/RealtimeActions.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
-  const {
-    categoryAdded,
-    setCategoryAdded,
-    categoryUpdate,
-    setCategoryUpdate,
-    categoryDeleted,
-    setCategoryDeleted,
-  } = useMqtt();
   const LoadingState = useSelector(
     (state) => state.SpreadManagementReducer.Loading
   );
@@ -93,46 +94,45 @@ const SpreadManagement = () => {
             label: categoryAdded.category.category,
           };
           setCategoryOptions([...categoryOptions, newCategoryhData]);
-          setCategoryAdded(null);
+          dispatch(setCategoryAdded(null));
         }
       }
     }
   }, [categoryAdded]);
 
   useEffect(() => {
-    if (categoryUpdate !== null) {
-      console.log(categoryUpdate, "categoryUpdate");
+    if (categoryUpdated !== null) {
       if (Array.isArray(categoryOptions)) {
         let findCategoryObj = categoryOptions.find(
           (categoryData, index) =>
-            categoryData.categoryID === categoryUpdate.category.categoryId
+            categoryData.categoryID === categoryUpdated.category.categoryId
         );
         if (findCategoryObj !== undefined) {
           setCategoryOptions((prevCategoryData) => {
             return prevCategoryData.map((data4, index) => {
-              if (data4.categoryID === categoryUpdate.category.categoryId) {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
                 return {
                   ...data4,
-                  value: categoryUpdate.category.categoryId,
-                  label: categoryUpdate.category.category,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
                 };
               }
               return data4;
             });
           });
           console.log(categoryID, "categoryIDcategoryIDcategoryID");
-          if (categoryID.value === categoryUpdate.category.categoryId) {
+          if (categoryID.value === categoryUpdated.category.categoryId) {
             setCategoryID({
-              value: categoryUpdate.category.categoryId,
-              label: categoryUpdate.category.category,
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
             });
           }
 
-          setCategoryUpdate(null);
+          dispatch(setCategoryUpdated(null));
         }
       }
     }
-  }, [categoryUpdate]);
+  }, [categoryUpdated]);
 
   // useEffect(() => {
   //   if (categoryDeleted !== null) {

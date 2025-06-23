@@ -20,11 +20,13 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateBranchTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
-import { useMqtt } from "../../../../../../../../context/MQTTContext";
+import { setBranchTradeRightsUpdated } from "../../../../../../../../store/actions/RealtimeActions";
 const EditBranchTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { branchTradeRightsUpdated, setBranchTradeRightsUpdated } = useMqtt();
+  const branchTradeRightsUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchTradeRightsUpdated
+  );
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetBranchTradeRights = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetBranchTradeRights
@@ -479,14 +481,6 @@ const EditBranchTradeModal = ({ info }) => {
 
   useEffect(() => {
     if (branchTradeRightsUpdated !== null) {
-      console.log(
-        {
-          branchTradeRightsUpdated: branchTradeRightsUpdated,
-          tradeRightsData: tradeRightsData,
-          info: info,
-        },
-        "branchTradeRightsUpdated"
-      );
       try {
         const { branchTradeRights } = branchTradeRightsUpdated;
         if (info.id === branchTradeRights.branchID) {
@@ -529,7 +523,7 @@ const EditBranchTradeModal = ({ info }) => {
             });
           });
         }
-        setBranchTradeRightsUpdated(null);
+        dispatch(setBranchTradeRightsUpdated(null));
       } catch (error) {
         console.error("Error updating from MQTT:", error);
       }

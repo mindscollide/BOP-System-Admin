@@ -32,24 +32,32 @@ import {
 } from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
-import { useMqtt } from "../../../../../../context/MQTTContext";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import EditBankerModal from "../EditBankUserModal/EditBankerModal";
 import {
   downloadBankUserlistReportApi,
   downloadPDFBankUserReportApi,
 } from "../../../../../../store/actions/Download-Report";
+import {
+  setBankUserUpdated,
+  setBranchUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    bankUserCreated,
-    bankUserRoleStatusChange,
-    branchUpdated,
-    setBranchUpdated,
-    bankUserUpdated,
-    setBankUserUpdated,
-  } = useMqtt();
+  const bankUserCreated = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserCreated
+  );
+  const bankUserRoleStatusChange = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserRoleStatusChange
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
+  const bankUserUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserUpdated
+  );
+  console.log(bankUserUpdated, "bankUserUpdatedbankUserUpdated");
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -137,18 +145,6 @@ const BankerList = () => {
     dispatch(SearchBankUsersAPI(navigate, data));
   };
 
-  // useEffect(() => {
-  //   dispatch(GetBankUserRolesAPI(navigate));
-  //   let data = {
-  //     EmployeeID: "",
-  //     Name: "",
-  //     Email: "",
-  //     RoleID: 0,
-  //     sRow: 0,
-  //     Length: 50,
-  //   };
-  //   dispatch(SearchBankUsersAPI(navigate, data));
-  // }, []);
   useEffect(() => {
     dispatch(GetBankUserRolesAPI(navigate));
     // let data = {
@@ -202,7 +198,7 @@ const BankerList = () => {
       });
 
       setTableData(updatedTableData);
-      setBranchUpdated(null);
+      dispatch(setBranchUpdated(null));
     }
   }, [branchUpdated]);
 
@@ -538,8 +534,10 @@ const BankerList = () => {
 
   useEffect(() => {
     if (bankUserCreated !== null) {
+      console.log(bankUserCreated, "bankUserCreatedbankUserCreated");
       try {
         const { user, createdDateTime, createdUserID } = bankUserCreated;
+
         let findIsExist = tableData.find(
           (tableRow, index) => tableRow.employeeID === user.employeeID
         );
@@ -558,6 +556,7 @@ const BankerList = () => {
             creationDateTime: createdDateTime,
           };
           setTableData((prevState) => [userData, ...prevState]);
+        } else {
         }
       } catch (error) {
         console.log(error);
@@ -614,7 +613,7 @@ const BankerList = () => {
       } catch (err) {
         console.log(err);
       }
-      setBankUserUpdated(null);
+      dispatch(setBankUserUpdated(null));
     }
   }, [bankUserUpdated]);
 

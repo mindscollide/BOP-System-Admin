@@ -19,12 +19,14 @@ import {
   ConvertDateTimrStringIntoGTM,
   extractTimeOnly,
 } from "../../../../helpers/reusableMethods";
-import { useMqtt } from "../../../../context/MQTTContext";
+import { setMarketTimingsUpdated } from "../../../../store/actions/RealtimeActions";
 
 const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { marketTimingsUpdated, setMarketTimingsUpdated } = useMqtt();
+  const marketTimingsUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.marketTimingsUpdated
+  );
   const [settingUser, setSettingUser] = useState(true);
   const [passcodeSetting, setPasscodeSetting] = useState(false);
   const [marketTiming, setMarketTiming] = useState(false);
@@ -127,7 +129,7 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
       setFridayEndTime(
         ConvertDateTimrStringIntoGTM(marketTimings.fridayEndTime, "hh:mm:ss")
       );
-      setMarketTimingsUpdated(null);
+      dispatch(setMarketTimingsUpdated(null));
     }
   }, [marketTimingsUpdated]);
 

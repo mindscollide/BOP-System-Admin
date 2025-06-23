@@ -15,13 +15,20 @@ import {
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import Select from "react-select";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 const AddBranchModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
-  const { categoryAdded, setCategoryAdded, categoryUpdate, setCategoryUpdate } =
-    useMqtt();
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -192,48 +199,46 @@ const AddBranchModal = () => {
             label: categoryAdded.category.category,
           };
           setCategoryOptions([...categoryOptions, newCategoryhData]);
-          setCategoryAdded(null);
+          dispatch(setCategoryAdded(null));
         }
       }
     }
   }, [categoryAdded]);
 
   useEffect(() => {
-    if (categoryUpdate !== null) {
-      console.log(categoryUpdate, "categoryUpdate");
-      console.log(categoryOptions, "categoryUpdate");
+    if (categoryUpdated !== null) {
       if (Array.isArray(categoryOptions)) {
         let findCategoryObj = categoryOptions.find(
           (categoryData, index) =>
-            categoryData.categoryID === categoryUpdate.category.categoryId
+            categoryData.categoryID === categoryUpdated.category.categoryId
         );
         if (findCategoryObj !== undefined) {
           console.log("Reached here------");
           setCategoryOptions((prevCategoryData) => {
             return prevCategoryData.map((data4, index) => {
-              if (data4.categoryID === categoryUpdate.category.categoryId) {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
                 return {
                   ...data4,
-                  value: categoryUpdate.category.categoryId,
-                  label: categoryUpdate.category.category,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
                 };
               }
               return data4;
             });
           });
           console.log(categoryID, "categoryIDcategoryIDcategoryID");
-          if (categoryID.value === categoryUpdate.category.categoryId) {
+          if (categoryID.value === categoryUpdated.category.categoryId) {
             setCategoryID({
-              value: categoryUpdate.category.categoryId,
-              label: categoryUpdate.category.category,
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
             });
           }
 
-          setCategoryUpdate(null);
+          dispatch(setCategoryUpdated(null));
         }
       }
     }
-  }, [categoryUpdate]);
+  }, [categoryUpdated]);
   return (
     <>
       <Modal
