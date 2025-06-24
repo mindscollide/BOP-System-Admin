@@ -193,7 +193,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">Start Time</label>
               <TimePicker
-                format={"hh:mm A"}
+                format={"hh:mm"}
                 value={moment(monToThruStartTime, "HH:mm")}
                 showNow={false}
                 onOk={(event) => handleChange("monToThruStartTime", event)}
@@ -208,7 +208,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">End Time</label>
               <TimePicker
-                format={"hh:mm A"}
+                format={"hh:mm"}
                 value={moment(monToThruEndTime, "HH:mm")}
                 showNow={false}
                 onOk={(event) => handleChange("monToThruEndTime", event)}
@@ -235,7 +235,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">Start Time</label>
               <TimePicker
-                format={"hh:mm A"}
+                format={"hh:mm"}
                 value={moment(fridayStartTime, "HH:mm")}
                 showNow={false}
                 onOk={(event) => handleChange("fridayStartTime", event)}
@@ -248,8 +248,8 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">End Time</label>
               <TimePicker
-                format={"hh:mm A"}
-                value={moment(fridayEndTime, "HH:mm A")}
+                format={"hh:mm"}
+                value={moment(fridayEndTime, "HH:mm")}
                 use12Hours={true}
                 showNow={false}
                 onOk={(event) => handleChange("fridayEndTime", event)}
