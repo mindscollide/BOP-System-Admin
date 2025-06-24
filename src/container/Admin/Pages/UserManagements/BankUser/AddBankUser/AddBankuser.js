@@ -147,7 +147,7 @@ const AddBankUser = () => {
     }
 
     // Check if role list data is available before proceeding
-    if (RoleList !== null) {
+    if (RoleList !== null && RoleList !== undefined) {
       try {
         // Transform raw roles into format suitable for dropdown options
         let newRolesData = RoleList.roles.map((role) => {

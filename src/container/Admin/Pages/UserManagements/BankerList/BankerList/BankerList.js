@@ -709,6 +709,7 @@ const BankerList = () => {
                   placeholder={"Select Role"}
                   options={roleOptions}
                   value={roleID.value ? roleID : null}
+                  menuPortalTarget={document.body}
                   onChange={handleSelectRole}
                   classNamePrefix="selectCateogyCorporateList"
                 />

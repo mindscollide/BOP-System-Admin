@@ -358,35 +358,41 @@ const EditBankerModal = () => {
 
   useEffect(() => {
     if (bankUserRoleStatusChange !== null) {
-      setUpdateBankUser({
-        ...updateBankUser,
-        activeUser: {
-          value:
-            bankUserRoleStatusChange.updatedUser.userStatusID === 1
-              ? "Active"
-              : "Inactive",
-        },
+      try {
+        setUpdateBankUser({
+          ...updateBankUser,
+          activeUser: {
+            value:
+              bankUserRoleStatusChange.updatedUser.userStatusID === 1
+                ? "Active"
+                : "Inactive",
+          },
 
-        roleID: {
-          value: bankUserRoleStatusChange.updatedUser.userRoleID,
-        },
-        branch: bankUserRoleStatusChange.updatedUser.branch,
-      });
-      if (roleOptions.length > 0) {
-        let fingRoleName = roleOptions.find(
-          (roleIDData, index) =>
-            roleIDData.value === bankUserRoleStatusChange.updatedUser.userRoleID
-        );
-        if (fingRoleName !== undefined) {
-          setRoleID(fingRoleName);
+          roleID: {
+            value: bankUserRoleStatusChange.updatedUser.userRoleID,
+          },
+          branch: bankUserRoleStatusChange.updatedUser.branch,
+        });
+        if (roleOptions.length > 0) {
+          let fingRoleName = roleOptions.find(
+            (roleIDData, index) =>
+              roleIDData.value ===
+              bankUserRoleStatusChange.updatedUser.userRoleID
+          );
+          if (fingRoleName !== undefined) {
+            setRoleID(fingRoleName);
+          }
         }
+        if (bankUserRoleStatusChange.updatedUser.userRoleID === 9) {
+          setBranchRole({
+            value: bankUserRoleStatusChange.updatedUser.branch.branchID,
+            label: bankUserRoleStatusChange.updatedUser.branch.branchName,
+          });
+        }
+        dispatch(setBankUserRoleStatusChange(null));
+      } catch (error) {
+        console.log("Error:", error);
       }
-
-      setBranchRole({
-        value: bankUserRoleStatusChange.updatedUser.branch.branchID,
-        label: bankUserRoleStatusChange.updatedUser.branch.branchName,
-      });
-      dispatch(setBankUserRoleStatusChange(null));
     }
   }, [bankUserRoleStatusChange]);
   return (

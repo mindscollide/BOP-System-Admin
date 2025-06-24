@@ -167,6 +167,7 @@ const SystemLogin = () => {
                           </InputGroup.Text>
                           <Form.Control
                             name="Password"
+                            ref={Password}
                             autoComplete="off"
                             className="form-comtrol-textfield-password"
                             placeholder="Password"
