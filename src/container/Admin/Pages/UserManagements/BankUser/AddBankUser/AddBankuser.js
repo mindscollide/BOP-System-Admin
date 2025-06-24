@@ -33,6 +33,7 @@ import { useBankUser } from "../utils/BankUserContext";
 import {
   setBranchCreated,
   setBranchUpdated,
+  setCategoryUpdated,
 } from "../../../../../../store/actions/RealtimeActions";
 
 const AddBankUser = () => {
@@ -47,6 +48,10 @@ const AddBankUser = () => {
 
   const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
 
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
+
   const { setEditBranchData, setBulkUploadClicked } = useBankUser();
 
   const [modalState, setModalState] = useState(0);
@@ -56,7 +61,7 @@ const AddBankUser = () => {
 
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
-
+  console.log(branchOptions, "branchOptionsbranchOptions");
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
 
@@ -94,6 +99,8 @@ const AddBankUser = () => {
   const [addBankUser, setAddBankUser] = useState({
     ...addBankUserSchema,
   });
+
+  console.log(addBankUser, "addBankUseraddBankUser");
 
   // Fetch branches on component mount
   useEffect(() => {
@@ -198,6 +205,7 @@ const AddBankUser = () => {
                   branchCode: branchUpdated.branch.branchCode,
                   branchContact: branchUpdated.branch.branchContact,
                   branchName: branchUpdated.branch.branchName,
+                  branchID: branchUpdated.branch.branchID,
                 };
               }
               return data4;
@@ -214,6 +222,7 @@ const AddBankUser = () => {
               branchCode: branchUpdated.branch.branchCode,
               branchContact: branchUpdated.branch.branchContact,
               branchName: branchUpdated.branch.branchName,
+              branchID: branchUpdated.branch.branchID,
             });
           }
           dispatch(setBranchUpdated(null));
@@ -221,6 +230,47 @@ const AddBankUser = () => {
       }
     }
   }, [branchUpdated]);
+
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(branchOptions)) {
+        let findCategoryObj = branchOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdated.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          console.log("Reached here------");
+          setBranchOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
+                return {
+                  ...data4,
+                  categoryID: categoryUpdated.category.categoryId,
+                  categoryName: categoryUpdated.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          // console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (
+            addBankUser.category.categoryID ===
+            categoryUpdated.category.categoryId
+          ) {
+            setAddBankUser({
+              ...addBankUser,
+              category: {
+                ...addBankUser.category,
+                value: categoryUpdated.category.category,
+              },
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
+      }
+    }
+  }, [categoryUpdated]);
   //add bank user security admin validate handler
   const addBankUserValidateHandler = (e) => {
     let name = e.target.name;
@@ -381,7 +431,9 @@ const AddBankUser = () => {
       setAddBankUser({
         ...addBankUser,
         category: {
+          ...addBankUser.category,
           value: firstBranchOption.categoryName,
+          categoryID: firstBranchOption.categoryID,
         },
       });
     } else {
@@ -389,6 +441,7 @@ const AddBankUser = () => {
       setAddBankUser({
         ...addBankUser,
         category: {
+          ...addBankUser.category,
           value: "",
         },
       });
@@ -400,7 +453,9 @@ const AddBankUser = () => {
     setAddBankUser({
       ...addBankUser,
       category: {
+        ...addBankUser.category,
         value: selectedBranch.categoryName,
+        categoryID: selectedBranch.categoryID,
       },
     });
   };
@@ -467,6 +522,7 @@ const AddBankUser = () => {
       },
       category: {
         value: "",
+        categoryID: 0,
         errorMessage: "",
         errorStatus: false,
       },

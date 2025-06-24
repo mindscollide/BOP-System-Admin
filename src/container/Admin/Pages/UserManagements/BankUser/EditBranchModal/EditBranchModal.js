@@ -13,6 +13,7 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 const EditBranchModal = ({ editBranchData }) => {
+  console.log("editBranchDataeditBranchData", editBranchData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
@@ -28,7 +29,7 @@ const EditBranchModal = ({ editBranchData }) => {
   });
 
   const [updateBranch, setUpdateBranch] = useState({ ...editBranchData });
-
+  console.log(updateBranch, "updateBranchupdateBranch");
   //State to activate the edit button
   //States
   const [open, setOpen] = useState(false);

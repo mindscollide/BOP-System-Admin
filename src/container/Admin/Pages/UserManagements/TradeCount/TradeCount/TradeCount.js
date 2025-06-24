@@ -74,6 +74,7 @@ const TradeCount = () => {
   }); //row length on scroll
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
@@ -83,18 +84,33 @@ const TradeCount = () => {
   //   (state) => state.BOPSystemAdminModal.tradeCountCommentModal
   // );
 
-  //handle Edit Corporate
-  // const handleEditBanker = () => {
-  //   // dispatch(editBankUserModalSystemAdmin(true));
-  //   // dispatch(DeleteCorporateModalSystemAdmin(false));
-  //   // dispatch(UserDetailsCorporateModalSystemAdmin(false));
-  // };
-
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
     setShowExportOptions(!showExportOptions);
+  };
+  const handlePageSizeChange = (newSize) => {
+    setDropdownvalue(newSize);
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
+
+    let Data = {
+      TxnID: tradeCount.TxnID.value,
+      CorporateName: tradeCount.clientName.value,
+      AccountNumber: tradeCount.AccountNumber.value,
+      FromDate: formatDate(tradeCount.dateFrom.value),
+      ToDate: formatDate(tradeCount.dateTo.value),
+      LCNumber: tradeCount.LC.value,
+      Side: tradeCount.side.value,
+      NatureOfTransactionID: tradeCount.natureOfClient.value,
+      Amount: Number(tradeCount.Amount.value),
+      sRow: 0,
+      Length: newSize,
+    };
+    dispatch(GetAllTradesAPI(navigate, Data));
   };
   // Fetch categories on component mount
   useEffect(() => {
@@ -110,7 +126,7 @@ const TradeCount = () => {
       NatureOfTransactionID: 0,
       Amount: 0.0,
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
 
     dispatch(GetAllTradesAPI(navigate, data));
@@ -131,7 +147,7 @@ const TradeCount = () => {
         NatureOfTransactionID: 0,
         Amount: 0.0,
         sRow: sRow,
-        Length: 10,
+        Length: dropdownvalue,
       };
       dispatch(GetAllTradesAPI(navigate, Data));
     }
@@ -323,34 +339,6 @@ const TradeCount = () => {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      transactionID: "245ABD",
-      name: "John Doe",
-      side: "Buy",
-      nature: "Important Payment",
-      CCY1: "USD",
-      CCY1Amount: "100",
-      rate: "290",
-      CCY2: "KWD",
-      CCY2Amount: "100",
-      tradeDate: "13/05/2023",
-      time: "12:07 pm",
-      LC: "12345",
-      account: "02909090908",
-      // comment: (
-      //   <Row>
-      //     <Col lg={12} md={12} sm={12}>
-      //       <i className="icon-view-comment color-blue"></i>
-      //     </Col>
-      //   </Row>
-      // ),
-      comment: "Comment of data 1",
-      status: "Active",
-    },
-  ];
-
   // Trade Count validate handler
   const tradeCountValidateHandler = (e) => {
     const { name, value } = e.target;
@@ -438,17 +426,6 @@ const TradeCount = () => {
     setHasReachedBottom(false);
     setTableData([]);
     setRecordLength(0);
-    // let searchData = {
-    //   TxnID: tradeCount.TxnID.value,
-    //   CorporateName: tradeCount.clientName.value,
-    //   side: tradeCount.side.value,
-    //   Amount: tradeCount.Amount.value,
-    //   LC: tradeCount.LC.value,
-    //   AccountNumber: tradeCount.AccountNumber.value,
-    //   Nature: tradeCount.natureOfClient.value,
-    //   From: formatDate(tradeCount.dateFrom.value),
-    //   To: formatDate(tradeCount.dateTo.value),
-    // };
 
     let searchData = {
       TxnID: tradeCount.TxnID.value,
@@ -457,11 +434,11 @@ const TradeCount = () => {
       FromDate: formatDate(tradeCount.dateFrom.value),
       ToDate: formatDate(tradeCount.dateTo.value),
       LCNumber: tradeCount.LC.value,
-      IsBuySide: tradeCount.side.value,
+      Side: tradeCount.side.value,
       NatureOfTransactionID: tradeCount.natureOfClient.value,
-      Amount: tradeCount.Amount.value,
+      Amount: Number(tradeCount.Amount.value),
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
 
     console.log("searchData is", searchData);
@@ -478,6 +455,7 @@ const TradeCount = () => {
       setModalState(0);
     }
   }, [modalState]);
+
   // show error message When user hit activate btn
   const handleResetEventButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -696,7 +674,9 @@ const TradeCount = () => {
                   placeholder="Amount"
                   name="Amount"
                   onChange={tradeCountValidateHandler}
-                  value={tradeCount.Amount.value}
+                  value={
+                    tradeCount.Amount.value === 0 ? "" : tradeCount.Amount.value
+                  }
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
                 />
@@ -812,7 +792,10 @@ const TradeCount = () => {
 
             <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
-                <ExportShowComponent />
+                <ExportShowComponent
+                  value={dropdownvalue}
+                  onChange={handlePageSizeChange}
+                />
               </Col>
             </Row>
 

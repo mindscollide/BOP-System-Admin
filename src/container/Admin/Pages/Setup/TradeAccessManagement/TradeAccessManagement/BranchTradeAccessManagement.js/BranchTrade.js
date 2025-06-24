@@ -21,6 +21,7 @@ import {
   setBranchTradeStatusUpdated,
   setBranchUpdated,
 } from "../../../../../../../store/actions/RealtimeActions";
+import ExportShowComponent from "../../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 
 const BranchTrade = ({
   hasReachedBottom,
@@ -29,6 +30,8 @@ const BranchTrade = ({
   setBranchTableData,
   setSRow,
   setBranchRecordLength,
+  setDropdownvalue,
+  dropdownvalue,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -90,7 +93,7 @@ const BranchTrade = ({
     let data = {
       BranchName: "",
       sRow: 0,
-      Length: 25,
+      Length: dropdownvalue,
     };
     dispatch(GetBranchesWithStatusAPI(navigate, data));
   }, []);
@@ -279,8 +282,31 @@ const BranchTrade = ({
       },
     },
   ];
+
+  const handlePageSizeChange = (newSize) => {
+    setDropdownvalue(newSize);
+    setSRow(0);
+    setHasReachedBottom(false);
+    setBranchTableData([]);
+    setBranchRecordLength(0);
+
+    let data = {
+      CorporateName: "",
+      sRow: 0,
+      Length: newSize,
+    };
+    dispatch(GetBranchesWithStatusAPI(navigate, data));
+  };
   return (
     <>
+      <Row className="mt-1">
+        <Col lg={12} md={12} sm={12}>
+          <ExportShowComponent
+            value={dropdownvalue}
+            onChange={handlePageSizeChange}
+          />
+        </Col>
+      </Row>
       <Row className="mt-1">
         <Col lg={12} md={12} sm={12}>
           <Table

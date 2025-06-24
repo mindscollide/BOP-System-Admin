@@ -525,7 +525,7 @@ const CategoryManagement = () => {
     let value = e.target.value;
 
     if (name === "nameUpdate" && value !== "") {
-      let valueCheck = value.replace(/[^a-zA-Z ]/g, "").trimStart(); // updated to match handleValueChange
+      let valueCheck = value.replace(/[^a-zA-Z0-9 ]/g, "").trimStart(); // updated to match handleValueChange
       if (valueCheck !== "") {
         setCategoryUpdate({
           ...categoryupdate,

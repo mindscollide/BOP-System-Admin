@@ -99,6 +99,7 @@ export const addBankUserSchema = {
   },
   category: {
     value: "",
+    categoryID: 0,
     errorMessage: "",
     errorStatus: false,
   },
@@ -294,12 +295,17 @@ export const addCorporateUserSchema = {
     errorMessage: "",
     errorStatus: false,
   },
-  category: {
+  // category: {
+  //   value: "",
+  //   errorMessage: "",
+  //   errorStatus: false,
+  // },
+  categoryName: {
     value: "",
+    categoryID: 0,
     errorMessage: "",
     errorStatus: false,
   },
-  categoryName: { value: "", errorMessage: "", errorStatus: false },
   natureOfClient: { value: "", errorMessage: "", errorStatus: false },
   rfqTreasury: { value: "", errorMessage: "", errorStatus: false },
   rfqCorporate: { value: "", errorMessage: "", errorStatus: false },
@@ -476,12 +482,12 @@ export const tradeCountSchema = {
     errorStatus: false,
   },
   side: {
-    value: "",
+    value: 0,
     errorMessage: "",
     errorStatus: false,
   },
   Amount: {
-    value: "",
+    value: 0,
     errorMessage: "",
     errorStatus: false,
   },
