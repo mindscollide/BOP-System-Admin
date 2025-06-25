@@ -194,6 +194,7 @@ const MarketTiming = ({
               <label className="two-factor-text">Start Time</label>
               <TimePicker
                 format={"hh:mm"}
+                inputReadOnly={true}
                 value={moment(monToThruStartTime, "HH:mm")}
                 showNow={false}
                 onOk={(event) => handleChange("monToThruStartTime", event)}
@@ -209,6 +210,7 @@ const MarketTiming = ({
               <label className="two-factor-text">End Time</label>
               <TimePicker
                 format={"hh:mm"}
+                inputReadOnly={true}
                 value={moment(monToThruEndTime, "HH:mm")}
                 showNow={false}
                 onOk={(event) => handleChange("monToThruEndTime", event)}
@@ -236,6 +238,7 @@ const MarketTiming = ({
               <label className="two-factor-text">Start Time</label>
               <TimePicker
                 format={"hh:mm"}
+                inputReadOnly={true}
                 value={moment(fridayStartTime, "HH:mm")}
                 showNow={false}
                 onOk={(event) => handleChange("fridayStartTime", event)}
@@ -249,8 +252,8 @@ const MarketTiming = ({
               <label className="two-factor-text">End Time</label>
               <TimePicker
                 format={"hh:mm"}
+                inputReadOnly={true}
                 value={moment(fridayEndTime, "HH:mm")}
-                use12Hours={true}
                 showNow={false}
                 onOk={(event) => handleChange("fridayEndTime", event)}
                 onSelect={(event) => handleChangeTime(event, "fridayEndTime")}
