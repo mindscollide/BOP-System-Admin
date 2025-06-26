@@ -787,6 +787,11 @@ const CategoryManagement = () => {
                 <Button
                   className="Update_button_category"
                   text="Update"
+                  disableBtn={
+                    categoryupdate.category.value.trimStart() === ""
+                      ? true
+                      : false
+                  }
                   onClick={() => UpdateCategory(data)}
                 />
                 <Button

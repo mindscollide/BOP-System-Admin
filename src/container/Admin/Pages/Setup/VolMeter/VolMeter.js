@@ -16,6 +16,7 @@ import {
   GetVolmeterByBankIDAPI,
 } from "../../../../../store/actions/BOPSystemAdminActions";
 import { useSelector } from "react-redux";
+import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
 
 const VolMeter = () => {
   const navigate = useNavigate();
@@ -90,75 +91,126 @@ const VolMeter = () => {
     }
   }, [GetVolmeterByBankID]);
 
+  // const onChanngeVolMterValidation = (e) => {
+  //   let name = e.target.name;
+  //   let value = e.target.value;
+  //   let validateValue = value.replace(/[^0-9.]/g, "");
+
+  //   if (name === "volatilityMeter" && validateValue !== "") {
+  //     if (validateValue !== "") {
+  //       setVolMeterFields({
+  //         ...volMeterFields,
+  //         volatilityMeter: {
+  //           value: validateValue.trimStart(),
+  //           errorMessage: "",
+  //           errorStatus: false,
+  //         },
+  //       });
+  //     }
+  //   } else if (name === "volatilityMeter" && validateValue === "") {
+  //     setVolMeterFields({
+  //       ...volMeterFields,
+  //       volatilityMeter: {
+  //         value: "",
+  //         errorMessage: "",
+  //         errorStatus: true,
+  //       },
+  //     });
+  //   }
+
+  //   if (name === "nameVol" && validateValue !== "") {
+  //     if (validateValue !== "") {
+  //       setVolMeterFields({
+  //         ...volMeterFields,
+  //         nameVol: {
+  //           value: validateValue.trimStart(),
+  //           errorMessage: "",
+  //           errorStatus: false,
+  //         },
+  //       });
+  //     }
+  //   } else if (name === "nameVol" && validateValue === "") {
+  //     setVolMeterFields({
+  //       ...volMeterFields,
+  //       nameVol: {
+  //         value: "",
+  //         errorMessage: "",
+  //         errorStatus: true,
+  //       },
+  //     });
+  //   }
+
+  //   if (name === "volMeter" && validateValue !== "") {
+  //     if (validateValue !== "") {
+  //       setVolMeterFields({
+  //         ...volMeterFields,
+  //         volMeter: {
+  //           value: validateValue.trimStart(),
+  //           errorMessage: "",
+  //           errorStatus: false,
+  //         },
+  //       });
+  //     }
+  //   } else if (name === "volMeter" && validateValue === "") {
+  //     setVolMeterFields({
+  //       ...volMeterFields,
+  //       volMeter: {
+  //         value: "",
+  //         errorMessage: "",
+  //         errorStatus: true,
+  //       },
+  //     });
+  //   }
+  // };
+
   const onChanngeVolMterValidation = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    let validateValue = value.replace(/[^0-9.]/g, "");
+    const { name, value } = e.target;
+    if (isValidNumberUnderMax(value, "", 1000)) {
+      const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
+      const sanitizedValue =
+        value === "" || value === "."
+          ? "0"
+          : regular_ex.test(value)
+          ? value.slice(1)
+          : value === "0.0"
+          ? "0.1"
+          : // Remove leading "0" (e.g., "09" → "9")
+            value;
 
-    if (name === "volatilityMeter" && validateValue !== "") {
-      if (validateValue !== "") {
-        setVolMeterFields({
-          ...volMeterFields,
-          volatilityMeter: {
-            value: validateValue.trimStart(),
-            errorMessage: "",
-            errorStatus: false,
-          },
-        });
+      if (name === "volatilityMeter") {
+        {
+          setVolMeterFields({
+            ...volMeterFields,
+            volatilityMeter: {
+              value: sanitizedValue,
+              errorMessage: "",
+              errorStatus: false,
+            },
+          });
+        }
       }
-    } else if (name === "volatilityMeter" && validateValue === "") {
-      setVolMeterFields({
-        ...volMeterFields,
-        volatilityMeter: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
-    }
 
-    if (name === "nameVol" && validateValue !== "") {
-      if (validateValue !== "") {
+      if (name === "nameVol") {
         setVolMeterFields({
           ...volMeterFields,
           nameVol: {
-            value: validateValue.trimStart(),
+            value: sanitizedValue,
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "nameVol" && validateValue === "") {
-      setVolMeterFields({
-        ...volMeterFields,
-        nameVol: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
-    }
 
-    if (name === "volMeter" && validateValue !== "") {
-      if (validateValue !== "") {
+      if (name === "volMeter") {
         setVolMeterFields({
           ...volMeterFields,
           volMeter: {
-            value: validateValue.trimStart(),
+            value: sanitizedValue,
             errorMessage: "",
             errorStatus: false,
           },
         });
       }
-    } else if (name === "volMeter" && validateValue === "") {
-      setVolMeterFields({
-        ...volMeterFields,
-        volMeter: {
-          value: "",
-          errorMessage: "",
-          errorStatus: true,
-        },
-      });
     }
   };
 
