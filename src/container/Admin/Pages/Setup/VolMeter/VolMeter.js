@@ -178,16 +178,14 @@ const VolMeter = () => {
             value;
 
       if (name === "volatilityMeter") {
-        {
-          setVolMeterFields({
-            ...volMeterFields,
-            volatilityMeter: {
-              value: sanitizedValue,
-              errorMessage: "",
-              errorStatus: false,
-            },
-          });
-        }
+        setVolMeterFields({
+          ...volMeterFields,
+          volatilityMeter: {
+            value: sanitizedValue,
+            errorMessage: "",
+            errorStatus: false,
+          },
+        });
       }
 
       if (name === "nameVol") {
