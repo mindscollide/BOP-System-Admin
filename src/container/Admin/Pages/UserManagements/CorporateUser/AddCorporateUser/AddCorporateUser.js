@@ -5,6 +5,7 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import { validateEmail } from "../../../../../../utils/regexUtil";
 import {
   ConfirmationModalSystemAdmin,
@@ -89,7 +90,7 @@ const AddCorporateUser = () => {
       category: (val) => val.trim(),
     };
 
-    const isFieldEmpty = (val) => val === "";
+    // const isFieldEmpty = (val) => val === "";
 
     // Update field function
     const updateField = (fieldName, fieldValue) => {
@@ -97,14 +98,14 @@ const AddCorporateUser = () => {
         ? validateInput[fieldName](fieldValue)
         : fieldValue;
 
-      const hasError = isFieldEmpty(validValue);
+      // const hasError = isFieldEmpty(validValue);
 
       setCorporateUser((prevState) => ({
         ...prevState,
         [fieldName]: {
           value: validValue,
-          errorMessage: hasError ? "This field is required" : "",
-          errorStatus: hasError,
+          // errorMessage: hasError ? "This field is required" : "",
+          // errorStatus: hasError,
         },
       }));
     };
@@ -115,11 +116,29 @@ const AddCorporateUser = () => {
 
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    if (validateEmail(corporateUser.email.value)) {
+    if (
+      validateEmail(corporateUser.email.value) &&
+      !corporateUser.email.value.includes("@bop.com.pk") &&
+      !corporateUser.email.value.includes("@bop.com")
+      // corporateUser.firstName.value !== "" &&
+      // corporateUser.email.value !== "" &&
+      // corporateUser.companyName !== ""
+    ) {
       dispatch(ConfirmationModalSystemAdmin(true));
       setModalState(1);
     } else {
-      setErrorShow(true);
+      setCorporateUser((prevState) => {
+        return {
+          ...prevState,
+          email: {
+            ...prevState.email,
+            errorMessage: "Email Domain Incorrect or Not Allowed",
+            errorStatus: true,
+          },
+        };
+      });
+      // setErrorShow(true);
+      // alert("Not Validated");
     }
   };
   //handle Active Button
@@ -127,46 +146,27 @@ const AddCorporateUser = () => {
   const handleConfirmationYes = useCallback(() => {
     try {
       if (modalState === 1) {
-        if (
-          corporateUser.firstName.value !== "" &&
-          corporateUser.email.value !== "" &&
-          corporateUser.companyName !== ""
-        ) {
-          if (validateEmail(corporateUser.email.value)) {
-            setErrorShow(false);
-            let newData = {
-              User: {
-                FirstName: corporateUser.firstName.value,
-                Email: corporateUser.email.value,
-                ContactNumber: "03909090909",
-              },
-              CorporateID: companyRoleID.corporateID,
-              IsChatActive: corporateUser.isChatActive.value,
-              IsFEEnabled: corporateUser.isFEActive.value,
-              IsNonFEEnabled: corporateUser.isNonFEActive.value,
-            };
+        let newData = {
+          User: {
+            FirstName: corporateUser.firstName.value,
+            Email: corporateUser.email.value,
+            ContactNumber: "03909090909",
+          },
+          CorporateID: companyRoleID.corporateID,
+          IsChatActive: corporateUser.isChatActive.value,
+          IsFEEnabled: corporateUser.isFEActive.value,
+          IsNonFEEnabled: corporateUser.isNonFEActive.value,
+        };
 
-            dispatch(
-              CreateCorporateUserRequestAPI(
-                navigate,
-                newData,
-                handleCancelButtonYes,
-                setCorporateUser
-              )
-            );
-            dispatch(ConfirmationModalSystemAdmin(false));
-          } else {
-            setErrorShow(true);
-          }
-        } else {
-          // setTimeout();
-
-          setOpen({
-            open: true,
-            message: "Fill All Required Fields",
-          });
-          setErrorShow(true);
-        }
+        dispatch(
+          CreateCorporateUserRequestAPI(
+            navigate,
+            newData,
+            handleCancelButtonYes,
+            setCorporateUser
+          )
+        );
+        dispatch(ConfirmationModalSystemAdmin(false));
       } else if (modalState === 2) {
         dispatch(ConfirmationModalSystemAdmin(false));
         setModalState(0);
@@ -582,28 +582,9 @@ const AddCorporateUser = () => {
                       />
                     </div>
                     {corporateUser.email.errorStatus && (
-                      <Row>
-                        <Col className="d-flex justify-content-start">
-                          <p className={styles["bankErrorMessage"]}>
-                            {corporateUser.email.errorMessage}
-                          </p>
-                        </Col>
-                      </Row>
-                    )}
-
-                    {errorShow &&
-                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                      corporateUser.email.value
-                    ) ? (
-                      <Row>
-                        <Col className="d-flex justify-content-start">
-                          <p className={styles["bankErrorMessage"]}>
-                            Enter Valid Email Address
-                          </p>
-                        </Col>
-                      </Row>
-                    ) : (
-                      ""
+                      <p className={styles["bankErrorMessage"]}>
+                        {corporateUser.email.errorMessage}
+                      </p>
                     )}
                   </Col>
                 </Row>
