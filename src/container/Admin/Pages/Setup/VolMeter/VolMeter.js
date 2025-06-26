@@ -165,7 +165,7 @@ const VolMeter = () => {
 
   const onChanngeVolMterValidation = (e) => {
     const { name, value } = e.target;
-    if (isValidNumberUnderMax(value, "", 1000)) {
+    if (isValidNumberUnderMax(value, "", 100)) {
       const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
       const sanitizedValue =
         value === "" || value === "."
@@ -288,7 +288,6 @@ const VolMeter = () => {
                       onChange={onChanngeVolMterValidation}
                       value={volMeterFields.nameVol.value}
                       labelClass="d-none"
-                      maxLength={5}
                     />
                   </Col>
                   <Col
@@ -304,7 +303,6 @@ const VolMeter = () => {
                       value={volMeterFields.volMeter.value}
                       onChange={onChanngeVolMterValidation}
                       labelClass="d-none"
-                      maxLength={5}
                     />
                   </Col>
                 </Row>
