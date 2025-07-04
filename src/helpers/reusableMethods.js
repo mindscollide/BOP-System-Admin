@@ -124,3 +124,23 @@ export const isValidAmount = (value, maxDecimalPlaces = 2) => {
 
   return true;
 };
+
+
+export const convertDateTimeIntoLocal = (utcDateString) => {
+  const year = parseInt(utcDateString.slice(0, 4));
+  const month = parseInt(utcDateString.slice(4, 6)) - 1; // JS months are 0-based
+  const day = parseInt(utcDateString.slice(6, 8));
+  const hour = parseInt(utcDateString.slice(8, 10));
+  const minute = parseInt(utcDateString.slice(10, 12));
+  const second = parseInt(utcDateString.slice(12, 14));
+
+  // Create date in UTC
+  const utcDate = new Date(Date.UTC(year, month, day, hour, minute, second));
+  console.log(utcDate, "utcDateutcDate")
+  // Convert to local time string
+  const localDateString = utcDate.toString(); // Uses system/browser local time
+
+  console.log("Local Time:", localDateString);
+
+  return utcDate;
+};

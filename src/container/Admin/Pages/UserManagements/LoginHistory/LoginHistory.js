@@ -14,6 +14,7 @@ import {
 
 import { loginHistorySchema } from "../../../../../utils/schemas";
 import {
+  convertDateTimeIntoLocal,
   formatDate,
   formatDateAndTimeFromString,
   formatTimeSpan,
@@ -224,7 +225,7 @@ const LoginHistory = () => {
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="px-3">Email</label>,
+      title: <label className='px-3'>Email</label>,
       dataIndex: "email",
       key: "email",
       width: "220px",
@@ -232,7 +233,7 @@ const LoginHistory = () => {
       ellipsis: true,
     },
     {
-      title: <label className="px-3">Name</label>,
+      title: <label className='px-3'>Name</label>,
       dataIndex: "userName",
       key: "userName",
       width: "200px",
@@ -241,7 +242,7 @@ const LoginHistory = () => {
     },
 
     {
-      title: <label className="px-3">Counter Party</label>,
+      title: <label className='px-3'>Counter Party</label>,
       dataIndex: "counterPartyName",
       key: "counterPartyName",
       width: "150px",
@@ -250,7 +251,7 @@ const LoginHistory = () => {
     },
 
     {
-      title: <label className="px-3">Role</label>,
+      title: <label className='px-3'>Role</label>,
       dataIndex: "roleID",
       key: "roleID",
       width: "100px",
@@ -266,7 +267,7 @@ const LoginHistory = () => {
     },
 
     {
-      title: <label className="px-3">IP Address</label>,
+      title: <label className='px-3'>IP Address</label>,
       dataIndex: "ipAddress",
       key: "ipAddress",
       width: "130px",
@@ -274,7 +275,7 @@ const LoginHistory = () => {
       ellipsis: true,
     },
     {
-      title: <label className="px-3">Logged In Time</label>,
+      title: <label className='px-3'>Logged In Time</label>,
       dataIndex: "logInDateTime",
       key: "logInDateTime",
       align: "left",
@@ -283,14 +284,14 @@ const LoginHistory = () => {
       render: (logInDateTime) => {
         // Format the date and time
         return logInDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(logInDateTime)).format(
-              "DD/MM/YYYY HH:mm:ss"
+          ? moment(convertDateTimeIntoLocal(logInDateTime)).format(
+              "DD/MM/YYYY hh:mm:ss"
             )
           : "-";
       },
     },
     {
-      title: <label className="px-3">Logged Out Time</label>,
+      title: <label className='px-3'>Logged Out Time</label>,
       dataIndex: "logOutDateTime",
       key: "logOutDateTime",
       align: "center",
@@ -299,15 +300,15 @@ const LoginHistory = () => {
       render: (logOutDateTime) => {
         // Format the date and time
         return logOutDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(logOutDateTime)).format(
-              "DD/MM/YYYY HH:mm:ss"
+          ? moment(convertDateTimeIntoLocal(logOutDateTime)).format(
+              "DD/MM/YYYY hh:mm:ss"
             )
           : "-";
       },
     },
 
     {
-      title: <label className="px-3">Total Span</label>,
+      title: <label className='px-3'>Total Span</label>,
       dataIndex: "totalSpan",
       key: "totalSpan",
       align: "left",
@@ -469,15 +470,13 @@ const LoginHistory = () => {
         <button
           onClick={() => {
             /* Handle CSV export */
-          }}
-        >
+          }}>
           Export as CSV
         </button>
         <button
           onClick={() => {
             /* Handle PDF export */
-          }}
-        >
+          }}>
           Export as PDF
         </button>
         <button onClick={onClose}>Close</button>
@@ -527,21 +526,21 @@ const LoginHistory = () => {
 
   return (
     <section className={styles["SectionContainer"]}>
-      <Row className="mt-4">
+      <Row className='mt-4'>
         <Col lg={12} md={12} sm={12}>
           <span className={styles["customer-List-label"]}>
             Customer Login History
           </span>
         </Col>
       </Row>
-      <Row className="mt-2">
+      <Row className='mt-2'>
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-2 g-2">
+            <Row className='mt-2 g-2'>
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"Name"}
-                  placeholder="Name"
+                  placeholder='Name'
                   labelClass={"d-none"}
                   value={loginHistory.Name.value}
                   onChange={LoginHistoryValidateHandler}
@@ -550,7 +549,7 @@ const LoginHistory = () => {
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"CounterPartyname"}
-                  placeholder="Counter Party Name"
+                  placeholder='Counter Party Name'
                   labelClass={"d-none"}
                   value={loginHistory.CounterPartyName.value}
                   onChange={LoginHistoryValidateHandler}
@@ -559,7 +558,7 @@ const LoginHistory = () => {
               <Col lg={2} md={2} sm={12}>
                 <TextField
                   name={"email"}
-                  placeholder="Email"
+                  placeholder='Email'
                   labelClass={"d-none"}
                   value={loginHistory.Email.value}
                   onChange={LoginHistoryValidateHandler}
@@ -572,7 +571,7 @@ const LoginHistory = () => {
                   options={roleOptions}
                   value={roleID.value ? roleID : null}
                   onChange={handleSelectRole}
-                  classNamePrefix="selectCateogyCorporateList"
+                  classNamePrefix='selectCateogyCorporateList'
                 />
               </Col>
 
@@ -580,13 +579,12 @@ const LoginHistory = () => {
                 lg={4}
                 md={4}
                 sm={12}
-                className="d-flex align-items-center pe-4"
-              >
+                className='d-flex align-items-center pe-4'>
                 <DatePicker
                   name={"dateFrom"}
                   labelClass={"d-none"}
                   inputClass={styles["Tradecount-Datepicker-left"]}
-                  placeholder="Start date"
+                  placeholder='Start date'
                   showOtherDays={true}
                   value={loginHistory.dateFrom.value}
                   onChange={(date) => handleDateChange("dateFrom", date)}
@@ -597,9 +595,9 @@ const LoginHistory = () => {
                 <label className={styles["Tradecount-date-to"]}>to</label>
 
                 <DatePicker
-                  name="dateTo"
+                  name='dateTo'
                   labelClass={"d-none"}
-                  placeholder="End Date"
+                  placeholder='End Date'
                   showOtherDays={true}
                   inputClass={styles["Tradecount-Datepicker-right"]}
                   value={loginHistory.dateTo.value}
@@ -609,23 +607,22 @@ const LoginHistory = () => {
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
+            <Row className='mt-3'>
               <Col
                 lg={12}
                 md={12}
                 sm={12}
-                className="d-flex justify-content-center gap-1"
-              >
+                className='d-flex justify-content-center gap-1'>
                 <Button
-                  icon={<i className="icon-search icon-check-space"></i>}
+                  icon={<i className='icon-search icon-check-space'></i>}
                   className={styles["SearchButton_loginHistory"]}
-                  text="Search"
+                  text='Search'
                   onClick={handleSearchEventButton}
                 />
                 <Button
-                  icon={<i className="icon-refresh icon-check-space"></i>}
+                  icon={<i className='icon-refresh icon-check-space'></i>}
                   className={styles["Banklist-Reset-btn"]}
-                  text="Reset"
+                  text='Reset'
                   onClick={handleResetEventButton}
                 />
 
@@ -633,28 +630,27 @@ const LoginHistory = () => {
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<img src={excelIcon} alt="Excel Icon" />}
+                        icon={<img src={excelIcon} alt='Excel Icon' />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        icon={<img src={pdfIcon} alt="PDF Icon" />}
+                        icon={<img src={pdfIcon} alt='PDF Icon' />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                     </div>
                   }
                   // title="Title"
-                  trigger="click"
+                  trigger='click'
                   open={open}
                   onOpenChange={handleOpenChange}
-                  placement="bottomRight"
-                  arrow={false}
-                >
+                  placement='bottomRight'
+                  arrow={false}>
                   <Button
-                    icon={<i className="icon-download"></i>}
+                    icon={<i className='icon-download'></i>}
                     className={styles["Export_Button"]}
-                    text="Export"
+                    text='Export'
                     iconClass={styles["resetIconClass"]}
                     onClick={toggleExportOptions}
                   />
@@ -662,7 +658,7 @@ const LoginHistory = () => {
               </Col>
             </Row>
 
-            <Row className="mt-1">
+            <Row className='mt-1'>
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent
                   value={dropdownvalue}
@@ -671,13 +667,13 @@ const LoginHistory = () => {
               </Col>
             </Row>
 
-            <Row className="mt-1">
+            <Row className='mt-1'>
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 250, x: "scroll" }}
+                  scroll={{ y: 250, x: "max-content" }}
                   className={"BankUserList-table"}
                 />
               </Col>

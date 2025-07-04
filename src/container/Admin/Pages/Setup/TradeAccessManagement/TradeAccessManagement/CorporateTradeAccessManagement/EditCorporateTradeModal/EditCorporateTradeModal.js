@@ -52,11 +52,19 @@ const EditCorporateTradeModal = ({ info }) => {
   //Trade Rights Data
   const [tradeRightsData, setTradeRightsData] = useState({
     listOfInstruments: [],
-    maxTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-    minTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
+    maxTransactionLimit: {
+      value: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    minTransactionLimit: {
+      value: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
     totalLimit: { value: 0, errorMessage: "", errorStatus: false },
   });
-
+  console.log(tradeRightsData, "tradeRightsDatatradeRightsData")
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
 
@@ -103,12 +111,20 @@ const EditCorporateTradeModal = ({ info }) => {
 
           setTradeRightsData({
             maxTransactionLimit: {
-              value: GetCorporateTradeRights.maxTransactionLimit,
+              value: Number(
+                GetCorporateTradeRights.maxTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             minTransactionLimit: {
-              value: GetCorporateTradeRights.minTransactionLimit,
+              value: Number(
+                GetCorporateTradeRights.minTransactionLimit
+              ).toLocaleString("en-PK"),
             },
-            totalLimit: { value: GetCorporateTradeRights.totalLimit },
+            totalLimit: {
+              value: Number(GetCorporateTradeRights.totalLimit).toLocaleString(
+                "en-PK"
+              ),
+            },
           });
         }
       } catch (error) {
@@ -179,17 +195,23 @@ const EditCorporateTradeModal = ({ info }) => {
     if (corporateTradeRightsUpdated !== null) {
       try {
         const { corporateTradeRights } = corporateTradeRightsUpdated;
-        if (info.id === corporateTradeRights.corporateID) {
+        if (info?.id === corporateTradeRights.corporateID) {
           // Update the limits
           setTradeRightsData({
             maxTransactionLimit: {
-              value: corporateTradeRights.maxTransactionLimit,
+              value: Number(
+                corporateTradeRights.maxTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             minTransactionLimit: {
-              value: corporateTradeRights.minTransactionLimit,
+              value: Number(
+                corporateTradeRights.minTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             totalLimit: {
-              value: corporateTradeRights.totalLimit,
+              value: Number(corporateTradeRights.totalLimitF).toLocaleString(
+                "en-PK"
+              ),
             },
           });
 
@@ -474,29 +496,33 @@ const EditCorporateTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    // Allow: digits, optional one dot
-    const validString = value
-      .replace(/[^0-9.]/g, "")
-      .replace(/^([^.]*\.)|\./g, "$1");
+    // Step 1: Remove all non-digit characters
+    let rawValue = value.replace(/[^0-9]/g, "");
 
-    // No error if value is not empty and a valid number format
-    const hasError = validString.trim() === "";
-    const numericValue = Number(validString);
+    // Step 2: Remove leading zeros unless the entire value is "0"
+    rawValue = rawValue.replace(/^0+(?=\d)/, "");
 
-    // First update the changed field
+    // Step 3: Convert to PKR format (e.g., 1000 -> 1,000)
+    const formattedValue = rawValue
+      ? Number(rawValue).toLocaleString("en-PK")
+      : "";
+
+    // Step 4: Basic required validation
+    const hasError = rawValue.trim() === "";
+
     setTradeRightsData((prevState) => {
       const updatedState = {
         ...prevState,
         [name]: {
-          value: numericValue,
+          value: formattedValue,
+          rawValue: rawValue, // Keep raw for numeric logic
           errorMessage: hasError ? "This field is required" : "",
           errorStatus: hasError,
         },
       };
 
-      // Then check min/max relationship
-      const minLimit = updatedState.minTransactionLimit.value;
-      const maxLimit = updatedState.maxTransactionLimit.value;
+      const minLimit = Number(updatedState.minTransactionLimit?.value || 0);
+      const maxLimit = Number(updatedState.maxTransactionLimit?.value || 0);
 
       const limitError = minLimit > maxLimit;
 
@@ -519,6 +545,7 @@ const EditCorporateTradeModal = ({ info }) => {
       };
     });
   };
+
   // show error message When user hit activate btn
   const handleSaveChangesButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -530,10 +557,10 @@ const EditCorporateTradeModal = ({ info }) => {
     if (modalState === 1) {
       dispatch(editTradeAccessManagementModalSystemAdmin(false));
       let updatedData = {
-        CorporateID: info.id,
-        TotalLimit: tradeRightsData.totalLimit.value,
-        MinTransactionLimit: tradeRightsData.minTransactionLimit.value,
-        MaxTransactionLimit: tradeRightsData.maxTransactionLimit.value,
+        CorporateID: info?.id,
+        TotalLimit: Number(tradeRightsData.totalLimit?.value),
+        MinTransactionLimit: Number(tradeRightsData.minTransactionLimit?.value),
+        MaxTransactionLimit: Number(tradeRightsData.maxTransactionLimit?.value),
         ListOfInstruments: instrumentDataSource.map((item) => ({
           InstrumentID: item.instrumentID,
           IsCrossRateBuy: item.isCrossRateBuy,
@@ -595,9 +622,21 @@ const EditCorporateTradeModal = ({ info }) => {
   const closeModal = useCallback(() => {
     setTradeRightsData({
       listOfInstruments: [],
-      maxTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-      minTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-      totalLimit: { value: 0, errorMessage: "", errorStatus: false },
+      maxTransactionLimit: {
+        value: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
+      minTransactionLimit: {
+        value: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
+      totalLimit: {
+        value: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
     });
     setInstrumentDataSource([]);
     dispatch(editTradeAccessManagementModalSystemAdmin(false));
@@ -607,26 +646,25 @@ const EditCorporateTradeModal = ({ info }) => {
     <Modal
       show={BOPSystemAdminModal.editModalTradeAccessManagement}
       setShow={closeModal}
-      className="UniversalBOPModalStylesTradeAccessManagment"
+      className='UniversalBOPModalStylesTradeAccessManagment'
       modalHeaderClassName={"d-none"}
-      modalFooterClassName="UniversalBOPModalStylesfooterTradeAccessMangement"
-      size="xl"
+      modalFooterClassName='UniversalBOPModalStylesfooterTradeAccessMangement'
+      size='xl'
       // onHide={closeModal}
       ModalBody={
         <>
           <Row>
             <Col lg={6} md={6} sm={6}>
-              <span className={styles["HeaderNameLabel"]}>{info.name}</span>
+              <span className={styles["HeaderNameLabel"]}>{info?.name}</span>
             </Col>
             <Col
               lg={6}
               md={6}
               sm={6}
-              className={styles["EditCorporateTrade_modal-crossIcon"]}
-            >
+              className={styles["EditCorporateTrade_modal-crossIcon"]}>
               {" "}
               <i
-                className="icon-close cursor-pointer"
+                className='icon-close cursor-pointer'
                 onClick={() =>
                   dispatch(editTradeAccessManagementModalSystemAdmin(false))
                 }
@@ -634,7 +672,7 @@ const EditCorporateTradeModal = ({ info }) => {
             </Col>
           </Row>
           <Row>
-            <Col lg={9} md={9} sm={12} className="mx-auto">
+            <Col lg={9} md={9} sm={12} className='mx-auto'>
               <Row>
                 <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
@@ -643,7 +681,7 @@ const EditCorporateTradeModal = ({ info }) => {
                   </span>
                   <TextField
                     name={"totalLimit"}
-                    labelClass="d-none"
+                    labelClass='d-none'
                     placeholder={"Total Limit"}
                     value={
                       tradeRightsData.totalLimit
@@ -670,18 +708,18 @@ const EditCorporateTradeModal = ({ info }) => {
                   />
                 </Col>
               </Row>
-              <Row className="mt-3">
+              <Row className='mt-3'>
                 <Col lg={12} md={12} sm={12}>
                   <span className={styles["labels-add-bank"]}>
                     Default Transaction Amount Limit (Min-Max)
                   </span>
                 </Col>
               </Row>
-              <Row className="mt-1">
+              <Row className='mt-1'>
                 <Col lg={6} md={6} sm={6}>
                   <TextField
                     name={"minTransactionLimit"}
-                    labelClass="d-none"
+                    labelClass='d-none'
                     placeholder={"Min Amount Limit"}
                     value={
                       tradeRightsData.minTransactionLimit
@@ -695,7 +733,7 @@ const EditCorporateTradeModal = ({ info }) => {
                 <Col lg={6} md={6} sm={6}>
                   <TextField
                     name={"maxTransactionLimit"}
-                    labelClass="d-none"
+                    labelClass='d-none'
                     placeholder={"Max Amount Limit"}
                     value={
                       tradeRightsData.maxTransactionLimit
@@ -707,7 +745,7 @@ const EditCorporateTradeModal = ({ info }) => {
                   />
                   {tradeRightsData.maxTransactionLimit.errorStatus && (
                     <Row>
-                      <Col className="d-flex justify-content-start">
+                      <Col className='d-flex justify-content-start'>
                         <p className={styles["corporateErrorMessage"]}>
                           {tradeRightsData.maxTransactionLimit.errorMessage}
                         </p>
@@ -718,7 +756,7 @@ const EditCorporateTradeModal = ({ info }) => {
               </Row>
             </Col>
           </Row>
-          <Row className="mt-3">
+          <Row className='mt-3'>
             <Col lg={12} md={12} sm={12}>
               <Table
                 column={columns}
@@ -733,15 +771,14 @@ const EditCorporateTradeModal = ({ info }) => {
       }
       ModalFooter={
         <>
-          <Row className="mt-3">
+          <Row className='mt-3'>
             <Col
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-center gap-2"
-            >
+              className='d-flex justify-content-center gap-2'>
               <Button
-                icon={<i className="icon-refresh"></i>}
+                icon={<i className='icon-refresh'></i>}
                 text={"Save Changes"}
                 className={styles["SaveCorpChangeBtn"]}
                 iconClass={styles["IconClass"]}
@@ -755,7 +792,7 @@ const EditCorporateTradeModal = ({ info }) => {
               />
 
               <Button
-                icon={<i className="icon-close"></i>}
+                icon={<i className='icon-close'></i>}
                 text={"Cancel"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

@@ -98,10 +98,10 @@ const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
               dispatch(
                 CreateNewCorporateSuccess(
                   response.data.responseResult,
-                  "Corporate Saved"
+                  "Corporate successfully created"
                 )
               );
-              dispatch(getAllCorporatesCategory(navigate));
+              // dispatch(getAllCorporatesCategory(navigate));
               dispatch(corporatePlusIconModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
@@ -2290,10 +2290,7 @@ const GetAllInstrumentsAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllInstrumentsSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetAllInstrumentsSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -2574,7 +2571,14 @@ const GetAllTradesAPI = (navigate, data) => {
       });
   };
 };
+
+const clearResponseMessageBopSystemAdmin = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCER,
+  };
+};
 export {
+  clearResponseMessageBopSystemAdmin,
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
   AddBranchAPI,

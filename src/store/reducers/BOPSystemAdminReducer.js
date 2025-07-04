@@ -608,6 +608,11 @@ const BOPSystemAdminReducer = (state = initialState, action) => {
         GetAllTrades: null,
         ResponseMessage: action.message,
       };
+    case actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCER:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
     default:
       return { ...state };
   }

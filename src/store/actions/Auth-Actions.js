@@ -89,7 +89,7 @@ const RefreshToken = (navigate) => {
               await dispatch(
                 refreshtokenSuccess(
                   response.data.responseResult,
-                  "Refresh Token Update Successfully"
+                  ""
                 )
               );
               localStorage.setItem("token", response.data.responseResult.token);
