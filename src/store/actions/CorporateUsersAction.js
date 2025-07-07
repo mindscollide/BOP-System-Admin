@@ -381,9 +381,16 @@ const UpdateCorporateUsersAPI = (navigate, data, setCorproateUserId) => {
   };
 };
 
+const clearResponseMessageCorporateUserReducer = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_CORPORATEUSERREDUCER,
+  };
+};
+
 export {
   GetAllCorporateUsersAPI,
   GetCorporateUserByUserIDApi,
   SearchCorporateUsersAPI,
   UpdateCorporateUsersAPI,
+  clearResponseMessageCorporateUserReducer,
 };

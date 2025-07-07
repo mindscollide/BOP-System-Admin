@@ -1,11 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react";
-import BOPLOGO from "../../../assets/images/logo2.png";
-import { Col } from "react-bootstrap";
-import styles from "./Loader.module.css";
+import BOPLOGO from "../../../assets/images/logo-hd.png";
+// import { Col } from "react-bootstrap";
+// import styles from "./Loader.module.css";
 import { useSelector } from "react-redux";
+import "./Loader.css";
 
 const Loader = () => {
-  const [showLoading, setShowLoading] = useState(false);
+  const [isLoader, setIsLoading] = useState(false);
+
   const AddCategoryLoader = useSelector((state) => state.AddCategory.Loading);
   const BOPSystemAdminModalloader = useSelector(
     (state) => state.BOPSystemAdminModal.Loading
@@ -13,6 +15,7 @@ const Loader = () => {
   const BOPSystemAdminReducerloader = useSelector(
     (state) => state.BOPSystemAdminReducer.Loading
   );
+  console.log(BOPSystemAdminReducerloader, "BOPSystemAdminReducerloader");
   const CorporateUsersReducerloader = useSelector(
     (state) => state.CorporateUsersReducer.Loading
   );
@@ -44,16 +47,50 @@ const Loader = () => {
     downloadReducerloader,
     settingsReducerloader,
     uploadReducerloader,
-  ];
+  ].some((loading) => loading);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    let timeout;
+
+    if (isLoading) {
+      setIsLoading(true); // Show loader
+    } else {
+      // Hide loader after a short delay when loading completes
+      timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [isLoading]);
+  console.log(isLoader, "isLoaderisLoader");
+  // return (
+  //   isLoader && (
+  //     <Col sm={12} md={12} lg={12} className={styles["overlay"]}>
+  //       <Col sm={12} md={12} lg={12} className={styles["overlay-content"]}>
+  //         <img src={BOPLOGO} width={200} alt="" />
+  //         <span className={styles["loader-line"]}></span>
+  //       </Col>
+  //     </Col>
+  //   )
+  // );
+
   return (
-    <Col sm={12} md={12} lg={12} className={styles["overlay"]}>
-      <Col sm={12} md={12} lg={12} className={styles["overlay-content"]}>
-        <img src={BOPLOGO} width={200} alt="" />
-        <span className={styles["loader-line"]}></span>
-      </Col>
-    </Col>
+    isLoader && (
+      <div className="body-loader overflow-hidden">
+        <div className="body-loader-inner">
+          <div className="logo-loader-wrapper">
+            <img
+              className="img-fluid"
+              src={BOPLOGO}
+              alt="Section-Loader"
+              width={200}
+            />
+            <div className="loader-line-highlight" />
+          </div>
+        </div>
+      </div>
+    )
   );
 };
 

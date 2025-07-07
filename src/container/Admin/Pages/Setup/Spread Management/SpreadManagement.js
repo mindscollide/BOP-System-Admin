@@ -236,9 +236,9 @@ const SpreadManagement = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {(LoadingCategoryState && <Loader />) ||
+      {/* {(LoadingCategoryState && <Loader />) ||
         (LoadingState && <Loader />) ||
-        (LoadingTradeState && <Loader />)}
+        (LoadingTradeState && <Loader />)} */}
     </section>
   );
 };

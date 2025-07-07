@@ -21,6 +21,7 @@ import "@fontsource/poppins/400-italic.css";
 import { Loader } from "./components/elements";
 
 function App() {
+  console.log("App COmoinent");
   return (
     <>
       <Loader />

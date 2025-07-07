@@ -2,6 +2,7 @@ import * as actions from "../action_types";
 
 const initialState = {
   Loading: false,
+  ResponseMessage: "",
   GetCorporatesWithStatus: null,
   GetBranchesWithStatus: null,
   UpdateCorporateStatus: null,
@@ -223,6 +224,11 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    case actions.CLEAR_RESPONSEMESSAGE_SETUPTRADEACCESSMANAGEMENTREDUCER:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
     default:
       return { ...state };
   }

@@ -877,7 +877,7 @@ const AddBankUser = () => {
           handleNoButton={handleNoButton}
         />
       )}
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
     </section>
   );
 };

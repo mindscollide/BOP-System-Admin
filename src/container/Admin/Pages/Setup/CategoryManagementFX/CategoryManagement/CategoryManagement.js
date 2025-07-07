@@ -341,30 +341,34 @@ const CategoryManagement = () => {
               flexDirection: "column",
               gap: "8px",
               minHeight: "50px",
-            }}>
+            }}
+          >
             {data.CounterParties.map((client, index) => (
               <Draggable
                 key={`${data.categoryID}-${client.CounterpartyID}-${client.CounterPartyType}`}
                 draggableId={`${data.categoryID}-${client.CounterpartyID}-${client.CounterPartyType}`}
                 index={index}
-                type='DEFAULT'>
+                type="DEFAULT"
+              >
                 {(provided) => (
                   <div
-                    className='mt-2'
+                    className="mt-2"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    {...provided.dragHandleProps}>
+                    {...provided.dragHandleProps}
+                  >
                     <Collapse
                       className={
                         client.CounterPartyType === 1
                           ? "custom-collapse"
                           : "Branchcustom-collapse"
                       }
-                      accordion>
+                      accordion
+                    >
                       <Panel
                         header={
-                          <div className='header-container'>
-                            <span className='company-name'>
+                          <div className="header-container">
+                            <span className="company-name">
                               {client.CounterPartyName}
                             </span>
                           </div>
@@ -374,15 +378,16 @@ const CategoryManagement = () => {
                           client.CounterPartyType === 1
                             ? "custom-panel"
                             : "Branchcustom-panel"
-                        }>
+                        }
+                      >
                         {client.CounterPartyUsers.length > 0 ? (
                           client.CounterPartyUsers.map((user, i) => (
-                            <p className='user-email' key={i}>
+                            <p className="user-email" key={i}>
                               {user.email}
                             </p>
                           ))
                         ) : (
-                          <p className='no-user'>No users</p>
+                          <p className="no-user">No users</p>
                         )}
                       </Panel>
                     </Collapse>
@@ -695,24 +700,24 @@ const CategoryManagement = () => {
     return (
       <Row>
         <>
-          <Col lg={12} md={12} sm={12} className='add-cate-wrapper m-3'>
+          <Col lg={12} md={12} sm={12} className="add-cate-wrapper m-3">
             <Row>
               <Col lg={12} md={12} sm={12}>
-                <span className='Name_tag'>
+                <span className="Name_tag">
                   Name
-                  <span className='red_steric'>*</span>
+                  <span className="red_steric">*</span>
                 </span>
               </Col>
             </Row>
 
             <Row>
-              <Col lg={12} md={12} sm={12} className='CreateMeetingInput'>
+              <Col lg={12} md={12} sm={12} className="CreateMeetingInput">
                 <TextField
-                  name='nameUpdate'
-                  applyClass='form-control2'
-                  type='text'
+                  name="nameUpdate"
+                  applyClass="form-control2"
+                  type="text"
                   maxLength={25}
-                  labelClass='d-none'
+                  labelClass="d-none"
                   required={true}
                   value={categoryupdate.category.value}
                   onChange={HandleUpdateChange}
@@ -720,29 +725,29 @@ const CategoryManagement = () => {
               </Col>
             </Row>
 
-            <Row className='mt-3'>
+            <Row className="mt-3">
               <Col lg={12} md={12} sm={12}>
-                <span className='Name_tag'>
-                  Spread <span className='red_steric'>*</span>
+                <span className="Name_tag">
+                  Spread <span className="red_steric">*</span>
                 </span>
               </Col>
             </Row>
 
-            <Row className='mt-2'>
+            <Row className="mt-2">
               <Col lg={6} md={6} sm={12} xs={12}>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
-                    <span className='Name_tag'>Bid</span>
+                    <span className="Name_tag">Bid</span>
                   </Col>
                 </Row>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
                     <TextField
-                      name='Bidupdated'
-                      applyClass='form-control2'
-                      type='text'
+                      name="Bidupdated"
+                      applyClass="form-control2"
+                      type="text"
                       maxLength={100}
-                      labelClass='d-none'
+                      labelClass="d-none"
                       required={true}
                       value={categoryupdate.bidSpread.value}
                       onChange={HandleUpdateChange}
@@ -753,17 +758,17 @@ const CategoryManagement = () => {
               <Col lg={6} md={6} sm={12} xs={12}>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
-                    <span className='Name_tag'>Offer</span>
+                    <span className="Name_tag">Offer</span>
                   </Col>
                 </Row>
                 <Row>
                   <Col lg={12} md={12} sm={12}>
                     <TextField
-                      name='Offerupdate'
-                      applyClass='form-control2'
-                      type='text'
+                      name="Offerupdate"
+                      applyClass="form-control2"
+                      type="text"
                       maxLength={100}
-                      labelClass='d-none'
+                      labelClass="d-none"
                       required={true}
                       value={categoryupdate.offerSpread.value}
                       onChange={HandleUpdateChange}
@@ -772,15 +777,16 @@ const CategoryManagement = () => {
                 </Row>
               </Col>
             </Row>
-            <Row className='mt-3'>
+            <Row className="mt-3">
               <Col
                 lg={12}
                 md={12}
                 sm={12}
-                className='d-flex justify-content-center gap-2'>
+                className="d-flex justify-content-center gap-2"
+              >
                 <Button
-                  className='Update_button_category'
-                  text='Update'
+                  className="Update_button_category"
+                  text="Update"
                   disableBtn={
                     categoryupdate.category.value.trimStart() === ""
                       ? true
@@ -789,8 +795,8 @@ const CategoryManagement = () => {
                   onClick={() => UpdateCategory(data)}
                 />
                 <Button
-                  className='Cancel_button_cateogry'
-                  text='Cancel'
+                  className="Cancel_button_cateogry"
+                  text="Cancel"
                   onClick={() => CloseUpdateCategory(data.CounterpartyID)}
                 />
               </Col>
@@ -803,12 +809,12 @@ const CategoryManagement = () => {
   };
 
   return (
-    <section className='SectionContainer'>
-      <Row className='mt-3'>
+    <section className="SectionContainer">
+      <Row className="mt-3">
         <Col lg={10} sm={10} md={11}>
-          <span className='PageHeading'>Category Management</span>
+          <span className="PageHeading">Category Management</span>
         </Col>
-        <Col lg={2} md={2} sm={12} className='d-flex justify-content-center'>
+        <Col lg={2} md={2} sm={12} className="d-flex justify-content-center">
           <Button
             text={"Add a Category"}
             className={"AddCategoryButton"}
@@ -820,25 +826,27 @@ const CategoryManagement = () => {
       {/* <!--row  Begin--> */}
 
       <Row
-        className='cat-management-wrapper d-flex mt-3'
-        id='catManagementItem'>
-        <Col lg={12} md={12} sm={12} className='Content_container'>
+        className="cat-management-wrapper d-flex mt-3"
+        id="catManagementItem"
+      >
+        <Col lg={12} md={12} sm={12} className="Content_container">
           <Button
-            icon={<i className='icon-arrow-left'></i>}
-            className='leftarrow'
+            icon={<i className="icon-arrow-left"></i>}
+            className="leftarrow"
             onClick={SlideLeft}
           />
           <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId='ROOT' type='group' direction='horizontal'>
+            <Droppable droppableId="ROOT" type="group" direction="horizontal">
               {(outerProvided) => (
                 <Col
                   lg={12}
                   md={12}
                   sm={12}
-                  className='Scroller-x-resolution'
-                  id='Slider'
+                  className="Scroller-x-resolution"
+                  id="Slider"
                   ref={outerProvided.innerRef}
-                  {...outerProvided.droppableProps}>
+                  {...outerProvided.droppableProps}
+                >
                   {Array.isArray(corporates) && corporates.length > 0 ? (
                     <>
                       {corporates.map((data, index) => {
@@ -853,72 +861,80 @@ const CategoryManagement = () => {
                                   data.categoryID + data.CounterpartyID
                                 }
                                 index={index}
-                                type='column'>
+                                type="column"
+                              >
                                 {(outerProvided) => (
                                   <Col
-                                    className='cat-management-item m-1'
+                                    className="cat-management-item m-1"
                                     ref={outerProvided.innerRef}
                                     {...outerProvided.draggableProps}
-                                    {...outerProvided.dragHandleProps}>
-                                    <Row className='item-inner'>
-                                      <Col className='cat-header'>
-                                        <Row className='mt-2'>
+                                    {...outerProvided.dragHandleProps}
+                                  >
+                                    <Row className="item-inner">
+                                      <Col className="cat-header">
+                                        <Row className="mt-2">
                                           <Col
-                                            className='cat-title'
+                                            className="cat-title"
                                             lg={6}
                                             sm={6}
-                                            md={6}>
+                                            md={6}
+                                          >
                                             {data.categoryName}
                                           </Col>
                                           <Col
-                                            className='d-flex justify-content-end gap-1 align-items-center'
+                                            className="d-flex justify-content-end gap-1 align-items-center"
                                             lg={6}
                                             sm={6}
-                                            md={6}>
+                                            md={6}
+                                          >
                                             <span
-                                              className='edit-cat d-inline-block'
+                                              className="edit-cat d-inline-block"
                                               onClick={() =>
                                                 OpenEditCategory(
                                                   data.categoryID,
                                                   data
                                                 )
-                                              }>
-                                              <i class='icon-text-edit'></i>
+                                              }
+                                            >
+                                              <i class="icon-text-edit"></i>
                                             </span>
 
                                             <span
-                                              className='delete-cat d-inline-block cursor-pointer'
+                                              className="delete-cat d-inline-block cursor-pointer"
                                               onClick={() =>
                                                 handleDelteCliked(
                                                   data.categoryID
                                                 )
-                                              }>
-                                              <i class='icon-trash'></i>
+                                              }
+                                            >
+                                              <i class="icon-trash"></i>
                                             </span>
                                           </Col>
                                           <Row>
                                             <Col lg={12} md={12} sm={12}>
-                                              <hr className='Line' />
+                                              <hr className="Line" />
                                             </Col>
                                           </Row>
                                         </Row>
 
-                                        <Row className='mt-2'>
+                                        <Row className="mt-2">
                                           <Col
                                             lg={6}
                                             sm={6}
                                             md={6}
-                                            className='d-flex justify-content-start'>
+                                            className="d-flex justify-content-start"
+                                          >
                                             <Row>
                                               <Col
                                                 lg={12}
                                                 md={12}
                                                 sm={12}
-                                                className='text-center'>
-                                                <div className='title_bid'>
+                                                className="text-center"
+                                              >
+                                                <div className="title_bid">
                                                   Bid
                                                 </div>
-                                                <div className='rate val-highlight1'>
+                                                <div className="rate val-highlight1">
                                                   {data.bidSpread !== 0
                                                     ? formatNumberForFourDecimal(
                                                         data.bidSpread
@@ -933,17 +949,19 @@ const CategoryManagement = () => {
                                             lg={6}
                                             sm={6}
                                             md={6}
-                                            className='d-flex justify-content-end'>
+                                            className="d-flex justify-content-end"
+                                          >
                                             <Row>
                                               <Col
                                                 lg={12}
                                                 md={12}
                                                 sm={12}
-                                                className='text-center'>
-                                                <div className='title_bid'>
+                                                className="text-center"
+                                              >
+                                                <div className="title_bid">
                                                   offer
                                                 </div>
-                                                <div className='rate val-highlight2'>
+                                                <div className="rate val-highlight2">
                                                   {data.offerSpread !== 0
                                                     ? formatNumberForFourDecimal(
                                                         data.offerSpread
@@ -955,12 +973,13 @@ const CategoryManagement = () => {
                                           </Col>
                                         </Row>
                                       </Col>
-                                      <Row className='cat-item-content'>
+                                      <Row className="cat-item-content">
                                         <Col
-                                          className='customer'
+                                          className="customer"
                                           lg={12}
                                           sm={12}
-                                          md={12}>
+                                          md={12}
+                                        >
                                           {showCards(data)}
                                         </Col>
                                         {outerProvided.placeholder}
@@ -981,15 +1000,15 @@ const CategoryManagement = () => {
           </DragDropContext>
 
           <Button
-            icon={<i className='icon-arrow-right'></i>}
-            className='righArrow'
+            icon={<i className="icon-arrow-right"></i>}
+            className="righArrow"
             onClick={Slideright}
           />
         </Col>
       </Row>
       {DeleteCategoryGobalState && <DeleteModal categoryID={categoryID} />}
       {AddCategoryGobalState && <AddCategoryModal />}
-      {auth.Loading || BOPSystemAdminReducer.Loading ? <Loader /> : null}
+      {/* {auth.Loading || BOPSystemAdminReducer.Loading ? <Loader /> : null} */}
     </section>
   );
 };

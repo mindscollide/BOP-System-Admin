@@ -111,5 +111,10 @@ const Addcategory = (navigate, data) => {
       });
   };
 };
+const AddCategoryResponseMessage = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_ADD_CATEGORY,
+  };
+};
 
-export { Addcategory };
+export { Addcategory, AddCategoryResponseMessage };

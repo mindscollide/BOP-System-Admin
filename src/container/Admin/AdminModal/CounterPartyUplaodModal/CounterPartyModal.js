@@ -190,7 +190,7 @@ const CounterPartyModal = ({ uploadCounterModal, setUploadCounterModal }) => {
         }
       />
 
-      {uploadReducer.Loading ? <Loader /> : null}
+      {/* {uploadReducer.Loading ? <Loader /> : null} */}
     </Fragment>
   );
 };

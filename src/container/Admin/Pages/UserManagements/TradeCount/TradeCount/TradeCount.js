@@ -820,7 +820,7 @@ const TradeCount = () => {
           handleNoButton={handleNoButton}
         />
       )}
-      {(LoadingTrade && <Loader />) || (LoadingAuth && <Loader />)}
+      {/* {(LoadingTrade && <Loader />) || (LoadingAuth && <Loader />)} */}
     </section>
   );
 };

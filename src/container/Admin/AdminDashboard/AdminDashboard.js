@@ -36,6 +36,7 @@ import {
   setSpotCrossUpdated,
   setSpotSpreadUpdated,
 } from "../../../store/actions/RealtimeActions";
+import { Loader } from "../../../components/elements";
 
 const AdminDashboard = () => {
   const { Content, Sider } = Layout;
@@ -215,6 +216,7 @@ const AdminDashboard = () => {
           </Content>
         </Layout>
         <ResponseMessage />
+        <Loader />
       </Layout>
     </>
   );

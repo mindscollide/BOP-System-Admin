@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import "./MarketTiming.css";
-import DatePicker from "react-multi-date-picker";
-import MultiTimePicker from "react-multi-date-picker/plugins/time_picker";
 import { useSelector } from "react-redux";
 import { ConvertDateTimrStringIntoGTM } from "../../../../../helpers/reusableMethods";
 import { TimePicker } from "antd";

@@ -30,11 +30,7 @@ import {
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
-import {
-  GetAllBranchesAPI,
-  getAllCorporatesCategory,
-  RefreshToken,
-} from "./Auth-Actions";
+import { RefreshToken } from "./Auth-Actions";
 import {
   AdduserModalSystemAdmin,
   ConfirmationModalSystemAdmin,

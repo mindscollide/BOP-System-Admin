@@ -776,7 +776,7 @@ const AddCorporateUser = () => {
           handleNoButton={handleNoButton}
         />
       )}
-      {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null}
+      {/* {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

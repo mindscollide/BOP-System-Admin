@@ -382,7 +382,7 @@ const TradeAccessManagement = () => {
         </Col>
       </Row>
 
-      {Loading && <Loader />}
+      {/* {Loading && <Loader />} */}
     </section>
   );
 };

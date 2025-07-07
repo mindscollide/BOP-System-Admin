@@ -328,7 +328,7 @@ const VolMeter = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

@@ -9,6 +9,7 @@ import { BankUserProvider } from "./container/Admin/Pages/UserManagements/BankUs
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/Routes";
 import { CorporateUserProvider } from "./container/Admin/Pages/UserManagements/CorporateUser/utils/CorporateUserContext";
+import { Loader } from "./components/elements";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -97,6 +97,12 @@ const corporateUsersReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    case actions.CLEAR_RESPONSEMESSAGE_CORPORATEUSERREDUCER:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
+
     default:
       return { ...state };
   }

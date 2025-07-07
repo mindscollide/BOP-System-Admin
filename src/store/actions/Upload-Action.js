@@ -124,4 +124,10 @@ const counterPartyUpload = (navigate, data, setCounterUploadModal, setFile) => {
   };
 };
 
-export { counterPartyUpload };
+const clearResponseMessageUploadReducer = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_UPLOADREDUCER,
+  };
+};
+
+export { counterPartyUpload, clearResponseMessageUploadReducer };

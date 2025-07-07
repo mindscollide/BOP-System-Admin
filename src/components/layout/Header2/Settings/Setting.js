@@ -36,7 +36,7 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     BD_EmailOnEveryMessage: false,
   });
 
-  const [monToThruStartTime, setMonToThruStartTime] = useState("");
+  const [monToThruStartTime, setMonToThruStartTime] = useState(null);
   const [monToThruEndTime, setMonToThruEndTime] = useState(null);
   const [fridayStartTime, setFridayStartTime] = useState(null);
   const [fridayEndTime, setFridayEndTime] = useState(null);
@@ -302,7 +302,7 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
           </>
         }
       />
-      {Loading && <Loader />}
+      {/* {Loading && <Loader />} */}
     </>
   );
 };

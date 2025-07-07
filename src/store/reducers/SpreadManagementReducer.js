@@ -207,6 +207,12 @@ const SpreadManagementReducer = (state = initalState, action) => {
         SaveCategoryNonFEDiscounts: null,
         ResponseMessage: action.message,
       };
+
+    case actions.CLEAR_RESPONSEMESSAGE_SPREADMANAGEMENTREDUCER:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
     default:
       return { ...state };
   }

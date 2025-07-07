@@ -243,7 +243,7 @@ const AddCategoryModal = () => {
               />
             </Col>
           </Row>
-          {AddCategory.Loading && <Loader />}
+          {/* {AddCategory.Loading && <Loader />} */}
         </>
       }
     />

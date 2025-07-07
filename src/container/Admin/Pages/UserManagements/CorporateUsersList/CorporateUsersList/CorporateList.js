@@ -844,7 +844,7 @@ const CorporateList = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {loadingState && <Loader />}
+      {/* {loadingState && <Loader />} */}
 
       {EditCorporateModalGobalState && (
         <EditCorporateModal

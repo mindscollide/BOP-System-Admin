@@ -610,6 +610,12 @@ const downloadPDFLoginHistoryReportApi = (navigate, Data) => {
   };
 };
 
+const clearResponseMessageDownloadReducer = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_DOWNLOADREDUCER,
+  };
+};
+
 export {
   downloadCorporateLoginReports,
   bankUserDownloadReport,
@@ -620,4 +626,5 @@ export {
   downloadPDFBankUserReportApi,
   downloadPDFCorporateUserReportApi,
   downloadPDFLoginHistoryReportApi,
+  clearResponseMessageDownloadReducer,
 };

@@ -87,10 +87,7 @@ const RefreshToken = (navigate) => {
               )
             ) {
               await dispatch(
-                refreshtokenSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                refreshtokenSuccess(response.data.responseResult, "")
               );
               localStorage.setItem("token", response.data.responseResult.token);
               localStorage.setItem(
@@ -1447,7 +1444,11 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
       });
   };
 };
-
+const clearResponseMessageAuth = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_AUTH,
+  };
+};
 export {
   logOutApi,
   signOut,
@@ -1466,4 +1467,5 @@ export {
   GetAllBranchesAPI,
   UpdateBranchCataegoryMappingAPI,
   GetAllCorporatesDataAPI,
+  clearResponseMessageAuth,
 };

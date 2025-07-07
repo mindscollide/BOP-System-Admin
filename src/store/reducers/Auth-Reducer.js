@@ -527,6 +527,11 @@ const authReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    case actions.CLEAR_RESPONSEMESSAGE_AUTH:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
     default:
       return { ...state };
   }

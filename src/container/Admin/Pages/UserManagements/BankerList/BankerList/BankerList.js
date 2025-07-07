@@ -791,7 +791,7 @@ const BankerList = () => {
       </Row>
       {EditBankerModalGobalState && <EditBankerModal />}
 
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
       {showActivationModal === true && (
         <ActivateConfirmationModal

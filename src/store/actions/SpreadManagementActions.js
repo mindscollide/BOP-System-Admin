@@ -1152,6 +1152,11 @@ const SaveCategoryNonFEDiscountsAPI = (navigate, data) => {
       });
   };
 };
+const clearResponseMessageSpreadManagementReducer = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_SPREADMANAGEMENTREDUCER,
+  };
+};
 
 export {
   GetSpotSpreadsForCategoryAPI,
@@ -1165,4 +1170,5 @@ export {
   SaveCategoryForwardsAPI,
   SaveCategoryFEDiscountsAPI,
   SaveCategoryNonFEDiscountsAPI,
+  clearResponseMessageSpreadManagementReducer,
 };

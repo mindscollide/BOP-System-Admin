@@ -211,9 +211,9 @@ const SystemLogin = () => {
           </Row>
         </Container>
       </Col>
-      {LoadingAuthReducerState && <Loader />}
+      {/* {LoadingAuthReducerState && <Loader />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
-      {auth.Loading ? <Loader /> : null}
+      {/* {auth.Loading ? <Loader /> : null} */}
     </Fragment>
   );
 };

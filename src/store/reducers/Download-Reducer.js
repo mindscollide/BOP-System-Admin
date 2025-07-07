@@ -169,6 +169,11 @@ const downloadReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    case actions.CLEAR_RESPONSEMESSAGE_DOWNLOADREDUCER:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
     default:
       return { ...state };
   }
