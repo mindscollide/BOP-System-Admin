@@ -8,7 +8,6 @@ import {
   Button,
   Table,
   Notification,
-  Loader,
 } from "../../../../../../components/elements";
 
 import { useNavigate } from "react-router-dom";
@@ -57,7 +56,6 @@ const BankerList = () => {
   const bankUserUpdated = useSelector(
     (state) => state.RealtimeActionReducer.bankUserUpdated
   );
-  console.log(bankUserUpdated, "bankUserUpdatedbankUserUpdated");
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -83,8 +81,6 @@ const BankerList = () => {
   //row length on scroll
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
-  // //Sate for handling export options
-  // const [showExportOptions, setShowExportOptions] = useState(false);
 
   //Search all corporate Users
   const SearchBankUsers = useSelector(
@@ -98,9 +94,6 @@ const BankerList = () => {
   const EditBankerModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editBankUserModal
   );
-
-  //Global State
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
 
   //State BankList
   const [bankList, setBankList] = useState({ ...bankListSchema });

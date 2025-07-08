@@ -11,6 +11,8 @@ import {
   setBankUserCreated,
   setBankUserRoleStatusChange,
   setBankUserUpdated,
+  setBlotterTransactionAccepted,
+  setBlotterTransactionCancelled,
   setBranchCreated,
   setBranchStatusUpdated,
   setBranchTradeRightsUpdated,
@@ -186,6 +188,12 @@ const AdminDashboard = () => {
         case "CATEGORY_NON_FE_DISCOUNTING_SPREADS":
           dispatch(setNonFEDiscountingSpreadUpdated(data.payload));
           // setNonFEDiscoutingSpreadUpdated(data.payload);
+          break;
+        case "BLOTTER_TRANSACTION_ACCEPTED":
+          dispatch(setBlotterTransactionAccepted(data.payload));
+          break;
+        case "BLOTTER_TRANSACTION_CANCELLED":
+          dispatch(setBlotterTransactionCancelled(data.payload));
           break;
         default:
           break;

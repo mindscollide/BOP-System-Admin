@@ -2550,10 +2550,12 @@ const GetAllTradesAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllTrades_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllTrades_02".toLowerCase()
                 )
             ) {
-              dispatch(GetAllTradesFail("Exception"));
+              dispatch(GetAllTradesFail("No Data Available"));
+            } else {
+              dispatch(GetAllTradesFail("Something went wrong"));
             }
           } else {
             dispatch(GetAllTradesFail("Something went wrong"));

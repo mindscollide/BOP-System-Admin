@@ -138,3 +138,13 @@ export const setNonFEDiscountingSpreadUpdated = (payload) => ({
   type: types.SET_NON_FE_DISCOUNTING_SPREAD_UPDATED,
   payload,
 });
+
+export const setBlotterTransactionAccepted = (payload) => ({
+  type: types.BLOTTER_TRANSACTION_ACCEPTED,
+  payload,
+});
+
+export const setBlotterTransactionCancelled = (payload) => ({
+  type: types.BLOTTER_TRANSACTION_CANCELLED,
+  payload,
+});

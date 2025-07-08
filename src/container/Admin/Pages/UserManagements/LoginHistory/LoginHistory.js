@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   Table,
-  Loader,
 } from "../../../../../components/elements";
 // import ExportShowComponent from "../BankerList/ExportShowComponent";
 
@@ -16,7 +15,6 @@ import { loginHistorySchema } from "../../../../../utils/schemas";
 import {
   convertDateTimeIntoLocal,
   formatDate,
-  formatDateAndTimeFromString,
   formatTimeSpan,
 } from "../../../../../helpers/reusableMethods";
 import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
@@ -45,7 +43,6 @@ const LoginHistory = () => {
     ...loginHistorySchema,
   });
   //Global State
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
   // Search All User Login History
   const SearchAllUserLoginHistory = useSelector(
     (state) => state.BOPSystemAdminReducer.SearchAllUserLoginHistory

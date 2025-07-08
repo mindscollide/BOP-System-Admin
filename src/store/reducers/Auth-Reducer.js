@@ -35,6 +35,7 @@ const initialState = {
   userLogout: null,
   updatedBranchCategoryData: null,
   GetAllCorporates: null,
+  GetAllNatureOfTransactions: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -524,6 +525,27 @@ const authReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         GetAllCorporates: null,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_ALL_NATURE_OF_TRANSACTIONS_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+
+    case actions.GET_ALL_NATURE_OF_TRANSACTIONS_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        GetAllNatureOfTransactions: action.response,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_ALL_NATURE_OF_TRANSACTIONS_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        GetAllNatureOfTransactions: [],
         ResponseMessage: action.message,
       };
 

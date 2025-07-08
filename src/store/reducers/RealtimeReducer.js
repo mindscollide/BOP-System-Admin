@@ -36,6 +36,8 @@ const initialState = {
   forwardSpreadUpdated: null,
   FEDiscountingSpreadUpdated: null,
   NonFEDiscountingSpreadUpdated: null,
+  BlotterTransactionAccepted: null,
+  BlotterTransactionCancelled: null,
 };
 
 const eventReducer = (state = initialState, action) => {
@@ -102,6 +104,11 @@ const eventReducer = (state = initialState, action) => {
     case types.SET_NON_FE_DISCOUNTING_SPREAD_UPDATED:
       return { ...state, NonFEDiscountingSpreadUpdated: action.payload };
 
+    case types.BLOTTER_TRANSACTION_ACCEPTED:
+      return { ...state, BlotterTransactionAccepted: action.payload };
+
+    case types.BLOTTER_TRANSACTION_CANCELLED:
+      return { ...state, BlotterTransactionCancelled: action.payload };
     default:
       return state;
   }
