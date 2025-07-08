@@ -18,15 +18,9 @@ import "@fontsource/poppins";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/400-italic.css";
 
-import { Loader } from "./components/elements";
-
 function App() {
   console.log("App COmoinent");
-  return (
-    <>
-      <Loader />
-    </>
-  );
+  return <>{/* <Loader /> */}</>;
 }
 
 export default App;

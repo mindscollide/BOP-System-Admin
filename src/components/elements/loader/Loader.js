@@ -1,7 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BOPLOGO from "../../../assets/images/logo-hd.png";
-// import { Col } from "react-bootstrap";
-// import styles from "./Loader.module.css";
 import { useSelector } from "react-redux";
 import "./Loader.css";
 
@@ -63,17 +61,6 @@ const Loader = () => {
 
     return () => clearTimeout(timeout);
   }, [isLoading]);
-  console.log(isLoader, "isLoaderisLoader");
-  // return (
-  //   isLoader && (
-  //     <Col sm={12} md={12} lg={12} className={styles["overlay"]}>
-  //       <Col sm={12} md={12} lg={12} className={styles["overlay-content"]}>
-  //         <img src={BOPLOGO} width={200} alt="" />
-  //         <span className={styles["loader-line"]}></span>
-  //       </Col>
-  //     </Col>
-  //   )
-  // );
 
   return (
     isLoader && (
