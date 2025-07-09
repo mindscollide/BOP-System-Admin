@@ -896,7 +896,7 @@ const CategoryManagement = () => {
                                                 )
                                               }
                                             >
-                                              <i class="icon-text-edit"></i>
+                                              <i className="icon-text-edit"></i>
                                             </span>
 
                                             <span
@@ -907,7 +907,7 @@ const CategoryManagement = () => {
                                                 )
                                               }
                                             >
-                                              <i class="icon-trash"></i>
+                                              <i className="icon-trash"></i>
                                             </span>
                                           </Col>
                                           <Row>

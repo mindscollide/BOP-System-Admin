@@ -220,7 +220,6 @@ const TradeCount = () => {
   };
 
   //Custome hook for Scrolling (1)
-
   // column for LoginHistory
   const tradeColumns = [
     {
