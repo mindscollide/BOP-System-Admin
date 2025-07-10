@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import styles from "./CorporateBulkUploadModal.module.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -8,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { CreateBulkCorporateUserRequestAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import { Button, Modal, Table } from "../../../../../../components/elements";
 import { useCorporateUser } from "../utils/CorporateUserContext";
-// import { Button, Modal, Table } from "../../../../components/elements";
-// import { CreateBulkCorporateUserRequestAPI } from "../../../../store/actions/BOPSystemAdminActions";
 
 const CorporateBulkUploadModal = () => {
   const dispatch = useDispatch();
@@ -19,11 +16,6 @@ const CorporateBulkUploadModal = () => {
   const [usersToBeAdded, setUsersToBeAdded] = useState([]);
   const [usersToBeUpdated, setUsersToBeUpdated] = useState([]);
   const [invalidUsers, setInvalidUsers] = useState([]);
-
-  // const BankUsersBankList = useSelector(
-  //   (state) => state.BOPSystemAdminReducer.BankUsersBankList
-  // );
-
   const CorporateUsersBulkList = useSelector(
     (state) => state.BOPSystemAdminReducer.CorporateUsersBulkListData
   );

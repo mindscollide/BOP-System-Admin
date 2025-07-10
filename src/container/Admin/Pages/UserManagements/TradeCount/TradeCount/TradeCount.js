@@ -29,10 +29,7 @@ import { useSelector } from "react-redux";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
 import excelIcon from "../../../../../../assets/images/excel.png";
 import { useNavigate } from "react-router-dom";
-import {
-  // GetAllNatureAPI,
-  GetAllNatureOfTransactionsAPI,
-} from "../../../../../../store/actions/Auth-Actions";
+import { GetAllNatureOfTransactionsAPI } from "../../../../../../store/actions/Auth-Actions";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 // import CommentModal from "../CommentModal/CommentModal";
 import { GetAllTradesAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
@@ -124,7 +121,7 @@ const TradeCount = () => {
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
   // const [hasReachedBottom, setHasReachedBottom] = useState(false);
-  const [dropdownvalue, setDropdownvalue] = useState(10);
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
@@ -234,7 +231,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Client</label>,
       dataIndex: "corporateName",
       key: "corporateName",
-      width: "100px",
+      width: "200px",
       align: "center",
       ellipsis: true,
     },
@@ -245,11 +242,6 @@ const TradeCount = () => {
       width: "50px",
       align: "center",
       ellipsis: true,
-      // render: (val, record) => {
-      //   console.log({ record }, "val record");
-      //   let side = record?.side === true ? "Buy" : "Sell";
-      //   return side;
-      // },
     },
     {
       title: <label className="bottom-table-header">Nature</label>,
@@ -266,7 +258,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">CCY1</label>,
       dataIndex: "ccY1",
       key: "ccY1",
-      width: "100px",
+      width: "50px",
       align: "center",
       ellipsis: true,
     },
@@ -290,7 +282,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">CCY2</label>,
       dataIndex: "ccY2",
       key: "ccY2",
-      width: "100px",
+      width: "50px",
       align: "center",
       ellipsis: true,
     },
@@ -307,7 +299,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Date</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "120px",
+      width: "100px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
@@ -323,7 +315,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Time</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "100px",
+      width: "75px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
@@ -347,7 +339,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Account#</label>,
       dataIndex: "accountNumber",
       key: "accountNumber",
-      width: "200px",
+      width: "100px",
       align: "center",
       ellipsis: true,
     },
