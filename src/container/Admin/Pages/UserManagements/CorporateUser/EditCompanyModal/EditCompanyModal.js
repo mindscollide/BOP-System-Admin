@@ -39,7 +39,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
 
   //RFQTreasuryRoles
   const [treasuryOptionsID, setTreasuryOptionsID] = useState(
-    updateCompany.rfqTimers
+    updateCompany.rfqTimers.length > 0
       ? {
           value: updateCompany.rfqTimers[0].treasuryRFQExpiryInMin,
           label: `${updateCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
@@ -49,7 +49,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
 
   //RFQTreasuryRoles
   const [corporateOptionsID, setCorporateOptionsID] = useState(
-    updateCompany.rfqTimers
+    updateCompany.rfqTimers.length > 0
       ? {
           value: updateCompany.rfqTimers[0].corporateRFQExpiryInMin,
           label: `${updateCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,

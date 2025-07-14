@@ -269,8 +269,16 @@ const AddCorporateUser = () => {
       companyID: selectedCompany.value,
       categoryName: selectedCompany.category.categoryName,
       natureOfClient: selectedCompany.natureofBusiness.name,
-      rfqTreasury: `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
-      rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+      rfqTreasury: `${
+        selectedCompany.rfqTimers.length > 0
+          ? `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`
+          : []
+      }`,
+      rfqCorporate: `${
+        selectedCompany.rfqTimers.length > 0
+          ? `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`
+          : []
+      } `,
     }));
   };
 
