@@ -62,11 +62,13 @@ const AddCorporateUser = () => {
   console.log("corporateUser,", corporateUser);
   //companyRoles
   const [companyRoleID, setCompanyRole] = useState(null);
+  console.log(companyRoleID, "Company Data");
 
   //Global State
   //State for branch options
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
 
+  console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
   //Checking snakbar state
   const [open, setOpen] = useState(false);
 
@@ -190,6 +192,7 @@ const AddCorporateUser = () => {
 
   //Edit Button
   const handleEditButton = (companyRoleID) => {
+    console.log(companyRoleID, "companyRoleIDcompanyRoleID");
     dispatch(editCompanyModalSystemAdmin(true));
     setEditCompanyData(companyRoleID);
   };
@@ -281,6 +284,24 @@ const AddCorporateUser = () => {
   useEffect(() => {
     dispatch(GetAllCorporatesDataAPI(navigate));
   }, []);
+
+  // Handle File upload
+  const HandleFileUpload = (event) => {
+    // setBulkUploadClicked(true);
+    const { files } = event.target;
+    if (files !== undefined && files.length > 0) {
+      let ext = files[0].name.split(".").pop();
+      if (ext === "xls" || ext === "xlsx") {
+        let fileData = files[0];
+        dispatch(
+          CorporateUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
+        );
+      } else {
+        alert("Invalid type");
+      }
+      event.target.value = null;
+    }
+  };
 
   useEffect(() => {
     if (GetAllCorporates !== null) {
@@ -402,15 +423,22 @@ const AddCorporateUser = () => {
                     ...data,
                     value: corporateUpdated.corporate.corporateID,
                     label: corporateUpdated.corporate.corporateName,
-                    companyID: corporateUpdated.corporate.corporateID,
-
-                    categoryName:
-                      corporateUpdated.corporate.corporateCategory.categoryName,
-                    natureOfClient:
-                      corporateUpdated.corporate.natureOFBussiness
+                    corporateID: corporateUpdated.corporate.corporateID,
+                    corporateName: corporateUpdated.corporate.corporateName,
+                    natureofBusiness: {
+                      pK_NatureOfBusiness:
+                        corporateUpdated.corporate.natureOFBussiness
+                          .natureOfBussinessID,
+                      name: corporateUpdated.corporate.natureOFBussiness
                         .natureOfBussiness,
-                    rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
-                    rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                    },
+                    rfqTimers: [
+                      {
+                        treasuryRFQExpiryInMin: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+                        corporateRFQExpiryInMin: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                        corporateID: corporateUpdated.corporate.corporateID,
+                      },
+                    ],
                   };
                 }
                 return data;
@@ -508,24 +536,6 @@ const AddCorporateUser = () => {
       }
     }
   }, [categoryUpdated]);
-
-  // Handle File upload
-  const HandleFileUpload = (event) => {
-    // setBulkUploadClicked(true);
-    const { files } = event.target;
-    if (files !== undefined && files.length > 0) {
-      let ext = files[0].name.split(".").pop();
-      if (ext === "xls" || ext === "xlsx") {
-        let fileData = files[0];
-        dispatch(
-          CorporateUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
-        );
-      } else {
-        alert("Invalid type");
-      }
-      event.target.value = null;
-    }
-  };
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>

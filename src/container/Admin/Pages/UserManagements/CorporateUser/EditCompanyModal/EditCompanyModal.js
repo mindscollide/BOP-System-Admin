@@ -14,11 +14,14 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
-const EditCompanyModal = ({ editCompanyData }) => {
+import { useCorporateUser } from "../utils/CorporateUserContext";
+const EditCompanyModal = () => {
+  const { editCompanyData } = useCorporateUser();
+  console.log(editCompanyData, "editCompanyDataeditCompanyData");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
-  const [updateCompany, setUpdateCompany] = useState({ ...editCompanyData });
+  const [updateCompany, setUpdateCompany] = useState(editCompanyData);
 
   const [companyEditError, setCompanyEditError] = useState({
     corporateName: {
