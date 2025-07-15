@@ -739,7 +739,7 @@ const AddBankUser = () => {
                             <Select
                               options={branchOptions}
                               placeholder="Select Branch"
-                              value={branchRole.value !== 0 ? branchRole : null}
+                              value={branchRole?.value !== 0 ? branchRole : null}
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
                               // classNamePrefix="selectCateogyCorporateList"
