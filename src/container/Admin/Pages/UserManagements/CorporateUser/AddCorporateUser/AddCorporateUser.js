@@ -64,12 +64,8 @@ const AddCorporateUser = () => {
   const [companyRoleID, setCompanyRole] = useState(null);
 
   //Global State
-  const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
-  console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
-  //state for error Message
-  const [errorShow, setErrorShow] = useState(false);
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);

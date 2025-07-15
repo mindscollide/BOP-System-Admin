@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import Header2 from "../../../components/layout/Header2/Header2";
 
 import Sidebar2 from "../../../components/layout/Sidebar2/Sidebar2";
@@ -39,8 +39,10 @@ import {
   setSpotSpreadUpdated,
 } from "../../../store/actions/RealtimeActions";
 import { Loader } from "../../../components/elements";
+import { logOutApi } from "../../../store/actions/Auth-Actions";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const { Content, Sider } = Layout;
   const dispatch = useDispatch();
   const { connectToMqtt, isConnected } = useMqttClient({
@@ -70,8 +72,16 @@ const AdminDashboard = () => {
           // setCorporateUserRoleStatusChange(data.payload);
           break;
         case "BANK_USER_ROLE_STATUS_CHANGE":
+          let userID = localStorage.getItem("userID");
           console.log("Message arrived:", data);
           dispatch(setBankUserRoleStatusChange(data.payload));
+          console.log(
+            Number(data.payload.updatedUser.userID) === Number(userID),
+            "setBankUserRoleStatusChange"
+          );
+          if (Number(data.payload.updatedUser.userID) === Number(userID)) {
+            dispatch(logOutApi(navigate));
+          }
           // When Security Admin Change a Bank User Role
           // setBankUserRoleStatusChange(data.payload);
           break;
