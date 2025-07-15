@@ -113,7 +113,7 @@ export const useMqttClient = ({
         userName: process.env.REACT_APP_MQTT_USERNAME,
         password: process.env.REACT_APP_MQTT_PASSWORD,
         cleanSession: true,
-        useSSL: false,
+        useSSL: process.env.REACT_APP_MQTT_PORT === "8883" ? true : false,
       });
     },
     [onMessageArrived, onConnectionLost, randomString, subscribeToTopics]
