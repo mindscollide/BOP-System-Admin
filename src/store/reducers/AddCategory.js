@@ -33,6 +33,12 @@ const AddCategory = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
 
+    case actions.CLEAR_RESPONSEMESSAGE_ADD_CATEGORY:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
+
     default:
       return { ...state };
   }

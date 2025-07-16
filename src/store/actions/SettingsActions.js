@@ -216,6 +216,7 @@ const GetMarketTimeSettingsFail = (message) => {
 };
 
 const GetMarketTimeSettingsAPI = (navigate) => {
+  // console.log("reached here......");
   let token = localStorage.getItem("token");
   return async (dispatch) => {
     dispatch(GetMarketTimeSettingsInit());
@@ -239,6 +240,7 @@ const GetMarketTimeSettingsAPI = (navigate) => {
           await dispatch(RefreshToken(navigate));
           dispatch(GetMarketTimeSettingsAPI(navigate));
         } else if (response.data.responseCode === 200) {
+          console.log("reached here......2");
           if (response.data.responseResult.isExecuted === true) {
             if (
               response.data.responseResult.responseMessage
@@ -253,6 +255,7 @@ const GetMarketTimeSettingsAPI = (navigate) => {
                   "API executed successfully."
                 )
               );
+              console.log("reached here......3");
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "Setting_SettingServiceManager_GetMarketTimeSettings_02".toLowerCase()
@@ -342,8 +345,11 @@ const SaveMarketTimeSettingsAPI = (navigate, data, setSettingModalState) => {
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
             if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
-              "Setting_SettingServiceManager_SaveMarketTimeSettings_01".toLowerCase()
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "Setting_SettingServiceManager_SaveMarketTimeSettings_01"
+                )
             ) {
               dispatch(
                 SaveMarketTimeSettingsSuccess(
@@ -401,9 +407,15 @@ const SaveMarketTimeSettingsAPI = (navigate, data, setSettingModalState) => {
       });
   };
 };
+const clearResponseMessageSettings = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_SETTINGS,
+  };
+};
 export {
   GetUserSettingsAPI,
   UpdateUserSettingsAPI,
   GetMarketTimeSettingsAPI,
   SaveMarketTimeSettingsAPI,
+  clearResponseMessageSettings,
 };

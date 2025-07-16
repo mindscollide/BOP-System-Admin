@@ -109,6 +109,43 @@
   align-items: center !important;
   gap: 4px !important;
 }
+.AddBranchClass {
+  background: #096fed !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 5px !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 9px 12px !important;
+}
+.AddBranchClass:disabled {
+  background: var(--disabled-button) !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 5px !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 9px 12px !important;
+}
+
+.AddBranchClass:is(:hover, :focus, :active, :focus-visible) {
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 5px !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 9px 12px !important;
+}
 .companyErrorMessage {
   height: 0px;
   margin-top: 0px !important;

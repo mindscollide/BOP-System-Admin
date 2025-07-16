@@ -2,6 +2,7 @@ import * as actions from "../action_types";
 
 const initialState = {
   Loading: false,
+  ResponseMessage: "",
   GetUserSettings: null,
   UpdateUserSettings: null,
   GetMarketTimeSettings: null,
@@ -99,6 +100,13 @@ const settingsReducer = (state = initialState, action) => {
         SaveMarketTimeSettings: null,
         ResponseMessage: action.message,
       };
+
+    case actions.CLEAR_RESPONSEMESSAGE_SETTINGS:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
+
     default:
       return { ...state };
   }

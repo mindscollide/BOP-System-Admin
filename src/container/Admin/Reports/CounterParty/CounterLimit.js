@@ -172,11 +172,7 @@ const CounterLimit = () => {
           />
         </>
       ) : null}
-      {systemReducer.Loading ||
-      uploadReducer.Loading ||
-      downloadReducer.Loading ? (
-        <Loader />
-      ) : null}
+
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

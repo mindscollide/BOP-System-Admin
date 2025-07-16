@@ -5,6 +5,7 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import { validateEmail } from "../../../../../../utils/regexUtil";
 import {
   ConfirmationModalSystemAdmin,
@@ -28,18 +29,24 @@ import {
 import { addCorporateUserSchema } from "../../../../../../utils/schemas";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
 import { useCorporateUser } from "../utils/CorporateUserContext";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setCategoryUpdated,
+  setCorporateCreated,
+  setCorporateUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const AddCorporateUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const {
-    corporateCreated,
-    setCorporateCreated,
-    corporateUpdated,
-    setCorporateUpdated,
-  } = useMqtt();
+  const corporateCreated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateCreated
+  );
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
   const { setBulkUploadClicked, setEditCompanyData } = useCorporateUser();
 
@@ -52,18 +59,16 @@ const AddCorporateUser = () => {
   const [corporateUser, setCorporateUser] = useState({
     ...addCorporateUserSchema,
   });
-
+  console.log("corporateUser,", corporateUser);
   //companyRoles
   const [companyRoleID, setCompanyRole] = useState(null);
+  console.log(companyRoleID, "Company Data");
 
   //Global State
-  const { BOPSystemAdminReducer, auth } = useSelector((state) => state);
   //State for branch options
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
 
-  //state for error Message
-  const [errorShow, setErrorShow] = useState(false);
-
+  console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
   //Checking snakbar state
   const [open, setOpen] = useState(false);
 
@@ -83,7 +88,7 @@ const AddCorporateUser = () => {
       category: (val) => val.trim(),
     };
 
-    const isFieldEmpty = (val) => val === "";
+    // const isFieldEmpty = (val) => val === "";
 
     // Update field function
     const updateField = (fieldName, fieldValue) => {
@@ -91,14 +96,14 @@ const AddCorporateUser = () => {
         ? validateInput[fieldName](fieldValue)
         : fieldValue;
 
-      const hasError = isFieldEmpty(validValue);
+      // const hasError = isFieldEmpty(validValue);
 
       setCorporateUser((prevState) => ({
         ...prevState,
         [fieldName]: {
           value: validValue,
-          errorMessage: hasError ? "This field is required" : "",
-          errorStatus: hasError,
+          // errorMessage: hasError ? "This field is required" : "",
+          // errorStatus: hasError,
         },
       }));
     };
@@ -109,11 +114,29 @@ const AddCorporateUser = () => {
 
   // show error message When user hit activate btn
   const handleActivateButton = () => {
-    if (validateEmail(corporateUser.email.value)) {
+    if (
+      validateEmail(corporateUser.email.value) &&
+      !corporateUser.email.value.includes("@bop.com.pk") &&
+      !corporateUser.email.value.includes("@bop.com")
+      // corporateUser.firstName.value !== "" &&
+      // corporateUser.email.value !== "" &&
+      // corporateUser.companyName !== ""
+    ) {
       dispatch(ConfirmationModalSystemAdmin(true));
       setModalState(1);
     } else {
-      setErrorShow(true);
+      setCorporateUser((prevState) => {
+        return {
+          ...prevState,
+          email: {
+            ...prevState.email,
+            errorMessage: "Email Domain Incorrect or Not Allowed",
+            errorStatus: true,
+          },
+        };
+      });
+      // setErrorShow(true);
+      // alert("Not Validated");
     }
   };
   //handle Active Button
@@ -121,46 +144,27 @@ const AddCorporateUser = () => {
   const handleConfirmationYes = useCallback(() => {
     try {
       if (modalState === 1) {
-        if (
-          corporateUser.firstName.value !== "" &&
-          corporateUser.email.value !== "" &&
-          corporateUser.companyName !== ""
-        ) {
-          if (validateEmail(corporateUser.email.value)) {
-            setErrorShow(false);
-            let newData = {
-              User: {
-                FirstName: corporateUser.firstName.value,
-                Email: corporateUser.email.value,
-                ContactNumber: "03909090909",
-              },
-              CorporateID: companyRoleID.corporateID,
-              IsChatActive: corporateUser.isChatActive.value,
-              IsFEEnabled: corporateUser.isFEActive.value,
-              IsNonFEEnabled: corporateUser.isNonFEActive.value,
-            };
+        let newData = {
+          User: {
+            FirstName: corporateUser.firstName.value,
+            Email: corporateUser.email.value,
+            ContactNumber: "03909090909",
+          },
+          CorporateID: companyRoleID.corporateID,
+          IsChatActive: corporateUser.isChatActive.value,
+          IsFEEnabled: corporateUser.isFEActive.value,
+          IsNonFEEnabled: corporateUser.isNonFEActive.value,
+        };
 
-            dispatch(
-              CreateCorporateUserRequestAPI(
-                navigate,
-                newData,
-                handleCancelButtonYes,
-                setCorporateUser
-              )
-            );
-            dispatch(ConfirmationModalSystemAdmin(false));
-          } else {
-            setErrorShow(true);
-          }
-        } else {
-          // setTimeout();
-
-          setOpen({
-            open: true,
-            message: "Fill All Required Fields",
-          });
-          setErrorShow(true);
-        }
+        dispatch(
+          CreateCorporateUserRequestAPI(
+            navigate,
+            newData,
+            handleCancelButtonYes,
+            setCorporateUser
+          )
+        );
+        dispatch(ConfirmationModalSystemAdmin(false));
       } else if (modalState === 2) {
         dispatch(ConfirmationModalSystemAdmin(false));
         setModalState(0);
@@ -188,6 +192,7 @@ const AddCorporateUser = () => {
 
   //Edit Button
   const handleEditButton = (companyRoleID) => {
+    console.log(companyRoleID, "companyRoleIDcompanyRoleID");
     dispatch(editCompanyModalSystemAdmin(true));
     setEditCompanyData(companyRoleID);
   };
@@ -253,20 +258,50 @@ const AddCorporateUser = () => {
   };
 
   const CompanySelectHandler = async (selectedCompany) => {
+    console.log(
+      selectedCompany,
+      "selectedCompanyselectedCompanyselectedCompany"
+    );
     setCompanyRole(selectedCompany);
     setCorporateUser((prevState) => ({
       ...prevState,
       companyID: selectedCompany.value,
       categoryName: selectedCompany.category.categoryName,
       natureOfClient: selectedCompany.natureofBusiness.name,
-      rfqTreasury: `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
-      rfqCorporate: `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,
+      rfqTreasury: `${
+        selectedCompany.rfqTimers.length > 0
+          ? `${selectedCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`
+          : []
+      }`,
+      rfqCorporate: `${
+        selectedCompany.rfqTimers.length > 0
+          ? `${selectedCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`
+          : []
+      } `,
     }));
   };
 
   useEffect(() => {
     dispatch(GetAllCorporatesDataAPI(navigate));
   }, []);
+
+  // Handle File upload
+  const HandleFileUpload = (event) => {
+    // setBulkUploadClicked(true);
+    const { files } = event.target;
+    if (files !== undefined && files.length > 0) {
+      let ext = files[0].name.split(".").pop();
+      if (ext === "xls" || ext === "xlsx") {
+        let fileData = files[0];
+        dispatch(
+          CorporateUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
+        );
+      } else {
+        alert("Invalid type");
+      }
+      event.target.value = null;
+    }
+  };
 
   useEffect(() => {
     if (GetAllCorporates !== null) {
@@ -291,6 +326,7 @@ const AddCorporateUser = () => {
               setCompanyRole(getCompanyData);
               setCorporateUser((prevState) => ({
                 ...prevState,
+                categoryID: getCompanyData.category.categoryID,
                 companyID: getCompanyData.value,
                 categoryName: getCompanyData.category.categoryName,
                 natureOfClient: getCompanyData.natureofBusiness.name,
@@ -318,112 +354,188 @@ const AddCorporateUser = () => {
 
   useEffect(() => {
     if (corporateCreated !== null) {
-      if (Array.isArray(companyNameOptions)) {
-        let findCorporateObj = companyNameOptions.find(
-          (corporateData, index) =>
-            corporateData.corporateID === corporateCreated.corporate.corporateID
-        );
-        if (findCorporateObj === undefined) {
-          let newCorporateData = {
-            ...corporateCreated.corporate,
-            value: corporateCreated.corporate.corporateID,
-            label: corporateCreated.corporate.corporateName,
-          };
-          setCompanyNameOptions([...companyNameOptions, newCorporateData]);
-          setCorporateCreated(null);
+      try {
+        if (Array.isArray(companyNameOptions)) {
+          let findCorporateObj = companyNameOptions.find(
+            (corporateData, index) =>
+              corporateData.corporateID ===
+              corporateCreated.corporate.corporateID
+          );
+          if (findCorporateObj === undefined) {
+            const { corporate } = corporateCreated;
+            let newCorporateData = {
+              corporateID: corporate.corporateID,
+              corporateName: corporate.corporateName,
+              natureofBusiness: {
+                pK_NatureOfBusiness:
+                  corporate.natureOFBussiness.natureOfBussinessID,
+                name: corporate.natureOFBussiness.natureOfBussiness,
+              },
+              category: {
+                categoryID: corporate.corporateCategory.categoryID,
+                categoryName: corporate.corporateCategory.categoryName,
+                bidSpread: corporate.corporateCategory.bidSpread,
+                offerSpread: corporate.corporateCategory.offerSpread,
+                fK_AssetTypeID: corporate.corporateCategory.fK_AssetTypeID,
+                fK_UserID: corporate.corporateCategory.fK_UserID,
+                fK_BankID: 1,
+              },
+              rfqTimers: [
+                {
+                  treasuryRFQExpiryInMin: Number(
+                    corporate.rfqTimers.treasuryRFQTimer
+                  ),
+                  corporateRFQExpiryInMin: Number(
+                    corporate.rfqTimers.corporateRFQTimer
+                  ),
+                  corporateID: corporate.corporateCategory.categoryID,
+                },
+              ],
+              value: corporate.corporateID,
+              label: corporate.corporateName,
+            };
+            setCompanyNameOptions([...companyNameOptions, newCorporateData]);
+            dispatch(setCorporateCreated(null));
+          }
         }
+      } catch (error) {
+        console.log(error, "Error in corporate created effect");
       }
     }
   }, [corporateCreated]);
 
   useEffect(() => {
     if (corporateUpdated !== null) {
-      if (Array.isArray(companyNameOptions)) {
-        let findCorporateObj = companyNameOptions.find(
-          (corporateData, index) =>
-            corporateData.corporateID === corporateUpdated.corporate.corporateID
-        );
-        if (findCorporateObj !== undefined) {
-          setCompanyNameOptions((prevCompanyData) => {
-            return prevCompanyData.map((data, index) => {
-              if (data.corporateID === corporateUpdated.corporate.corporateID) {
-                return {
-                  ...data,
-                  value: corporateUpdated.corporate.corporateID,
-                  label: corporateUpdated.corporate.corporateName,
-                  companyID: corporateUpdated.corporate.corporateID,
-
-                  categoryName:
-                    corporateUpdated.corporate.corporateCategory.categoryName,
-                  natureOfClient:
+      try {
+        if (Array.isArray(companyNameOptions)) {
+          let findCorporateObj = companyNameOptions.find(
+            (corporateData, index) =>
+              corporateData.corporateID ===
+              corporateUpdated.corporate.corporateID
+          );
+          if (findCorporateObj !== undefined) {
+            setCompanyNameOptions((prevCompanyData) => {
+              return prevCompanyData.map((data, index) => {
+                if (
+                  data.corporateID === corporateUpdated.corporate.corporateID
+                ) {
+                  return {
+                    ...data,
+                    value: corporateUpdated.corporate.corporateID,
+                    label: corporateUpdated.corporate.corporateName,
+                    corporateID: corporateUpdated.corporate.corporateID,
+                    corporateName: corporateUpdated.corporate.corporateName,
+                    natureofBusiness: {
+                      pK_NatureOfBusiness:
+                        corporateUpdated.corporate.natureOFBussiness
+                          .natureOfBussinessID,
+                      name: corporateUpdated.corporate.natureOFBussiness
+                        .natureOfBussiness,
+                    },
+                    rfqTimers: [
+                      {
+                        treasuryRFQExpiryInMin: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+                        corporateRFQExpiryInMin: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                        corporateID: corporateUpdated.corporate.corporateID,
+                      },
+                    ],
+                  };
+                }
+                return data;
+              });
+            });
+            if (
+              companyRoleID.corporateID ===
+              corporateUpdated.corporate.corporateID
+            ) {
+              let corporateRoleData = {
+                corporateID: corporateUpdated.corporate.corporateID,
+                corporateName: corporateUpdated.corporate.corporateName,
+                natureofBusiness: {
+                  pK_NatureOfBusiness:
                     corporateUpdated.corporate.natureOFBussiness
-                      .natureOfBussiness,
-                  rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
-                  rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
-                };
-              }
-              return data;
-            });
-          });
-          if (
-            companyRoleID.corporateID === corporateUpdated.corporate.corporateID
-          ) {
-            let corporateRoleData = {
-              corporateID: corporateUpdated.corporate.corporateID,
-              corporateName: corporateUpdated.corporate.corporateName,
-              natureofBusiness: {
-                pK_NatureOfBusiness:
-                  corporateUpdated.corporate.natureOFBussiness
-                    .natureOfBussinessID,
-                name: corporateUpdated.corporate.natureOFBussiness
-                  .natureOfBussiness,
-              },
-              category: corporateUpdated.corporate.corporateCategory,
-              rfqTimers: [
-                {
-                  treasuryRFQExpiryInMin: Number(
-                    corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
-                  ),
-                  corporateRFQExpiryInMin: Number(
-                    corporateUpdated.corporate.rfqTimers.corporateRFQTimer
-                  ),
-                  corporateID: corporateUpdated.corporate.corporateID,
+                      .natureOfBussinessID,
+                  name: corporateUpdated.corporate.natureOFBussiness
+                    .natureOfBussiness,
                 },
-              ],
-              value: corporateUpdated.corporate.corporateID,
-              label: corporateUpdated.corporate.corporateName,
-            };
-            setCompanyRole(corporateRoleData);
-            setCorporateUser({
-              ...corporateUser,
-              rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
-              rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
-              natureOfClient:
-                corporateUpdated.corporate.natureOFBussiness.natureOfBussiness,
-            });
+                category: corporateUpdated.corporate.corporateCategory,
+                rfqTimers: [
+                  {
+                    treasuryRFQExpiryInMin: Number(
+                      corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
+                    ),
+                    corporateRFQExpiryInMin: Number(
+                      corporateUpdated.corporate.rfqTimers.corporateRFQTimer
+                    ),
+                    corporateID: corporateUpdated.corporate.corporateID,
+                  },
+                ],
+                value: corporateUpdated.corporate.corporateID,
+                label: corporateUpdated.corporate.corporateName,
+              };
+              setCompanyRole(corporateRoleData);
+              setCorporateUser({
+                ...corporateUser,
+                rfqTreasury: `${corporateUpdated.corporate.rfqTimers.treasuryRFQTimer} Minutes`,
+                rfqCorporate: `${corporateUpdated.corporate.rfqTimers.corporateRFQTimer} Minutes`,
+                natureOfClient:
+                  corporateUpdated.corporate.natureOFBussiness
+                    .natureOfBussiness,
+              });
+            }
           }
         }
+        dispatch(setCorporateUpdated(null));
+      } catch (error) {
+        console.log(error, "Error in corporate updated effect");
       }
-      setCorporateUpdated(null);
     }
   }, [corporateUpdated]);
-  // Handle File upload
-  const HandleFileUpload = (event) => {
-    // setBulkUploadClicked(true);
-    const { files } = event.target;
-    if (files !== undefined && files.length > 0) {
-      let ext = files[0].name.split(".").pop();
-      if (ext === "xls" || ext === "xlsx") {
-        let fileData = files[0];
-        dispatch(
-          CorporateUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
+
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(companyNameOptions)) {
+        let findCategoryObj = companyNameOptions.find(
+          (categoryData, index) =>
+            categoryData.category.categoryID ===
+            categoryUpdated.category.categoryId
         );
-      } else {
-        alert("Invalid type");
+        if (findCategoryObj !== undefined) {
+          setCompanyNameOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              console.log(data4, "data4data4data4data4");
+              if (
+                data4.category.categoryID ===
+                categoryUpdated.category.categoryId
+              ) {
+                return {
+                  ...data4,
+                  categoryID: categoryUpdated.category.categoryId,
+                  categoryName: categoryUpdated.category.category,
+                  category: {
+                    ...data4.category,
+                    categoryName: categoryUpdated.category.category,
+                  },
+                };
+              }
+              return data4;
+            });
+          });
+          // console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (
+            corporateUser.categoryID === categoryUpdated.category.categoryId
+          ) {
+            setCorporateUser({
+              ...corporateUser,
+              categoryName: categoryUpdated.category.category,
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
       }
-      event.target.value = null;
     }
-  };
+  }, [categoryUpdated]);
   return (
     <section className={styles["Container_bank_user"]}>
       <Row>
@@ -484,28 +596,9 @@ const AddCorporateUser = () => {
                       />
                     </div>
                     {corporateUser.email.errorStatus && (
-                      <Row>
-                        <Col className="d-flex justify-content-start">
-                          <p className={styles["bankErrorMessage"]}>
-                            {corporateUser.email.errorMessage}
-                          </p>
-                        </Col>
-                      </Row>
-                    )}
-
-                    {errorShow &&
-                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                      corporateUser.email.value
-                    ) ? (
-                      <Row>
-                        <Col className="d-flex justify-content-start">
-                          <p className={styles["bankErrorMessage"]}>
-                            Enter Valid Email Address
-                          </p>
-                        </Col>
-                      </Row>
-                    ) : (
-                      ""
+                      <p className={styles["bankErrorMessage"]}>
+                        {corporateUser.email.errorMessage}
+                      </p>
                     )}
                   </Col>
                 </Row>
@@ -697,7 +790,7 @@ const AddCorporateUser = () => {
           handleNoButton={handleNoButton}
         />
       )}
-      {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null}
+      {/* {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );

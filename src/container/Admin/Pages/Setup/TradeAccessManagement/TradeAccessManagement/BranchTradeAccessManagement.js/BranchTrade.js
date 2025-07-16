@@ -15,7 +15,13 @@ import { Col, Row } from "react-bootstrap";
 import styles from "./BranchTrade.module.css";
 import { useDispatch } from "react-redux";
 import EditBranchTradeModal from "./EditBranchTradeModal/EditBranchTradeModal";
-import { useMqtt } from "../../../../../../../context/MQTTContext";
+import {
+  setBranchCreated,
+  setBranchStatusUpdated,
+  setBranchTradeStatusUpdated,
+  setBranchUpdated,
+} from "../../../../../../../store/actions/RealtimeActions";
+import ExportShowComponent from "../../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 
 const BranchTrade = ({
   hasReachedBottom,
@@ -24,19 +30,23 @@ const BranchTrade = ({
   setBranchTableData,
   setSRow,
   setBranchRecordLength,
+  setDropdownvalue,
+  dropdownvalue,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    branchCreated,
-    setBranchCreated,
-    branchUpdated,
-    setBranchUpdated,
-    branchStatusUpdated,
-    setBranchStatusUpdated,
-    branchTradeStatusUpdated,
-    setBranchTradeStatusUpdated,
-  } = useMqtt();
+  const branchCreated = useSelector(
+    (state) => state.RealtimeActionReducer.branchCreated
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
+  const branchStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchStatusUpdated
+  );
+  const branchTradeStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchTradeStatusUpdated
+  );
 
   //Table for Branche data
   // const [branchTableData, setBranchTableData] = useState([]);
@@ -83,7 +93,7 @@ const BranchTrade = ({
     let data = {
       BranchName: "",
       sRow: 0,
-      Length: 25,
+      Length: dropdownvalue,
     };
     dispatch(GetBranchesWithStatusAPI(navigate, data));
   }, []);
@@ -129,7 +139,7 @@ const BranchTrade = ({
           };
           setBranchTableData((prevState) => [newBranch, ...prevState]);
         }
-        setBranchCreated(null);
+        dispatch(setBranchCreated(null));
       } catch (error) {
         console.log(error);
       }
@@ -150,7 +160,7 @@ const BranchTrade = ({
           return item;
         });
         setBranchTableData(updatedBranch);
-        setBranchUpdated(null);
+        dispatch(setBranchUpdated(null));
       } catch (error) {
         console.log(error);
       }
@@ -170,7 +180,7 @@ const BranchTrade = ({
           return branch;
         });
         setBranchTableData(updatedTableData);
-        setBranchStatusUpdated(null);
+        dispatch(setBranchStatusUpdated(null));
       } catch (error) {}
     }
   }, [branchStatusUpdated]);
@@ -188,7 +198,7 @@ const BranchTrade = ({
           return branch;
         });
         setBranchTableData(updatedTableData);
-        setBranchTradeStatusUpdated(null);
+        dispatch(setBranchTradeStatusUpdated(null));
       } catch (error) {}
     }
   }, [branchTradeStatusUpdated]);
@@ -272,8 +282,31 @@ const BranchTrade = ({
       },
     },
   ];
+
+  const handlePageSizeChange = (newSize) => {
+    setDropdownvalue(newSize);
+    setSRow(0);
+    setHasReachedBottom(false);
+    setBranchTableData([]);
+    setBranchRecordLength(0);
+
+    let data = {
+      CorporateName: "",
+      sRow: 0,
+      Length: newSize,
+    };
+    dispatch(GetBranchesWithStatusAPI(navigate, data));
+  };
   return (
     <>
+      <Row className="mt-1">
+        <Col lg={12} md={12} sm={12}>
+          <ExportShowComponent
+            value={dropdownvalue}
+            onChange={handlePageSizeChange}
+          />
+        </Col>
+      </Row>
       <Row className="mt-1">
         <Col lg={12} md={12} sm={12}>
           <Table

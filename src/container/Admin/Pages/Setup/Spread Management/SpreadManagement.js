@@ -22,9 +22,19 @@ import { GetAllInstrumentsAPI } from "../../../../../store/actions/BOPSystemAdmi
 import FEDiscountingTable from "./FEDiscountingTable.js";
 import ParityAndCross from "./ParityAndCrossTable/ParityAndCrossTable.js";
 import NonFEDiscountingTable from "./NonFEDiscountingTable.js";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+} from "../../../../../store/actions/RealtimeActions.js";
 const SpreadManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
   const LoadingState = useSelector(
     (state) => state.SpreadManagementReducer.Loading
@@ -55,7 +65,7 @@ const SpreadManagement = () => {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
             ...category,
-            value: { value: category.categoryID },
+            value: category.categoryID,
             label: category.categoryName,
           };
         });
@@ -70,6 +80,77 @@ const SpreadManagement = () => {
       } catch (error) {}
     }
   }, [getAllCategories]);
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          dispatch(setCategoryAdded(null));
+        }
+      }
+    }
+  }, [categoryAdded]);
+
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdated.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (categoryID.value === categoryUpdated.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
+      }
+    }
+  }, [categoryUpdated]);
+
+  // useEffect(() => {
+  //   if (categoryDeleted !== null) {
+  //     console.log("categoryDeleted", categoryDeleted);
+  //     if (Array.isArray(categoryOptions)) {
+  //       setCategoryOptions((prevOptions) =>
+  //         prevOptions.filter(
+  //           (category) => category.categoryID !== categoryDeleted.categoryID
+  //         )
+  //       );
+  //       // Also reset selected category if it was deleted
+  //       if (categoryID?.value === categoryDeleted.categoryID) {
+  //         setCategoryID(null);
+  //       }
+  //       setCategoryDeleted(null);
+  //     }
+  //   }
+  // }, [categoryDeleted]);
 
   //handle select CategoryID
   const handleSelectCategory = async (selectedCategory) => {
@@ -155,9 +236,9 @@ const SpreadManagement = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {(LoadingCategoryState && <Loader />) ||
+      {/* {(LoadingCategoryState && <Loader />) ||
         (LoadingState && <Loader />) ||
-        (LoadingTradeState && <Loader />)}
+        (LoadingTradeState && <Loader />)} */}
     </section>
   );
 };

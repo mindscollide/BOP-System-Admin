@@ -18,21 +18,28 @@ import {
   GetAllBranchesAPI,
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setBankUserRoleStatusChange,
+  setBranchCreated,
+  setBranchUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const EditBankerModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
-  const {
-    branchCreated,
-    branchUpdated,
-    setBranchCreated,
-    setBranchUpdated,
-    bankUserRoleStatusChange,
-    setBankUserRoleStatusChange,
-    bankUserUpdated,
-  } = useMqtt();
+  const branchCreated = useSelector(
+    (state) => state.RealtimeActionReducer.branchCreated
+  );
+  const bankUserRoleStatusChange = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserRoleStatusChange
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
+  const bankUserUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserUpdated
+  );
 
   // GetBankUserbyUserID
   const GetBankUserbyUserID = useSelector(
@@ -49,6 +56,9 @@ const EditBankerModal = () => {
   const [branchRole, setBranchRole] = useState({
     value: 0,
     label: "",
+    branchCode: "",
+    branchContact: "",
+    branchName: "",
   });
   //state for role
   const [roleOptions, setRoleOptions] = useState([]);
@@ -67,7 +77,7 @@ const EditBankerModal = () => {
   const [updateBankUser, setUpdateBankUser] = useState({
     ...updateBankUserSchema,
   });
-
+  console.log(updateBankUser, "updateBankUserupdateBankUser");
   //Handle Value Change and Validation
   const handleValueChangeAndValidation = (e) => {
     const { name, value } = e.target;
@@ -258,7 +268,7 @@ const EditBankerModal = () => {
             label: branchCreated.branch.branchName,
           };
           setBranchOptions([...branchOptions, newBranchData]);
-          setBranchCreated(null);
+          dispatch(setBranchCreated(null));
         }
       }
     }
@@ -300,7 +310,7 @@ const EditBankerModal = () => {
               branchName: branchUpdated.branch.branchName,
             });
           }
-          setBranchUpdated(null);
+          dispatch(setBranchUpdated(null));
         }
       }
     }
@@ -308,68 +318,81 @@ const EditBankerModal = () => {
 
   useEffect(() => {
     if (bankUserUpdated !== null) {
-      setUpdateBankUser({
-        ...updateBankUser,
-        firstName: {
-          value: bankUserUpdated.user.firstName,
-        },
-        ContactNumber: {
-          value: bankUserUpdated.user.contactNumber,
-        },
-      });
-      if (roleOptions.length > 0) {
-        let fingRoleName = roleOptions.find(
-          (roleIDData, index) =>
-            roleIDData.value === bankUserUpdated.user.userRoleID
-        );
-        if (fingRoleName !== undefined) {
-          setRoleID(fingRoleName);
-        }
-      }
-      if (branchOptions.length > 0) {
-        if (bankUserUpdated.user.branch?.branchID !== undefined) {
-          let findBranchName = branchOptions.find(
-            (branchID, index) =>
-              branchID.value === bankUserUpdated.user?.branch?.branchID
+      console.log(bankUserUpdated);
+
+      try {
+        setUpdateBankUser({
+          ...updateBankUser,
+          firstName: {
+            value: bankUserUpdated.user.firstName,
+          },
+          ContactNumber: {
+            value: bankUserUpdated.user.contactNumber,
+          },
+        });
+        if (roleOptions.length > 0) {
+          let fingRoleName = roleOptions.find(
+            (roleIDData, index) =>
+              roleIDData.value === bankUserUpdated.user.userRoleID
           );
-          if (findBranchName !== undefined) {
-            setBranchRole(findBranchName);
+          if (fingRoleName !== undefined) {
+            setRoleID(fingRoleName);
           }
         }
+        if (branchOptions.length > 0) {
+          if (bankUserUpdated.user.branch?.branchID !== undefined) {
+            let findBranchName = branchOptions.find(
+              (branchID, index) =>
+                branchID.value === bankUserUpdated.user?.branch?.branchID
+            );
+            if (findBranchName !== undefined) {
+              setBranchRole(findBranchName);
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
   }, [bankUserUpdated]);
 
   useEffect(() => {
     if (bankUserRoleStatusChange !== null) {
-      setUpdateBankUser({
-        ...updateBankUser,
-        activeUser: {
-          value:
-            bankUserRoleStatusChange.updatedUser.userStatusID === 1
-              ? "Active"
-              : "Inactive",
-        },
+      try {
+        setUpdateBankUser({
+          ...updateBankUser,
+          activeUser: {
+            value:
+              bankUserRoleStatusChange.updatedUser.userStatusID === 1
+                ? "Active"
+                : "Inactive",
+          },
 
-        roleID: {
-          value: bankUserRoleStatusChange.updatedUser.userRoleID,
-        },
-        branch: bankUserRoleStatusChange.updatedUser.branch,
-      });
-      if (roleOptions.length > 0) {
-        let fingRoleName = roleOptions.find(
-          (roleIDData, index) =>
-            roleIDData.value === bankUserRoleStatusChange.updatedUser.userRoleID
-        );
-        if (fingRoleName !== undefined) {
-          setRoleID(fingRoleName);
+          roleID: {
+            value: bankUserRoleStatusChange.updatedUser.userRoleID,
+          },
+          branch: bankUserRoleStatusChange.updatedUser.branch,
+        });
+        if (roleOptions.length > 0) {
+          let fingRoleName = roleOptions.find(
+            (roleIDData, index) =>
+              roleIDData.value ===
+              bankUserRoleStatusChange.updatedUser.userRoleID
+          );
+          if (fingRoleName !== undefined) {
+            setRoleID(fingRoleName);
+          }
         }
+        if (bankUserRoleStatusChange.updatedUser.userRoleID === 9) {
+          setBranchRole({
+            value: bankUserRoleStatusChange.updatedUser.branch.branchID,
+            label: bankUserRoleStatusChange.updatedUser.branch.branchName,
+          });
+        }
+        dispatch(setBankUserRoleStatusChange(null));
+      } catch (error) {
+        console.log("Error:", error);
       }
-
-      setBranchRole({
-        value: bankUserRoleStatusChange.updatedUser.branch,
-      });
-      setBankUserRoleStatusChange(null);
     }
   }, [bankUserRoleStatusChange]);
   return (

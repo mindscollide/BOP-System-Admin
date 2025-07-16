@@ -12,7 +12,10 @@ import {
   SaveCategoryParitySpotAPI,
 } from "../../../../../../store/actions/SpreadManagementActions";
 import ActivateConfirmationModal from "../../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setSpotCrossUpdated,
+  setSpotSpreadUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 const ParityAndCross = ({ categoryID }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,12 +34,12 @@ const ParityAndCross = ({ categoryID }) => {
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
-  const {
-    spotSpreadUpdated,
-    setSpotSpreadUpdated,
-    spotCrossUpdated,
-    setCrossSpreadUpdated,
-  } = useMqtt();
+  const spotSpreadUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.spotSpreadUpdated
+  );
+  const spotCrossUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.spotCrossUpdated
+  );
 
   useEffect(() => {
     if (GetSpotSpreadsForCategory !== null && GetAllInstruments !== null) {
@@ -110,7 +113,7 @@ const ParityAndCross = ({ categoryID }) => {
           );
           setParitySpotData(newDataMapping);
         }
-        setSpotSpreadUpdated(null);
+        dispatch(setSpotSpreadUpdated(null));
       } catch (error) {
         console.error("Error in mapping instrument data:", error);
       }
@@ -192,7 +195,7 @@ const ParityAndCross = ({ categoryID }) => {
 
           setCrossRateData(newDataMapping);
         }
-        setCrossSpreadUpdated(null);
+        dispatch(setSpotCrossUpdated(null));
       } catch (error) {
         console.error("Error setting cross rate data:", error);
       }

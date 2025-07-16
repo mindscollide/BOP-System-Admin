@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Table,
-  Loader,
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import DatePicker from "react-multi-date-picker";
@@ -14,7 +13,6 @@ import DatePicker from "react-multi-date-picker";
 import { tradeCountSchema } from "../../../../../../utils/schemas";
 import { transactionSide } from "../../../../../../helpers/Dropdown";
 import {
-  formatDate,
   formatDateAndTimeFromString,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
@@ -31,33 +29,81 @@ import { useSelector } from "react-redux";
 import pdfIcon from "../../../../../../assets/images/pdf.png";
 import excelIcon from "../../../../../../assets/images/excel.png";
 import { useNavigate } from "react-router-dom";
-import { GetAllNatureAPI } from "../../../../../../store/actions/Auth-Actions";
+import { GetAllNatureOfTransactionsAPI } from "../../../../../../store/actions/Auth-Actions";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 // import CommentModal from "../CommentModal/CommentModal";
 import { GetAllTradesAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
 import moment from "moment";
+import { formatDateToUTC } from "../../../../../../commen/functions/utils";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const LoadingTrade = useSelector(
-    (state) => state.BOPSystemAdminReducer.Loading
+  const BlotterTransactionAccepted = useSelector(
+    (state) => state.RealtimeActionReducer.BlotterTransactionAccepted
   );
-  const LoadingAuth = useSelector((state) => state.auth.Loading);
-  const getAllNatureOfBuisness = useSelector(
-    (state) => state.auth.getAllNatureOfBuisness
-  );
-  console.log("getAllNatureOfBuisness", getAllNatureOfBuisness);
 
+  const BlotterTransactionCancelled = useSelector(
+    (state) => state.RealtimeActionReducer.BlotterTransactionCancelled
+  );
+
+  const GetAllNatureOfTransactions = useSelector(
+    (state) => state.auth.GetAllNatureOfTransactions
+  );
   const GetAllTrades = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllTrades
   );
-  console.log(GetAllTrades, "GetAllTrades");
 
   //Trade Count States
-  const [tradeCount, setTradeCount] = useState({ ...tradeCountSchema });
+  const [tradeCount, setTradeCount] = useState({
+    TxnID: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    clientName: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    side: {
+      value: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    Amount: {
+      value: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    LC: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    AccountNumber: {
+      value: "",
+      errorMessage: "",
+      errorStatus: false,
+    },
+    dateFrom: {
+      value: new Date(),
+      errorMessage: "",
+      errorStatus: false,
+    },
+    dateTo: {
+      value: new Date(),
+      errorMessage: "",
+      errorStatus: false,
+    },
+    natureOfClient: {
+      value: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+  });
 
   //state for save and cancel button
   const showActivationModal = useSelector(
@@ -74,6 +120,8 @@ const TradeCount = () => {
   }); //row length on scroll
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
+  // const [hasReachedBottom, setHasReachedBottom] = useState(false);
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   //Checking snakbar state
   const [open, setOpen] = useState(false);
@@ -83,13 +131,6 @@ const TradeCount = () => {
   //   (state) => state.BOPSystemAdminModal.tradeCountCommentModal
   // );
 
-  //handle Edit Corporate
-  // const handleEditBanker = () => {
-  //   // dispatch(editBankUserModalSystemAdmin(true));
-  //   // dispatch(DeleteCorporateModalSystemAdmin(false));
-  //   // dispatch(UserDetailsCorporateModalSystemAdmin(false));
-  // };
-
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
@@ -98,45 +139,84 @@ const TradeCount = () => {
   };
   // Fetch categories on component mount
   useEffect(() => {
-    dispatch(GetAllNatureAPI(navigate));
+    dispatch(GetAllNatureOfTransactionsAPI(navigate));
+    const FromDate = new Date(tradeCount.dateFrom.value);
+    FromDate.setHours(0, 0, 0);
+    const ToDate = new Date(tradeCount.dateTo.value);
+    ToDate.setHours(23, 59, 59);
     let data = {
       TxnID: "",
       CorporateName: "",
       AccountNumber: "",
-      FromDate: "",
-      ToDate: "",
+      FromDate: formatDateToUTC(FromDate),
+      ToDate: formatDateToUTC(ToDate),
       LCNumber: "",
       Side: 0,
       NatureOfTransactionID: 0,
       Amount: 0.0,
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
 
     dispatch(GetAllTradesAPI(navigate, data));
   }, []);
-  //Custome hook for Scrolling (1)
+
   const { hasReachedBottom, setHasReachedBottom } = useTableScrollBottom(() => {
     console.log("🚀 Table reached bottom");
     // Load more data here if needed
     if (recordsLength !== tableData.length) {
+      // setHasReachedBottom(true);
+      const FromDate = new Date(tradeCount.dateFrom.value);
+      FromDate.setHours(0, 0, 0);
+      const ToDate = new Date(tradeCount.dateTo.value);
+      ToDate.setHours(23, 59, 59);
       let Data = {
-        TxnID: "",
-        CorporateName: "",
-        AccountNumber: "",
-        FromDate: "",
-        ToDate: "",
-        LCNumber: "",
-        Side: false,
-        NatureOfTransactionID: 0,
-        Amount: 0.0,
+        TxnID: tradeCount.TxnID.value,
+        CorporateName: tradeCount.clientName.value,
+        AccountNumber: tradeCount.AccountNumber.value,
+        FromDate: formatDateToUTC(FromDate),
+        ToDate: formatDateToUTC(ToDate),
+        LCNumber: tradeCount.LC.value,
+        Side: side.value,
+        NatureOfTransactionID: tradeCount.natureOfClient.value,
+        Amount: Number(tradeCount.Amount.value),
         sRow: sRow,
-        Length: 10,
+        Length: dropdownvalue,
       };
       dispatch(GetAllTradesAPI(navigate, Data));
     }
   });
+  const handlePageSizeChange = (newSize) => {
+    setDropdownvalue(newSize);
+    setSRow(0);
+    setHasReachedBottom(false);
+    setTableData([]);
+    setRecordLength(0);
+    try {
+      const FromDate = new Date(tradeCount.dateFrom.value);
+      FromDate.setHours(0, 0, 0);
+      const ToDate = new Date(tradeCount.dateTo.value);
+      ToDate.setHours(23, 59, 59);
+      let Data = {
+        TxnID: tradeCount.TxnID.value,
+        CorporateName: tradeCount.clientName.value,
+        AccountNumber: tradeCount.AccountNumber.value,
+        FromDate: formatDateToUTC(FromDate),
+        ToDate: formatDateToUTC(ToDate),
+        LCNumber: tradeCount.LC.value,
+        Side: side.value,
+        NatureOfTransactionID: tradeCount.natureOfClient.value,
+        Amount: Number(tradeCount.Amount.value),
+        sRow: 0,
+        Length: newSize,
+      };
+      dispatch(GetAllTradesAPI(navigate, Data));
+    } catch (error) {
+      console.log("Error:, ", error);
+    }
+  };
 
+  //Custome hook for Scrolling (1)
   // column for LoginHistory
   const tradeColumns = [
     {
@@ -151,7 +231,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Client</label>,
       dataIndex: "corporateName",
       key: "corporateName",
-      width: "100px",
+      width: "200px",
       align: "center",
       ellipsis: true,
     },
@@ -162,38 +242,23 @@ const TradeCount = () => {
       width: "50px",
       align: "center",
       ellipsis: true,
-      render: (val, record) => {
-        console.log({ record }, "val record");
-        let side = record?.isBuySide === true ? "Buy" : "Sell";
-        return side;
-      },
     },
     {
       title: <label className="bottom-table-header">Nature</label>,
-      dataIndex: "natureOfTransactionID",
-      key: "natureOfTransactionID",
+      dataIndex: "nature",
+      key: "nature",
       width: "200px",
       align: "center",
       ellipsis: true,
       render: (val, record) => {
-        let nature =
-          getAllNatureOfBuisness?.natureofBusinesses?.length > 0 &&
-          getAllNatureOfBuisness?.natureofBusinesses.find(
-            (nature) => nature.pK_NatureOfBusiness === val
-          );
-        return (
-          <IndexCell
-            value={nature !== undefined ? nature.name : ""}
-            record={record}
-          />
-        );
+        return <IndexCell value={val} />;
       },
     },
     {
       title: <label className="bottom-table-header">CCY1</label>,
       dataIndex: "ccY1",
       key: "ccY1",
-      width: "100px",
+      width: "50px",
       align: "center",
       ellipsis: true,
     },
@@ -217,7 +282,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">CCY2</label>,
       dataIndex: "ccY2",
       key: "ccY2",
-      width: "100px",
+      width: "50px",
       align: "center",
       ellipsis: true,
     },
@@ -234,7 +299,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Date</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "120px",
+      width: "100px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
@@ -250,7 +315,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Time</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "100px",
+      width: "75px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
@@ -274,7 +339,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Account#</label>,
       dataIndex: "accountNumber",
       key: "accountNumber",
-      width: "200px",
+      width: "100px",
       align: "center",
       ellipsis: true,
     },
@@ -320,34 +385,6 @@ const TradeCount = () => {
       render: (statusID) => {
         return "Accepted";
       },
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      transactionID: "245ABD",
-      name: "John Doe",
-      side: "Buy",
-      nature: "Important Payment",
-      CCY1: "USD",
-      CCY1Amount: "100",
-      rate: "290",
-      CCY2: "KWD",
-      CCY2Amount: "100",
-      tradeDate: "13/05/2023",
-      time: "12:07 pm",
-      LC: "12345",
-      account: "02909090908",
-      // comment: (
-      //   <Row>
-      //     <Col lg={12} md={12} sm={12}>
-      //       <i className="icon-view-comment color-blue"></i>
-      //     </Col>
-      //   </Row>
-      // ),
-      comment: "Comment of data 1",
-      status: "Active",
     },
   ];
 
@@ -401,6 +438,7 @@ const TradeCount = () => {
 
   //Handle Date Change method
   const handleDateChange = (fieldName, value) => {
+    console.log({ fieldName: fieldName, value: Date(value) });
     setTradeCount((prev) => ({
       ...prev,
       [fieldName]: {
@@ -438,32 +476,24 @@ const TradeCount = () => {
     setHasReachedBottom(false);
     setTableData([]);
     setRecordLength(0);
-    // let searchData = {
-    //   TxnID: tradeCount.TxnID.value,
-    //   CorporateName: tradeCount.clientName.value,
-    //   side: tradeCount.side.value,
-    //   Amount: tradeCount.Amount.value,
-    //   LC: tradeCount.LC.value,
-    //   AccountNumber: tradeCount.AccountNumber.value,
-    //   Nature: tradeCount.natureOfClient.value,
-    //   From: formatDate(tradeCount.dateFrom.value),
-    //   To: formatDate(tradeCount.dateTo.value),
-    // };
 
+    const FromDate = new Date(tradeCount.dateFrom.value);
+    FromDate.setHours(0, 0, 0);
+    const ToDate = new Date(tradeCount.dateTo.value);
+    ToDate.setHours(23, 59, 59);
     let searchData = {
       TxnID: tradeCount.TxnID.value,
       CorporateName: tradeCount.clientName.value,
       AccountNumber: tradeCount.AccountNumber.value,
-      FromDate: formatDate(tradeCount.dateFrom.value),
-      ToDate: formatDate(tradeCount.dateTo.value),
+      FromDate: formatDateToUTC(FromDate),
+      ToDate: formatDateToUTC(ToDate),
       LCNumber: tradeCount.LC.value,
-      IsBuySide: tradeCount.side.value,
+      Side: side.value,
       NatureOfTransactionID: tradeCount.natureOfClient.value,
-      Amount: tradeCount.Amount.value,
+      Amount: Number(tradeCount.Amount.value),
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
-
     console.log("searchData is", searchData);
     dispatch(GetAllTradesAPI(navigate, searchData));
   };
@@ -478,6 +508,7 @@ const TradeCount = () => {
       setModalState(0);
     }
   }, [modalState]);
+
   // show error message When user hit activate btn
   const handleResetEventButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -489,50 +520,48 @@ const TradeCount = () => {
     setRecordLength(0);
     setSRow(0);
     setTableData([]);
+    let FromDate = new Date();
+    FromDate.setHours(0, 0, 0);
+    let ToDate = new Date();
+    ToDate.setHours(23, 59, 59);
     if (modalState === 2) {
       dispatch(ConfirmationModalSystemAdmin(false));
       setModalState(0);
+
       setTradeCount({
         ...tradeCountSchema,
         side: {
-          value: "",
+          value: 0,
         },
         Nature: {
           value: "",
         },
         dateFrom: {
-          value: "",
+          value: FromDate,
         },
         dateTo: {
-          value: "",
+          value: ToDate,
         },
       });
-      setSide("");
+      setSide(0);
       setNatureID("");
     }
     let data = {
       TxnID: "",
       CorporateName: "",
       AccountNumber: "",
-      FromDate: "",
-      ToDate: "",
+      FromDate: formatDateToUTC(FromDate),
+      ToDate: formatDateToUTC(ToDate),
       LCNumber: "",
       Side: 0,
       NatureOfTransactionID: 0,
       Amount: 0.0,
       sRow: 0,
-      Length: 10,
+      Length: dropdownvalue,
     };
 
     dispatch(GetAllTradesAPI(navigate, data));
   };
-
-  //Handle Select Change
-  // A generic function to handle dropdown changes
-  // const handleDropdownChange = (field, value, setter, userField) => {
-  //   setter(value); // Set the state
-  //   userField.value = value.value; // Update the corporateUser object
-  // };
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
@@ -593,36 +622,37 @@ const TradeCount = () => {
   };
 
   useEffect(() => {
-    if (getAllNatureOfBuisness !== null) {
+    if (GetAllNatureOfTransactions !== null) {
       try {
-        let newNatureOfBusiness = getAllNatureOfBuisness.natureofBusinesses.map(
-          (natureOfBusiness) => {
-            return {
-              ...natureOfBusiness,
-              value: natureOfBusiness.pK_NatureOfBusiness,
-              label: natureOfBusiness.name,
-            };
-          }
-        );
-        setNatureOptions(newNatureOfBusiness);
+        let newNatureOfTransactions =
+          GetAllNatureOfTransactions.natureOfTransactions.map(
+            (natureOTransaction) => {
+              return {
+                ...natureOTransaction,
+                value: natureOTransaction.id,
+                label: natureOTransaction.name,
+              };
+            }
+          );
+        setNatureOptions(newNatureOfTransactions);
       } catch (error) {}
     }
-  }, [getAllNatureOfBuisness]);
+  }, [GetAllNatureOfTransactions]);
 
   //handelled scrolling here (4)
   useEffect(() => {
     if (GetAllTrades !== null) {
       try {
-        const { transactions, totalRecords } = GetAllTrades;
+        const { transactions, totalCount } = GetAllTrades;
         if (hasReachedBottom) {
           setHasReachedBottom(false);
-          setRecordLength(totalRecords);
+          setRecordLength(totalCount);
           setTableData([...tableData, ...transactions]);
           setSRow(tableData.length + transactions.length);
         } else {
           setHasReachedBottom(false);
           setTableData(transactions);
-          setRecordLength(totalRecords);
+          setRecordLength(totalCount);
           setSRow(transactions.length);
         }
       } catch (error) {}
@@ -635,6 +665,45 @@ const TradeCount = () => {
       }
     }
   }, [GetAllTrades]);
+
+  useEffect(() => {
+    if (BlotterTransactionAccepted !== null) {
+      console.log("BlotterTransactionAccepted: ", BlotterTransactionAccepted);
+      const { transaction } = BlotterTransactionAccepted;
+      let record = {
+        ...transaction,
+        txnID: transaction.txnid,
+        transactionDateTime: transaction.settlementDateTime,
+      };
+      setTableData((prev) => [record, ...prev]);
+    }
+  }, [BlotterTransactionAccepted]);
+
+  // useEffect(() => {
+  //   if (BlotterTransactionCancelled !== null) {
+  //     try {
+  //       const { transaction } = BlotterTransactionCancelled;
+  //       let findRecord = tableData.find(
+  //         (tableRow, index) => tableRow.txnID === transaction.txnID
+  //       );
+
+  //     } catch (error) {}
+  //   }
+  // }, [BlotterTransactionCancelled]);
+
+  useEffect(() => {
+    if (BlotterTransactionCancelled !== null) {
+      try {
+        const { transaction } = BlotterTransactionCancelled;
+
+        setTableData((prev) =>
+          prev.filter((row) => row.txnID !== transaction.txnid)
+        );
+      } catch (error) {
+        console.error("Error while removing cancelled transaction:", error);
+      }
+    }
+  }, [BlotterTransactionCancelled]);
 
   return (
     <section className={styles["SectionContainer"]}>
@@ -696,7 +765,9 @@ const TradeCount = () => {
                   placeholder="Amount"
                   name="Amount"
                   onChange={tradeCountValidateHandler}
-                  value={tradeCount.Amount.value}
+                  value={
+                    tradeCount.Amount.value === 0 ? "" : tradeCount.Amount.value
+                  }
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
                 />
@@ -812,7 +883,10 @@ const TradeCount = () => {
 
             <Row className="mt-1">
               <Col lg={12} md={12} sm={12}>
-                <ExportShowComponent />
+                <ExportShowComponent
+                  value={dropdownvalue}
+                  onChange={handlePageSizeChange}
+                />
               </Col>
             </Row>
 
@@ -822,7 +896,7 @@ const TradeCount = () => {
                   column={tradeColumns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ x: "scroll" }}
+                  scroll={{ x: "scroll", y: 230 }}
                   className={"BankUserList-table"}
                 />
               </Col>
@@ -837,7 +911,6 @@ const TradeCount = () => {
           handleNoButton={handleNoButton}
         />
       )}
-      {(LoadingTrade && <Loader />) || (LoadingAuth && <Loader />)}
     </section>
   );
 };

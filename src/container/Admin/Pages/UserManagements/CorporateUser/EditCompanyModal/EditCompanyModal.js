@@ -14,11 +14,14 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
-const EditCompanyModal = ({ editCompanyData }) => {
+import { useCorporateUser } from "../utils/CorporateUserContext";
+const EditCompanyModal = () => {
+  const { editCompanyData } = useCorporateUser();
+  console.log(editCompanyData, "editCompanyDataeditCompanyData");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
-  const [updateCompany, setUpdateCompany] = useState({ ...editCompanyData });
+  const [updateCompany, setUpdateCompany] = useState(editCompanyData);
 
   const [companyEditError, setCompanyEditError] = useState({
     corporateName: {
@@ -39,7 +42,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
 
   //RFQTreasuryRoles
   const [treasuryOptionsID, setTreasuryOptionsID] = useState(
-    updateCompany.rfqTimers
+    updateCompany.rfqTimers.length > 0
       ? {
           value: updateCompany.rfqTimers[0].treasuryRFQExpiryInMin,
           label: `${updateCompany.rfqTimers[0].treasuryRFQExpiryInMin} Minutes`,
@@ -49,7 +52,7 @@ const EditCompanyModal = ({ editCompanyData }) => {
 
   //RFQTreasuryRoles
   const [corporateOptionsID, setCorporateOptionsID] = useState(
-    updateCompany.rfqTimers
+    updateCompany.rfqTimers.length > 0
       ? {
           value: updateCompany.rfqTimers[0].corporateRFQExpiryInMin,
           label: `${updateCompany.rfqTimers[0].corporateRFQExpiryInMin} Minutes`,

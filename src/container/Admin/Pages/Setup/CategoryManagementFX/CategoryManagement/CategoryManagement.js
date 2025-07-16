@@ -28,20 +28,27 @@ import {
   DeleteCategoryModalSystemAdmin,
 } from "../../../../../../store/actions/BOPSystemAdminModalsActions";
 import { UpdateCategoryAPI } from "../../../../../../store/actions/BOPSystemAdminActions";
-import { useMqtt } from "../../../../../../context/MQTTContext";
 import { isValidNumberUnderMax } from "../../../../../../helpers/reusableMethods";
 const CategoryManagement = () => {
   //Accordian
   const { Panel } = Collapse;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    categoryAdded,
-    categoryUpdate,
-    categoryDeleted,
-    counterpartyChnaged,
-    counterpartyBranchChnaged,
-  } = useMqtt();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
+  const categoryDeleted = useSelector(
+    (state) => state.RealtimeActionReducer.categoryDeleted
+  );
+  const counterpartyChanged = useSelector(
+    (state) => state.RealtimeActionReducer.counterpartyChanged
+  );
+  const counterpartyBranchChanged = useSelector(
+    (state) => state.RealtimeActionReducer.counterpartyBranchChanged
+  );
 
   const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
@@ -153,8 +160,8 @@ const CategoryManagement = () => {
 
   // Update  category to corporates
   useEffect(() => {
-    if (categoryUpdate?.category) {
-      const updatedCat = categoryUpdate.category;
+    if (categoryUpdated?.category) {
+      const updatedCat = categoryUpdated.category;
 
       setCorporates((prev) =>
         prev.map((corp) => {
@@ -170,7 +177,7 @@ const CategoryManagement = () => {
         })
       );
     }
-  }, [categoryUpdate]);
+  }, [categoryUpdated]);
 
   //Delete the category
   useEffect(() => {
@@ -184,11 +191,11 @@ const CategoryManagement = () => {
   // When CounterParty Corporate Is mapped
   useEffect(() => {
     if (
-      counterpartyChnaged?.categoryID &&
-      counterpartyChnaged?.counterPartyID
+      counterpartyChanged?.categoryID &&
+      counterpartyChanged?.counterPartyID
     ) {
       const { categoryID, counterPartyID, counterPartyType } =
-        counterpartyChnaged;
+        counterpartyChanged;
 
       setCorporates((prev) => {
         // Flatten all to find actual data
@@ -232,17 +239,17 @@ const CategoryManagement = () => {
         });
       });
     }
-  }, [counterpartyChnaged]);
+  }, [counterpartyChanged]);
 
   // When CounterParty Branch Is mapped
   useEffect(() => {
     if (
-      counterpartyBranchChnaged?.categoryID &&
-      counterpartyBranchChnaged?.counterPartyID &&
-      counterpartyBranchChnaged?.counterPartyType === 2 // Ensure it's type 2 only
+      counterpartyBranchChanged?.categoryID &&
+      counterpartyBranchChanged?.counterPartyID &&
+      counterpartyBranchChanged?.counterPartyType === 2 // Ensure it's type 2 only
     ) {
       const { categoryID, counterPartyID, counterPartyType } =
-        counterpartyBranchChnaged;
+        counterpartyBranchChanged;
 
       setCorporates((prev) => {
         // Find the correct counterparty with matching ID and type
@@ -289,7 +296,7 @@ const CategoryManagement = () => {
         });
       });
     }
-  }, [counterpartyBranchChnaged]);
+  }, [counterpartyBranchChanged]);
 
   //for Auto focus
   const NameRef = useRef(null);
@@ -317,7 +324,7 @@ const CategoryManagement = () => {
     var Slider = document.getElementById("Slider");
     Slider.scrollLeft = Slider.scrollLeft + 300;
   };
-
+  console.log(categoryupdate, "categoryupdatecategoryupdate");
   //This is for the corporate shown inside the main card i.e Corporate and branches
   const showCards = (data) => {
     console.log(data, "datadata");
@@ -518,7 +525,7 @@ const CategoryManagement = () => {
     let value = e.target.value;
 
     if (name === "nameUpdate" && value !== "") {
-      let valueCheck = value.replace(/[^a-zA-Z ]/g, "").trimStart(); // updated to match handleValueChange
+      let valueCheck = value.replace(/[^a-zA-Z0-9 ]/g, "").trimStart(); // updated to match handleValueChange
       if (valueCheck !== "") {
         setCategoryUpdate({
           ...categoryupdate,
@@ -709,7 +716,7 @@ const CategoryManagement = () => {
                   name="nameUpdate"
                   applyClass="form-control2"
                   type="text"
-                  maxLength={100}
+                  maxLength={25}
                   labelClass="d-none"
                   required={true}
                   value={categoryupdate.category.value}
@@ -780,6 +787,11 @@ const CategoryManagement = () => {
                 <Button
                   className="Update_button_category"
                   text="Update"
+                  disableBtn={
+                    categoryupdate.category.value.trimStart() === ""
+                      ? true
+                      : false
+                  }
                   onClick={() => UpdateCategory(data)}
                 />
                 <Button
@@ -884,7 +896,7 @@ const CategoryManagement = () => {
                                                 )
                                               }
                                             >
-                                              <i class="icon-text-edit"></i>
+                                              <i className="icon-text-edit"></i>
                                             </span>
 
                                             <span
@@ -895,7 +907,7 @@ const CategoryManagement = () => {
                                                 )
                                               }
                                             >
-                                              <i class="icon-trash"></i>
+                                              <i className="icon-trash"></i>
                                             </span>
                                           </Col>
                                           <Row>
@@ -996,7 +1008,7 @@ const CategoryManagement = () => {
       </Row>
       {DeleteCategoryGobalState && <DeleteModal categoryID={categoryID} />}
       {AddCategoryGobalState && <AddCategoryModal />}
-      {auth.Loading || BOPSystemAdminReducer.Loading ? <Loader /> : null}
+      {/* {auth.Loading || BOPSystemAdminReducer.Loading ? <Loader /> : null} */}
     </section>
   );
 };

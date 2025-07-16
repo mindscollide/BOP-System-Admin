@@ -140,6 +140,7 @@
 }
 
 .bankErrorMessage {
+  margin-left: 130px;
   height: 0px;
   margin-top: 0px !important;
   font-size: 12px !important;
@@ -242,11 +243,11 @@
 @media (max-width: 768px) {
   .EditButton,
   .PlusButton {
-    width: 35px !important;
+    /* width: 35px !important;
     right: auto !important;
     margin-left: 8px !important;
     margin-top: 8px !important;
-    position: relative !important;
+    position: relative !important; */
   }
 }
 .InputFieldClass {

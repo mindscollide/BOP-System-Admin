@@ -30,11 +30,7 @@ import {
   systemAdminAPI,
 } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
-import {
-  GetAllBranchesAPI,
-  getAllCorporatesCategory,
-  RefreshToken,
-} from "./Auth-Actions";
+import { RefreshToken } from "./Auth-Actions";
 import {
   AdduserModalSystemAdmin,
   ConfirmationModalSystemAdmin,
@@ -98,10 +94,10 @@ const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
               dispatch(
                 CreateNewCorporateSuccess(
                   response.data.responseResult,
-                  "Corporate Saved"
+                  "Corporate successfully created"
                 )
               );
-              dispatch(getAllCorporatesCategory(navigate));
+              // dispatch(getAllCorporatesCategory(navigate));
               dispatch(corporatePlusIconModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
@@ -2290,10 +2286,7 @@ const GetAllInstrumentsAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllInstrumentsSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetAllInstrumentsSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -2557,10 +2550,12 @@ const GetAllTradesAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllTrades_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllTrades_02".toLowerCase()
                 )
             ) {
-              dispatch(GetAllTradesFail("Exception"));
+              dispatch(GetAllTradesFail("No Data Available"));
+            } else {
+              dispatch(GetAllTradesFail("Something went wrong"));
             }
           } else {
             dispatch(GetAllTradesFail("Something went wrong"));
@@ -2574,7 +2569,14 @@ const GetAllTradesAPI = (navigate, data) => {
       });
   };
 };
+
+const clearResponseMessageBopSystemAdmin = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCER,
+  };
+};
 export {
+  clearResponseMessageBopSystemAdmin,
   CreateNewCorporateAPI,
   UpdateCorporateByCorporateIDAPI,
   AddBranchAPI,

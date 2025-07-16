@@ -10,21 +10,14 @@ import {
 } from "../../../../store/actions/Auth-Actions";
 import "./SystemLogin.css";
 const SystemLogin = () => {
-  const { auth } = useSelector((state) => state);
-  console.log(auth, "authReducerauthReducerauthReducer");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const ResponseMessageAuthReducerState = useSelector(
     (state) => state.auth.ResponseMessage
   );
 
-  const LoadingAuthReducerState = useSelector(
-    (state) => state.auth.ResponseMessage
-  );
-  console.log(
-    LoadingAuthReducerState,
-    "LoadingAuthReducerStateLoadingAuthReducerStateLoadingAuthReducerState"
-  );
+  const LoadingAuthReducerState = useSelector((state) => state.auth.Loading);
+
   //Auth States
   const [open, setOpen] = useState({
     open: false,
@@ -167,6 +160,7 @@ const SystemLogin = () => {
                           </InputGroup.Text>
                           <Form.Control
                             name="Password"
+                            ref={Password}
                             autoComplete="off"
                             className="form-comtrol-textfield-password"
                             placeholder="Password"
@@ -212,7 +206,6 @@ const SystemLogin = () => {
       </Col>
       {LoadingAuthReducerState && <Loader />}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
-      {auth.Loading ? <Loader /> : null}
     </Fragment>
   );
 };

@@ -120,6 +120,13 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       };
     }
 
+    case actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCERMODAL: {
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
+    }
+
     default:
       return { ...state };
   }

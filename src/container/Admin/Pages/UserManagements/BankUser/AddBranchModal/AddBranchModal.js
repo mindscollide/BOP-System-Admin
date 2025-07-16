@@ -15,9 +15,20 @@ import {
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
 import Select from "react-select";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 const AddBranchModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
+
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -150,6 +161,7 @@ const AddBranchModal = () => {
       try {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
+            ...category,
             value: category.categoryID,
             label: category.categoryName,
           };
@@ -173,183 +185,235 @@ const AddBranchModal = () => {
     }
   }, [getAllCategories]);
 
-  return (
-    <>
-      <Modal
-        show={BOPSystemAdminModal.addBankUserModal}
-        setShow={(value) => dispatch(AdduserModalSystemAdmin(value))}
-        className="UniversalBOPModalStylesBankUser"
-        modalHeaderClassName={"d-none"}
-        modalFooterClassName="UniversalBOPModalStylesfooter"
-        size="lg"
-        onHide={() => dispatch(AdduserModalSystemAdmin(false))}
-        ModalBody={
-          <>
-            <Row>
-              <Col lg={6} md={6} sm={6}>
-                <span className={styles["AddBranchLabel"]}>Add Branch</span>
-              </Col>
-              <Col
-                sm={6}
-                md={6}
-                lg={6}
-                className={styles["AddBranch_modal-crossIcon"]}
-              >
-                <i
-                  className={`icon-close cursor-pointer ${styles["cross-icon-style"]}`}
-                  onClick={() => dispatch(AdduserModalSystemAdmin(false))}
-                />
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
-                <span className={styles["labels-add-bank"]}>
-                  Branch Name
-                  <span className={styles["aesterick-color"]}>*</span>
-                </span>
-              </Col>
-              <Col
-                lg={9}
-                md={9}
-                sm={12}
-                className={styles["addBranch-inputField"]}
-              >
-                <TextField
-                  name={"branchName"}
-                  labelClass="d-none"
-                  value={addBranch.branchName.value}
-                  onChange={handleChangeAddBranch}
-                  maxLength={50}
-                />
-                {addBranch.branchName.errorStatus === true && (
-                  <Row>
-                    <Col className="d-flex justify-content-start">
-                      <p className={styles["branchErrorMessage"]}>
-                        {addBranch.branchName.errorMessage}
-                      </p>
-                    </Col>
-                  </Row>
-                )}
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
-                <span className={styles["labels-add-bank"]}>
-                  Branch Code
-                  <span className={styles["aesterick-color"]}>*</span>
-                </span>
-              </Col>
-              <Col
-                lg={9}
-                md={9}
-                sm={12}
-                className={styles["addBranch-inputField"]}
-              >
-                <TextField
-                  name={"branchCode"}
-                  labelClass="d-none"
-                  value={addBranch.branchCode.value}
-                  onChange={handleChangeAddBranch}
-                  maxLength={4}
-                />
-                {addBranch.branchCode.errorStatus && (
-                  <Row>
-                    <Col className="d-flex justify-content-start">
-                      <p className={styles["branchErrorMessage"]}>
-                        {addBranch.branchCode.errorMessage}
-                      </p>
-                    </Col>
-                  </Row>
-                )}
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
-                <span className={styles["labels-add-bank"]}>
-                  Category
-                  <span className={styles["aesterick-color"]}>*</span>
-                </span>
-              </Col>
-              <Col
-                lg={9}
-                md={9}
-                sm={12}
-                className={styles["addBranch-inputField"]}
-              >
-                <Select
-                  name="categoryID"
-                  options={categoryOptions}
-                  placeholder="Select Category"
-                  classNamePrefix={"selectCateogyCorporateList"}
-                  value={categoryID.value !== 0 ? categoryID : null}
-                  onChange={handleSelectCategory}
-                  menuPortalTarget={document.body}
-                  isSearchable={true}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mt-3">
-              <Col lg={3} md={3} sm={12}>
-                <span className={styles["labels-add-bank"]}>
-                  Contact
-                  <span className={styles["aesterick-color"]}>*</span>
-                </span>
-              </Col>
-              <Col
-                lg={9}
-                md={9}
-                sm={12}
-                className={styles["addBranch-inputField"]}
-              >
-                <TextField
-                  name={"branchContact"}
-                  labelClass="d-none"
-                  value={addBranch.branchContact.value}
-                  onChange={handleChangeAddBranch}
-                  maxLength={20}
-                />
-              </Col>
-            </Row>
-          </>
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          dispatch(setCategoryAdded(null));
         }
-        ModalFooter={
-          <Row className="mb-3 mt-4">
-            <Col
-              lg={12}
-              md={12}
-              sm={12}
-              className="d-flex justify-content-center gap-2"
-            >
-              <Button
-                icon={<i className="icon-users"></i>}
-                text={"Add Branch"}
-                className={styles["AddBranchClass"]}
-                iconClass={styles["IconClass"]}
-                onClick={handleAddBranchEvent}
-                disableBtn={
-                  addBranch.branchName.value !== "" &&
-                  addBranch.branchCode.value !== "" &&
-                  addBranch.branchContact.value !== "" &&
-                  addBranch.categoryID.value !== ""
-                    ? false
-                    : true
-                }
-              />
+      }
+    }
+  }, [categoryAdded]);
 
-              <Button
-                icon={<i className="icon-close"></i>}
-                text={"Cancel"}
-                className={styles["CancelButton"]}
-                iconClass={styles["IconClass"]}
-                onClick={handleCancelButton}
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdated.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          console.log("Reached here------");
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (categoryID.value === categoryUpdated.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
+      }
+    }
+  }, [categoryUpdated]);
+  return (
+    <Modal
+      show={BOPSystemAdminModal.addBankUserModal}
+      setShow={(value) => dispatch(AdduserModalSystemAdmin(value))}
+      className="UniversalBOPModalStylesBankUser"
+      modalHeaderClassName={"d-none"}
+      modalFooterClassName="UniversalBOPModalStylesfooter"
+      size="lg"
+      onHide={() => dispatch(AdduserModalSystemAdmin(false))}
+      ModalBody={
+        <>
+          <Row>
+            <Col lg={6} md={6} sm={6}>
+              <span className={styles["AddBranchLabel"]}>Add Branch</span>
+            </Col>
+            <Col
+              sm={6}
+              md={6}
+              lg={6}
+              className={styles["AddBranch_modal-crossIcon"]}
+            >
+              <i
+                className={`icon-close cursor-pointer ${styles["cross-icon-style"]}`}
+                onClick={() => dispatch(AdduserModalSystemAdmin(false))}
               />
             </Col>
           </Row>
-        }
-      />
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
-    </>
+          <Row className="mt-3">
+            <Col lg={3} md={3} sm={12}>
+              <span className={styles["labels-add-bank"]}>
+                Branch Name
+                <span className={styles["aesterick-color"]}>*</span>
+              </span>
+            </Col>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addBranch-inputField"]}
+            >
+              <TextField
+                name={"branchName"}
+                labelClass="d-none"
+                value={addBranch.branchName.value}
+                onChange={handleChangeAddBranch}
+                maxLength={50}
+              />
+              {addBranch.branchName.errorStatus === true && (
+                <Row>
+                  <Col className="d-flex justify-content-start">
+                    <p className={styles["branchErrorMessage"]}>
+                      {addBranch.branchName.errorMessage}
+                    </p>
+                  </Col>
+                </Row>
+              )}
+            </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col lg={3} md={3} sm={12}>
+              <span className={styles["labels-add-bank"]}>
+                Branch Code
+                <span className={styles["aesterick-color"]}>*</span>
+              </span>
+            </Col>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addBranch-inputField"]}
+            >
+              <TextField
+                name={"branchCode"}
+                labelClass="d-none"
+                value={addBranch.branchCode.value}
+                onChange={handleChangeAddBranch}
+                maxLength={4}
+              />
+              {addBranch.branchCode.errorStatus && (
+                <Row>
+                  <Col className="d-flex justify-content-start">
+                    <p className={styles["branchErrorMessage"]}>
+                      {addBranch.branchCode.errorMessage}
+                    </p>
+                  </Col>
+                </Row>
+              )}
+            </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col lg={3} md={3} sm={12}>
+              <span className={styles["labels-add-bank"]}>
+                Category
+                <span className={styles["aesterick-color"]}>*</span>
+              </span>
+            </Col>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addBranch-inputField"]}
+            >
+              <Select
+                name="categoryID"
+                options={categoryOptions}
+                placeholder="Select Category"
+                classNamePrefix={"selectCateogyCorporateList"}
+                value={categoryID.value !== 0 ? categoryID : null}
+                onChange={handleSelectCategory}
+                menuPortalTarget={document.body}
+                isSearchable={true}
+              />
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col lg={3} md={3} sm={12}>
+              <span className={styles["labels-add-bank"]}>
+                Contact
+                <span className={styles["aesterick-color"]}>*</span>
+              </span>
+            </Col>
+            <Col
+              lg={9}
+              md={9}
+              sm={12}
+              className={styles["addBranch-inputField"]}
+            >
+              <TextField
+                name={"branchContact"}
+                labelClass="d-none"
+                value={addBranch.branchContact.value}
+                onChange={handleChangeAddBranch}
+                maxLength={20}
+              />
+            </Col>
+          </Row>
+        </>
+      }
+      ModalFooter={
+        <Row className="mb-3 mt-4">
+          <Col
+            lg={12}
+            md={12}
+            sm={12}
+            className="d-flex justify-content-center gap-2"
+          >
+            <Button
+              icon={<i className="icon-users"></i>}
+              text={"Add Branch"}
+              className={styles["AddBranchClass"]}
+              iconClass={styles["IconClass"]}
+              onClick={handleAddBranchEvent}
+              disableBtn={
+                addBranch.branchName.value !== "" &&
+                addBranch.branchCode.value !== "" &&
+                addBranch.branchContact.value !== "" &&
+                addBranch.categoryID.value !== ""
+                  ? false
+                  : true
+              }
+            />
+
+            <Button
+              icon={<i className="icon-close"></i>}
+              text={"Cancel"}
+              className={styles["CancelButton"]}
+              iconClass={styles["IconClass"]}
+              onClick={handleCancelButton}
+            />
+          </Col>
+        </Row>
+      }
+    />
+    // <Notification setOpen={setOpen} open={open.open} message={open.message} />
   );
 };
 

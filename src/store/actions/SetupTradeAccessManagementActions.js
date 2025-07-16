@@ -746,6 +746,12 @@ const UpdateCorporateTradeRightsAPI = (navigate, data) => {
   };
 };
 
+const clearResponseMessageSetupTradeAccessManagementReducer = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_SETUPTRADEACCESSMANAGEMENTREDUCER,
+  };
+};
+
 export {
   GetCorporatesWithStatusAPI,
   GetBranchesWithStatusAPI,
@@ -755,4 +761,5 @@ export {
   GetBranchTradeRightsAPI,
   UpdateBranchTradeRightsAPI,
   UpdateCorporateTradeRightsAPI,
+  clearResponseMessageSetupTradeAccessManagementReducer,
 };

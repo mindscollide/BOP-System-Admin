@@ -20,12 +20,14 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateCorporateTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
-import { useMqtt } from "../../../../../../../../context/MQTTContext";
+import { setCorporateTradeRightsUpdated } from "../../../../../../../../store/actions/RealtimeActions";
 const EditCorporateTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { corporateTradeRightsUpdated, setCorporateTradeRightsUpdated } =
-    useMqtt();
+  const corporateTradeRightsUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateTradeRightsUpdated
+  );
+
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetCorporateTradeRights = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetCorporateTradeRights
@@ -50,14 +52,22 @@ const EditCorporateTradeModal = ({ info }) => {
   //Trade Rights Data
   const [tradeRightsData, setTradeRightsData] = useState({
     listOfInstruments: [],
-    maxTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-    minTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-    totalLimit: { value: 0, errorMessage: "", errorStatus: false },
+    maxTransactionLimit: {
+      value: 0,
+      rawValue: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    minTransactionLimit: {
+      value: 0,
+      rawValue: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    totalLimit: { value: 0, rawValue: 0, errorMessage: "", errorStatus: false },
   });
-
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
-
   useEffect(() => {
     if (GetCorporateTradeRights !== null && GetAllInstruments !== null) {
       try {
@@ -72,41 +82,52 @@ const EditCorporateTradeModal = ({ info }) => {
                   (item) => item.instrumentID === instrument.instrumentID
                 );
 
-              // If match found, merge the data and set instrumentName
-              if (matchedInstrument) {
-                return {
-                  ...matchedInstrument,
-                  instrumentName: instrument.instrumentName,
-                };
-              }
-
-              // If no match, return default values
-              return {
-                instrumentID: instrument.instrumentID,
-                instrumentName: instrument.instrumentName,
-                isCrossRateBuy: false,
-                isCrossRateSell: false,
-                isDiscounting: false,
-                isForwardBuy: false,
-                isForwardSell: false,
-                isParityBuy: false,
-                isParitySell: false,
-                isActive: false,
-                isViewOnly: true,
-              };
+              return matchedInstrument
+                ? {
+                    ...matchedInstrument,
+                    instrumentName: instrument.instrumentName,
+                  }
+                : {
+                    instrumentID: instrument.instrumentID,
+                    instrumentName: instrument.instrumentName,
+                    isCrossRateBuy: false,
+                    isCrossRateSell: false,
+                    isDiscounting: false,
+                    isForwardBuy: false,
+                    isForwardSell: false,
+                    isParityBuy: false,
+                    isParitySell: false,
+                    isActive: false,
+                    isViewOnly: true,
+                  };
             }
           );
 
           setInstrumentDataSource(newDataMapping);
 
           setTradeRightsData({
+            ...tradeRightsData,
             maxTransactionLimit: {
-              value: GetCorporateTradeRights.maxTransactionLimit,
+              ...tradeRightsData.maxTransactionLimit,
+              rawValue: GetCorporateTradeRights.maxTransactionLimit,
+              value: Number(
+                GetCorporateTradeRights.maxTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             minTransactionLimit: {
-              value: GetCorporateTradeRights.minTransactionLimit,
+              ...tradeRightsData.minTransactionLimit,
+              rawValue: GetCorporateTradeRights.minTransactionLimit,
+              value: Number(
+                GetCorporateTradeRights.minTransactionLimit
+              ).toLocaleString("en-PK"),
             },
-            totalLimit: { value: GetCorporateTradeRights.totalLimit },
+            totalLimit: {
+              ...tradeRightsData.totalLimit,
+              rawValue: GetCorporateTradeRights.totalLimit,
+              value: Number(GetCorporateTradeRights.totalLimit).toLocaleString(
+                "en-PK"
+              ),
+            },
           });
         }
       } catch (error) {
@@ -172,60 +193,66 @@ const EditCorporateTradeModal = ({ info }) => {
       }
     } catch (error) {}
   };
-
   useEffect(() => {
     if (corporateTradeRightsUpdated !== null) {
-      // console.log(
-      //   {
-      //     corporateTradeRightsUpdated: corporateTradeRightsUpdated,
-      //     tradeRightsData: tradeRightsData,
-      //     info: info,
-      //   },
-      //   "corporateTradeRightsUpdated"
-      // );
       try {
         const { corporateTradeRights } = corporateTradeRightsUpdated;
-        if (info.id === corporateTradeRights.corporateID) {
-          // Update the limits
-          setTradeRightsData({
+
+        if (info?.id === corporateTradeRights.corporateID) {
+          // ✅ Correctly update nested fields inside tradeRightsData
+          setTradeRightsData((prev) => ({
+            ...prev,
             maxTransactionLimit: {
-              value: corporateTradeRights.maxTransactionLimit,
+              ...prev.maxTransactionLimit,
+              rawValue: corporateTradeRights.maxTransactionLimit,
+              value: Number(
+                corporateTradeRights.maxTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             minTransactionLimit: {
-              value: corporateTradeRights.minTransactionLimit,
+              ...prev.minTransactionLimit,
+              rawValue: corporateTradeRights.minTransactionLimit,
+              value: Number(
+                corporateTradeRights.minTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             totalLimit: {
-              value: corporateTradeRights.totalLimit,
+              ...prev.totalLimit,
+              rawValue: corporateTradeRights.totalLimitF,
+              value: Number(corporateTradeRights.totalLimitF).toLocaleString(
+                "en-PK"
+              ),
             },
-          });
+          }));
 
-          // Update the instrument checkboxes
-          setInstrumentDataSource((prevData) => {
-            return prevData.map((instrument) => {
+          // ✅ Update instrumentDataSource with new instrument rights
+          setInstrumentDataSource((prevData) =>
+            prevData.map((instrument) => {
               const updatedInstrument =
                 corporateTradeRights.listOfInstruments.find(
                   (item) => item.instrumentID === instrument.instrumentID
                 );
 
-              if (updatedInstrument) {
-                return {
-                  ...instrument,
-                  isCrossRateBuy: updatedInstrument.isCrossRateBuy,
-                  isCrossRateSell: updatedInstrument.isCrossRateSell,
-                  isDiscounting: updatedInstrument.isDiscounting,
-                  isForwardBuy: updatedInstrument.isForwardBuy,
-                  isForwardSell: updatedInstrument.isForwardSell,
-                  isParityBuy: updatedInstrument.isParityBuy,
-                  isParitySell: updatedInstrument.isParitySell,
-                  isActive: updatedInstrument.isActive,
-                  isViewOnly: updatedInstrument.isViewOnly,
-                };
-              }
-              return instrument;
-            });
-          });
+              return updatedInstrument
+                ? {
+                    ...instrument,
+                    isCrossRateBuy: updatedInstrument.isCrossRateBuy,
+                    isCrossRateSell: updatedInstrument.isCrossRateSell,
+                    isDiscounting: updatedInstrument.isDiscounting,
+                    isForwardBuy: updatedInstrument.isForwardBuy,
+                    isForwardSell: updatedInstrument.isForwardSell,
+                    isParityBuy: updatedInstrument.isParityBuy,
+                    isParitySell: updatedInstrument.isParitySell,
+                    isActive: updatedInstrument.isActive,
+                    isViewOnly: updatedInstrument.isViewOnly,
+                  }
+                : instrument;
+            })
+          );
         }
-        setCorporateTradeRightsUpdated(null);
+
+        // ✅ Clear MQTT update object
+        dispatch(setCorporateTradeRightsUpdated(null));
       } catch (error) {
         console.error("Error updating from MQTT:", error);
       }
@@ -480,29 +507,33 @@ const EditCorporateTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    // Allow: digits, optional one dot
-    const validString = value
-      .replace(/[^0-9.]/g, "")
-      .replace(/^([^.]*\.)|\./g, "$1");
+    // Step 1: Remove all non-digit characters
+    let rawValue = value.replace(/[^0-9]/g, "");
 
-    // No error if value is not empty and a valid number format
-    const hasError = validString.trim() === "";
-    const numericValue = Number(validString);
+    // Step 2: Remove leading zeros unless the entire value is "0"
+    rawValue = rawValue.replace(/^0+(?=\d)/, "");
 
-    // First update the changed field
+    // Step 3: Convert to PKR format (e.g., 1000 -> 1,000)
+    const formattedValue = rawValue
+      ? Number(rawValue).toLocaleString("en-PK")
+      : "";
+
+    // Step 4: Basic required validation
+    const hasError = rawValue.trim() === "";
+
     setTradeRightsData((prevState) => {
       const updatedState = {
         ...prevState,
         [name]: {
-          value: numericValue,
+          value: formattedValue,
+          rawValue: rawValue, // Keep raw for numeric logic
           errorMessage: hasError ? "This field is required" : "",
           errorStatus: hasError,
         },
       };
 
-      // Then check min/max relationship
-      const minLimit = updatedState.minTransactionLimit.value;
-      const maxLimit = updatedState.maxTransactionLimit.value;
+      const minLimit = Number(updatedState.minTransactionLimit?.rawValue || 0);
+      const maxLimit = Number(updatedState.maxTransactionLimit?.rawValue || 0);
 
       const limitError = minLimit > maxLimit;
 
@@ -525,6 +556,7 @@ const EditCorporateTradeModal = ({ info }) => {
       };
     });
   };
+
   // show error message When user hit activate btn
   const handleSaveChangesButton = () => {
     dispatch(ConfirmationModalSystemAdmin(true));
@@ -536,10 +568,14 @@ const EditCorporateTradeModal = ({ info }) => {
     if (modalState === 1) {
       dispatch(editTradeAccessManagementModalSystemAdmin(false));
       let updatedData = {
-        CorporateID: info.id,
-        TotalLimit: tradeRightsData.totalLimit.value,
-        MinTransactionLimit: tradeRightsData.minTransactionLimit.value,
-        MaxTransactionLimit: tradeRightsData.maxTransactionLimit.value,
+        CorporateID: info?.id,
+        TotalLimit: Number(tradeRightsData.totalLimit?.rawValue),
+        MinTransactionLimit: Number(
+          tradeRightsData.minTransactionLimit?.rawValue
+        ),
+        MaxTransactionLimit: Number(
+          tradeRightsData.maxTransactionLimit?.rawValue
+        ),
         ListOfInstruments: instrumentDataSource.map((item) => ({
           InstrumentID: item.instrumentID,
           IsCrossRateBuy: item.isCrossRateBuy,
@@ -601,9 +637,24 @@ const EditCorporateTradeModal = ({ info }) => {
   const closeModal = useCallback(() => {
     setTradeRightsData({
       listOfInstruments: [],
-      maxTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-      minTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-      totalLimit: { value: 0, errorMessage: "", errorStatus: false },
+      maxTransactionLimit: {
+        value: 0,
+        rawValue: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
+      minTransactionLimit: {
+        value: 0,
+        rawValue: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
+      totalLimit: {
+        value: 0,
+        rawValue: 0,
+        errorMessage: "",
+        errorStatus: false,
+      },
     });
     setInstrumentDataSource([]);
     dispatch(editTradeAccessManagementModalSystemAdmin(false));
@@ -622,7 +673,7 @@ const EditCorporateTradeModal = ({ info }) => {
         <>
           <Row>
             <Col lg={6} md={6} sm={6}>
-              <span className={styles["HeaderNameLabel"]}>{info.name}</span>
+              <span className={styles["HeaderNameLabel"]}>{info?.name}</span>
             </Col>
             <Col
               lg={6}
@@ -753,13 +804,12 @@ const EditCorporateTradeModal = ({ info }) => {
                 iconClass={styles["IconClass"]}
                 onClick={handleSaveChangesButton}
                 disableBtn={
-                  tradeRightsData.minTransactionLimit.value >
-                  tradeRightsData.maxTransactionLimit.value
-                    ? true
-                    : false
+                  Number(tradeRightsData.minTransactionLimit.rawValue) <=
+                  Number(tradeRightsData.maxTransactionLimit.rawValue)
+                    ? false
+                    : true
                 }
               />
-
               <Button
                 icon={<i className="icon-close"></i>}
                 text={"Cancel"}

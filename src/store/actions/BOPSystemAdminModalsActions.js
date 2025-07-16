@@ -103,6 +103,12 @@ const DeleteCategoryModalSystemAdmin = (response, message) => {
   };
 };
 
+const clearResponseMessageBopSystemAdminModal = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCERMODAL,
+  };
+};
+
 export {
   AdduserModalSystemAdmin,
   EditCorporateModalSystemAdmin,
@@ -117,4 +123,5 @@ export {
   AddBankUserConfirmationModalSystemAdmin,
   TradeCountCommentModalSystemAdmin,
   DeleteCategoryModalSystemAdmin,
+  clearResponseMessageBopSystemAdminModal,
 };

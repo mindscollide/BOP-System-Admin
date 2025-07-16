@@ -35,21 +35,40 @@ import {
   SearchCorporateUsersAPI,
 } from "../../../../../../store/actions/CorporateUsersAction";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
-import { useMqtt } from "../../../../../../context/MQTTContext";
 import CorporateUserDetailsModal from "../CorporateUserDetailsModal/CorporateUserDetailsModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
-import { downloadCorporateUserlistReportApi } from "../../../../../../store/actions/Download-Report";
+import {
+  downloadCorporateUserlistReportApi,
+  downloadPDFCorporateUserReportApi,
+} from "../../../../../../store/actions/Download-Report";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+  setCorporateUpdated,
+  setCorporateUserCreated,
+} from "../../../../../../store/actions/RealtimeActions";
 const CorporateList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    corproateUserCreated,
-    corporateUserRoleStatusChange,
-    corporateUpdated,
-    setCorporateUpdated,
-    corporateUserUpdated,
-  } = useMqtt();
+  const corporateUserCreated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserCreated
+  );
+  const corporateUserRoleStatusChange = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserRoleStatusChange
+  );
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
+  const corporateUserUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUserUpdated
+  );
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
   //Global State
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -147,16 +166,6 @@ const CorporateList = () => {
   useEffect(() => {
     dispatch(GetAllCategoriesAPI(navigate));
     handlePageSizeChange(50);
-    // let data = {
-    //   FirstName: "",
-    //   CompanyName: "",
-    //   CategoryID: 0,
-    //   Email: "",
-    //   sRow: 0,
-    //   Length: dropdownvalue,
-    // };
-
-    // dispatch(SearchCorporateUsersAPI(navigate, data));
   }, []);
 
   useEffect(() => {
@@ -165,7 +174,7 @@ const CorporateList = () => {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
             ...category,
-            value: { value: category.categoryID },
+            value: category.categoryID,
             label: category.categoryName,
           };
         });
@@ -173,6 +182,60 @@ const CorporateList = () => {
       } catch (error) {}
     }
   }, [getAllCategories]);
+
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          dispatch(setCategoryAdded(null));
+        }
+      }
+    }
+  }, [categoryAdded]);
+
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdated.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (categoryID.value === categoryUpdated.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
+      }
+    }
+  }, [categoryUpdated]);
 
   //handelled scrolling here (4)
   useEffect(() => {
@@ -224,9 +287,9 @@ const CorporateList = () => {
   }, [corporateUserRoleStatusChange]);
 
   useEffect(() => {
-    if (corproateUserCreated !== null) {
+    if (corporateUserCreated !== null) {
       try {
-        const { user, createdUserID, createdDateTime } = corproateUserCreated;
+        const { user, createdUserID, createdDateTime } = corporateUserCreated;
         let findIsExist = tableData.find(
           (tableRow, index) => tableRow.userID === user.createdUserID
         );
@@ -242,12 +305,13 @@ const CorporateList = () => {
             passwordModificationTime: "",
           };
           setTableData((prevState) => [userData, ...prevState]);
+          dispatch(setCorporateUserCreated(null));
         }
       } catch (error) {
         console.log(error);
       }
     }
-  }, [corproateUserCreated]);
+  }, [corporateUserCreated]);
 
   useEffect(() => {
     if (corporateUpdated !== null) {
@@ -261,9 +325,10 @@ const CorporateList = () => {
         return user;
       });
       setTableData(updatedTableData);
-      setCorporateUpdated(null);
+      dispatch(setCorporateUpdated(null));
     }
   }, [corporateUpdated]);
+
   //Banker List validate handler
   const CorporateListValidateHandler = (e) => {
     let name = e.target.name;
@@ -636,12 +701,18 @@ const CorporateList = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
+    console.log("Doc saved as Excel");
+    let data = {
+      Name: corporateList.Name.value !== "" ? corporateList.Name.value : "",
+      CorporateName:
+        corporateList.CorporateName.value !== ""
+          ? corporateList.CorporateName.value
+          : "",
+      Email: corporateList.Email.value !== "" ? corporateList.Email.value : "",
+      categoryID: categoryID.value !== 0 ? categoryID.value : 0,
+    };
+    console.log(data, "Doc saved as Excel");
+    dispatch(downloadPDFCorporateUserReportApi(navigate, data));
     console.log("doc saved as pdf");
   };
 
@@ -773,7 +844,7 @@ const CorporateList = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {loadingState && <Loader />}
+      {/* {loadingState && <Loader />} */}
 
       {EditCorporateModalGobalState && (
         <EditCorporateModal

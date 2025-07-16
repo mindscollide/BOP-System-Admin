@@ -12,7 +12,7 @@ import { SaveCategoryNonFEDiscountsAPI } from "../../../../../store/actions/Spre
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { isValidNumberUnderMax } from "../../../../../helpers/reusableMethods";
-import { useMqtt } from "../../../../../context/MQTTContext";
+import { setNonFEDiscountingSpreadUpdated } from "../../../../../store/actions/RealtimeActions";
 
 const NonFEDiscountingTable = ({ categoryID }) => {
   const dispatch = useDispatch();
@@ -32,8 +32,10 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   const GetAllTenors = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
   );
-  const { NonFEDiscoutingSpreadUpdated, setNonFEDiscoutingSpreadUpdated } =
-    useMqtt();
+
+  const NonFEDiscoutingSpreadUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.NonFEDiscoutingSpreadUpdated
+  );
 
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
@@ -93,11 +95,12 @@ const NonFEDiscountingTable = ({ categoryID }) => {
           setFEDiscoutingColumns(columnsData);
 
           setNonFEDiscoutingData(rowData);
-          setNonFEDiscoutingSpreadUpdated(null);
+          dispatch(setNonFEDiscountingSpreadUpdated(null));
         } catch (error) {}
       }
     }
   }, [NonFEDiscoutingSpreadUpdated, GetAllInstruments, GetAllTenors]);
+
   const handleChangeDiscounting = (value, record, instrumentName) => {
     if (isValidNumberUnderMax(value, "", 100)) {
       const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"

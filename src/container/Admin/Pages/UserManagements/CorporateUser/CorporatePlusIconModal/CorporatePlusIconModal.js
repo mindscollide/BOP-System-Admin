@@ -18,10 +18,21 @@ import {
   TextField,
 } from "../../../../../../components/elements";
 import { RFQTimerOptions } from "../../../../../../helpers/Dropdown";
+import {
+  setCategoryAdded,
+  setCategoryUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const CorporatePlusIconModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categoryAdded = useSelector(
+    (state) => state.RealtimeActionReducer.categoryAdded
+  );
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
+
   const { BOPSystemAdminModal } = useSelector((state) => state);
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
@@ -146,7 +157,7 @@ const CorporatePlusIconModal = () => {
         let newCategoriesData = getAllCategories.categories.map((category) => {
           return {
             ...category,
-            value: { value: category.categoryID },
+            value: category.categoryID,
             label: category.categoryName,
           };
         });
@@ -194,13 +205,66 @@ const CorporatePlusIconModal = () => {
     }
   }, [getAllCategories, getAllNatureOfBuisness]);
 
+  useEffect(() => {
+    if (categoryAdded !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryAdded.category.categoryId
+        );
+        if (findCategoryObj === undefined) {
+          let newCategoryhData = {
+            ...categoryAdded.category,
+            value: categoryAdded.category.categoryId,
+            label: categoryAdded.category.category,
+          };
+          setCategoryOptions([...categoryOptions, newCategoryhData]);
+          dispatch(setCategoryAdded(null));
+        }
+      }
+    }
+  }, [categoryAdded]);
+
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(categoryOptions)) {
+        let findCategoryObj = categoryOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdated.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          setCategoryOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
+                return {
+                  ...data4,
+                  value: categoryUpdated.category.categoryId,
+                  label: categoryUpdated.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          if (categoryID.value === categoryUpdated.category.categoryId) {
+            setCategoryID({
+              value: categoryUpdated.category.categoryId,
+              label: categoryUpdated.category.category,
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
+      }
+    }
+  }, [categoryUpdated]);
+
   //handle select categoryID
   const handleSelectCategory = async (selectedCategory) => {
     setCategoryID(selectedCategory);
 
     setAddCompnany((prevState) => ({
       ...prevState,
-      categoryID: { ...prevState.categoryID, value: selectedCategory.value },
+      categoryID: { ...prevState.category, value: selectedCategory.value },
     }));
   };
 

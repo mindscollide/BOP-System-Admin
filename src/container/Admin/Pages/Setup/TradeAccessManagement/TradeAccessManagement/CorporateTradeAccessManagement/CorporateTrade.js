@@ -16,7 +16,13 @@ import {
 import styles from "./CorporateTrade.module.css";
 import { Col, Row } from "react-bootstrap";
 import EditCorporateTradeModal from "./EditCorporateTradeModal/EditCorporateTradeModal";
-import { useMqtt } from "../../../../../../../context/MQTTContext";
+import {
+  setCorporateCreated,
+  setCorporateStatusUpdated,
+  setCorporateTradeStatusUpdated,
+  setCorporateUpdated,
+} from "../../../../../../../store/actions/RealtimeActions";
+import ExportShowComponent from "../../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 
 const CorporateTrade = ({
   hasReachedBottom,
@@ -25,19 +31,23 @@ const CorporateTrade = ({
   setCorporateTableData,
   setSRow,
   setCorporateRecordLength,
+  setDropdownvalue,
+  dropdownvalue,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    corporateCreated,
-    setCorporateCreated,
-    corporateUpdated,
-    setCorporateUpdated,
-    corporateStatusUpdated,
-    setCorporateStatusUpdated,
-    corporateTradeStatusUpdated,
-    setCorporateTradeStatusUpdated,
-  } = useMqtt();
+  const corporateCreated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateCreated
+  );
+  const corporateUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateUpdated
+  );
+  const corporateStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateStatusUpdated
+  );
+  const corporateTradeStatusUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.corporateTradeStatusUpdated
+  );
 
   //table for corporate
   // const [corporateTableData, setCorporateTableData] = useState([]);
@@ -57,6 +67,8 @@ const CorporateTrade = ({
     };
     dispatch(GetCorporateTradeRightsAPI(navigate, data));
   };
+  // const [tableData, setTableData] = useState([]);
+  // const [recordsLength, setRecordLength] = useState(0);
   //Add Bank  Use Modal Calling
   const EditTradeAccessManagementModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editModalTradeAccessManagement
@@ -88,7 +100,7 @@ const CorporateTrade = ({
     let data = {
       CorporateName: "",
       sRow: 0,
-      Length: 25,
+      Length: dropdownvalue,
     };
     dispatch(GetCorporatesWithStatusAPI(navigate, data));
   }, []);
@@ -133,7 +145,7 @@ const CorporateTrade = ({
           };
           setCorporateTableData((prevState) => [newCorporate, ...prevState]);
         }
-        setCorporateCreated(null);
+        dispatch(setCorporateCreated(null));
       } catch (error) {
         console.log(error);
       }
@@ -152,7 +164,7 @@ const CorporateTrade = ({
         return corporate;
       });
       setCorporateTableData(updatedTableData);
-      setCorporateUpdated(null);
+      dispatch(setCorporateUpdated(null));
     }
   }, [corporateUpdated]);
 
@@ -169,7 +181,7 @@ const CorporateTrade = ({
           return corporate;
         });
         setCorporateTableData(updatedTableData);
-        setCorporateStatusUpdated(null);
+        dispatch(setCorporateStatusUpdated(null));
       } catch (error) {
         console.log(error);
       }
@@ -191,7 +203,7 @@ const CorporateTrade = ({
           return corporate;
         });
         setCorporateTableData(updatedTableData);
-        setCorporateTradeStatusUpdated(null);
+        dispatch(setCorporateTradeStatusUpdated(null));
       } catch (error) {
         console.log(error);
       }
@@ -277,9 +289,32 @@ const CorporateTrade = ({
       },
     },
   ];
+  const handlePageSizeChange = (newSize) => {
+    setDropdownvalue(newSize);
+    setSRow(0);
+    setHasReachedBottom(false);
+    setCorporateTableData([]);
+    setCorporateRecordLength(0);
+
+    let data = {
+      CorporateName: "",
+      sRow: 0,
+      Length: newSize,
+    };
+    dispatch(GetCorporatesWithStatusAPI(navigate, data));
+  };
 
   return (
     <>
+      <Row className="mt-1">
+        <Col lg={12} md={12} sm={12}>
+          <ExportShowComponent
+            value={dropdownvalue}
+            onChange={handlePageSizeChange}
+          />
+        </Col>
+      </Row>
+
       <Row className="mt-1">
         <Col lg={12} md={12} sm={12}>
           <Table

@@ -8,7 +8,6 @@ import {
   Button,
   Table,
   Notification,
-  Loader,
 } from "../../../../../../components/elements";
 
 import { useNavigate } from "react-router-dom";
@@ -32,21 +31,31 @@ import {
 } from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
-import { useMqtt } from "../../../../../../context/MQTTContext";
 import ExportShowComponent from "../../../ReusableComponents/ExportShowComponent/ExportShowComponent";
 import EditBankerModal from "../EditBankUserModal/EditBankerModal";
-import { downloadBankUserlistReportApi } from "../../../../../../store/actions/Download-Report";
+import {
+  downloadBankUserlistReportApi,
+  downloadPDFBankUserReportApi,
+} from "../../../../../../store/actions/Download-Report";
+import {
+  setBankUserUpdated,
+  setBranchUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    bankUserCreated,
-    bankUserRoleStatusChange,
-    branchUpdated,
-    setBranchUpdated,
-    bankUserUpdated,
-    setBankUserUpdated,
-  } = useMqtt();
+  const bankUserCreated = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserCreated
+  );
+  const bankUserRoleStatusChange = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserRoleStatusChange
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
+  const bankUserUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.bankUserUpdated
+  );
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -72,8 +81,6 @@ const BankerList = () => {
   //row length on scroll
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
-  // //Sate for handling export options
-  // const [showExportOptions, setShowExportOptions] = useState(false);
 
   //Search all corporate Users
   const SearchBankUsers = useSelector(
@@ -87,9 +94,6 @@ const BankerList = () => {
   const EditBankerModalGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.editBankUserModal
   );
-
-  //Global State
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
 
   //State BankList
   const [bankList, setBankList] = useState({ ...bankListSchema });
@@ -134,18 +138,6 @@ const BankerList = () => {
     dispatch(SearchBankUsersAPI(navigate, data));
   };
 
-  // useEffect(() => {
-  //   dispatch(GetBankUserRolesAPI(navigate));
-  //   let data = {
-  //     EmployeeID: "",
-  //     Name: "",
-  //     Email: "",
-  //     RoleID: 0,
-  //     sRow: 0,
-  //     Length: 50,
-  //   };
-  //   dispatch(SearchBankUsersAPI(navigate, data));
-  // }, []);
   useEffect(() => {
     dispatch(GetBankUserRolesAPI(navigate));
     // let data = {
@@ -199,7 +191,7 @@ const BankerList = () => {
       });
 
       setTableData(updatedTableData);
-      setBranchUpdated(null);
+      dispatch(setBranchUpdated(null));
     }
   }, [branchUpdated]);
 
@@ -535,8 +527,10 @@ const BankerList = () => {
 
   useEffect(() => {
     if (bankUserCreated !== null) {
+      console.log(bankUserCreated, "bankUserCreatedbankUserCreated");
       try {
         const { user, createdDateTime, createdUserID } = bankUserCreated;
+
         let findIsExist = tableData.find(
           (tableRow, index) => tableRow.employeeID === user.employeeID
         );
@@ -555,6 +549,7 @@ const BankerList = () => {
             creationDateTime: createdDateTime,
           };
           setTableData((prevState) => [userData, ...prevState]);
+        } else {
         }
       } catch (error) {
         console.log(error);
@@ -611,7 +606,7 @@ const BankerList = () => {
       } catch (err) {
         console.log(err);
       }
-      setBankUserUpdated(null);
+      dispatch(setBankUserUpdated(null));
     }
   }, [bankUserUpdated]);
 
@@ -650,12 +645,16 @@ const BankerList = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
+    let data = {
+      EmployeeID:
+        bankList.EmployeeID.value !== "" ? bankList.EmployeeID.value : "",
+      Name: bankList.Name.value !== "" ? bankList.Name.value : "",
+      RoleID: roleID.value !== 0 ? roleID.value : 0,
+      Email: bankList.Email.value !== "" ? bankList.Email.value : "",
+    };
+    console.log(data, "Doc saved as Excel");
+
+    dispatch(downloadPDFBankUserReportApi(navigate, data));
     console.log("doc saved as pdf");
   };
 
@@ -703,6 +702,7 @@ const BankerList = () => {
                   placeholder={"Select Role"}
                   options={roleOptions}
                   value={roleID.value ? roleID : null}
+                  menuPortalTarget={document.body}
                   onChange={handleSelectRole}
                   classNamePrefix="selectCateogyCorporateList"
                 />
@@ -725,13 +725,7 @@ const BankerList = () => {
                   text="Reset"
                   onClick={handleReset}
                 />
-                {/* <Button
-                  icon={<i className="icon-download"></i>}
-                  className={styles["Export_Button"]}
-                  text="Export"
-                  iconClass={styles["resetIconClass"]}
-                  // onClick={() => setShowExportOptions(!showExportOptions)}
-                /> */}
+
                 <Popover
                   content={
                     <div className={styles["export-options"]}>
@@ -790,7 +784,7 @@ const BankerList = () => {
       </Row>
       {EditBankerModalGobalState && <EditBankerModal />}
 
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
       <Notification setOpen={setOpen} open={open.open} message={open.message} />
       {showActivationModal === true && (
         <ActivateConfirmationModal

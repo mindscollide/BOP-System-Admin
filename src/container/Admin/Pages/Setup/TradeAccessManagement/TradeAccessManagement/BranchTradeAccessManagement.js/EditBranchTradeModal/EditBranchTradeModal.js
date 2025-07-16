@@ -20,11 +20,13 @@ import ActivateConfirmationModal from "../../../../../../../../helpers/Modals/Ac
 import { useNavigate } from "react-router-dom";
 import { GetAllInstrumentsAPI } from "../../../../../../../../store/actions/BOPSystemAdminActions";
 import { UpdateBranchTradeRightsAPI } from "../../../../../../../../store/actions/SetupTradeAccessManagementActions";
-import { useMqtt } from "../../../../../../../../context/MQTTContext";
+import { setBranchTradeRightsUpdated } from "../../../../../../../../store/actions/RealtimeActions";
 const EditBranchTradeModal = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { branchTradeRightsUpdated, setBranchTradeRightsUpdated } = useMqtt();
+  const branchTradeRightsUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchTradeRightsUpdated
+  );
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const GetBranchTradeRights = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetBranchTradeRights
@@ -49,13 +51,50 @@ const EditBranchTradeModal = ({ info }) => {
   //Trade Rights Data
   const [tradeRightsData, setTradeRightsData] = useState({
     listOfInstruments: [],
-    maxTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-    minTransactionLimit: { value: 0, errorMessage: "", errorStatus: false },
-    totalLimit: { value: 0, errorMessage: "", errorStatus: false },
+    maxTransactionLimit: {
+      value: 0,
+      rawValue: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    minTransactionLimit: {
+      value: 0,
+      rawValue: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
+    totalLimit: {
+      value: 0,
+      rawValue: 0,
+      errorMessage: "",
+      errorStatus: false,
+    },
   });
 
   //Instrument Table Data
   const [instrumentDataSource, setInstrumentDataSource] = useState([]);
+  useEffect(() => {
+    dispatch(GetAllInstrumentsAPI(navigate));
+  }, []);
+
+  useEffect(() => {
+    if (GetAllInstruments !== null) {
+      try {
+        let newInstrumentsData = GetAllInstruments.instruments.map(
+          (instrument) => {
+            return {
+              ...instrument,
+              value: instrument.instrumentID,
+              label: instrument.instrumentName,
+            };
+          }
+        );
+        setInstrumentOptions(newInstrumentsData);
+      } catch (error) {
+        return error;
+      }
+    }
+  }, [GetAllInstruments]);
 
   useEffect(() => {
     if (GetBranchTradeRights !== null && GetAllInstruments !== null) {
@@ -99,13 +138,28 @@ const EditBranchTradeModal = ({ info }) => {
           setInstrumentDataSource(newDataMapping);
 
           setTradeRightsData({
+            ...tradeRightsData,
             maxTransactionLimit: {
-              value: GetBranchTradeRights.maxTransactionLimit,
+              ...tradeRightsData.maxTransactionLimit,
+              rawValue: GetBranchTradeRights.maxTransactionLimit,
+              value: Number(
+                GetBranchTradeRights.maxTransactionLimit
+              ).toLocaleString("en-PK"),
             },
             minTransactionLimit: {
-              value: GetBranchTradeRights.minTransactionLimit,
+              ...tradeRightsData.minTransactionLimit,
+              rawValue: GetBranchTradeRights.minTransactionLimit,
+              value: Number(
+                GetBranchTradeRights.minTransactionLimit
+              ).toLocaleString("en-PK"),
             },
-            totalLimit: { value: GetBranchTradeRights.totalLimit },
+            totalLimit: {
+              ...tradeRightsData.totalLimit,
+              rawValue: GetBranchTradeRights.totalLimit,
+              value: Number(GetBranchTradeRights.totalLimit).toLocaleString(
+                "en-PK"
+              ),
+            },
           });
         }
       } catch (error) {
@@ -113,6 +167,71 @@ const EditBranchTradeModal = ({ info }) => {
       }
     }
   }, [GetBranchTradeRights, GetAllInstruments]);
+
+  useEffect(() => {
+    if (branchTradeRightsUpdated !== null) {
+      try {
+        const { branchTradeRights } = branchTradeRightsUpdated;
+        if (info.id === branchTradeRights.branchID) {
+          // Update the limits
+          setTradeRightsData((prev) => ({
+            ...prev,
+            maxTransactionLimit: {
+              ...prev.maxTransactionLimit,
+              rawValue: branchTradeRights.maxTransactionLimit,
+              value: Number(
+                branchTradeRights.maxTransactionLimit
+              ).toLocaleString("en-PK"),
+            },
+            minTransactionLimit: {
+              ...prev.minTransactionLimit,
+              rawValue: branchTradeRights.minTransactionLimit,
+              value: Number(
+                branchTradeRights.minTransactionLimit
+              ).toLocaleString("en-PK"),
+            },
+            totalLimit: {
+              ...prev.totalLimit,
+              rawValue: branchTradeRights.totalLimitF,
+              value: Number(branchTradeRights.totalLimitF).toLocaleString(
+                "en-PK"
+              ),
+            },
+          }));
+
+          // Update the instrument checkboxes
+          setInstrumentDataSource((prevData) => {
+            return prevData.map((instrument) => {
+              const updatedInstrument =
+                branchTradeRights.listOfInstruments.find(
+                  (item) => item.instrumentID === instrument.instrumentID
+                );
+
+              if (updatedInstrument) {
+                return {
+                  ...instrument,
+                  isCrossRateBuy: updatedInstrument.isCrossRateBuy,
+                  isCrossRateSell: updatedInstrument.isCrossRateSell,
+                  isDiscounting: updatedInstrument.isDiscounting,
+                  isForwardBuy: updatedInstrument.isForwardBuy,
+                  isForwardSell: updatedInstrument.isForwardSell,
+                  isParityBuy: updatedInstrument.isParityBuy,
+                  isParitySell: updatedInstrument.isParitySell,
+                  isActive: updatedInstrument.isActive,
+                  isViewOnly: updatedInstrument.isViewOnly,
+                };
+              }
+              return instrument;
+            });
+          });
+        }
+        dispatch(setBranchTradeRightsUpdated(null));
+      } catch (error) {
+        console.error("Error updating from MQTT:", error);
+      }
+    }
+  }, [branchTradeRightsUpdated]);
+
   //checkbox value change method
   const handleCheckboxChange = (record, field, event) => {
     try {
@@ -394,29 +513,35 @@ const EditBranchTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    // Allow: digits, optional one dot
-    const validString = value
-      .replace(/[^0-9.]/g, "")
-      .replace(/^([^.]*\.)|\./g, "$1");
+    // Step 1: Remove all non-digit characters
+    let rawValue = value.replace(/[^0-9]/g, "");
 
-    // No error if value is not empty and a valid number format
-    const hasError = validString.trim() === "";
-    const numericValue = Number(validString);
+    // Step 2: Remove leading zeros unless the entire value is "0"
+    rawValue = rawValue.replace(/^0+(?=\d)/, "");
+
+    // Step 3: Convert to PKR format (e.g., 1000 -> 1,000)
+    const formattedValue = rawValue
+      ? Number(rawValue).toLocaleString("en-PK")
+      : "";
+
+    // Step 4: Basic required validation
+    const hasError = rawValue.trim() === "";
 
     // First update the changed field
     setTradeRightsData((prevState) => {
       const updatedState = {
         ...prevState,
         [name]: {
-          value: numericValue,
+          rawValue: rawValue,
+          value: formattedValue,
           errorMessage: hasError ? "This field is required" : "",
           errorStatus: hasError,
         },
       };
 
       // Then check min/max relationship
-      const minLimit = updatedState.minTransactionLimit.value;
-      const maxLimit = updatedState.maxTransactionLimit.value;
+      const minLimit = updatedState.minTransactionLimit.rawValue;
+      const maxLimit = updatedState.maxTransactionLimit.rawValue;
 
       const limitError = minLimit > maxLimit;
 
@@ -452,9 +577,13 @@ const EditBranchTradeModal = ({ info }) => {
       dispatch(editTradeAccessManagementModalSystemAdmin(false));
       let updatedData = {
         BranchID: info.id,
-        TotalLimit: tradeRightsData.totalLimit.value,
-        MinTransactionLimit: tradeRightsData.minTransactionLimit.value,
-        MaxTransactionLimit: tradeRightsData.maxTransactionLimit.value,
+        TotalLimit: Number(tradeRightsData.totalLimit.rawValue),
+        MinTransactionLimit: Number(
+          tradeRightsData.minTransactionLimit.rawValue
+        ),
+        MaxTransactionLimit: Number(
+          tradeRightsData.maxTransactionLimit.rawValue
+        ),
         ListOfInstruments: instrumentDataSource.map((item) => ({
           InstrumentID: item.instrumentID,
           IsCrossRateBuy: item.isCrossRateBuy,
@@ -469,94 +598,13 @@ const EditBranchTradeModal = ({ info }) => {
         })),
       };
 
-      dispatch(UpdateBranchTradeRightsAPI(navigate, updatedData));
+      dispatch(UpdateBranchTradeRightsAPI(navigate, updatedData, closeModal));
     }
     // else if (modalState === 2) {
     // }
     setModalState(0);
     handleNoButton();
   };
-
-  useEffect(() => {
-    if (branchTradeRightsUpdated !== null) {
-      console.log(
-        {
-          branchTradeRightsUpdated: branchTradeRightsUpdated,
-          tradeRightsData: tradeRightsData,
-          info: info,
-        },
-        "branchTradeRightsUpdated"
-      );
-      try {
-        const { branchTradeRights } = branchTradeRightsUpdated;
-        if (info.id === branchTradeRights.branchID) {
-          // Update the limits
-          setTradeRightsData({
-            maxTransactionLimit: {
-              value: branchTradeRights.maxTransactionLimit,
-            },
-            minTransactionLimit: {
-              value: branchTradeRights.minTransactionLimit,
-            },
-            totalLimit: {
-              value: branchTradeRights.totalLimit,
-            },
-          });
-
-          // Update the instrument checkboxes
-          setInstrumentDataSource((prevData) => {
-            return prevData.map((instrument) => {
-              const updatedInstrument =
-                branchTradeRights.listOfInstruments.find(
-                  (item) => item.instrumentID === instrument.instrumentID
-                );
-
-              if (updatedInstrument) {
-                return {
-                  ...instrument,
-                  isCrossRateBuy: updatedInstrument.isCrossRateBuy,
-                  isCrossRateSell: updatedInstrument.isCrossRateSell,
-                  isDiscounting: updatedInstrument.isDiscounting,
-                  isForwardBuy: updatedInstrument.isForwardBuy,
-                  isForwardSell: updatedInstrument.isForwardSell,
-                  isParityBuy: updatedInstrument.isParityBuy,
-                  isParitySell: updatedInstrument.isParitySell,
-                  isActive: updatedInstrument.isActive,
-                  isViewOnly: updatedInstrument.isViewOnly,
-                };
-              }
-              return instrument;
-            });
-          });
-        }
-        setBranchTradeRightsUpdated(null);
-      } catch (error) {
-        console.error("Error updating from MQTT:", error);
-      }
-    }
-  }, [branchTradeRightsUpdated]);
-  useEffect(() => {
-    dispatch(GetAllInstrumentsAPI(navigate));
-  }, []);
-
-  useEffect(() => {
-    if (GetAllInstruments !== null) {
-      try {
-        let newInstrumentsData = GetAllInstruments.instruments.map(
-          (instrument) => {
-            return {
-              ...instrument,
-              value: instrument.instrumentID,
-              label: instrument.instrumentName,
-            };
-          }
-        );
-        setInstrumentOptions(newInstrumentsData);
-      } catch (error) {
-        return error;
-      }
-    }
-  }, [GetAllInstruments]);
 
   //handle select categoryID
   const handleSelectInstrument = async (selectedInstrument) => {
@@ -729,10 +777,10 @@ const EditBranchTradeModal = ({ info }) => {
                 iconClass={styles["IconClass"]}
                 onClick={handleSaveChangesButton}
                 disableBtn={
-                  tradeRightsData.minTransactionLimit.value >
-                  tradeRightsData.maxTransactionLimit.value
-                    ? true
-                    : false
+                  Number(tradeRightsData.minTransactionLimit.rawValue) <=
+                  Number(tradeRightsData.maxTransactionLimit.rawValue)
+                    ? false
+                    : true
                 }
               />
 

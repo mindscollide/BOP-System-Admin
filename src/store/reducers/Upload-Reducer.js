@@ -35,6 +35,11 @@ const uploadReducer = (state = initialState, action) => {
         uploadValidCorporates: null,
       };
 
+    case actions.CLEAR_RESPONSEMESSAGE_UPLOADREDUCER:
+      return {
+        ...state,
+        ResponseMessage: "",
+      };
     default:
       return { ...state };
   }

@@ -16,6 +16,7 @@ import {
   LogoutRM,
   UpdateBranchCategoryMappingapi,
   GetAllCorporatesData,
+  GetAllNatureOfTransactions,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -82,28 +83,23 @@ const RefreshToken = (navigate) => {
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted) {
             if (
-              response.data.responseResult.responseMessage.includes.toLowerCase(
-                "ERM_AuthService_AuthManager_RefreshToken_01".toLowerCase()
-              )
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_RefreshToken_01".toLowerCase()
             ) {
-              await dispatch(
-                refreshtokenSuccess(
-                  response.data.responseResult,
-                  "Refresh Token Update Successfully"
-                )
-              );
               localStorage.setItem("token", response.data.responseResult.token);
               localStorage.setItem(
                 "refreshToken",
                 response.data.responseResult.refreshToken
               );
+              // await
+              dispatch(refreshtokenSuccess(response.data.responseResult, ""));
             } else if (
-              response.data.responseResult.responseMessage.includes.toLowerCase(
-                "ERM_AuthService_AuthManager_RefreshToken_02".toLowerCase()
-              )
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_RefreshToken_02".toLowerCase()
             ) {
               let message2 = "Your Session has expired. Please login again";
               dispatch(signOut(navigate, message2));
+              return;
             }
           } else {
             dispatch(signOut(navigate, ""));
@@ -954,6 +950,93 @@ const GetAllNatureAPI = (navigate, data) => {
       });
   };
 };
+
+//Get All Nature Of Transactions
+const GetAllNatureOfTransactionsInit = () => {
+  return {
+    type: actions.GET_ALL_NATURE_OF_TRANSACTIONS_INIT,
+  };
+};
+
+const GetAllNatureOfTransactionsSuccess = (response, message) => {
+  return {
+    type: actions.GET_ALL_NATURE_OF_TRANSACTIONS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetAllNatureOfTransactionsFail = (message) => {
+  return {
+    type: actions.GET_ALL_NATURE_OF_TRANSACTIONS_FAIL,
+    message: message,
+  };
+};
+
+const GetAllNatureOfTransactionsAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetAllNatureOfTransactionsInit());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllNatureOfTransactions.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetAllNatureOfTransactionsAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetAllNatureOfTransactionsSuccess(
+                  response.data.responseResult,
+                  "Data Available"
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_02".toLowerCase()
+            ) {
+              dispatch(GetAllNatureOfTransactionsFail("Data UnAvailable"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllNatureOfTransactionsFail("Exception"));
+            }
+          } else {
+            dispatch(GetAllNatureOfTransactionsFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetAllNatureOfTransactionsFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetAllNatureOfTransactionsFail("something went wrong"));
+      });
+  };
+};
 //Get All Categories
 const RoleListInit = () => {
   return {
@@ -1447,7 +1530,11 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
       });
   };
 };
-
+const clearResponseMessageAuth = () => {
+  return {
+    type: actions.CLEAR_RESPONSEMESSAGE_AUTH,
+  };
+};
 export {
   logOutApi,
   signOut,
@@ -1466,4 +1553,6 @@ export {
   GetAllBranchesAPI,
   UpdateBranchCataegoryMappingAPI,
   GetAllCorporatesDataAPI,
+  clearResponseMessageAuth,
+  GetAllNatureOfTransactionsAPI,
 };

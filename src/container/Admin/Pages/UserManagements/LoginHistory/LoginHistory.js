@@ -8,14 +8,13 @@ import {
   TextField,
   Button,
   Table,
-  Loader,
 } from "../../../../../components/elements";
 // import ExportShowComponent from "../BankerList/ExportShowComponent";
 
 import { loginHistorySchema } from "../../../../../utils/schemas";
 import {
+  convertDateTimeIntoLocal,
   formatDate,
-  formatDateAndTimeFromString,
   formatTimeSpan,
 } from "../../../../../helpers/reusableMethods";
 import ActivateConfirmationModal from "../../../../../helpers/Modals/ActivateConfirmationModal/ActivateConfirmationModal";
@@ -31,7 +30,10 @@ import { SearchAllUserLoginHistoryAPI } from "../../../../../store/actions/BOPSy
 import moment from "moment";
 import { useTableScrollBottom } from "../../../../../helpers/useTableScrollBottom";
 import ExportShowComponent from "../../ReusableComponents/ExportShowComponent/ExportShowComponent";
-import { downloadLoginHistoryReportApi } from "../../../../../store/actions/Download-Report";
+import {
+  downloadLoginHistoryReportApi,
+  downloadPDFLoginHistoryReportApi,
+} from "../../../../../store/actions/Download-Report";
 const LoginHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,7 +43,6 @@ const LoginHistory = () => {
     ...loginHistorySchema,
   });
   //Global State
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
   // Search All User Login History
   const SearchAllUserLoginHistory = useSelector(
     (state) => state.BOPSystemAdminReducer.SearchAllUserLoginHistory
@@ -280,8 +281,8 @@ const LoginHistory = () => {
       render: (logInDateTime) => {
         // Format the date and time
         return logInDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(logInDateTime)).format(
-              "DD/MM/YYYY HH:mm:ss"
+          ? moment(convertDateTimeIntoLocal(logInDateTime)).format(
+              "DD/MM/YYYY hh:mm:ss"
             )
           : "-";
       },
@@ -296,8 +297,8 @@ const LoginHistory = () => {
       render: (logOutDateTime) => {
         // Format the date and time
         return logOutDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(logOutDateTime)).format(
-              "DD/MM/YYYY HH:mm:ss"
+          ? moment(convertDateTimeIntoLocal(logOutDateTime)).format(
+              "DD/MM/YYYY hh:mm:ss"
             )
           : "-";
       },
@@ -438,13 +439,26 @@ const LoginHistory = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
-    console.log("doc saved as pdf");
+    console.log("Doc saved as Excel");
+    let Data = {
+      UserName: loginHistory.Name.value !== "" ? loginHistory.Name.value : "",
+      CounterPartyName:
+        loginHistory.CounterPartyName.value !== ""
+          ? loginHistory.CounterPartyName.value
+          : "",
+      Email: loginHistory.Email.value !== "" ? loginHistory.Email.value : "",
+      RoleID: roleID.value !== 0 ? roleID.value : 0,
+      StartDateTime:
+        loginHistory.dateFrom.value !== ""
+          ? formatDate(loginHistory.dateFrom.value)
+          : "",
+      EndDateTime:
+        loginHistory.dateTo.value !== ""
+          ? formatDate(loginHistory.dateTo.value)
+          : "",
+    };
+    console.log(Data, "Doc saved as Excel");
+    dispatch(downloadPDFLoginHistoryReportApi(navigate, Data));
   };
   //Metod to perform action of Export options
   const ExportOptions = ({ onClose }) => {
@@ -661,7 +675,7 @@ const LoginHistory = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 250, x: "scroll" }}
+                  scroll={{ y: 250, x: "max-content" }}
                   className={"BankUserList-table"}
                 />
               </Col>
@@ -669,7 +683,7 @@ const LoginHistory = () => {
           </CustomPaper>
         </Col>
       </Row>
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
       {<ActivateConfirmationModal onConfirm={handleResetYes} />}
       {showActivationModal === true && (
         <ActivateConfirmationModal

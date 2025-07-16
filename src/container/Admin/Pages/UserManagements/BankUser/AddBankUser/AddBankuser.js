@@ -30,15 +30,27 @@ import {
   GetBankUserRolesAPI,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useBankUser } from "../utils/BankUserContext";
-import { useMqtt } from "../../../../../../context/MQTTContext";
+import {
+  setBranchCreated,
+  setBranchUpdated,
+  setCategoryUpdated,
+} from "../../../../../../store/actions/RealtimeActions";
 
 const AddBankUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const branchCreated = useSelector(
+    (state) => state.RealtimeActionReducer.branchCreated
+  );
+  const branchUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.branchUpdated
+  );
 
-  const { branchCreated, branchUpdated, setBranchCreated, setBranchUpdated } =
-    useMqtt();
   const getALlBranches = useSelector((state) => state.auth.GetAllBranchesData);
+
+  const categoryUpdated = useSelector(
+    (state) => state.RealtimeActionReducer.categoryUpdated
+  );
 
   const { setEditBranchData, setBulkUploadClicked } = useBankUser();
 
@@ -49,7 +61,7 @@ const AddBankUser = () => {
 
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
-
+  console.log(branchOptions, "branchOptionsbranchOptions");
   //Global Staate
   const { BOPSystemAdminReducer } = useSelector((state) => state);
 
@@ -87,6 +99,8 @@ const AddBankUser = () => {
   const [addBankUser, setAddBankUser] = useState({
     ...addBankUserSchema,
   });
+
+  console.log(addBankUser, "addBankUseraddBankUser");
 
   // Fetch branches on component mount
   useEffect(() => {
@@ -133,7 +147,7 @@ const AddBankUser = () => {
     }
 
     // Check if role list data is available before proceeding
-    if (RoleList !== null) {
+    if (RoleList !== null && RoleList !== undefined) {
       try {
         // Transform raw roles into format suitable for dropdown options
         let newRolesData = RoleList.roles.map((role) => {
@@ -167,7 +181,7 @@ const AddBankUser = () => {
             label: branchCreated.branch.branchName,
           };
           setBranchOptions([...branchOptions, newBranchData]);
-          setBranchCreated(null);
+          dispatch(setBranchCreated(null));
         }
       }
     }
@@ -191,6 +205,7 @@ const AddBankUser = () => {
                   branchCode: branchUpdated.branch.branchCode,
                   branchContact: branchUpdated.branch.branchContact,
                   branchName: branchUpdated.branch.branchName,
+                  branchID: branchUpdated.branch.branchID,
                 };
               }
               return data4;
@@ -207,13 +222,55 @@ const AddBankUser = () => {
               branchCode: branchUpdated.branch.branchCode,
               branchContact: branchUpdated.branch.branchContact,
               branchName: branchUpdated.branch.branchName,
+              branchID: branchUpdated.branch.branchID,
             });
           }
-          setBranchUpdated(null);
+          dispatch(setBranchUpdated(null));
         }
       }
     }
   }, [branchUpdated]);
+
+  useEffect(() => {
+    if (categoryUpdated !== null) {
+      if (Array.isArray(branchOptions)) {
+        let findCategoryObj = branchOptions.find(
+          (categoryData, index) =>
+            categoryData.categoryID === categoryUpdated.category.categoryId
+        );
+        if (findCategoryObj !== undefined) {
+          console.log("Reached here------");
+          setBranchOptions((prevCategoryData) => {
+            return prevCategoryData.map((data4, index) => {
+              if (data4.categoryID === categoryUpdated.category.categoryId) {
+                return {
+                  ...data4,
+                  categoryID: categoryUpdated.category.categoryId,
+                  categoryName: categoryUpdated.category.category,
+                };
+              }
+              return data4;
+            });
+          });
+          // console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          if (
+            addBankUser.category.categoryID ===
+            categoryUpdated.category.categoryId
+          ) {
+            setAddBankUser({
+              ...addBankUser,
+              category: {
+                ...addBankUser.category,
+                value: categoryUpdated.category.category,
+              },
+            });
+          }
+
+          dispatch(setCategoryUpdated(null));
+        }
+      }
+    }
+  }, [categoryUpdated]);
   //add bank user security admin validate handler
   const addBankUserValidateHandler = (e) => {
     let name = e.target.name;
@@ -374,7 +431,9 @@ const AddBankUser = () => {
       setAddBankUser({
         ...addBankUser,
         category: {
+          ...addBankUser.category,
           value: firstBranchOption.categoryName,
+          categoryID: firstBranchOption.categoryID,
         },
       });
     } else {
@@ -382,6 +441,7 @@ const AddBankUser = () => {
       setAddBankUser({
         ...addBankUser,
         category: {
+          ...addBankUser.category,
           value: "",
         },
       });
@@ -393,7 +453,9 @@ const AddBankUser = () => {
     setAddBankUser({
       ...addBankUser,
       category: {
+        ...addBankUser.category,
         value: selectedBranch.categoryName,
+        categoryID: selectedBranch.categoryID,
       },
     });
   };
@@ -460,6 +522,7 @@ const AddBankUser = () => {
       },
       category: {
         value: "",
+        categoryID: 0,
         errorMessage: "",
         errorStatus: false,
       },
@@ -477,7 +540,7 @@ const AddBankUser = () => {
           ...prevState,
           email: {
             ...prevState.email,
-            errorMessage: "Email should be in email format",
+            errorMessage: "Email Domain should be @bop.com or @bop.com.pk",
             errorStatus: true,
           },
         };
@@ -676,7 +739,7 @@ const AddBankUser = () => {
                             <Select
                               options={branchOptions}
                               placeholder="Select Branch"
-                              value={branchRole.value !== 0 ? branchRole : null}
+                              value={branchRole?.value !== 0 ? branchRole : null}
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
                               // classNamePrefix="selectCateogyCorporateList"
@@ -814,7 +877,7 @@ const AddBankUser = () => {
           handleNoButton={handleNoButton}
         />
       )}
-      {BOPSystemAdminReducer.Loading && <Loader />}
+      {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
     </section>
   );
 };

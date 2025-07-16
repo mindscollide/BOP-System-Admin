@@ -49,7 +49,7 @@ const TradeAccessManagement = () => {
       value: "",
     },
   });
-  const [dropdownvalue, setDropdownvalue] = useState(25);
+  const [dropdownvalue, setDropdownvalue] = useState(50);
 
   const handleChangeDropDown = (value) => {
     setDropdownvalue(value);
@@ -86,7 +86,7 @@ const TradeAccessManagement = () => {
       let data = {
         BranchName: "",
         sRow: 0,
-        Length: 25,
+        Length: dropdownvalue,
       };
       dispatch(GetBranchesWithStatusAPI(navigate, data));
 
@@ -105,7 +105,7 @@ const TradeAccessManagement = () => {
       let data = {
         CorporateName: "",
         sRow: 0,
-        Length: 25,
+        Length: dropdownvalue,
       };
       dispatch(GetCorporatesWithStatusAPI(navigate, data));
 
@@ -127,7 +127,7 @@ const TradeAccessManagement = () => {
         let data = {
           CorporateName: corporateName.Name.value,
           sRow: sRow,
-          Length: 25,
+          Length: dropdownvalue,
         };
         dispatch(GetCorporatesWithStatusAPI(navigate, data));
       }
@@ -136,7 +136,7 @@ const TradeAccessManagement = () => {
         let data = {
           BranchName: branchName.Name.value,
           sRow: sRow,
-          Length: 25,
+          Length: dropdownvalue,
         };
         dispatch(GetBranchesWithStatusAPI(navigate, data));
       }
@@ -218,7 +218,7 @@ const TradeAccessManagement = () => {
               ? corporateName.Name.value
               : "",
             sRow: 0,
-            Length: 25,
+            Length: dropdownvalue,
           };
 
           dispatch(GetCorporatesWithStatusAPI(navigate, data));
@@ -241,7 +241,7 @@ const TradeAccessManagement = () => {
           let data = {
             BranchName: branchName.Name.value ? branchName.Name.value : "",
             sRow: 0,
-            Length: 25,
+            Length: dropdownvalue,
           };
           dispatch(GetBranchesWithStatusAPI(navigate, data));
         }
@@ -330,7 +330,7 @@ const TradeAccessManagement = () => {
                 )}
               </Col>
             </Row>
-            <Row className="mt-3">
+            {/* <Row className="mt-3">
               <Col
                 lg={12}
                 md={12}
@@ -352,7 +352,7 @@ const TradeAccessManagement = () => {
 
                 <span className={styles["spanshowClass"]}>entries</span>
               </Col>
-            </Row>
+            </Row> */}
             {radioValue === "Corporate" ? (
               <CorporateTrade
                 hasReachedBottom={hasReachedBottom}
@@ -361,6 +361,8 @@ const TradeAccessManagement = () => {
                 setCorporateTableData={setCorporateTableData}
                 setSRow={setSRow}
                 setCorporateRecordLength={setCorporateRecordLength}
+                setDropdownvalue={setDropdownvalue}
+                dropdownvalue={dropdownvalue}
               />
             ) : radioValue === "Branch" ? (
               <BranchTrade
@@ -370,6 +372,8 @@ const TradeAccessManagement = () => {
                 setBranchTableData={setBranchTableData}
                 setSRow={setSRow}
                 setBranchRecordLength={setBranchRecordLength}
+                setDropdownvalue={setDropdownvalue}
+                dropdownvalue={dropdownvalue}
               />
             ) : (
               ""
@@ -378,7 +382,7 @@ const TradeAccessManagement = () => {
         </Col>
       </Row>
 
-      {Loading && <Loader />}
+      {/* {Loading && <Loader />} */}
     </section>
   );
 };
