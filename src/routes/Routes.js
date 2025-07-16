@@ -4,7 +4,6 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import CounterLimit from "../container/Admin/Reports/CounterParty/CounterLimit";
 import VolMeter from "../container/Admin/Pages/Setup/VolMeter/VolMeter";
 import CategoryManagement from "../container/Admin/Pages/Setup/CategoryManagementFX/CategoryManagement/CategoryManagement";
 import BankerList from "../container/Admin/Pages/UserManagements/BankerList/BankerList/BankerList";
@@ -34,7 +33,6 @@ export const router = createBrowserRouter(
         <Route index element={<BankUser />} />
         <Route path="AddBankUser" element={<BankUser />} />
         <Route path="tradeCount" element={<TradeCount />} />
-        <Route path="counterLimit" element={<CounterLimit />} />
         <Route path="volMeter" element={<VolMeter />} />
         <Route path="categorymanagement" element={<CategoryManagement />} />
         <Route path="CorporateUser" element={<CorporateUser />} />
@@ -48,7 +46,6 @@ export const router = createBrowserRouter(
 
         <Route path="SpreadManagement" element={<SpreadManagement />} />
       </Route>
-      {/* </Route> */}
     </>
   )
 );
