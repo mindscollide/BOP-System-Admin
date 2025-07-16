@@ -21,6 +21,7 @@ import LoginHistory from "../container/Admin/Pages/UserManagements/LoginHistory/
 import TradeCount from "../container/Admin/Pages/UserManagements/TradeCount/TradeCount/TradeCount";
 import TradeAccessManagement from "../container/Admin/Pages/Setup/TradeAccessManagement/TradeAccessManagement/TradeAccessManagement";
 import SpreadManagement from "../container/Admin/Pages/Setup/Spread Management/SpreadManagement";
+import CurrencyManagement from "../container/Admin/Pages/Setup/CurrencyManagement/CurrencyManagement";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,7 +46,7 @@ export const router = createBrowserRouter(
           path="TradeAccessManagement"
           element={<TradeAccessManagement />}
         />
-
+        {/* <Route path="CurrencyManagement" element={<CurrencyManagement />} /> */}
         <Route path="SpreadManagement" element={<SpreadManagement />} />
       </Route>
       {/* </Route> */}

@@ -72,9 +72,15 @@ const Sidebar2 = () => {
   };
 
   const navigateToVolMeter = () => {
-    localStorage.setItem("defaultOpenKey", "sub1");
+    localStorage.setItem("defaultOpenKey", "sub2");
     localStorage.setItem("defaultSelectedKey", "10");
     navigate("/BOP/volMeter");
+  };
+
+  const navigateToCurrencyManagement = () => {
+    localStorage.setItem("defaultOpenKey", "sub2");
+    localStorage.setItem("defaultSelectedKey", "11");
+    navigate("/BOP/CurrencyManagement");
   };
 
   return (
@@ -153,7 +159,6 @@ const Sidebar2 = () => {
         >
           Trade Access Management
         </Menu.Item>
-
         <Menu.Item
           className="menu-items-sidebar"
           key="8"
@@ -161,7 +166,6 @@ const Sidebar2 = () => {
         >
           Category Management FX
         </Menu.Item>
-
         <Menu.Item
           className="menu-items-sidebar"
           key="9"
@@ -175,7 +179,14 @@ const Sidebar2 = () => {
           onClick={navigateToVolMeter}
         >
           Vol Meter
-        </Menu.Item>
+        </Menu.Item>{" "}
+        {/* <Menu.Item
+          className="menu-items-sidebar"
+          key="11"
+          onClick={navigateToCurrencyManagement}
+        >
+          Currency Management
+        </Menu.Item> */}
       </SubMenu>
     </Menu>
   );
