@@ -1346,7 +1346,7 @@ const SearchBankUsersAPI = (navigate, data) => {
               dispatch(
                 SearchBankUsersSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -1356,7 +1356,7 @@ const SearchBankUsersAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchBankUsers_02".toLowerCase()
                 )
             ) {
-              dispatch(SearchBankUsersFail("No Data Available"));
+              dispatch(SearchBankUsersFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2213,7 +2213,7 @@ const GetCounterPartyNamesAPI = (navigate) => {
               dispatch(
                 GetCounterPartyNamesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -2374,7 +2374,7 @@ const SearchAllUserLoginHistoryAPI = (navigate, data) => {
               dispatch(
                 SearchAllUserLoginHistorySuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -2384,7 +2384,7 @@ const SearchAllUserLoginHistoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_02".toLowerCase()
                 )
             ) {
-              dispatch(SearchAllUserLoginHistoryFail("No Data Available"));
+              dispatch(SearchAllUserLoginHistoryFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2462,7 +2462,7 @@ const GetCounterPartyListAPI = (navigate) => {
               dispatch(
                 GetCounterPartyListSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -2543,7 +2543,7 @@ const GetAllTradesAPI = (navigate, data) => {
               dispatch(
                 GetAllTradesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -2553,7 +2553,7 @@ const GetAllTradesAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetAllTrades_02".toLowerCase()
                 )
             ) {
-              dispatch(GetAllTradesFail("No Data Available"));
+              dispatch(GetAllTradesFail(""));
             } else {
               dispatch(GetAllTradesFail("Something went wrong"));
             }

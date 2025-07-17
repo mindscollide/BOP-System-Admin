@@ -75,19 +75,19 @@ const GetCorporatesWithStatusAPI = (navigate, data) => {
               dispatch(
                 GetCorporatesWithStatusSuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporatesWithStatus_02".toLowerCase()
             ) {
-              dispatch(GetCorporatesWithStatusFail("No Data Available."));
+              dispatch(GetCorporatesWithStatusFail(""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporatesWithStatus_04".toLowerCase()
             ) {
-              dispatch(GetCorporatesWithStatusFail("Exception."));
+              dispatch(GetCorporatesWithStatusFail("Exception"));
             } else {
               dispatch(GetCorporatesWithStatusFail("Something went wrong"));
             }
@@ -162,7 +162,7 @@ const UpdateCorporateStatusAPI = (navigate, data) => {
               dispatch(
                 UpdateCorporateStatusSuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
@@ -255,14 +255,14 @@ const GetBranchesWithStatusAPI = (navigate, data) => {
               dispatch(
                 GetBranchesWithStatusSuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetBranchesWithStatus_02".toLowerCase()
             ) {
-              dispatch(GetBranchesWithStatusFail("No Data Available."));
+              dispatch(GetBranchesWithStatusFail(""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetBranchesWithStatus_04".toLowerCase()
@@ -342,7 +342,7 @@ const UpdateBranchStatusAPI = (navigate, data) => {
               dispatch(
                 UpdateBranchStatusSuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
@@ -434,7 +434,7 @@ const GetCorporateTradeRightsAPI = (navigate, data) => {
               dispatch(
                 GetCorporateTradeRightsSuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
@@ -445,7 +445,7 @@ const GetCorporateTradeRightsAPI = (navigate, data) => {
               dispatch(
                 GetCorporateTradeRightsSuccess(
                   response.data.responseResult,
-                  "No Data Available."
+                  ""
                 )
               );
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
@@ -528,7 +528,7 @@ const GetBranchTradeRightsAPI = (navigate, data) => {
               dispatch(
                 GetBranchTradeRightsSuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
               dispatch(editTradeAccessManagementModalSystemAdmin(true));
@@ -539,7 +539,7 @@ const GetBranchTradeRightsAPI = (navigate, data) => {
               dispatch(
                 GetBranchTradeRightsSuccess(
                   response.data.responseResult,
-                  "No Data Available."
+                  ""
                 )
               );
               dispatch(editTradeAccessManagementModalSystemAdmin(true));

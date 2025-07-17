@@ -653,14 +653,14 @@ const GetAllCategoriesAPI = (navigate) => {
               dispatch(
                 GetAllCategoriesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllCategories_02".toLowerCase()
             ) {
-              dispatch(GetAllCategoriesFail("No Data Available"));
+              dispatch(GetAllCategoriesFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -740,14 +740,14 @@ const getAllCorporatesCategory = (navigate) => {
               dispatch(
                 getAllCorporatesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_02".toLowerCase()
             ) {
-              dispatch(getAllCorporatesFail("No Data Available"));
+              dispatch(getAllCorporatesFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -827,14 +827,14 @@ const GetAllCorporatesDataAPI = (navigate) => {
               dispatch(
                 GetAllCorporatesDataSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
             ) {
-              dispatch(GetAllCorporatesDataFail("No Data Available"));
+              dispatch(GetAllCorporatesDataFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -842,7 +842,7 @@ const GetAllCorporatesDataAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
                 )
             ) {
-              dispatch(GetAllCorporatesDataFail("No Data Available"));
+              dispatch(GetAllCorporatesDataFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -921,14 +921,14 @@ const GetAllNatureAPI = (navigate, data) => {
               dispatch(
                 GetAllNatureSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_02".toLowerCase()
             ) {
-              dispatch(GetAllNatureFail("No Data Available"));
+              dispatch(GetAllNatureFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1008,7 +1008,7 @@ const GetAllNatureOfTransactionsAPI = (navigate, data) => {
               dispatch(
                 GetAllNatureOfTransactionsSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -1091,13 +1091,13 @@ const RoleListAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                RoleListSuccess(response.data.responseResult, "Data Available")
+                RoleListSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_RoleList_02".toLowerCase()
             ) {
-              dispatch(RoleListFail("No Data Available"));
+              dispatch(RoleListFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1175,7 +1175,7 @@ const GetBankUserRolesAPI = (navigate) => {
               dispatch(
                 GetBankUserRolesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -1258,14 +1258,14 @@ const GetAllInstrumentTypesAPI = (navigate) => {
               dispatch(
                 GetAllInstrumentTypesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllInstrumentTypes_02".toLowerCase()
             ) {
-              dispatch(GetAllInstrumentTypesFail("No Data Available"));
+              dispatch(GetAllInstrumentTypesFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1343,7 +1343,7 @@ const GetAllBranchesAPI = (navigate) => {
               dispatch(
                 GetAllBranchesSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (

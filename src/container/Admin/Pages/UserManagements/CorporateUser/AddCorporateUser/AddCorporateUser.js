@@ -21,8 +21,6 @@ import {
   Button,
   Checkbox,
   CustomUpload,
-  Loader,
-  Notification,
   Paper,
   TextField,
 } from "../../../../../../components/elements";
@@ -791,7 +789,6 @@ const AddCorporateUser = () => {
         />
       )}
       {/* {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null} */}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };
