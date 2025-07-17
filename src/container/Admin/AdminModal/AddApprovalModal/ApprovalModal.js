@@ -1,11 +1,6 @@
 import React, { Fragment } from "react";
-import { Container, Col, Row } from "react-bootstrap";
-import {
-  TextField,
-  Button,
-  Table,
-  Modal,
-} from "../../../../components/elements";
+import { Col, Row } from "react-bootstrap";
+import { Button, Modal } from "../../../../components/elements";
 import "./ApprovalModal.css";
 
 const ApprovalModal = ({ ModalTitle, modalApproval, setModalApproval }) => {
