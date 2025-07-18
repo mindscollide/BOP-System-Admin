@@ -11,6 +11,7 @@ import {
   DownloadPDFCorporateUserListSystemAdminReport,
   DownloadPDFLoginHistorySystemAdminReport,
   DailyTransactionReport,
+  DailyTransactionPDFReport,
 } from "../../commen/apis/Api_config";
 import { RefreshToken } from "./Auth-Actions";
 import { downloadReportAPI } from "../../commen/apis/Api_ends_points";
@@ -801,6 +802,90 @@ const downloadDailyTransactionSystemAdminReportApi = (navigate, Data) => {
   };
 };
 
+// PDF Version Report Download Daily Transaction System Admin
+const downloadPDFDailyTransactionSystemAdmin_init = () => {
+  return {
+    type: actions.DAILY_TRANSACTION_PDF_INIT,
+  };
+};
+const downloadPDFDailyTransactionSystemAdmin_success = (response, message) => {
+  return {
+    type: actions.DAILY_TRANSACTION_PDF_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+const downloadPDFDailyTransactionSystemAdmin_fail = (message) => {
+  return {
+    type: actions.DAILY_TRANSACTION_PDF_FAIL,
+    message: message,
+  };
+};
+const downloadPDFDailyTransactionSystemAdminApi = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  let form = new FormData();
+  form.append("RequestMethod", DailyTransactionPDFReport.RequestMethod);
+  form.append("RequestData", JSON.stringify(Data));
+
+  return async (dispatch) => {
+    await dispatch(downloadPDFDailyTransactionSystemAdmin_init());
+
+    axios({
+      method: "post",
+      url: downloadReportAPI,
+      data: form,
+      headers: {
+        _token: token,
+        "Content-Type": "application/pdf",
+      },
+      responseType: "arraybuffer",
+    })
+      .then(async (response) => {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 Handle JSON response (likely error)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadPDFDailyTransactionSystemAdminApi(navigate, Data));
+          } else {
+            dispatch(downloadPDFDailyTransactionSystemAdmin_fail(parsedData));
+          }
+        }
+
+        // 🟢 Handle valid PDF download
+        else if (response.status === 200) {
+          const blob = new Blob([response.data], { type: "application/pdf" });
+          const url = window.URL.createObjectURL(blob);
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "DailyTransactionSystemAdmin.pdf");
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          dispatch(
+            downloadPDFDailyTransactionSystemAdmin_success(
+              null,
+              "Download successfully"
+            )
+          );
+        }
+      })
+      .catch((error) => {
+        dispatch(downloadPDFDailyTransactionSystemAdmin_fail(error.message));
+      });
+  };
+};
+
 const clearResponseMessageDownloadReducer = () => {
   return {
     type: actions.CLEAR_RESPONSEMESSAGE_DOWNLOADREDUCER,
@@ -819,4 +904,5 @@ export {
   downloadPDFLoginHistoryReportApi,
   clearResponseMessageDownloadReducer,
   downloadDailyTransactionSystemAdminReportApi,
+  downloadPDFDailyTransactionSystemAdminApi,
 };

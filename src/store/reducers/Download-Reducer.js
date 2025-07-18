@@ -10,6 +10,7 @@ const initialState = {
   pdfReportCorporateUserlistData: null,
   pdfReportLoginHistorylistData: null,
   dailyTransactionDataReportData: null,
+  dailyTransactionDataPDFReportData: null,
 };
 
 const downloadReducer = (state = initialState, action) => {
@@ -189,6 +190,28 @@ const downloadReducer = (state = initialState, action) => {
         state,
         Loading: false,
         dailyTransactionDataReportData: null,
+        ResponseMessage: action.message,
+      };
+
+    //Daily Transaction PDF Report
+    case actions.DAILY_TRANSACTION_PDF_INIT:
+      return {
+        state,
+        Loading: true,
+      };
+
+    case actions.DAILY_TRANSACTION_PDF_SUCCESS:
+      return {
+        state,
+        Loading: false,
+        dailyTransactionDataPDFReportData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.DAILY_TRANSACTION_PDF_FAIL:
+      return {
+        state,
+        Loading: false,
+        dailyTransactionDataPDFReportData: null,
         ResponseMessage: action.message,
       };
 

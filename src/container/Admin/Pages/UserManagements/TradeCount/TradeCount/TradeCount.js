@@ -39,6 +39,7 @@ import { formatDateToUTC } from "../../../../../../commen/functions/utils";
 import {
   downloadBankUserlistReportApi,
   downloadDailyTransactionSystemAdminReportApi,
+  downloadPDFDailyTransactionSystemAdminApi,
 } from "../../../../../../store/actions/Download-Report";
 
 const TradeCount = () => {
@@ -601,13 +602,25 @@ const TradeCount = () => {
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
     console.log("doc saved as pdf");
+    console.log("Doc saved as Excel");
+    const FromDate = new Date(tradeCount.dateFrom.value);
+    FromDate.setHours(0, 0, 0);
+    const ToDate = new Date(tradeCount.dateTo.value);
+    ToDate.setHours(23, 59, 59);
+    let Data = {
+      TxnID: tradeCount.TxnID.value,
+      CorporateName: tradeCount.clientName.value,
+      AccountNumber: tradeCount.AccountNumber.value,
+      FromDate: formatDateToUTC(FromDate),
+      ToDate: formatDateToUTC(ToDate),
+      LCNumber: tradeCount.LC.value,
+      Side: side.value,
+      NatureOfTransactionID: tradeCount.natureOfClient.value,
+      Amount: Number(tradeCount.Amount.value),
+    };
+
+    dispatch(downloadPDFDailyTransactionSystemAdminApi(navigate, Data));
   };
 
   //handle select categoryID
