@@ -334,6 +334,11 @@ const DownloadPDFLoginHistorySystemAdminReport = {
 const GetAllNatureOfTransactions = {
   RequestMethod: "ServiceManager.GetAllNatureOfTransactions",
 };
+
+const DailyTransactionReport = {
+  RequestMethod:
+    "ServiceManager.DownloadDailyTransactionsForSystemAdminExcelReport",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -416,4 +421,5 @@ export {
   DownloadPDFCorporateUserListSystemAdminReport,
   DownloadPDFLoginHistorySystemAdminReport,
   GetAllNatureOfTransactions,
+  DailyTransactionReport,
 };

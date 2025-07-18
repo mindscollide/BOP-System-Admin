@@ -10,6 +10,7 @@ import {
   DownloadPDFBankUserListSystemAdminReport,
   DownloadPDFCorporateUserListSystemAdminReport,
   DownloadPDFLoginHistorySystemAdminReport,
+  DailyTransactionReport,
 } from "../../commen/apis/Api_config";
 import { RefreshToken } from "./Auth-Actions";
 import { downloadReportAPI } from "../../commen/apis/Api_ends_points";
@@ -223,8 +224,10 @@ const downloadCorporateUserlistReportApi = (navigate, Data) => {
     DownloadCorporateUserListSystemAdminReport.RequestMethod
   );
   form.append("RequestData", JSON.stringify(Data));
+
   return async (dispatch) => {
     await dispatch(downloadCorporateUserlistReport_init());
+
     axios({
       method: "post",
       url: downloadReportAPI,
@@ -238,10 +241,27 @@ const downloadCorporateUserlistReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(downloadCorporateUserlistReportApi(navigate, Data));
-        } else if (response.status === 200) {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 If response is JSON (likely an error like token expiration)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadCorporateUserlistReportApi(navigate, Data));
+          } else {
+            dispatch(downloadCorporateUserlistReport_fail(parsedData));
+          }
+        }
+
+        // 🟢 If response is a valid Excel file
+        else if (response.status === 200) {
           const url = window.URL.createObjectURL(new Blob([response.data]));
 
           const link = document.createElement("a");
@@ -249,16 +269,18 @@ const downloadCorporateUserlistReportApi = (navigate, Data) => {
           link.setAttribute("download", "Corporate User List.xlsx");
           document.body.appendChild(link);
           link.click();
+          link.remove();
+
           dispatch(
             downloadCorporateUserlistReport_success(
-              response.data.responseResult,
-              "Download-successffuly"
+              null,
+              "Download successfully"
             )
           );
         }
       })
-      .catch((response) => {
-        dispatch(downloadCorporateUserlistReport_fail(response));
+      .catch((error) => {
+        dispatch(downloadCorporateUserlistReport_fail(error.message));
       });
   };
 };
@@ -292,8 +314,10 @@ const downloadBankUserlistReportApi = (navigate, Data) => {
     DownloadBankUserListSystemAdminReport.RequestMethod
   );
   form.append("RequestData", JSON.stringify(Data));
+
   return async (dispatch) => {
     await dispatch(downloadBankUserlistReport_init());
+
     axios({
       method: "post",
       url: downloadReportAPI,
@@ -307,10 +331,27 @@ const downloadBankUserlistReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(downloadBankUserlistReportApi(navigate, Data));
-        } else if (response.status === 200) {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 If response is JSON (likely token expiration or error)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadBankUserlistReportApi(navigate, Data));
+          } else {
+            dispatch(downloadBankUserlistReport_fail(parsedData));
+          }
+        }
+
+        // 🟢 If response is a valid Excel file
+        else if (response.status === 200) {
           const url = window.URL.createObjectURL(new Blob([response.data]));
 
           const link = document.createElement("a");
@@ -318,16 +359,15 @@ const downloadBankUserlistReportApi = (navigate, Data) => {
           link.setAttribute("download", "Bank User List.xlsx");
           document.body.appendChild(link);
           link.click();
+          link.remove();
+
           dispatch(
-            downloadBankUserlistReport_success(
-              response.data.responseResult,
-              "Download-successffuly"
-            )
+            downloadBankUserlistReport_success(null, "Download successfully")
           );
         }
       })
-      .catch((response) => {
-        dispatch(downloadBankUserlistReport_fail(response));
+      .catch((error) => {
+        dispatch(downloadBankUserlistReport_fail(error.message));
       });
   };
 };
@@ -360,8 +400,10 @@ const downloadLoginHistoryReportApi = (navigate, Data) => {
     DownloadLoginHistorySystemAdminReport.RequestMethod
   );
   form.append("RequestData", JSON.stringify(Data));
+
   return async (dispatch) => {
     await dispatch(downloadLoginHistoryReport_init());
+
     axios({
       method: "post",
       url: downloadReportAPI,
@@ -375,10 +417,27 @@ const downloadLoginHistoryReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(downloadLoginHistoryReportApi(navigate, Data));
-        } else if (response.status === 200) {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 If response is JSON (error like token expiration)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadLoginHistoryReportApi(navigate, Data));
+          } else {
+            dispatch(downloadLoginHistoryReport_fail(parsedData));
+          }
+        }
+
+        // 🟢 If response is a valid Excel file
+        else if (response.status === 200) {
           const url = window.URL.createObjectURL(new Blob([response.data]));
 
           const link = document.createElement("a");
@@ -386,16 +445,15 @@ const downloadLoginHistoryReportApi = (navigate, Data) => {
           link.setAttribute("download", "Login History.xlsx");
           document.body.appendChild(link);
           link.click();
+          link.remove();
+
           dispatch(
-            downloadLoginHistoryReport_success(
-              response.data.responseResult,
-              "Download-successffuly"
-            )
+            downloadLoginHistoryReport_success(null, "Download successfully")
           );
         }
       })
-      .catch((response) => {
-        dispatch(downloadLoginHistoryReport_fail(response));
+      .catch((error) => {
+        dispatch(downloadLoginHistoryReport_fail(error.message));
       });
   };
 };
@@ -442,10 +500,27 @@ const downloadPDFBankUserReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(downloadPDFBankUserReportApi(navigate, Data));
-        } else if (response.status === 200) {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 Handle JSON response (likely error)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadPDFBankUserReportApi(navigate, Data));
+          } else {
+            dispatch(downloadPDFBankUserReport_fail(parsedData));
+          }
+        }
+
+        // 🟢 Handle valid PDF download
+        else if (response.status === 200) {
           const blob = new Blob([response.data], { type: "application/pdf" });
           const url = window.URL.createObjectURL(blob);
 
@@ -457,10 +532,7 @@ const downloadPDFBankUserReportApi = (navigate, Data) => {
           link.remove();
 
           dispatch(
-            downloadPDFBankUserReport_success(
-              response.data.responseResult,
-              "Download-successfully"
-            )
+            downloadPDFBankUserReport_success(null, "Download successfully")
           );
         }
       })
@@ -512,10 +584,27 @@ const downloadPDFCorporateUserReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(downloadPDFCorporateUserReportApi(navigate, Data));
-        } else if (response.status === 200) {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 If response is JSON (likely an error like token expired)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadPDFCorporateUserReportApi(navigate, Data));
+          } else {
+            dispatch(downloadPDFCorporateUserReport_fail(parsedData));
+          }
+        }
+
+        // 🟢 If response is a valid PDF
+        else if (response.status === 200) {
           const blob = new Blob([response.data], { type: "application/pdf" });
           const url = window.URL.createObjectURL(blob);
 
@@ -528,8 +617,8 @@ const downloadPDFCorporateUserReportApi = (navigate, Data) => {
 
           dispatch(
             downloadPDFCorporateUserReport_success(
-              response.data.responseResult,
-              "Download-successfully"
+              null,
+              "Download successfully"
             )
           );
         }
@@ -582,10 +671,27 @@ const downloadPDFLoginHistoryReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        if (response.data.responseCode === 417) {
-          await dispatch(RefreshToken(navigate));
-          dispatch(downloadPDFLoginHistoryReportApi(navigate, Data));
-        } else if (response.status === 200) {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 If response is JSON (usually an error)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "parsed responseCode");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(downloadPDFLoginHistoryReportApi(navigate, Data));
+          } else {
+            dispatch(downloadPDFLoginHistoryReport_fail(parsedData));
+          }
+        }
+
+        // 🟢 If response is PDF
+        else if (response.status === 200) {
           const blob = new Blob([response.data], { type: "application/pdf" });
           const url = window.URL.createObjectURL(blob);
 
@@ -597,15 +703,100 @@ const downloadPDFLoginHistoryReportApi = (navigate, Data) => {
           link.remove();
 
           dispatch(
-            downloadPDFLoginHistoryReport_success(
-              response.data.responseResult,
-              "Download-successfully"
-            )
+            downloadPDFLoginHistoryReport_success(null, "Download successfully")
           );
         }
       })
       .catch((error) => {
         dispatch(downloadPDFLoginHistoryReport_fail(error.message));
+      });
+  };
+};
+
+// Daily Transaction List Report
+
+const downloadDailyTransactionSystemAdmin_init = () => {
+  return {
+    type: actions.DAILY_TRANSACTION_INIT,
+  };
+};
+const downloadDailyTransactionSystemAdmin_success = (response, message) => {
+  return {
+    type: actions.DAILY_TRANSACTION_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+const downloadDailyTransactionSystemAdmin_fail = (message) => {
+  return {
+    type: actions.DAILY_TRANSACTION_FAIL,
+    message: message,
+  };
+};
+
+const downloadDailyTransactionSystemAdminReportApi = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  let form = new FormData();
+  form.append("RequestMethod", DailyTransactionReport.RequestMethod);
+  form.append("RequestData", JSON.stringify(Data));
+
+  return async (dispatch) => {
+    await dispatch(downloadDailyTransactionSystemAdmin_init());
+
+    axios({
+      method: "post",
+      url: downloadReportAPI,
+      data: form,
+      headers: {
+        _token: token,
+        "Content-Disposition": "attachment; filename=template.xlsx",
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+      responseType: "arraybuffer",
+    })
+      .then(async (response) => {
+        const contentType = response.headers["content-type"];
+
+        // 🟡 Handle JSON response (usually for errors)
+        if (contentType && contentType.includes("application/json")) {
+          const decodedString = new TextDecoder().decode(
+            new Uint8Array(response.data)
+          );
+          const parsedData = JSON.parse(decodedString);
+
+          console.log(parsedData.responseCode, "responseCode parsedData");
+
+          if (parsedData.responseCode === 417) {
+            await dispatch(RefreshToken(navigate));
+            dispatch(
+              downloadDailyTransactionSystemAdminReportApi(navigate, Data)
+            );
+          } else {
+            dispatch(downloadDailyTransactionSystemAdmin_fail(parsedData));
+          }
+        }
+
+        // 🟢 Handle Excel file download
+        else if (response.status === 200) {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Daily Transaction System Admin.xlsx");
+          document.body.appendChild(link);
+          link.click();
+
+          dispatch(
+            downloadDailyTransactionSystemAdmin_success(
+              null,
+              "Download successfully"
+            )
+          );
+        }
+      })
+      .catch((error) => {
+        dispatch(downloadDailyTransactionSystemAdmin_fail(error));
       });
   };
 };
@@ -627,4 +818,5 @@ export {
   downloadPDFCorporateUserReportApi,
   downloadPDFLoginHistoryReportApi,
   clearResponseMessageDownloadReducer,
+  downloadDailyTransactionSystemAdminReportApi,
 };
