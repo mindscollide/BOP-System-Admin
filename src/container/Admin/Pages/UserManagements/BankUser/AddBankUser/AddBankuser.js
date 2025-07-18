@@ -540,7 +540,7 @@ const AddBankUser = () => {
           ...prevState,
           email: {
             ...prevState.email,
-            errorMessage: "Email Domain should be @bop.com or @bop.com.pk",
+            errorMessage: "Email Domain should be @bop.com.pk",
             errorStatus: true,
           },
         };
@@ -739,7 +739,9 @@ const AddBankUser = () => {
                             <Select
                               options={branchOptions}
                               placeholder="Select Branch"
-                              value={branchRole?.value !== 0 ? branchRole : null}
+                              value={
+                                branchRole?.value !== 0 ? branchRole : null
+                              }
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
                               // classNamePrefix="selectCateogyCorporateList"
@@ -852,7 +854,8 @@ const AddBankUser = () => {
                         addBankUser.EmployeeID.value !== "" &&
                         addBankUser.firstName.value !== "" &&
                         addBankUser.email.value !== "" &&
-                        addBankUser.Contact.value !== ""
+                        addBankUser.Contact.value !== "" &&
+                        addBankUser.EmployeeID.value.length === 4
                           ? false
                           : true
                       }
