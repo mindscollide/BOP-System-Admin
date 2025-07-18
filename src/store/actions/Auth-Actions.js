@@ -275,6 +275,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_DeleteCategory_02".toLowerCase()
                 )
             ) {
+              dispatch(DeleteCategoryModalSystemAdmin(false));
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
