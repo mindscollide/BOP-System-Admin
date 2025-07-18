@@ -457,12 +457,14 @@ const EditBankerModal = () => {
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <Select
+                  className={styles["disableText"]}
                   classNamePrefix={"selectCateogyCorporateList"}
                   options={roleOptions}
                   value={roleID}
                   isSearchable="true"
                   menuPortalTarget={document.body}
                   onChange={handleSelectRole}
+                  isDisabled
                 />
               </Col>
             </Row>
