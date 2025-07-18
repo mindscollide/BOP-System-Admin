@@ -482,10 +482,12 @@ const EditBankerModal = () => {
                       <span className={styles["aesterick-color"]}>*</span>
                     </span>
                     <Select
+                    
                       options={branchOptions}
                       placeholder="Select Branch"
                       value={branchRole.value !== 0 ? branchRole : null}
                       onChange={branchSelectRoleHandler}
+                      isDisabled={true}
                       isSearchable={true}
                       classNamePrefix="selectCateogyCorporateList"
                       menuPortalTarget={document.body}
