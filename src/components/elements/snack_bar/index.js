@@ -11,7 +11,7 @@ const Message = {
 };
 
 function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 const Notification = ({ setOpen, open, message }) => {
   const state = useSelector((state) => state);
@@ -30,7 +30,7 @@ const Notification = ({ setOpen, open, message }) => {
   };
   return (
     <>
-      {message !== "" ? (
+      {message !== "" && message !== undefined ? (
         <div className={classes.root}>
           <Snackbar
             autoHideDuration={4000}
@@ -38,13 +38,11 @@ const Notification = ({ setOpen, open, message }) => {
             open={open}
             onClose={handleClose}
             message={message}
-            key={vertical + horizontal}
-          >
+            key={vertical + horizontal}>
             <Alert
               onClose={handleClose}
               severity={"error"}
-              className={classes.BackGroundSucces}
-            >
+              className={classes.BackGroundSucces}>
               {message}
             </Alert>
           </Snackbar>

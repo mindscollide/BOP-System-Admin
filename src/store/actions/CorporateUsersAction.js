@@ -70,14 +70,14 @@ const GetAllCorporateUsersAPI = (navigate, data) => {
               dispatch(
                 GetAllCorporateUsersSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetAllCorporateUsers_02".toLowerCase()
             ) {
-              dispatch(GetAllCorporateUsersFail("No Data Available"));
+              dispatch(GetAllCorporateUsersFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -169,7 +169,7 @@ const GetCorporateUserByUserIDApi = (
               dispatch(
                 GetCorporateUserByUserIDSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
               setCorproateUserId(data.UserId);
@@ -182,7 +182,7 @@ const GetCorporateUserByUserIDApi = (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetCorporateUserByUserID_02".toLowerCase()
             ) {
-              dispatch(GetCorporateUserByUserIDFail("No Data Available"));
+              dispatch(GetCorporateUserByUserIDFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -258,7 +258,7 @@ const SearchCorporateUsersAPI = (navigate, data) => {
               dispatch(
                 SearchCorporateUsersSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -268,7 +268,7 @@ const SearchCorporateUsersAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchCorporateUsers_02".toLowerCase()
                 )
             ) {
-              dispatch(SearchCorporateUsersFail("No Data Available"));
+              dispatch(SearchCorporateUsersFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Table,
-  Notification,
 } from "../../../../../../components/elements";
 
 import { useNavigate } from "react-router-dom";
@@ -785,7 +784,6 @@ const BankerList = () => {
       {EditBankerModalGobalState && <EditBankerModal />}
 
       {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleResetYes}

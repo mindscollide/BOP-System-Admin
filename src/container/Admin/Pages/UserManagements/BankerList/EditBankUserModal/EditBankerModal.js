@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import {
   Button,
   Modal,
-  Notification,
   TextField,
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
@@ -67,11 +66,7 @@ const EditBankerModal = () => {
     label: "",
   });
 
-  //Notification state
-  const [open, setOpen] = useState({
-    open: false,
-    message: "",
-  });
+
 
   //State for add company
   const [updateBankUser, setUpdateBankUser] = useState({
@@ -581,7 +576,6 @@ const EditBankerModal = () => {
           </Row>
         }
       />
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </>
   );
 };

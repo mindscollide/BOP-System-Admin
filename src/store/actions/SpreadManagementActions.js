@@ -77,7 +77,7 @@ const GetSpotSpreadsForCategoryAPI = (navigate, data) => {
               dispatch(
                 GetSpotSpreadsForCategorySuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
@@ -87,7 +87,7 @@ const GetSpotSpreadsForCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetSpotSpreadsForCategory_02".toLowerCase()
                 )
             ) {
-              dispatch(GetSpotSpreadsForCategoryFail("No Data Available."));
+              dispatch(GetSpotSpreadsForCategoryFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -168,7 +168,7 @@ const GetCrossRateSpreadsForCategoryAPI = (navigate, data) => {
               dispatch(
                 GetCrossRateSpreadsForCategorySuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
@@ -178,9 +178,7 @@ const GetCrossRateSpreadsForCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetCrossRateSpreadsForCategory_02".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetCrossRateSpreadsForCategoryFail("No Data Available.")
-              );
+              dispatch(GetCrossRateSpreadsForCategoryFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -266,7 +264,7 @@ const GetTenorWiseForwardSpreadsForCategoryAPI = (navigate, data) => {
               dispatch(
                 GetTenorWiseForwardSpreadsForCategorySuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
@@ -276,9 +274,7 @@ const GetTenorWiseForwardSpreadsForCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetTenorWiseForwardSpreadsForCategory_02".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetTenorWiseForwardSpreadsForCategoryFail("No Data Available.")
-              );
+              dispatch(GetTenorWiseForwardSpreadsForCategoryFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -372,7 +368,7 @@ const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
               dispatch(
                 GetTenorWiseFEDiscountingSpreadsForCategorySuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
@@ -429,16 +425,8 @@ const GetTenorWiseFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
                 ],
               };
               dispatch(
-                GetTenorWiseFEDiscountingSpreadsForCategorySuccess(
-                  data,
-                  "Data Available."
-                )
+                GetTenorWiseFEDiscountingSpreadsForCategorySuccess(data, "")
               );
-              // dispatch(
-              //   GetTenorWiseFEDiscountingSpreadsForCategoryFail(
-              //     "No Data Available."
-              //   )
-              // );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetTenorWiseFEDiscountingSpreadsForCategory_04".toLowerCase()
@@ -531,22 +519,17 @@ const GetAllTenorsAPI = (navigate) => {
                   "UploadRate_UploadRateServiceManager_GetAllTenors_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllTenorsSuccess(
-                  response.data.responseResult,
-                  "API executed successfully."
-                )
-              );
+              dispatch(GetAllTenorsSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
             ) {
-              dispatch(GetAllTenorsFail("No Data Available."));
+              dispatch(GetAllTenorsFail(""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
             ) {
-              dispatch(GetAllTenorsFail("Role doesn’t matched."));
+              dispatch(GetAllTenorsFail("Role doesn’t matched"));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "UploadRate_UploadRateServiceManager_GetAllTenors_03".toLowerCase()
@@ -639,18 +622,14 @@ const GetTenorWiseNonFEDiscountingSpreadsForCategoryAPI = (navigate, data) => {
               dispatch(
                 GetTenorWiseNonFEDiscountingSpreadsForCategorySuccess(
                   response.data.responseResult,
-                  "Data Available."
+                  ""
                 )
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_02".toLowerCase()
             ) {
-              dispatch(
-                GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(
-                  "No Data Available."
-                )
-              );
+              dispatch(GetTenorWiseNonFEDiscountingSpreadsForCategoryFail(""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetTenorWiseNonFEDiscountingSpreadsForCategory_04".toLowerCase()

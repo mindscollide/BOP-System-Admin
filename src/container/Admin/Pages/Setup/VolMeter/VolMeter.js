@@ -5,7 +5,6 @@ import {
   CustomPaper,
   TextField,
   Button,
-  Notification,
   Loader,
 } from "../../../../../components/elements";
 import { useState } from "react";
@@ -329,7 +328,6 @@ const VolMeter = () => {
         </Col>
       </Row>
       {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };

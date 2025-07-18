@@ -10,7 +10,6 @@ import { GetAllCategoriesAPI } from "../../../../../../store/actions/Auth-Action
 import {
   Button,
   Modal,
-  Notification,
   TextField,
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
@@ -413,7 +412,6 @@ const AddBranchModal = () => {
         </Row>
       }
     />
-    // <Notification setOpen={setOpen} open={open.open} message={open.message} />
   );
 };
 

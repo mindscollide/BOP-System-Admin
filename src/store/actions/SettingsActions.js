@@ -66,7 +66,7 @@ const GetUserSettingsAPI = (navigate) => {
               dispatch(
                 GetUserSettingsSuccess(
                   response.data.responseResult,
-                  "API executed successfully."
+                  ""
                 )
               );
             } else if (
@@ -153,7 +153,7 @@ const UpdateUserSettingsAPI = (navigate, data, setSettingModalState) => {
               dispatch(
                 UpdateUserSettingsSuccess(
                   response.data.responseResult,
-                  "API executed successfully."
+                  "Update Settings Successfully"
                 )
               );
               setSettingModalState(false);
@@ -252,7 +252,7 @@ const GetMarketTimeSettingsAPI = (navigate) => {
               dispatch(
                 GetMarketTimeSettingsSuccess(
                   response.data.responseResult,
-                  "API executed successfully."
+                  ""
                 )
               );
               console.log("reached here......3");
@@ -354,7 +354,7 @@ const SaveMarketTimeSettingsAPI = (navigate, data, setSettingModalState) => {
               dispatch(
                 SaveMarketTimeSettingsSuccess(
                   response.data.responseResult,
-                  "API executed successfully."
+                  "Update Market Timing Successfully"
                 )
               );
               setSettingModalState(false);
