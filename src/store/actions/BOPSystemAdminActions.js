@@ -94,7 +94,7 @@ const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
               dispatch(
                 CreateNewCorporateSuccess(
                   response.data.responseResult,
-                  "Corporate successfully created"
+                  "Company successfully created"
                 )
               );
               // dispatch(getAllCorporatesCategory(navigate));
