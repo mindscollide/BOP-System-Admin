@@ -21,6 +21,12 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   const [modalState, setModalState] = useState(0);
   const [NonFEDiscoutingData, setNonFEDiscoutingData] = useState([]);
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
+  console.log(FEDiscoutingColumns, "FEDiscoutingColumns");
+  console.log(
+    GetTenorWiseNonFEDiscountingSpreadsForCategory,
+    "GetTenorWiseNonFEDiscountingSpreadsForCategory"
+  );
+
   const GetTenorWiseNonFEDiscountingSpreadsForCategory = useSelector(
     (state) =>
       state.SpreadManagementReducer
@@ -52,6 +58,11 @@ const NonFEDiscountingTable = ({ categoryID }) => {
             handleChangeDiscounting
           );
           setFEDiscoutingColumns(columnsData);
+          console.log(columnsData, "columnsDatacolumnsData");
+          console.log(
+            GetTenorWiseNonFEDiscountingSpreadsForCategory,
+            "GetTenorWiseNonFEDiscountingSpreadsForCategory"
+          );
 
           setNonFEDiscoutingData(rowData);
         } catch (error) {}
