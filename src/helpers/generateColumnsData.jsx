@@ -21,11 +21,15 @@ export const buildForwardsTable = (
     const applicableInstruments =
       value === 1
         ? instruments?.filter((inst) => inst.discountingApplicable) || []
+        : value === 2
+        ? instruments?.filter((inst) => inst.forwardsApplicable) || []
         : instruments;
 
     const applicableTenors =
       value === 1
         ? tenors?.filter((tenor) => tenor.isDiscountingApplicable) || []
+        : value === 2
+        ? tenors?.filter((tenor) => tenor.isForwardingApplicable) || []
         : tenors;
 
     // Step 1: Create rateMap with bid/ask
@@ -217,10 +221,14 @@ export const buildDiscountingTable = (
     const applicableInstruments =
       value === 1
         ? instruments?.filter((inst) => inst.discountingApplicable) || []
+        : value === 2
+        ? instruments?.filter((inst) => inst.discountingApplicable)
         : instruments;
     const applicableTenors =
       value === 1
         ? tenors?.filter((tenor) => tenor.isDiscountingApplicable) || []
+        : value === 2
+        ? tenors?.filter((tenor) => tenor.isDiscountingApplicable)
         : tenors;
 
     // Step 2: Create a map using composite key (instrumentID-tenorID)

@@ -1051,7 +1051,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   right: 2%;
 }
 
-.icon-arrow-right {
+.righArrow .icon-arrow-right {
   font-size: 80px !important;
   color: #000000;
   opacity: 0.5 !important;
