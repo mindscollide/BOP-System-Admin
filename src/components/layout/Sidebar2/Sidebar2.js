@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Nav, Navbar } from "react-bootstrap";
-import { PersonFill, GearFill } from "react-bootstrap-icons";
 import "./Sidebar2.css";
 
 const Sidebar2 = () => {
@@ -35,7 +34,10 @@ const Sidebar2 = () => {
             className="sidebar-menu-header"
           >
             <span>
-              <PersonFill className="sidebar-icon" /> User Management
+              <i className={"sidebar-icon icon-user"}>
+                {" "}
+                <span>User Management</span>
+              </i>
             </span>
             <i
               className={`sidebarExpendIcon  ${
@@ -122,7 +124,10 @@ const Sidebar2 = () => {
             className="sidebar-menu-header"
           >
             <span>
-              <GearFill className="sidebar-icon" /> Setup
+              <i className={"sidebar-icon icon-settings"}>
+                {" "}
+                <span>Setup</span>
+              </i>
             </span>
             <span
               className={`sidebarExpendIcon  ${
