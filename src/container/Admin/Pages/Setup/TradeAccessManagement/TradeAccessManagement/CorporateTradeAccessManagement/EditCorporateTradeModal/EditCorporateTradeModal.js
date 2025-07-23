@@ -480,28 +480,28 @@ const EditCorporateTradeModal = ({ info }) => {
       dataIndex: "",
       align: "center",
     },
-    {
-      title: "",
-      children: [
-        {
-          title: "Hide",
-          dataIndex: "isViewOnly",
-          key: "isViewOnly",
-          align: "center",
-          render: (_, record) => (
-            <CustomSwitch
-              checked={record.isViewOnly}
-              onChange={(event) =>
-                handleCheckboxChange(record, "isViewOnly", event)
-              }
-            />
-          ),
-        },
-      ],
-      key: "",
-      dataIndex: "",
-      align: "center",
-    },
+    // {
+    //   title: "",
+    //   children: [
+    //     {
+    //       title: "Hide",
+    //       dataIndex: "isViewOnly",
+    //       key: "isViewOnly",
+    //       align: "center",
+    //       render: (_, record) => (
+    //         <CustomSwitch
+    //           checked={record.isViewOnly}
+    //           onChange={(event) =>
+    //             handleCheckboxChange(record, "isViewOnly", event)
+    //           }
+    //         />
+    //       ),
+    //     },
+    //   ],
+    //   key: "",
+    //   dataIndex: "",
+    //   align: "center",
+    // },
   ];
 
   const handleValueChange = (e) => {
@@ -586,7 +586,7 @@ const EditCorporateTradeModal = ({ info }) => {
           IsParityBuy: item.isParityBuy,
           IsParitySell: item.isParitySell,
           IsActive: item.isActive,
-          IsViewOnly: item.isViewOnly,
+          IsViewOnly: false,
         })),
       };
 
