@@ -120,7 +120,7 @@
 .SectionContainer {
   width: 99% !important;
   margin: 0 auto !important;
-  height: 65vh;
+  min-height: 65vh;
 }
 
 .table-columns-Banklist {
