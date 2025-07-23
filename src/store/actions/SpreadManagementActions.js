@@ -14,6 +14,7 @@ import {
   SaveCategoryParitySpot,
 } from "../../commen/apis/Api_config";
 import {
+  authenticationAPI,
   systemAdminAPI,
   uploadRateAPI,
 } from "../../commen/apis/Api_ends_points";
@@ -496,7 +497,7 @@ const GetAllTenorsAPI = (navigate) => {
     form.append("RequestMethod", GetAllTenors.RequestMethod);
     axios({
       method: "POST",
-      url: uploadRateAPI,
+      url: authenticationAPI,
       data: form,
       headers: {
         _token: token,
@@ -516,13 +517,13 @@ const GetAllTenorsAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "UploadRate_UploadRateServiceManager_GetAllTenors_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllTenors_01".toLowerCase()
                 )
             ) {
               dispatch(GetAllTenorsSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_02".toLowerCase()
+              "ERM_AuthService_CommonManager_GetAllTenors_02".toLowerCase()
             ) {
               dispatch(GetAllTenorsFail(""));
             } else if (
@@ -532,14 +533,14 @@ const GetAllTenorsAPI = (navigate) => {
               dispatch(GetAllTenorsFail("Role doesn’t matched"));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_03".toLowerCase()
+              "ERM_AuthService_CommonManager_GetAllTenors_03".toLowerCase()
             ) {
-              dispatch(GetAllTenorsFail("Exception has been occurred."));
+              dispatch(GetAllTenorsFail("Something went wrong"));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
-              "UploadRate_UploadRateServiceManager_GetAllTenors_04".toLowerCase()
+              "ERM_AuthService_CommonManager_GetAllTenors_04".toLowerCase()
             ) {
-              dispatch(GetAllTenorsFail("DB Error."));
+              dispatch(GetAllTenorsFail("Something went wrong"));
             } else {
               dispatch(GetAllTenorsFail("Something went wrong"));
             }

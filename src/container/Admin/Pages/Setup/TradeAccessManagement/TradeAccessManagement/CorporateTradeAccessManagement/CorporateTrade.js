@@ -322,7 +322,7 @@ const CorporateTrade = ({
             pagination={false}
             rows={corporateTableData}
             className={"TradeAccessManagement"}
-            scroll={{ y: 400, x: "scroll" }}
+            scroll={{ y: 350, x: "scroll" }}
           />
         </Col>
       </Row>

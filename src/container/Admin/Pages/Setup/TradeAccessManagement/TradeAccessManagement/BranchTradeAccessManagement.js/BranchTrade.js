@@ -313,7 +313,7 @@ const BranchTrade = ({
             column={branchColumns}
             pagination={false}
             rows={branchTableData}
-            scroll={{ y: 400, x: "scroll" }}
+            scroll={{ y: 350, x: "scroll" }}
             className={"TradeAccessManagement"}
           />
         </Col>

@@ -40,9 +40,12 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   );
 
   const NonFEDiscoutingSpreadUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.NonFEDiscoutingSpreadUpdated
+    (state) => state.RealtimeActionReducer.NonFEDiscountingSpreadUpdated
   );
-
+  console.log(
+    "NonFEDiscoutingSpreadUpdatedNonFEDiscoutingSpreadUpdated",
+    NonFEDiscoutingSpreadUpdated
+  );
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (GetTenorWiseNonFEDiscountingSpreadsForCategory !== null) {
@@ -91,6 +94,10 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (NonFEDiscoutingSpreadUpdated !== null) {
+        console.log(
+          NonFEDiscoutingSpreadUpdated,
+          "NonFEDiscoutingSpreadUpdated"
+        );
         try {
           const {
             categorySpreads: { discountingSpreads },

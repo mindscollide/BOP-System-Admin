@@ -108,7 +108,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* Trade Access Management Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
 .TradeAccessManagement {
-  max-height: 70vh !important;
+  /* max-height: 70vh !important; */
 
   /* max-width: 100%; */
   width: 100%;
