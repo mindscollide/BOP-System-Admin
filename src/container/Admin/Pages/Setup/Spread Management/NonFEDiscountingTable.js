@@ -22,10 +22,7 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   const [NonFEDiscoutingData, setNonFEDiscoutingData] = useState([]);
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
   console.log(FEDiscoutingColumns, "FEDiscoutingColumns");
-  console.log(
-    GetTenorWiseNonFEDiscountingSpreadsForCategory,
-    "GetTenorWiseNonFEDiscountingSpreadsForCategory"
-  );
+
 
   const GetTenorWiseNonFEDiscountingSpreadsForCategory = useSelector(
     (state) =>

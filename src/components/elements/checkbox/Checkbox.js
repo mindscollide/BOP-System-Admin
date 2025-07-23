@@ -10,6 +10,7 @@ const CustomCheckbox = ({
   classNameDiv,
   disabled,
   className,
+  children,
 }) => {
   return (
     <>
@@ -20,7 +21,9 @@ const CustomCheckbox = ({
           checked={checked}
           onChange={onChange}
           disabled={disabled}
-        ></Checkbox>
+        >
+          {children || label2}
+        </Checkbox>
         <p className="m-0">{label2}</p>
       </div>
     </>

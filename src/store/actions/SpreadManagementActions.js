@@ -3,6 +3,7 @@ import * as actions from "../action_types";
 import {
   GetAllTenors,
   GetCrossRateSpreadsForCategory,
+  GetInstrumentApplicability,
   GetSpotSpreadsForCategory,
   GetTenorWiseFEDiscountingSpreadsForCategory,
   GetTenorWiseForwardSpreadsForCategory,
@@ -12,6 +13,7 @@ import {
   SaveCategoryForwards,
   SaveCategoryNonFEDiscounts,
   SaveCategoryParitySpot,
+  SaveInstrumentApplicability,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -19,6 +21,7 @@ import {
   uploadRateAPI,
 } from "../../commen/apis/Api_ends_points";
 import { RefreshToken } from "./Auth-Actions";
+import { SaveInstrumentApplicabilitySystemAdminModal } from "./BOPSystemAdminModalsActions";
 
 //GetSpotSpreadsForCategory
 const GetSpotSpreadsForCategoryInit = () => {
@@ -1132,6 +1135,193 @@ const SaveCategoryNonFEDiscountsAPI = (navigate, data) => {
       });
   };
 };
+
+//GetInstrumentApplicability
+const GetInstrumentApplicabilityInit = () => {
+  return {
+    type: actions.GET_INSTRUMENT_APPLICABLE_INIT,
+  };
+};
+
+const GetInstrumentApplicabilitySuccess = (response, message) => {
+  return {
+    type: actions.GET_INSTRUMENT_APPLICABLE_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const GetInstrumentApplicabilityFail = (message) => {
+  return {
+    type: actions.GET_INSTRUMENT_APPLICABLE_FAIL,
+    message: message,
+  };
+};
+
+const GetInstrumentApplicabilityAPI = (navigate) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(GetInstrumentApplicabilityInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", GetInstrumentApplicability.RequestMethod);
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(GetInstrumentApplicabilityAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetInstrumentApplicability_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                GetInstrumentApplicabilitySuccess(
+                  response.data.responseResult,
+                  ""
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetInstrumentApplicability_02".toLowerCase()
+            ) {
+              dispatch(GetInstrumentApplicabilityFail(""));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "SystemAdmin_SystemAdminManager_GetInstrumentApplicability_03".toLowerCase()
+            ) {
+              dispatch(GetInstrumentApplicabilityFail("Something went wrong"));
+            } else if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_CommonManager_GetAllTenors_04".toLowerCase()
+            ) {
+              dispatch(GetInstrumentApplicabilityFail("Something went wrong"));
+            } else {
+              dispatch(GetInstrumentApplicabilityFail("Something went wrong"));
+            }
+          } else {
+            dispatch(GetInstrumentApplicabilityFail("Something went wrong"));
+          }
+        } else {
+          dispatch(GetInstrumentApplicabilityFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(GetInstrumentApplicabilityFail("Something went wrong"));
+      });
+  };
+};
+
+//SaveInstrumentApplicability
+const SaveInstrumentApplicabilityInit = () => {
+  return {
+    type: actions.SAVE_INSTRUMENT_APPLICABLE_INIT,
+  };
+};
+
+const SaveInstrumentApplicabilitySuccess = (response, message) => {
+  return {
+    type: actions.SAVE_INSTRUMENT_APPLICABLE_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const SaveInstrumentApplicabilityFail = (message) => {
+  return {
+    type: actions.SAVE_INSTRUMENT_APPLICABLE_FAIL,
+    message: message,
+  };
+};
+
+const SaveInstrumentApplicabilityAPI = (navigate, data) => {
+  let token = localStorage.getItem("token");
+  return async (dispatch) => {
+    dispatch(SaveInstrumentApplicabilityInit());
+
+    let form = new FormData();
+    form.append("RequestMethod", SaveInstrumentApplicability.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: systemAdminAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data?.responseCode === 417) {
+          await dispatch(RefreshToken(navigate, data));
+          dispatch(SaveInstrumentApplicabilityAPI(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveInstrumentApplicability_01".toLowerCase()
+                )
+            ) {
+              dispatch(
+                SaveInstrumentApplicabilitySuccess(
+                  response.data.responseResult,
+                  "Successful."
+                )
+              );
+              dispatch(GetInstrumentApplicabilityAPI(navigate));
+              dispatch(SaveInstrumentApplicabilitySystemAdminModal(false));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveInstrumentApplicability_02".toLowerCase()
+                )
+            ) {
+              dispatch(SaveInstrumentApplicabilityFail("UnSuccessful."));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_SaveInstrumentApplicability_03".toLowerCase()
+                )
+            ) {
+              dispatch(SaveInstrumentApplicabilityFail("Exception."));
+            } else {
+              dispatch(SaveInstrumentApplicabilityFail("Something went wrong"));
+            }
+          } else {
+            dispatch(SaveInstrumentApplicabilityFail("Something went wrong"));
+          }
+        } else {
+          dispatch(SaveInstrumentApplicabilityFail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(SaveInstrumentApplicabilityFail("Something went wrong"));
+      });
+  };
+};
+
 const clearResponseMessageSpreadManagementReducer = () => {
   return {
     type: actions.CLEAR_RESPONSEMESSAGE_SPREADMANAGEMENTREDUCER,
@@ -1151,4 +1341,6 @@ export {
   SaveCategoryFEDiscountsAPI,
   SaveCategoryNonFEDiscountsAPI,
   clearResponseMessageSpreadManagementReducer,
+  GetInstrumentApplicabilityAPI,
+  SaveInstrumentApplicabilityAPI,
 };

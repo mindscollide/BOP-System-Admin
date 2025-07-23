@@ -181,6 +181,17 @@ const Sidebar2 = () => {
               >
                 Vol Meter
               </Link>
+              <Link
+                to="/BOP/CurrencyManagement"
+                className={
+                  selectedKey === "11"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("11")}
+              >
+                Currency Management
+              </Link>
             </div>
           )}
         </Nav.Item>
