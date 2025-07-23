@@ -28,7 +28,7 @@
 .Container_bank_user {
   width: 97% !important;
   margin: 0 auto !important;
-  height: 70vh !important;
+  min-height: 70vh !important;
 }
 
 .Active-btn-Corp {
