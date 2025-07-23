@@ -20,6 +20,10 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [modalState, setModalState] = useState(0);
   const [NonFEDiscoutingData, setNonFEDiscoutingData] = useState([]);
+  console.log(
+    NonFEDiscoutingData,
+    "NonFEDiscoutingDataNonFEDiscoutingDataNonFEDiscoutingData"
+  );
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
 
   const GetTenorWiseNonFEDiscountingSpreadsForCategory = useSelector(
@@ -156,6 +160,7 @@ const NonFEDiscountingTable = ({ categoryID }) => {
         CategoryID: categoryID,
         DiscountingSpreads: updatedDiscounts,
       };
+      console.log(data, "TEstdat");
       dispatch(SaveCategoryNonFEDiscountsAPI(navigate, data));
       setConfirmationModal(false);
       setModalState(0);
