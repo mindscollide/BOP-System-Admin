@@ -21,6 +21,7 @@ const FEDiscountingTable = ({ categoryID }) => {
   const [modalState, setModalState] = useState(0);
   const [FEDiscoutingData, setFEDiscoutingData] = useState([]);
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
+
   const GetTenorWiseFEDiscountingSpreadsForCategory = useSelector(
     (state) =>
       state.SpreadManagementReducer.GetTenorWiseFEDiscountingSpreadsForCategory
@@ -30,13 +31,16 @@ const FEDiscountingTable = ({ categoryID }) => {
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
 
+  console.log(GetAllInstruments, "GetAllInstrumentsGetAllInstruments");
+
   const GetAllTenors = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
   );
 
   const FEDiscoutingSpreadUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.FEDiscoutingSpreadUpdated
+    (state) => state.RealtimeActionReducer.FEDiscountingSpreadUpdated
   );
+  // console.log("FEDiscoutingSpreadUpdated", FEDiscoutingSpreadUpdated);
 
   const handleChangeDiscounting = (value, record, instrumentName) => {
     if (isValidNumberUnderMax(value, "", 100)) {

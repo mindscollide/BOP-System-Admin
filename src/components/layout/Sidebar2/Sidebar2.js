@@ -1,194 +1,191 @@
-import "./Sidebar2.css";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu } from "antd";
+import { Link } from "react-router-dom";
+import { Nav, Navbar } from "react-bootstrap";
+import "./Sidebar2.css";
 
 const Sidebar2 = () => {
-  const { SubMenu } = Menu;
-  const navigate = useNavigate();
-  const [openKeys, setOpenKeys] = useState([
-    localStorage.getItem("defaultOpenKey"),
-  ]);
+  const [expandedKey, setExpandedKey] = useState(
+    localStorage.getItem("defaultOpenKey") || null
+  );
 
-  const onOpenChange = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (latestOpenKey) {
-      setOpenKeys([latestOpenKey]);
-    } else {
-      setOpenKeys([]);
+  const selectedKey = localStorage.getItem("defaultSelectedKey");
+
+  const handleToggle = (eventKey) => {
+    if (eventKey === "sub1" || eventKey === "sub2") {
+      setExpandedKey(expandedKey === eventKey ? null : eventKey);
+      localStorage.setItem(
+        "defaultOpenKey",
+        expandedKey === eventKey ? null : eventKey
+      );
     }
   };
 
-  const navigateToAddaBankUser = () => {
-    localStorage.setItem("defaultOpenKey", "sub1");
-    localStorage.setItem("defaultSelectedKey", "1");
-    navigate("/BOP/AddBankUser");
-  };
-
-  const navigateToCorporateUser = () => {
-    localStorage.setItem("defaultOpenKey", "sub1");
-    localStorage.setItem("defaultSelectedKey", "2");
-    navigate("/BOP/CorporateUser");
-  };
-
-  const navigateToCorporateList = () => {
-    localStorage.setItem("defaultOpenKey", "sub1");
-    localStorage.setItem("defaultSelectedKey", "3");
-    navigate("/BOP/CorporateList");
-  };
-
-  const navigateToBankerList = () => {
-    localStorage.setItem("defaultOpenKey", "sub1");
-    localStorage.setItem("defaultSelectedKey", "4");
-    navigate("/BOP/BankerList");
-  };
-
-  const navigateToLoginHistory = () => {
-    localStorage.setItem("defaultOpenKey", "sub1");
-    localStorage.setItem("defaultSelectedKey", "5");
-    navigate("/BOP/LoginHistory");
-  };
-
-  const navigateToTradeCount = () => {
-    navigate("/BOP/tradeCount");
-    localStorage.setItem("defaultOpenKey", "sub1");
-    localStorage.setItem("defaultSelectedKey", "6");
-  };
-  const navigateToTradeAccessManagement = () => {
-    localStorage.setItem("defaultOpenKey", "sub2");
-    localStorage.setItem("defaultSelectedKey", "7");
-    navigate("/BOP/TradeAccessManagement");
-  };
-  const navigateToCategoryManagement = () => {
-    localStorage.setItem("defaultOpenKey", "sub2");
-    localStorage.setItem("defaultSelectedKey", "8");
-    navigate("/BOP/categorymanagement");
-  };
-
-  const navigateToSpreadManagement = () => {
-    localStorage.setItem("defaultOpenKey", "sub2");
-    localStorage.setItem("defaultSelectedKey", "9");
-    navigate("/BOP/SpreadManagement");
-  };
-
-  const navigateToVolMeter = () => {
-    localStorage.setItem("defaultOpenKey", "sub2");
-    localStorage.setItem("defaultSelectedKey", "10");
-    navigate("/BOP/volMeter");
-  };
-
-  const navigateToCurrencyManagement = () => {
-    localStorage.setItem("defaultOpenKey", "sub2");
-    localStorage.setItem("defaultSelectedKey", "11");
-    navigate("/BOP/CurrencyManagement");
+  const handleItemClick = (selectedKey) => {
+    localStorage.setItem("defaultSelectedKey", selectedKey);
   };
 
   return (
-    <Menu
-      theme="dark"
-      mode="inline"
-      defaultOpenKeys={[localStorage.getItem("defaultOpenKey")]}
-      selectedKeys={[localStorage.getItem("defaultSelectedKey")]}
-      className="Menu-sidebar-class"
-    >
-      <SubMenu
-        key="sub1"
-        icon={<i className="icon-user menu-icons"></i>}
-        title="User Management"
-        className="submenu-sidebar-icons"
-        theme="light"
-        style={{ background: "#4d4946" }}
-      >
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="1"
-          onClick={navigateToAddaBankUser}
-        >
-          Add a Bank User
-        </Menu.Item>
+    <Navbar expand={false} className="sidebar-navbar">
+      <Nav className="w-100">
+        {/* User Management Section */}
+        <Nav.Item className="sidebar-menu-group">
+          <Nav.Link
+            onClick={() => handleToggle("sub1")}
+            className="sidebar-menu-header"
+          >
+            <span>
+              <i className={"sidebar-icon icon-user"}>
+                {" "}
+                <span>User Management</span>
+              </i>
+            </span>
+            <i
+              className={`sidebarExpendIcon  ${
+                expandedKey === "sub1" ? "icon-arrow-down" : "icon-arrow-right "
+              }`}
+            ></i>
+          </Nav.Link>
+          {expandedKey === "sub1" && (
+            <div className="sidebar-submenu">
+              <Link
+                to="/BOP/AddBankUser"
+                className={
+                  selectedKey === "1"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("1")}
+              >
+                Add a Bank User
+              </Link>
+              <Link
+                to="/BOP/CorporateUser"
+                className={
+                  selectedKey === "2"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("2")}
+              >
+                Add a Corporate User
+              </Link>
+              <Link
+                to="/BOP/CorporateList"
+                className={
+                  selectedKey === "3"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("3")}
+              >
+                Corporate Users List
+              </Link>
+              <Link
+                to="/BOP/BankerList"
+                className={
+                  selectedKey === "4"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("4")}
+              >
+                Banker List
+              </Link>
+              <Link
+                to="/BOP/LoginHistory"
+                className={
+                  selectedKey === "5"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("5")}
+              >
+                Login History
+              </Link>
+              <Link
+                to="/BOP/tradeCount"
+                className={
+                  selectedKey === "6"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("6")}
+              >
+                Trade Count
+              </Link>
+            </div>
+          )}
+        </Nav.Item>
 
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="2"
-          onClick={navigateToCorporateUser}
-        >
-          Add a Corporate User
-        </Menu.Item>
-
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="3"
-          onClick={navigateToCorporateList}
-        >
-          Corporate Users List
-        </Menu.Item>
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="4"
-          onClick={navigateToBankerList}
-        >
-          Banker List
-        </Menu.Item>
-
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="5"
-          onClick={navigateToLoginHistory}
-        >
-          Login History
-        </Menu.Item>
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="6"
-          onClick={navigateToTradeCount}
-        >
-          Trade Count
-        </Menu.Item>
-      </SubMenu>
-
-      <SubMenu
-        key="sub2"
-        icon={<i className="icon-settings menu-icons"></i>}
-        title="Setup"
-        className="submenu-sidebar-icons"
-      >
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="7"
-          onClick={navigateToTradeAccessManagement}
-        >
-          Trade Access Management
-        </Menu.Item>
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="8"
-          onClick={navigateToCategoryManagement}
-        >
-          Category Management FX
-        </Menu.Item>
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="9"
-          onClick={navigateToSpreadManagement}
-        >
-          Spread Management
-        </Menu.Item>
-        <Menu.Item
-          className="menu-items-sidebar"
-          key="10"
-          onClick={navigateToVolMeter}
-        >
-          Vol Meter
-        </Menu.Item>{" "}
-        {/* <Menu.Item
-          className="menu-items-sidebar"
-          key="11"
-          onClick={navigateToCurrencyManagement}
-        >
-          Currency Management
-        </Menu.Item> */}
-      </SubMenu>
-    </Menu>
+        {/* Setup Section */}
+        <Nav.Item className="sidebar-menu-group">
+          <Nav.Link
+            onClick={() => handleToggle("sub2")}
+            className="sidebar-menu-header"
+          >
+            <span>
+              <i className={"sidebar-icon icon-settings"}>
+                {" "}
+                <span>Setup</span>
+              </i>
+            </span>
+            <span
+              className={`sidebarExpendIcon  ${
+                expandedKey === "sub2" ? "icon-arrow-down" : "icon-arrow-right "
+              }`}
+            ></span>
+          </Nav.Link>
+          {expandedKey === "sub2" && (
+            <div className="sidebar-submenu">
+              <Link
+                to="/BOP/TradeAccessManagement"
+                className={
+                  selectedKey === "7"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("7")}
+              >
+                Trade Access Management
+              </Link>
+              <Link
+                to="/BOP/categorymanagement"
+                className={
+                  selectedKey === "8"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("8")}
+              >
+                Category Management FX
+              </Link>
+              <Link
+                to="/BOP/SpreadManagement"
+                className={
+                  selectedKey === "9"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("9")}
+              >
+                Spread Management
+              </Link>
+              <Link
+                to="/BOP/volMeter"
+                className={
+                  selectedKey === "10"
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("10")}
+              >
+                Vol Meter
+              </Link>
+            </div>
+          )}
+        </Nav.Item>
+      </Nav>
+    </Navbar>
   );
 };
 

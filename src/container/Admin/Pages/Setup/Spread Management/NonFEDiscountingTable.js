@@ -21,6 +21,12 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   const [modalState, setModalState] = useState(0);
   const [NonFEDiscoutingData, setNonFEDiscoutingData] = useState([]);
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
+  console.log(FEDiscoutingColumns, "FEDiscoutingColumns");
+  console.log(
+    GetTenorWiseNonFEDiscountingSpreadsForCategory,
+    "GetTenorWiseNonFEDiscountingSpreadsForCategory"
+  );
+
   const GetTenorWiseNonFEDiscountingSpreadsForCategory = useSelector(
     (state) =>
       state.SpreadManagementReducer
@@ -34,9 +40,12 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   );
 
   const NonFEDiscoutingSpreadUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.NonFEDiscoutingSpreadUpdated
+    (state) => state.RealtimeActionReducer.NonFEDiscountingSpreadUpdated
   );
-
+  console.log(
+    "NonFEDiscoutingSpreadUpdatedNonFEDiscoutingSpreadUpdated",
+    NonFEDiscoutingSpreadUpdated
+  );
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (GetTenorWiseNonFEDiscountingSpreadsForCategory !== null) {
@@ -52,6 +61,11 @@ const NonFEDiscountingTable = ({ categoryID }) => {
             handleChangeDiscounting
           );
           setFEDiscoutingColumns(columnsData);
+          console.log(columnsData, "columnsDatacolumnsData");
+          console.log(
+            GetTenorWiseNonFEDiscountingSpreadsForCategory,
+            "GetTenorWiseNonFEDiscountingSpreadsForCategory"
+          );
 
           setNonFEDiscoutingData(rowData);
         } catch (error) {}
@@ -80,6 +94,10 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (NonFEDiscoutingSpreadUpdated !== null) {
+        console.log(
+          NonFEDiscoutingSpreadUpdated,
+          "NonFEDiscoutingSpreadUpdated"
+        );
         try {
           const {
             categorySpreads: { discountingSpreads },

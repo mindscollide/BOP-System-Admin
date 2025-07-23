@@ -94,7 +94,7 @@ const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
               dispatch(
                 CreateNewCorporateSuccess(
                   response.data.responseResult,
-                  "Corporate successfully created"
+                  "Company successfully created"
                 )
               );
               // dispatch(getAllCorporatesCategory(navigate));
@@ -1344,10 +1344,7 @@ const SearchBankUsersAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_SearchBankUsers_01".toLowerCase()
             ) {
               dispatch(
-                SearchBankUsersSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                SearchBankUsersSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -1609,10 +1606,7 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_01".toLowerCase()
             ) {
               dispatch(
-                GetVolmeterByBankIDsuccess(
-                  response.data.responseResult,
-                  "Volmeter values by bank"
-                )
+                GetVolmeterByBankIDsuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -2211,10 +2205,7 @@ const GetCounterPartyNamesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetCounterPartyNamesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                GetCounterPartyNamesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -2460,10 +2451,7 @@ const GetCounterPartyListAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetCounterPartyListSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                GetCounterPartyListSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -2540,12 +2528,7 @@ const GetAllTradesAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_GetAllTrades_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllTradesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
-              );
+              dispatch(GetAllTradesSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()

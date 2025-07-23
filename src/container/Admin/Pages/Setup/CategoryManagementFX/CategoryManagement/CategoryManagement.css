@@ -1028,7 +1028,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   border: none !important;
   z-index: 1 !important;
   position: absolute;
-  top: 46%;
+  top: 37%;
   left: 0px;
 }
 
@@ -1047,11 +1047,11 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   border: none !important;
   z-index: 1 !important;
   position: absolute;
-  top: 46%;
+  top: 37%;
   right: 2%;
 }
 
-.icon-arrow-right {
+.righArrow .icon-arrow-right {
   font-size: 80px !important;
   color: #000000;
   opacity: 0.5 !important;
