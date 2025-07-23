@@ -20,6 +20,7 @@ import {
   extractTimeOnly,
 } from "../../../../helpers/reusableMethods";
 import { setMarketTimingsUpdated } from "../../../../store/actions/RealtimeActions";
+import { formatTimeToUTC } from "../../../../commen/functions/utils";
 
 const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const dispatch = useDispatch();
@@ -27,6 +28,9 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const marketTimingsUpdated = useSelector(
     (state) => state.RealtimeActionReducer.marketTimingsUpdated
   );
+
+  console.log(marketTimingsUpdated, "marketTimingsUpdated");
+
   const [settingUser, setSettingUser] = useState(true);
   const [passcodeSetting, setPasscodeSetting] = useState(false);
   const [marketTiming, setMarketTiming] = useState(false);
@@ -36,10 +40,17 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     BD_EmailOnEveryMessage: false,
   });
 
+  console.log(settingsRecord, "settingsRecordsettingsRecord");
+
   const [monToThruStartTime, setMonToThruStartTime] = useState(null);
   const [monToThruEndTime, setMonToThruEndTime] = useState(null);
   const [fridayStartTime, setFridayStartTime] = useState(null);
   const [fridayEndTime, setFridayEndTime] = useState(null);
+
+  console.log(
+    { monToThruStartTime, monToThruEndTime, fridayStartTime, fridayEndTime },
+    "fridayEndTimefridayEndTimefridayEndTime"
+  );
 
   const Loading = useSelector((state) => state.settingsReducer.Loading);
   const GetUserSettings = useSelector(
@@ -48,6 +59,8 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   const GetMarketTimeSettings = useSelector(
     (state) => state.settingsReducer.GetMarketTimeSettings
   );
+
+  console.log(GetMarketTimeSettings, "GetMarketTimeSettings");
 
   useEffect(() => {
     dispatch(GetUserSettingsAPI(navigate));
@@ -113,6 +126,7 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
       }));
     }
   }, [GetUserSettings, GetMarketTimeSettings]);
+
   useEffect(() => {
     if (marketTimingsUpdated !== null) {
       const { marketTimings } = marketTimingsUpdated;
@@ -204,11 +218,13 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
 
     try {
       let updateTime = {
-        MonThuStartTime: extractTimeOnly(monToThruStartTime),
-        MonThuEndTime: extractTimeOnly(monToThruEndTime),
-        FridayStartTime: extractTimeOnly(fridayStartTime),
-        FridayEndTime: extractTimeOnly(fridayEndTime),
+        MonThuStartTime: formatTimeToUTC(monToThruStartTime),
+        MonThuEndTime: formatTimeToUTC(monToThruEndTime),
+        FridayStartTime: formatTimeToUTC(fridayStartTime),
+        FridayEndTime: formatTimeToUTC(fridayEndTime),
       };
+
+      console.log(updateTime, "updateTimeupdateTime");
       dispatch(
         SaveMarketTimeSettingsAPI(navigate, updateTime, setSettingModalState)
       );
