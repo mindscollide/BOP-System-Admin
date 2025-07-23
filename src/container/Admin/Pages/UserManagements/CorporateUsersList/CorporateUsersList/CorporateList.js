@@ -836,7 +836,7 @@ const CorporateList = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 300, x: "scroll" }}
+                  scroll={{ y: 280, x: "scroll" }}
                   className={"BankUserList-table"}
                 />
               </Col>
