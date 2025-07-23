@@ -55,6 +55,11 @@ const BankerList = () => {
   const bankUserUpdated = useSelector(
     (state) => state.RealtimeActionReducer.bankUserUpdated
   );
+  const saveInstrumentModal = useSelector(
+    (state) => state.BOPSystemAdminModal.saveInstrumentModal
+  );
+
+  console.log("saveInstrumentModal", saveInstrumentModal);
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);

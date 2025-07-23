@@ -1,0 +1,66 @@
+.currencymodal-label {
+  font-size: 23px !important;
+  font-weight: 500 !important;
+  color: #f26522 !important;
+}
+
+.currencymodal-heading2 {
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  color: #000 !important;
+}
+
+.saveChangesButton {
+  display: flex !important;
+  gap: 10px !important;
+  background: #096fed !important;
+  border-radius: 4px;
+  border: none !important;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  align-items: center !important;
+}
+
+.saveChangesButton:is(:hover, :focus, :active, :focus-visible) {
+  display: flex !important;
+  gap: 10px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border-radius: 4px;
+  border: none !important;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  align-items: center !important;
+}
+
+.IconClass {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.CancelButton {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 4px !important;
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.CancelButton:is(:hover, :active, :focus, :focus-visible) {
+  cursor: pointer !important;
+  font-family: "Poppins", sans-serif !important;
+  background: #0b5ed7 !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  gap: 5px !important;
+  align-items: center !important;
+  border: none !important;
+}

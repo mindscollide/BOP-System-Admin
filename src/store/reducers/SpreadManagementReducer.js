@@ -12,6 +12,8 @@ const initalState = {
   SaveCategoryForwards: null,
   SaveCategoryFEDiscounts: null,
   SaveCategoryNonFEDiscounts: null,
+  CurrencyManagementData: null,
+  SaveInstrumentAppliacableData: null,
 };
 
 const SpreadManagementReducer = (state = initalState, action) => {
@@ -205,6 +207,46 @@ const SpreadManagementReducer = (state = initalState, action) => {
         ...state,
         Loading: false,
         SaveCategoryNonFEDiscounts: null,
+        ResponseMessage: action.message,
+      };
+
+    case actions.GET_INSTRUMENT_APPLICABLE_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.GET_INSTRUMENT_APPLICABLE_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        CurrencyManagementData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.GET_INSTRUMENT_APPLICABLE_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        CurrencyManagementData: null,
+        ResponseMessage: action.message,
+      };
+
+    case actions.SAVE_INSTRUMENT_APPLICABLE_INIT:
+      return {
+        ...state,
+        Loading: true,
+      };
+    case actions.SAVE_INSTRUMENT_APPLICABLE_SUCCESS:
+      return {
+        ...state,
+        Loading: false,
+        SaveInstrumentAppliacableData: action.response,
+        ResponseMessage: action.message,
+      };
+    case actions.SAVE_INSTRUMENT_APPLICABLE_FAIL:
+      return {
+        ...state,
+        Loading: false,
+        SaveInstrumentAppliacableData: null,
         ResponseMessage: action.message,
       };
 

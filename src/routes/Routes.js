@@ -44,7 +44,7 @@ export const router = createBrowserRouter(
           path="TradeAccessManagement"
           element={<TradeAccessManagement />}
         />
-        {/* <Route path="CurrencyManagement" element={<CurrencyManagement />} /> */}
+        <Route path="CurrencyManagement" element={<CurrencyManagement />} />
         <Route path="SpreadManagement" element={<SpreadManagement />} />
       </Route>
     </>

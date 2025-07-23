@@ -1,3 +1,4 @@
+import { message } from "antd";
 import * as actions from "../action_types";
 
 const AdduserModalSystemAdmin = (response, message) => {
@@ -103,6 +104,20 @@ const DeleteCategoryModalSystemAdmin = (response, message) => {
   };
 };
 
+const SaveInstrumentApplicabilitySystemAdminModal = (response, message) => {
+  return {
+    type: actions.SAVE_INSTRUMENT_APPLICABLE_MODAL,
+    response: response,
+    message: message,
+  };
+};
+
+const setSelectedInstrument = (response, message) => ({
+  type: actions.SET_SELECTED_INSTRUMENT,
+  response: response,
+  message: message,
+});
+
 const clearResponseMessageBopSystemAdminModal = () => {
   return {
     type: actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCERMODAL,
@@ -124,4 +139,6 @@ export {
   TradeCountCommentModalSystemAdmin,
   DeleteCategoryModalSystemAdmin,
   clearResponseMessageBopSystemAdminModal,
+  SaveInstrumentApplicabilitySystemAdminModal,
+  setSelectedInstrument,
 };
