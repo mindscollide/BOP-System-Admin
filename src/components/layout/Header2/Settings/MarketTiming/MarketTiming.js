@@ -257,9 +257,9 @@ const MarketTiming = ({
                 showNow={false}
                 onOk={(event) => handleChange("fridayEndTime", event)}
                 onSelect={(event) => handleChangeTime(event, "fridayEndTime")}
-                disabledTime={() =>
-                  disabledTimeFri(fridayEndTime, fridayStartTime, 2)
-                }
+                // disabledTime={() =>
+                //   disabledTimeFri(fridayEndTime, fridayStartTime, 2)
+                // }
               />
             </Col>
           </Row>

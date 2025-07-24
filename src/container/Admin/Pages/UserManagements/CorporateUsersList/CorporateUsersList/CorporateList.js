@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Table,
-  Loader,
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
@@ -102,9 +101,7 @@ const CorporateList = () => {
   //row length on scroll
   const [sRow, setSRow] = useState(0);
   const [recordsLength, setRecordLength] = useState(0);
-  const loadingState = useSelector(
-    (state) => state.CorporateUsersReducer.Loading
-  );
+
   //Search all  corporate Users
   const SearchCorporateUsers = useSelector(
     (state) => state.CorporateUsersReducer.SearchCorporateUsersData
@@ -253,9 +250,6 @@ const CorporateList = () => {
           setRecordLength(totalRecords);
           setSRow(corporateUsers.length);
         }
-        // if (corporateUsers.length > 0) {
-        //   setTableData(SearchCorporateUsers.corporateUsers);
-        // }
       } catch (error) {}
     } else if (SearchCorporateUsers === null) {
       if (!hasReachedBottom) {
@@ -531,14 +525,14 @@ const CorporateList = () => {
       width: "220px",
       align: "left",
       ellipsis: true,
-      render: (email, record) => (
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => handleOnClickEmail(record)}
-        >
-          {email}
-        </span>
-      ),
+      // render: (email, record) => (
+      //   <span
+      //     style={{ cursor: "pointer" }}
+      //     onClick={() => handleOnClickEmail(record)}
+      //   >
+      //     {email}
+      // </span>
+      // ),
     },
     {
       title: <label className="px-3">Name</label>,
