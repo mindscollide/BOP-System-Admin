@@ -110,33 +110,6 @@ const AddCorporateUser = () => {
     updateField(name, value);
   };
 
-  // // show error message When user hit activate btn
-  // const handleActivateButton = () => {
-  //   if (
-  //     validateEmail(corporateUser.email.value) &&
-  //     !corporateUser.email.value.includes("@bop.com.pk").toLowerCase() &&
-  //     !corporateUser.email.value.includes("@bop.com").toLowerCase()
-  //     // corporateUser.firstName.value !== "" &&
-  //     // corporateUser.email.value !== "" &&
-  //     // corporateUser.companyName !== ""
-  //   ) {
-  //     dispatch(ConfirmationModalSystemAdmin(true));
-  //     setModalState(1);
-  //   } else {
-  //     setCorporateUser((prevState) => {
-  //       return {
-  //         ...prevState,
-  //         email: {
-  //           ...prevState.email,
-  //           errorMessage: "Email Domain Incorrect or Not Allowed",
-  //           errorStatus: true,
-  //         },
-  //       };
-  //     });
-  //     // setErrorShow(true);
-  //     // alert("Not Validated");
-  //   }
-  // };
   const handleActivateButton = () => {
     // First convert email to lowercase for consistent comparison
     const email = corporateUser.email.value.toLowerCase();

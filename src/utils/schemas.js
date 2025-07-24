@@ -373,6 +373,23 @@ export const updateCorporateUserSchema = {
     errorMessage: "",
     errorStatus: false,
   },
+  isFEActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  isNonFEActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  isChatActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
 };
 
 export const bankListSchema = {

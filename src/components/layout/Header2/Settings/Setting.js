@@ -17,6 +17,7 @@ import PassCodeSetting from "./PassCodeSetting/PassCodeSetting";
 import MarketTiming from "./MarketTiming/MarketTiming";
 import {
   ConvertDateTimrStringIntoGTM,
+  convertUTCToLocalDateWithToday,
   extractTimeOnly,
 } from "../../../../helpers/reusableMethods";
 import { setMarketTimingsUpdated } from "../../../../store/actions/RealtimeActions";
@@ -29,8 +30,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     (state) => state.RealtimeActionReducer.marketTimingsUpdated
   );
 
-  console.log(marketTimingsUpdated, "marketTimingsUpdated");
-
   const [settingUser, setSettingUser] = useState(true);
   const [passcodeSetting, setPasscodeSetting] = useState(false);
   const [marketTiming, setMarketTiming] = useState(false);
@@ -40,27 +39,17 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
     BD_EmailOnEveryMessage: false,
   });
 
-  console.log(settingsRecord, "settingsRecordsettingsRecord");
-
   const [monToThruStartTime, setMonToThruStartTime] = useState(null);
   const [monToThruEndTime, setMonToThruEndTime] = useState(null);
   const [fridayStartTime, setFridayStartTime] = useState(null);
   const [fridayEndTime, setFridayEndTime] = useState(null);
 
-  console.log(
-    { monToThruStartTime, monToThruEndTime, fridayStartTime, fridayEndTime },
-    "fridayEndTimefridayEndTimefridayEndTime"
-  );
-
-  const Loading = useSelector((state) => state.settingsReducer.Loading);
   const GetUserSettings = useSelector(
     (state) => state.settingsReducer.GetUserSettings
   );
   const GetMarketTimeSettings = useSelector(
     (state) => state.settingsReducer.GetMarketTimeSettings
   );
-
-  console.log(GetMarketTimeSettings, "GetMarketTimeSettings");
 
   useEffect(() => {
     dispatch(GetUserSettingsAPI(navigate));
@@ -130,19 +119,21 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
   useEffect(() => {
     if (marketTimingsUpdated !== null) {
       const { marketTimings } = marketTimingsUpdated;
+
       setMonToThruStartTime(
-        ConvertDateTimrStringIntoGTM(marketTimings.monThuStartTime, "hh:mm:ss")
+        convertUTCToLocalDateWithToday(marketTimings.monThuStartTime)
       );
       setMonToThruEndTime(
-        ConvertDateTimrStringIntoGTM(marketTimings.monThuEndTime, "hh:mm:ss")
+        convertUTCToLocalDateWithToday(marketTimings.monThuEndTime)
       );
 
       setFridayStartTime(
-        ConvertDateTimrStringIntoGTM(marketTimings.fridayStartTime, "hh:mm:ss")
+        convertUTCToLocalDateWithToday(marketTimings.fridayStartTime)
       );
       setFridayEndTime(
-        ConvertDateTimrStringIntoGTM(marketTimings.fridayEndTime, "hh:mm:ss")
+        convertUTCToLocalDateWithToday(marketTimings.fridayStartTime)
       );
+
       dispatch(setMarketTimingsUpdated(null));
     }
   }, [marketTimingsUpdated]);
@@ -224,7 +215,6 @@ const SettingModal = ({ SettingModalState, setSettingModalState }) => {
         FridayEndTime: formatTimeToUTC(fridayEndTime),
       };
 
-      console.log(updateTime, "updateTimeupdateTime");
       dispatch(
         SaveMarketTimeSettingsAPI(navigate, updateTime, setSettingModalState)
       );
