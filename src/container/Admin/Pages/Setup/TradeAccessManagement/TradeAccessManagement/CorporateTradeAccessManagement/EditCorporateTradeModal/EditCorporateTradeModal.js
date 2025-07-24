@@ -507,18 +507,12 @@ const EditCorporateTradeModal = ({ info }) => {
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    // Step 1: Remove all non-digit characters
-    let rawValue = value.replace(/[^0-9]/g, "");
+    let rawValue = value.replace(/[^0-9]/g, ""); // Remove non-digits
+    rawValue = rawValue.replace(/^0+(?=\d)/, ""); // Remove leading zeros
 
-    // Step 2: Remove leading zeros unless the entire value is "0"
-    rawValue = rawValue.replace(/^0+(?=\d)/, "");
-
-    // Step 3: Convert to PKR format (e.g., 1000 -> 1,000)
     const formattedValue = rawValue
       ? Number(rawValue).toLocaleString("en-PK")
       : "";
-
-    // Step 4: Basic required validation
     const hasError = rawValue.trim() === "";
 
     setTradeRightsData((prevState) => {
@@ -526,40 +520,46 @@ const EditCorporateTradeModal = ({ info }) => {
         ...prevState,
         [name]: {
           value: formattedValue,
-          rawValue: rawValue, // Keep raw for numeric logic
+          rawValue,
           errorMessage: hasError ? "This field is required" : "",
           errorStatus: hasError,
         },
       };
+
       const totalLimit = Number(updatedState.totalLimit?.rawValue || 0);
       const minLimit = Number(updatedState.minTransactionLimit?.rawValue || 0);
       const maxLimit = Number(updatedState.maxTransactionLimit?.rawValue || 0);
 
+      // Validation logic
       const limitError = minLimit > maxLimit;
-      const totalLimitError = totalLimit < maxLimit;
+      const totalLimitMaxError = totalLimit < maxLimit;
+      const totalLimitMinError = totalLimit < minLimit;
+
+      const minErrors = [];
+      const maxErrors = [];
+
+      if (limitError) {
+        minErrors.push("Min limit cannot be greater than Max limit");
+        maxErrors.push("Max limit cannot be less than Min limit");
+      }
+      if (totalLimitMinError) {
+        minErrors.push("Min limit cannot be greater than Total Limit");
+      }
+      if (totalLimitMaxError) {
+        maxErrors.push("Max limit cannot be greater than Total Limit");
+      }
 
       return {
         ...updatedState,
         minTransactionLimit: {
           ...updatedState.minTransactionLimit,
-          errorMessage: limitError
-            ? "Min limit cannot be greater than max limit"
-            : "",
-          errorStatus: limitError,
+          errorMessage: minErrors.join(" | "),
+          errorStatus: minErrors.length > 0,
         },
         maxTransactionLimit: {
           ...updatedState.maxTransactionLimit,
-          errorMessage: limitError
-            ? "Max limit cannot be less than min limit"
-            : "",
-          errorStatus: limitError,
-        },
-        minTransactionLimit: {
-          ...updatedState.minTransactionLimit,
-          errorMessage: limitError
-            ? "Min limit cannot be greater than max limit"
-            : "",
-          errorStatus: limitError,
+          errorMessage: maxErrors.join(" | "),
+          errorStatus: maxErrors.length > 0,
         },
       };
     });
@@ -812,10 +812,11 @@ const EditCorporateTradeModal = ({ info }) => {
                 iconClass={styles["IconClass"]}
                 onClick={handleSaveChangesButton}
                 disableBtn={
-                  Number(tradeRightsData.minTransactionLimit.rawValue) <=
-                  Number(tradeRightsData.maxTransactionLimit.rawValue)
-                    ? false
-                    : true
+                  tradeRightsData.maxTransactionLimit.errorStatus ||
+                  tradeRightsData.minTransactionLimit.errorStatus ||
+                  tradeRightsData.totalLimit.errorStatus
+                    ? true
+                    : false
                 }
               />
               <Button

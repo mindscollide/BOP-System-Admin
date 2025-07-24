@@ -279,13 +279,13 @@ export const addCorporateUserSchema = {
   },
 
   isFEActive: {
-    value: false,
+    value: true,
     errorMessage: "",
     errorStatus: false,
   },
 
   isNonFEActive: {
-    value: false,
+    value: true,
     errorMessage: "",
     errorStatus: false,
   },

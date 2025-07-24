@@ -68,7 +68,7 @@ const AddCorporateUser = () => {
 
   console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
   //Checking snakbar state
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   //state for cancel button
   //state for save and cancel button
@@ -271,10 +271,10 @@ const AddCorporateUser = () => {
         value: false,
       },
       isFEActive: {
-        value: false,
+        value: true,
       },
       isNonFEActive: {
-        value: false,
+        value: true,
       },
     }));
   };

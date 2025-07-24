@@ -22,7 +22,7 @@ const CustomCheckbox = ({
           onChange={onChange}
           disabled={disabled}
         >
-          {children || label2}
+          {children}
         </Checkbox>
         <p className="m-0">{label2}</p>
       </div>
