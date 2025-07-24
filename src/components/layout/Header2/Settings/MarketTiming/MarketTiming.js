@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import "./MarketTiming.css";
 import { useSelector } from "react-redux";
-import { ConvertDateTimrStringIntoGTM } from "../../../../../helpers/reusableMethods";
+import {
+  ConvertDateTimrStringIntoGTM,
+  convertUTCToLocalDateWithCurrentDate,
+  convertUTCToLocalDateWithToday,
+} from "../../../../../helpers/reusableMethods";
 import { TimePicker } from "antd";
 import moment from "moment";
 
@@ -26,13 +30,11 @@ const MarketTiming = ({
         const { fridayEnd, fridayStart, monThuEnd, monThuStart } =
           GetMarketTimeSettings;
 
-        setMonToThruStartTime(
-          ConvertDateTimrStringIntoGTM(monThuStart, "hh:mm")
-        );
-        setMonToThruEndTime(ConvertDateTimrStringIntoGTM(monThuEnd, "hh:mm"));
+        setMonToThruStartTime(convertUTCToLocalDateWithToday(monThuStart));
+        setMonToThruEndTime(convertUTCToLocalDateWithToday(monThuEnd));
 
-        setFridayStartTime(ConvertDateTimrStringIntoGTM(fridayStart, "hh:mm"));
-        setFridayEndTime(ConvertDateTimrStringIntoGTM(fridayEnd, "hh:mm"));
+        setFridayStartTime(convertUTCToLocalDateWithToday(fridayStart));
+        setFridayEndTime(convertUTCToLocalDateWithToday(fridayEnd));
       } catch (error) {
         console.log(error);
       }
@@ -191,7 +193,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">Start Time</label>
               <TimePicker
-                format={"hh:mm"}
+                format={"HH:mm"}
                 inputReadOnly={true}
                 value={moment(monToThruStartTime, "HH:mm")}
                 showNow={false}
@@ -207,7 +209,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">End Time</label>
               <TimePicker
-                format={"hh:mm"}
+                format={"HH:mm"}
                 inputReadOnly={true}
                 value={moment(monToThruEndTime, "HH:mm")}
                 showNow={false}
@@ -235,7 +237,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">Start Time</label>
               <TimePicker
-                format={"hh:mm"}
+                format={"HH:mm"}
                 inputReadOnly={true}
                 value={moment(fridayStartTime, "HH:mm")}
                 showNow={false}
@@ -249,7 +251,7 @@ const MarketTiming = ({
             <Col lg={6} md={6} sm={6}>
               <label className="two-factor-text">End Time</label>
               <TimePicker
-                format={"hh:mm"}
+                format={"HH:mm"}
                 inputReadOnly={true}
                 value={moment(fridayEndTime, "HH:mm")}
                 showNow={false}

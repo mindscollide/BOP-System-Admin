@@ -36,13 +36,13 @@ const SpreadManagement = () => {
     (state) => state.RealtimeActionReducer.categoryUpdated
   );
 
-  const LoadingState = useSelector(
-    (state) => state.SpreadManagementReducer.Loading
-  );
-  const LoadingTradeState = useSelector((state) => state.uploadReducer.Loading);
-  console.log(LoadingTradeState, "LoadingTradeState");
-  const LoadingCategoryState = useSelector((state) => state.auth.Loading);
-  console.log(LoadingCategoryState, "LoadingCategoryDtate");
+  // const LoadingState = useSelector(
+  //   (state) => state.SpreadManagementReducer.Loading
+  // );
+  // const LoadingTradeState = useSelector((state) => state.uploadReducer.Loading);
+  // console.log(LoadingTradeState, "LoadingTradeState");
+  // const LoadingCategoryState = useSelector((state) => state.auth.Loading);
+  // console.log(LoadingCategoryState, "LoadingCategoryDtate");
 
   const getAllCategories = useSelector((state) => state.auth.getAllCategories);
 
@@ -120,7 +120,7 @@ const SpreadManagement = () => {
               return data4;
             });
           });
-          console.log(categoryID, "categoryIDcategoryIDcategoryID");
+          // console.log(categoryID, "categoryIDcategoryIDcategoryID");
           if (categoryID.value === categoryUpdated.category.categoryId) {
             setCategoryID({
               value: categoryUpdated.category.categoryId,

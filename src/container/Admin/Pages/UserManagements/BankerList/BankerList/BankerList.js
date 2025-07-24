@@ -55,6 +55,11 @@ const BankerList = () => {
   const bankUserUpdated = useSelector(
     (state) => state.RealtimeActionReducer.bankUserUpdated
   );
+  const saveInstrumentModal = useSelector(
+    (state) => state.BOPSystemAdminModal.saveInstrumentModal
+  );
+
+  console.log("saveInstrumentModal", saveInstrumentModal);
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -773,7 +778,7 @@ const BankerList = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 300, x: "scroll" }}
+                  scroll={{ y: 280, x: "scroll" }}
                   className={"BankUserList-table"}
                 />
               </Col>

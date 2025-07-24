@@ -344,6 +344,15 @@ const DailyTransactionPDFReport = {
   RequestMethod:
     "ServiceManager.DownloadDailyTransactionsForSystemAdminPDFReport",
 };
+
+const GetInstrumentApplicability = {
+  RequestMethod: "ServiceManager.GetInstrumentApplicability",
+};
+
+const SaveInstrumentApplicability = {
+  RequestMethod: "ServiceManager.SaveInstrumentApplicability",
+};
+
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -428,4 +437,6 @@ export {
   GetAllNatureOfTransactions,
   DailyTransactionReport,
   DailyTransactionPDFReport,
+  GetInstrumentApplicability,
+  SaveInstrumentApplicability,
 };

@@ -7,8 +7,8 @@
   border-radius: 4px;
   width: 100% !important;
   overflow: hidden !important;
-  padding: 10px 13px !important;
   background-color: #ffffff !important;
+  margin: 0% !important;
 }
 
 .Currency-Management-Heading {
@@ -83,3 +83,4 @@
   padding: 0 !important;
   margin: 0 !important;
 }
+

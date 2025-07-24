@@ -25,7 +25,7 @@
 .Container_bank_user {
   width: 97% !important;
   margin: 0 auto !important;
-  height: 75vh;
+  min-height: 75vh;
 }
 
 .AddBankLabel {

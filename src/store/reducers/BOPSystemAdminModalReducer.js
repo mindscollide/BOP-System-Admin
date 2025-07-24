@@ -17,6 +17,8 @@ const initialState = {
   tradeCountCommentModal: false,
   BankBulkUploadModal: false,
   deleteCategoryModal: false,
+  saveInstrumentModal: false,
+  selectedInstrument: null,
 };
 
 const BOPSystemAdminModal = (state = initialState, action) => {
@@ -117,6 +119,21 @@ const BOPSystemAdminModal = (state = initialState, action) => {
       return {
         ...state,
         deleteCategoryModal: action.response,
+      };
+    }
+
+    case actions.SAVE_INSTRUMENT_APPLICABLE_MODAL: {
+      console.log("Reducer hit with:", action.response);
+      return {
+        ...state,
+        saveInstrumentModal: action.response,
+      };
+    }
+
+    case actions.SET_SELECTED_INSTRUMENT: {
+      return {
+        ...state,
+        selectedInstrument: action.response,
       };
     }
 

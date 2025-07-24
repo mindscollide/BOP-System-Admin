@@ -14,6 +14,24 @@ export const ConvertDateTimrStringIntoGTM = (date, pattern) => {
   console.log(ConvertIntoISO, "ConvertIntoISOConvertIntoISO");
   return new Date(ConvertIntoISO);
 };
+export const convertUTCToLocalDateWithToday = (timeStr) => {
+  // Extract hours and minutes from the input string
+  const [utcHours, utcMinutes] = timeStr.split(":").map(Number);
+
+  // Get today's date parts in the local timezone
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const day = today.getDate();
+
+  // Create a Date object in UTC using the provided time and today's date
+  const utcDate = new Date(Date.UTC(year, month, day, utcHours, utcMinutes));
+
+  // Convert it to a local time Date object
+  const localDate = new Date(utcDate.toLocaleString());
+
+  return localDate;
+};
 
 export const extractTimeOnly = (dateString) => {
   const dateObj = new Date(dateString);
@@ -125,7 +143,6 @@ export const isValidAmount = (value, maxDecimalPlaces = 2) => {
   return true;
 };
 
-
 export const convertDateTimeIntoLocal = (utcDateString) => {
   const year = parseInt(utcDateString.slice(0, 4));
   const month = parseInt(utcDateString.slice(4, 6)) - 1; // JS months are 0-based
@@ -136,7 +153,7 @@ export const convertDateTimeIntoLocal = (utcDateString) => {
 
   // Create date in UTC
   const utcDate = new Date(Date.UTC(year, month, day, hour, minute, second));
-  console.log(utcDate, "utcDateutcDate")
+  console.log(utcDate, "utcDateutcDate");
   // Convert to local time string
   const localDateString = utcDate.toString(); // Uses system/browser local time
 

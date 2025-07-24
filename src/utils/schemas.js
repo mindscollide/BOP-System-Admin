@@ -279,13 +279,13 @@ export const addCorporateUserSchema = {
   },
 
   isFEActive: {
-    value: false,
+    value: true,
     errorMessage: "",
     errorStatus: false,
   },
 
   isNonFEActive: {
-    value: false,
+    value: true,
     errorMessage: "",
     errorStatus: false,
   },
@@ -370,6 +370,23 @@ export const updateCorporateUserSchema = {
   },
   activeUser: {
     value: 0,
+    errorMessage: "",
+    errorStatus: false,
+  },
+  isFEActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  isNonFEActive: {
+    value: false,
+    errorMessage: "",
+    errorStatus: false,
+  },
+
+  isChatActive: {
+    value: false,
     errorMessage: "",
     errorStatus: false,
   },

@@ -336,11 +336,13 @@ export const buildDiscountingTable = (
 export const convertToDicountSpreads = (originalData, instruments) => {
   const DiscountRates = originalData.flatMap(
     (item) =>
-      instruments.map((instrument) => ({
-        InstrumentID: item[`InstrumentID_${instrument.instrumentName}`],
-        TenorID: item.TenorID,
-        Spread: Number(item[`rate_${instrument.instrumentName}`]) || 0,
-      }))
+      instruments
+        .filter((data, index) => data.discountingApplicable === true)
+        .map((instrument) => ({
+          InstrumentID: item[`InstrumentID_${instrument.instrumentName}`],
+          TenorID: item.TenorID,
+          Spread: Number(item[`rate_${instrument.instrumentName}`]) || 0,
+        }))
     // .filter((entry) => entry.Spread !== 0) // Exclude zero spreads
   );
   return DiscountRates;
