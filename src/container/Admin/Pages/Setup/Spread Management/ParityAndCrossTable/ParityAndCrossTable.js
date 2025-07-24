@@ -282,7 +282,7 @@ const ParityAndCross = ({ categoryID }) => {
     <>
       <Row>
         <Col lg={6} md={6} sm={12}>
-          <span className={style["ParitySpotHeading"]}>Against USD (bps)</span>
+          <span className={style["ParitySpotHeading"]}>Against USD</span>
           <ParitySpotTable
             paritySpotData={paritySpotData}
             setParitySpotData={setParitySpotData}
@@ -290,7 +290,7 @@ const ParityAndCross = ({ categoryID }) => {
         </Col>
 
         <Col lg={6} md={6} sm={12}>
-          <span className={style["ParitySpotHeading"]}>Against PKR (bps)</span>
+          <span className={style["ParitySpotHeading"]}>Against PKR</span>
           <CrossRateTable
             crossRateData={crossRateData}
             setCrossRateData={setCrossRateData}

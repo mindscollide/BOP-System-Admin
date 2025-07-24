@@ -325,9 +325,8 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               />
             </Col>
           </Row>
-          <Row className="mt-3 ">
+          {/* <Row className="mt-3 ">
             <Col lg={12} md={12} sm={12}>
-              <span className={styles["labels-add-bank"]}>FE / Non-FE</span>
               <div className="d-flex justify-content-start gap-4">
                 <Checkbox
                   label2="FE"
@@ -335,21 +334,19 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                   onChange={changeFETick}
                   checked={updateCorporate.isFEActive.value ? true : false}
                 />
-
+                <span className={styles["labels-add-bank"]}>FE</span>
                 <Checkbox
-                  label2="Non-FE"
+                  // label2="Non-FE"
                   classNameDiv={`${"d-flex align-items-center gap-2 m-0"}`}
                   onChange={changeNonFETick}
                   checked={updateCorporate.isNonFEActive.value ? true : false}
                 />
+                <span className={styles["labels-add-bank"]}>Non-FE</span>
               </div>
-              {/* </Col> */}
             </Col>
-          </Row>
-
+          </Row> */}
           <Row className="mt-3 ">
             <Col lg={12} md={12} sm={12}>
-              <span className={styles["labels-add-bank"]}>Chat</span>
               <div className="d-flex justify-content-start gap-4">
                 <Checkbox
                   label2="Chat"
@@ -357,11 +354,34 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                   onChange={changeActiveTick}
                   checked={updateCorporate.isChatActive.value ? true : false}
                   className={styles["InputFieldClass"]}
+                  labelClass2={styles["switchLabel"]}
                 />
               </div>
-              {/* </Col> */}
             </Col>
           </Row>
+
+          <Row className="mt-3">
+            <Col lg={12} md={12} sm={12}>
+              <div className="d-flex justify-content-start align-items-start w-100">
+                {/* <span className={styles["labels-add-bank"]}>FE / Non-FE</span> */}
+                <Checkbox
+                  label2="FE"
+                  classNameDiv={styles["CheckboxActive"]}
+                  onChange={changeFETick}
+                  checked={updateCorporate.isFEActive.value ? true : false}
+                  labelClass2={styles["switchLabel"]}
+                />
+                <Checkbox
+                  label2="Non-FE"
+                  classNameDiv={styles["CheckboxActive"]}
+                  onChange={changeNonFETick}
+                  checked={updateCorporate.isNonFEActive.value ? true : false}
+                  labelClass2={styles["switchLabel"]}
+                />
+              </div>
+            </Col>
+          </Row>
+
           <Row className="mt-3">
             <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
               <span className={styles["labels-add-bank"]}>
