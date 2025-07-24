@@ -531,11 +531,12 @@ const EditCorporateTradeModal = ({ info }) => {
           errorStatus: hasError,
         },
       };
-
+      const totalLimit = Number(updatedState.totalLimit?.rawValue || 0);
       const minLimit = Number(updatedState.minTransactionLimit?.rawValue || 0);
       const maxLimit = Number(updatedState.maxTransactionLimit?.rawValue || 0);
 
       const limitError = minLimit > maxLimit;
+      const totalLimitError = totalLimit < maxLimit;
 
       return {
         ...updatedState,
@@ -550,6 +551,13 @@ const EditCorporateTradeModal = ({ info }) => {
           ...updatedState.maxTransactionLimit,
           errorMessage: limitError
             ? "Max limit cannot be less than min limit"
+            : "",
+          errorStatus: limitError,
+        },
+        minTransactionLimit: {
+          ...updatedState.minTransactionLimit,
+          errorMessage: limitError
+            ? "Min limit cannot be greater than max limit"
             : "",
           errorStatus: limitError,
         },
@@ -695,7 +703,7 @@ const EditCorporateTradeModal = ({ info }) => {
               <Row>
                 <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
-                    Total Limit (PKR)
+                    Total Limit (USD)
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <TextField
