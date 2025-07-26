@@ -959,7 +959,7 @@ const CategoryManagement = () => {
                                                 className="text-center"
                                               >
                                                 <div className="title_bid">
-                                                  offer
+                                                  Offer
                                                 </div>
                                                 <div className="rate val-highlight2">
                                                   {data.offerSpread !== 0

@@ -320,7 +320,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isCrossRateBuy}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -339,7 +339,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isCrossRateSell}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -364,7 +364,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isParityBuy}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -383,7 +383,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isParitySell}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -408,7 +408,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isForwardBuy}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -427,7 +427,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isForwardSell}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -451,7 +451,7 @@ const EditBranchTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isDiscounting}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
