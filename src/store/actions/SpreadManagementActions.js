@@ -19,6 +19,7 @@ import {
   authenticationAPI,
   systemAdminAPI,
   uploadRateAPI,
+  watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import { RefreshToken } from "./Auth-Actions";
 import { SaveInstrumentApplicabilitySystemAdminModal } from "./BOPSystemAdminModalsActions";
@@ -705,7 +706,7 @@ const SaveCategoryParitySpotAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -795,7 +796,7 @@ const SaveCategoryCrossRatesAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -885,7 +886,7 @@ const SaveCategoryForwardsAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -974,7 +975,7 @@ const SaveCategoryFEDiscountsAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -1063,7 +1064,7 @@ const SaveCategoryNonFEDiscountsAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
