@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Nav, Navbar } from "react-bootstrap";
 import "./Sidebar2.css";
 
 const Sidebar2 = () => {
   const [expandedKey, setExpandedKey] = useState(
-    localStorage.getItem("defaultOpenKey") || null
+    sessionStorage.getItem("defaultOpenKey") || null
   );
+  const location = useLocation();
 
-  const selectedKey = localStorage.getItem("defaultSelectedKey");
+  const selectedKey = sessionStorage.getItem("defaultSelectedKey");
 
   const handleToggle = (eventKey) => {
     if (eventKey === "sub1" || eventKey === "sub2") {
       setExpandedKey(expandedKey === eventKey ? null : eventKey);
-      localStorage.setItem(
+      sessionStorage.setItem(
         "defaultOpenKey",
         expandedKey === eventKey ? null : eventKey
       );
@@ -21,7 +22,7 @@ const Sidebar2 = () => {
   };
 
   const handleItemClick = (selectedKey) => {
-    localStorage.setItem("defaultSelectedKey", selectedKey);
+    sessionStorage.setItem("defaultSelectedKey", selectedKey);
   };
 
   return (
@@ -50,66 +51,66 @@ const Sidebar2 = () => {
               <Link
                 to="/BOP/AddBankUser"
                 className={
-                  selectedKey === "1"
+                  location.pathname.includes("AddBankUser")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("1")}
+                onClick={() => handleItemClick("AddBankUser")}
               >
                 Add a Bank User
               </Link>
               <Link
                 to="/BOP/CorporateUser"
                 className={
-                  selectedKey === "2"
+                  location.pathname.includes("CorporateUser")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("2")}
+                onClick={() => handleItemClick("CorporateUser")}
               >
                 Add a Corporate User
               </Link>
               <Link
                 to="/BOP/CorporateList"
                 className={
-                  selectedKey === "3"
+                  location.pathname.includes("CorporateList")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("3")}
+                onClick={() => handleItemClick("CorporateList")}
               >
                 Corporate Users List
               </Link>
               <Link
                 to="/BOP/BankerList"
                 className={
-                  selectedKey === "4"
+                  location.pathname.includes("BankerList")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("4")}
+                onClick={() => handleItemClick("BankerList")}
               >
                 Banker List
               </Link>
               <Link
                 to="/BOP/LoginHistory"
                 className={
-                  selectedKey === "5"
+                  location.pathname.includes("LoginHistory")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("5")}
+                onClick={() => handleItemClick("LoginHistory")}
               >
                 Login History
               </Link>
               <Link
                 to="/BOP/tradeCount"
                 className={
-                  selectedKey === "6"
+                  location.pathname.includes("tradeCount")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("6")}
+                onClick={() => handleItemClick("tradeCount")}
               >
                 Trade Count
               </Link>
@@ -140,55 +141,55 @@ const Sidebar2 = () => {
               <Link
                 to="/BOP/TradeAccessManagement"
                 className={
-                  selectedKey === "7"
+                  location.pathname.includes("TradeAccessManagement")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("7")}
+                onClick={() => handleItemClick("TradeAccessManagement")}
               >
                 Trade Access Management
               </Link>
               <Link
                 to="/BOP/categorymanagement"
                 className={
-                  selectedKey === "8"
+                  location.pathname.includes("categorymanagement")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("8")}
+                onClick={() => handleItemClick("categorymanagement")}
               >
                 Category Management FX
               </Link>
               <Link
                 to="/BOP/SpreadManagement"
                 className={
-                  selectedKey === "9"
+                  location.pathname.includes("SpreadManagement")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("9")}
+                onClick={() => handleItemClick("SpreadManagement")}
               >
                 Spread Management
               </Link>
               <Link
                 to="/BOP/volMeter"
                 className={
-                  selectedKey === "10"
+                  location.pathname.includes("volMeter")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("10")}
+                onClick={() => handleItemClick("volMeter")}
               >
                 Vol Meter
               </Link>
               <Link
                 to="/BOP/CurrencyManagement"
                 className={
-                  selectedKey === "11"
+                  location.pathname.includes("CurrencyManagement")
                     ? "sidebar-menu-item_Active"
                     : "sidebar-menu-item"
                 }
-                onClick={() => handleItemClick("11")}
+                onClick={() => handleItemClick("CurrencyManagement")}
               >
                 Currency Management
               </Link>
