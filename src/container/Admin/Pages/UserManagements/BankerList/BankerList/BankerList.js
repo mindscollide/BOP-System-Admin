@@ -349,7 +349,7 @@ const BankerList = () => {
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="px-3">EmployeeID</label>,
+      title: <label className="px-3">Employee ID</label>,
       dataIndex: "employeeID",
       key: "employeeID",
       width: "100px",
