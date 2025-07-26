@@ -170,6 +170,8 @@ const FEDiscountingTable = ({ categoryID }) => {
         DiscountingSpreads: updatedDiscounts,
       };
       dispatch(SaveCategoryFEDiscountsAPI(navigate, data));
+
+      console.log(data, "SaveCategoryFEDiscountsAPISaveCategoryFEDiscountsAPI");
       setConfirmationModal(false);
       setModalState(0);
     } else if (modalState === 2) {

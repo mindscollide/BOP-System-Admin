@@ -112,9 +112,9 @@ const ForwardTable = ({ categoryID }) => {
           ? "0"
           : regular_ex.test(value)
           ? value.slice(1)
-          : value === "0.0"
-          ? "0.1"
-          : // Remove leading "0" (e.g., "09" → "9")
+          : // : value === "0.0"
+            // ? "0.1"
+            // Remove leading "0" (e.g., "09" → "9")
             value;
       setForwardData((prevState) =>
         prevState.map((stateData) => {

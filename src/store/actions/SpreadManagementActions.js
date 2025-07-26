@@ -729,10 +729,7 @@ const SaveCategoryParitySpotAPI = (navigate, data) => {
                 )
             ) {
               dispatch(
-                SaveCategoryParitySpotSuccess(
-                  response.data.responseResult,
-                  "Successful."
-                )
+                SaveCategoryParitySpotSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -822,10 +819,7 @@ const SaveCategoryCrossRatesAPI = (navigate, data) => {
                 )
             ) {
               dispatch(
-                SaveCategoryCrossRatesSuccess(
-                  response.data.responseResult,
-                  "Successful."
-                )
+                SaveCategoryCrossRatesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -915,10 +909,7 @@ const SaveCategoryForwardsAPI = (navigate, data) => {
                 )
             ) {
               dispatch(
-                SaveCategoryForwardsSuccess(
-                  response.data.responseResult,
-                  "Successful."
-                )
+                SaveCategoryForwardsSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -1007,10 +998,7 @@ const SaveCategoryFEDiscountsAPI = (navigate, data) => {
                 )
             ) {
               dispatch(
-                SaveCategoryFEDiscountsSuccess(
-                  response.data.responseResult,
-                  "Successful."
-                )
+                SaveCategoryFEDiscountsSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -1101,7 +1089,7 @@ const SaveCategoryNonFEDiscountsAPI = (navigate, data) => {
               dispatch(
                 SaveCategoryNonFEDiscountsSuccess(
                   response.data.responseResult,
-                  "Successful."
+                  ""
                 )
               );
             } else if (
@@ -1285,7 +1273,7 @@ const SaveInstrumentApplicabilityAPI = (navigate, data) => {
               dispatch(
                 SaveInstrumentApplicabilitySuccess(
                   response.data.responseResult,
-                  "Successful."
+                  ""
                 )
               );
               dispatch(GetInstrumentApplicabilityAPI(navigate));

@@ -234,7 +234,7 @@ const LoginHistory = () => {
       dataIndex: "userName",
       key: "userName",
       width: "200px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
 
@@ -243,7 +243,7 @@ const LoginHistory = () => {
       dataIndex: "counterPartyName",
       key: "counterPartyName",
       width: "150px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
 
@@ -253,7 +253,7 @@ const LoginHistory = () => {
       key: "roleID",
       width: "100px",
       ellipsis: true,
-      align: "center",
+      align: "left",
       render: (roleID) => {
         // Find the role name from the roles array based on userRoleID
         const role =

@@ -2101,7 +2101,7 @@ const UpdateCategoryAPI = (navigate, data) => {
               dispatch(
                 UpdateCategorySuccess(
                   response.data.responseResult,
-                  "category Updated"
+                  "Category Updated"
                 )
               );
             } else if (
@@ -2119,7 +2119,7 @@ const UpdateCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateCategory_03".toLowerCase()
                 )
             ) {
-              dispatch(UpdateCategoryFail("category not Updated"));
+              dispatch(UpdateCategoryFail("Category Not Updated"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2145,7 +2145,7 @@ const UpdateCategoryAPI = (navigate, data) => {
         }
       })
       .catch((response) => {
-        dispatch(UpdateCategoryFail("something went wrong"));
+        dispatch(UpdateCategoryFail("Something went wrong"));
       });
   };
 };

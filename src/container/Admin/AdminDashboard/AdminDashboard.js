@@ -229,7 +229,7 @@ const AdminDashboard = () => {
           >
             <Sidebar2 />
           </Sider>
-          <Content className="w-100 overflow-auto">
+          <Content className="w-100 overflow-auto mainContent">
             <Outlet />
           </Content>
         </Layout>

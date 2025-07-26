@@ -68,7 +68,7 @@ const AddCorporateUser = () => {
 
   console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
   //Checking snakbar state
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   //state for cancel button
   //state for save and cancel button
@@ -110,33 +110,6 @@ const AddCorporateUser = () => {
     updateField(name, value);
   };
 
-  // // show error message When user hit activate btn
-  // const handleActivateButton = () => {
-  //   if (
-  //     validateEmail(corporateUser.email.value) &&
-  //     !corporateUser.email.value.includes("@bop.com.pk").toLowerCase() &&
-  //     !corporateUser.email.value.includes("@bop.com").toLowerCase()
-  //     // corporateUser.firstName.value !== "" &&
-  //     // corporateUser.email.value !== "" &&
-  //     // corporateUser.companyName !== ""
-  //   ) {
-  //     dispatch(ConfirmationModalSystemAdmin(true));
-  //     setModalState(1);
-  //   } else {
-  //     setCorporateUser((prevState) => {
-  //       return {
-  //         ...prevState,
-  //         email: {
-  //           ...prevState.email,
-  //           errorMessage: "Email Domain Incorrect or Not Allowed",
-  //           errorStatus: true,
-  //         },
-  //       };
-  //     });
-  //     // setErrorShow(true);
-  //     // alert("Not Validated");
-  //   }
-  // };
   const handleActivateButton = () => {
     // First convert email to lowercase for consistent comparison
     const email = corporateUser.email.value.toLowerCase();
@@ -271,10 +244,10 @@ const AddCorporateUser = () => {
         value: false,
       },
       isFEActive: {
-        value: false,
+        value: true,
       },
       isNonFEActive: {
-        value: false,
+        value: true,
       },
     }));
   };

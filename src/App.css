@@ -11,6 +11,12 @@ body {
 :where(.css-dev-only-do-not-override-k7429z)[class*=" ant-layout"] {
   font-family: "Roboto", sans-serif !important;
 }
+.mainContent {
+  min-height: 90vh !important;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .Scroller-x-resolution {
   width: 100% !important;

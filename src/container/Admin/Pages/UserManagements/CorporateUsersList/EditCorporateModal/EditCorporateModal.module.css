@@ -15,6 +15,25 @@
   color: #004990 !important;
   font-weight: 500;
 }
+.switch-Label {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-weight: 500;
+  padding-top: 10px !important;
+}
+
+.CheckboxActive {
+  display: flex !important;
+  gap: 10px !important;
+  margin-left: -10px !important;
+}
+.switchLabel {
+  font-size: 12px !important;
+  color: #004990 !important;
+  font-weight: 500;
+  padding-top: 3px;
+  padding-right: 20px;
+}
 
 .aesterick-color {
   color: #cf5b5b !important;

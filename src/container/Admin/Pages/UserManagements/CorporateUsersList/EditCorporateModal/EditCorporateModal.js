@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   Button,
+  Checkbox,
   Modal,
   TextField,
 } from "../../../../../../components/elements";
@@ -46,6 +47,9 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
           statusId,
           rfqTimers,
           categoryID,
+          isChatEnabled,
+          isFEEnabled,
+          isNonFEEnabled,
         } = GetCorporateUserByUserID.user;
 
         setUpdateCorporate({
@@ -68,6 +72,18 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
           },
           activeUser: {
             value: statusId,
+          },
+          isChatActive: {
+            ...updateCorporate.isChatActive,
+            value: isChatEnabled,
+          },
+          isFEActive: {
+            ...updateCorporate.isFEActive,
+            value: isFEEnabled,
+          },
+          isNonFEActive: {
+            ...updateCorporate.isNonFEActive,
+            value: isNonFEEnabled,
           },
         });
       } catch (error) {}
@@ -93,6 +109,18 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
             ),
           },
+          // isChatActive: {
+          //   ...updateCorporate.isChatActive,
+          //   value: isChatEnabled,
+          // },
+          // isFEActive: {
+          //   ...updateCorporate.isFEActive,
+          //   value: isFEEnabled,
+          // },
+          // isNonFEActive: {
+          //   ...updateCorporate.isNonFEActive,
+          //   value: isNonFEEnabled,
+          // },
         });
         dispatch(setCorporateUpdated(null));
       } catch (error) {
@@ -161,11 +189,21 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
         updateCorporate.RFQTimerCorporate.value !== 0 &&
         updateCorporate.activeUser.value !== 0
       ) {
+        // let newData = {
+        //   FirstName: updateCorporate.firstName.value,
+        //   UserStatusId: updateCorporate.activeUser.value,
+        //   CorporateID: updateCorporate.corporateName.categoryID,
+        //   UserId: corporateUserId,
+        // };
+
         let newData = {
           FirstName: updateCorporate.firstName.value,
-          UserStatusId: updateCorporate.activeUser.value,
-          CorporateID: updateCorporate.corporateName.categoryID,
+          IsChat: updateCorporate.isChatActive.value,
+          IsFEEnabled: updateCorporate.isFEActive.value,
+          IsNonFEEnabled: updateCorporate.isNonFEActive.value,
           UserId: corporateUserId,
+          CorporateID: updateCorporate.corporateName.categoryID,
+          // UserRegisterationRequestID: 4567,
         };
         dispatch(
           UpdateCorporateUsersAPI(navigate, newData, setCorproateUserId)
@@ -177,6 +215,33 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
   //handle Discard Button
   const handleDiscardButton = () => {
     dispatch(EditCorporateModalSystemAdmin(false));
+  };
+  const changeFETick = (event) => {
+    console.log(event, "event");
+    setUpdateCorporate((prevState) => ({
+      ...prevState,
+      isFEActive: {
+        value: event.target.checked,
+      },
+    }));
+  };
+
+  const changeNonFETick = (event) => {
+    setUpdateCorporate((prevState) => ({
+      ...prevState,
+      isNonFEActive: {
+        value: event.target.checked,
+      },
+    }));
+  };
+
+  const changeActiveTick = (event) => {
+    setUpdateCorporate((prevState) => ({
+      ...prevState,
+      isChatActive: {
+        value: event.target.checked,
+      },
+    }));
   };
 
   return (
@@ -258,6 +323,62 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
                 onChange={handleValueChangeAndValidation}
                 disable={true}
               />
+            </Col>
+          </Row>
+          {/* <Row className="mt-3 ">
+            <Col lg={12} md={12} sm={12}>
+              <div className="d-flex justify-content-start gap-4">
+                <Checkbox
+                  label2="FE"
+                  classNameDiv={`${"d-flex align-items-center gap-2 m-0"}`}
+                  onChange={changeFETick}
+                  checked={updateCorporate.isFEActive.value ? true : false}
+                />
+                <span className={styles["labels-add-bank"]}>FE</span>
+                <Checkbox
+                  // label2="Non-FE"
+                  classNameDiv={`${"d-flex align-items-center gap-2 m-0"}`}
+                  onChange={changeNonFETick}
+                  checked={updateCorporate.isNonFEActive.value ? true : false}
+                />
+                <span className={styles["labels-add-bank"]}>Non-FE</span>
+              </div>
+            </Col>
+          </Row> */}
+          <Row className="mt-3 ">
+            <Col lg={12} md={12} sm={12}>
+              <div className="d-flex justify-content-start gap-4">
+                <Checkbox
+                  label2="Chat"
+                  classNameDiv={styles["CheckboxActive"]}
+                  onChange={changeActiveTick}
+                  checked={updateCorporate.isChatActive.value ? true : false}
+                  className={styles["InputFieldClass"]}
+                  labelClass2={styles["switchLabel"]}
+                />
+              </div>
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col lg={12} md={12} sm={12}>
+              <div className="d-flex justify-content-start align-items-start w-100">
+                {/* <span className={styles["labels-add-bank"]}>FE / Non-FE</span> */}
+                <Checkbox
+                  label2="FE"
+                  classNameDiv={styles["CheckboxActive"]}
+                  onChange={changeFETick}
+                  checked={updateCorporate.isFEActive.value ? true : false}
+                  labelClass2={styles["switchLabel"]}
+                />
+                <Checkbox
+                  label2="Non-FE"
+                  classNameDiv={styles["CheckboxActive"]}
+                  onChange={changeNonFETick}
+                  checked={updateCorporate.isNonFEActive.value ? true : false}
+                  labelClass2={styles["switchLabel"]}
+                />
+              </div>
             </Col>
           </Row>
 
