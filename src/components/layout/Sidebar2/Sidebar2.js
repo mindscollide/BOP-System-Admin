@@ -112,7 +112,7 @@ const Sidebar2 = () => {
                 }
                 onClick={() => handleItemClick("tradeCount")}
               >
-                Trade Count
+                Daily Trade
               </Link>
             </div>
           )}
