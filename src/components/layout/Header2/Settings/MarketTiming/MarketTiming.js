@@ -2,11 +2,7 @@ import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import "./MarketTiming.css";
 import { useSelector } from "react-redux";
-import {
-  ConvertDateTimrStringIntoGTM,
-  convertUTCToLocalDateWithCurrentDate,
-  convertUTCToLocalDateWithToday,
-} from "../../../../../helpers/reusableMethods";
+import { convertUTCToLocalDateWithToday } from "../../../../../helpers/reusableMethods";
 import { TimePicker } from "antd";
 import moment from "moment";
 
@@ -201,9 +197,9 @@ const MarketTiming = ({
                 onSelect={(event) =>
                   handleChangeTime(event, "monToThruStartTime")
                 }
-                // disabledTime={() =>
-                //   disabledTimeMonToThur(monToThruEndTime, monToThruStartTime, 1)
-                // }
+                disabledTime={() =>
+                  disabledTimeMonToThur(monToThruEndTime, monToThruStartTime, 1)
+                }
               />
             </Col>
             <Col lg={6} md={6} sm={6}>
@@ -217,9 +213,9 @@ const MarketTiming = ({
                 onSelect={(event) =>
                   handleChangeTime(event, "monToThruEndTime")
                 }
-                // disabledTime={() =>
-                //   disabledTimeMonToThur(monToThruEndTime, monToThruStartTime, 2)
-                // }
+                disabledTime={() =>
+                  disabledTimeMonToThur(monToThruEndTime, monToThruStartTime, 2)
+                }
               />
             </Col>
           </Row>
@@ -243,9 +239,9 @@ const MarketTiming = ({
                 showNow={false}
                 onOk={(event) => handleChange("fridayStartTime", event)}
                 onSelect={(event) => handleChangeTime(event, "fridayStartTime")}
-                // disabledTime={() =>
-                //   disabledTimeFri(fridayEndTime, fridayStartTime, 1)
-                // }
+                disabledTime={() =>
+                  disabledTimeFri(fridayEndTime, fridayStartTime, 1)
+                }
               />
             </Col>
             <Col lg={6} md={6} sm={6}>
@@ -257,9 +253,9 @@ const MarketTiming = ({
                 showNow={false}
                 onOk={(event) => handleChange("fridayEndTime", event)}
                 onSelect={(event) => handleChangeTime(event, "fridayEndTime")}
-                // disabledTime={() =>
-                //   disabledTimeFri(fridayEndTime, fridayStartTime, 2)
-                // }
+                disabledTime={() =>
+                  disabledTimeFri(fridayEndTime, fridayStartTime, 2)
+                }
               />
             </Col>
           </Row>
