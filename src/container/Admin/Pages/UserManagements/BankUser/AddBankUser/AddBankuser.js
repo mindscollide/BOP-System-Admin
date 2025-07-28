@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   CustomUpload,
-  Loader,
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
@@ -63,7 +62,6 @@ const AddBankUser = () => {
   const [branchOptions, setBranchOptions] = useState([]);
   console.log(branchOptions, "branchOptionsbranchOptions");
   //Global Staate
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
 
   //Role List
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
@@ -622,7 +620,6 @@ const AddBankUser = () => {
         dispatch(
           BankUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
         );
-        // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
       } else {
         alert("Invalid type");
       }
@@ -675,7 +672,6 @@ const AddBankUser = () => {
 
                   <Col lg={4} md={4} sm={12}>
                     <CustomUpload change={HandleFileUpload} />
-                    {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
                   </Col>
                   {addBankUser.EmployeeID.errorStatus && (
                     <Row>
@@ -752,7 +748,7 @@ const AddBankUser = () => {
 
                             <Button
                               className={styles["EditButton"]}
-                              icon={<i className={"icon-edit "}></i>}
+                              icon={<i className={"icon-edit"}></i>}
                               onClick={() =>
                                 handleOpenEditBankUserModal(branchRole)
                               }
