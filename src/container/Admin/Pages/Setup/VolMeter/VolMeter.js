@@ -319,7 +319,7 @@ const VolMeter = () => {
                 <Button
                   text="Update"
                   onClick={onUpdateBtnHit}
-                  icon={<i className="icon-refresh icon-update-refresh"></i>}
+                  icon={<i className="icon-refresh"></i>}
                   className={style["VolMeter-Update-btn"]}
                 />
               </Col>

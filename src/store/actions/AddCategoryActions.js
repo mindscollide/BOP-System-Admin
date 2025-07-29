@@ -70,7 +70,7 @@ const Addcategory = (navigate, data) => {
               dispatch(
                 addcategorysuccess(
                   response.data.responseResult,
-                  "Category saved"
+                  "Category Saved"
                 )
               );
               dispatch(AddCategoryModalSystemAdmin(false));
