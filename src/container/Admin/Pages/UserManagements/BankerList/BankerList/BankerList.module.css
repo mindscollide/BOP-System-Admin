@@ -146,10 +146,22 @@
   margin: 0 !important;
 }
 .ActiveStatus {
-  color: #00ee28 !important;
+  color: #12a812 !important;
 }
 .InactiveStatus {
-  color: #cf5b5b !important;
+  color: #808285 !important;
+}
+
+.LockedStatus {
+  color: #f8a041;
+}
+
+.ClosedStatus {
+  color: #cf5b5b;
+}
+
+.DormantStatus {
+  color: #808285;
 }
 .export-options {
   display: flex; /* Ensures items stay in a row */

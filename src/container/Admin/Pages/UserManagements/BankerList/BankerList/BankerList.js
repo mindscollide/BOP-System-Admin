@@ -428,21 +428,32 @@ const BankerList = () => {
       title: <label>Status</label>,
       dataIndex: "userStatusID",
       key: "userStatusID",
-      width: "70px",
+      width: "100px",
       align: "center",
       ellipsis: true,
       render: (val, record) => {
+        const statusMap = {
+          //label 1 as an active, 2 asn Inactive, 3 as an Locked, 4 as an Closed and 9 as an Dormant
+          1: { label: "Active", className: styles.ActiveStatus },
+          2: { label: "Inactive", className: styles.InactiveStatus },
+          3: { label: "Locked", className: styles.LockedStatus },
+          4: { label: "Closed", className: styles.ClosedStatus },
+          9: { label: "Dormant", className: styles.DormantStatus },
+        };
+
+        const { label, className } = statusMap[val] || {
+          label: "Unknown",
+          className: styles.DefaultStatus,
+        };
+
+        console.log(label, className, "checherchekr");
+
         return (
-          <IndexCell
-            value={val === 1 ? "Active" : "Inactive"}
-            CellClassName={
-              val === 1 ? styles.ActiveStatus : styles.InactiveStatus
-            }
-            record={record}
-          />
+          <IndexCell value={label} CellClassName={className} record={record} />
         );
       },
     },
+
     {
       title: <label className="px-3">Creation Date Time</label>,
       dataIndex: "creationDateTime",
