@@ -540,7 +540,7 @@ const AddCorporateUser = () => {
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-start m-0 p-0"
+              className="d-flex justify-content-start"
             >
               <span className={styles["bank-user-label"]}>
                 Add a Corporate user
@@ -616,14 +616,14 @@ const AddCorporateUser = () => {
                           className={styles["InputFieldClass"]}
                         />
                         <Button
+                          className={styles["EditButton"]}
+                          icon={<i className={"icon-edit"}></i>}
+                          onClick={() => handleEditButton(companyRoleID)}
+                        />
+                        <Button
                           className={styles["PlusButton"]}
                           icon={<span className={styles["PlusIcon"]}>+</span>}
                           onClick={handlePlusButton}
-                        />
-                        <Button
-                          className={styles["EditButton"]}
-                          icon={<i className={"icon-edit color-blue"}></i>}
-                          onClick={() => handleEditButton(companyRoleID)}
                         />
                       </Col>
                     </div>

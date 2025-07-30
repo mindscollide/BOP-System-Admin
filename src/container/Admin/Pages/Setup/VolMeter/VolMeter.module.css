@@ -63,7 +63,7 @@
   font-weight: 500;
   font-family: "Roboto", sans-serif !important;
   padding: 9px 18px !important;
-  display: flex;
+  display: flex !important;
   gap: 4px !important;
   align-items: center !important;
   background: #0b5ed7 !important;
@@ -73,18 +73,15 @@
 .VolMeter-Update-btn:hover {
   font-size: 14px;
   font-weight: 500;
-  display: flex;
-  gap: 4px !important;
-  align-items: center !important;
   font-family: "Roboto", sans-serif !important;
   padding: 9px 18px !important;
+  display: flex !important;
+  gap: 4px !important;
+  align-items: center !important;
   background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border: none;
 }
 
-.icon-update-refresh {
-  margin-right: 5px;
-  font-size: 16px;
-}
 .VolMeterInputBox {
   max-width: 100px;
   min-width: 100px;

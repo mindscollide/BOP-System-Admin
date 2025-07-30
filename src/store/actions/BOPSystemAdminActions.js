@@ -1428,10 +1428,7 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_01".toLowerCase()
             ) {
               dispatch(
-                GetBankUserByUserIDSuccess(
-                  response.data.responseResult,
-                  "User Status Updated"
-                )
+                GetBankUserByUserIDSuccess(response.data.responseResult, "")
               );
               dispatch(editBankUserModalSystemAdmin(true));
             } else if (
