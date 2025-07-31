@@ -209,7 +209,7 @@ const SpreadManagement = () => {
             {/* Forward Table  */}
             <Row>
               <Col lg={12} md={12} sm={12}>
-                <span className={style["ForwardLabel"]}>Forward</span>
+                <span className={style["ForwardLabel"]}>Forward (bps)</span>
                 <ForwardTable categoryID={categoryID.categoryID} />
               </Col>
             </Row>

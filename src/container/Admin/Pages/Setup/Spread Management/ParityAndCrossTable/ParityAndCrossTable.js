@@ -282,7 +282,7 @@ const ParityAndCross = ({ categoryID }) => {
     <>
       <Row>
         <Col lg={6} md={6} sm={12}>
-          <span className={style["ParitySpotHeading"]}>Against USD</span>
+          <span className={style["ParitySpotHeading"]}>Against USD (bps)</span>
           <ParitySpotTable
             paritySpotData={paritySpotData}
             setParitySpotData={setParitySpotData}
@@ -290,7 +290,7 @@ const ParityAndCross = ({ categoryID }) => {
         </Col>
 
         <Col lg={6} md={6} sm={12}>
-          <span className={style["ParitySpotHeading"]}>Against PKR</span>
+          <span className={style["ParitySpotHeading"]}>Against PKR (bps)</span>
           <CrossRateTable
             crossRateData={crossRateData}
             setCrossRateData={setCrossRateData}
@@ -298,23 +298,22 @@ const ParityAndCross = ({ categoryID }) => {
         </Col>
       </Row>
 
-      <Row className="mt-2 mb-5">
+      <Row className='mt-2 mb-5'>
         <Col
           lg={12}
           md={12}
           sm={12}
-          className="d-flex justify-content-center gap-2"
-        >
+          className='d-flex justify-content-center gap-2'>
           <Button
-            icon={<i className="icon-refresh"></i>}
+            icon={<i className='icon-refresh'></i>}
             className={style["Reset-btn-spreadManagement"]}
-            text="Reset"
+            text='Reset'
             onClick={handleResetParityAndCross}
           />
           <Button
-            icon={<i className="icon-save"></i>}
+            icon={<i className='icon-save'></i>}
             className={style["Search-btn-spreadManagement"]}
-            text="Save"
+            text='Save'
             onClick={handleSaveParityAndCross}
           />
         </Col>
