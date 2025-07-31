@@ -1457,3 +1457,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   background: #ccc;
   margin-left: -15px;
 }
+.droppableStyle {
+  background: #000 !important;
+  background-color: #000 !important;
+}

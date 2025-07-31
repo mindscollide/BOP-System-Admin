@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
 import { Col, Row } from "react-bootstrap";
-import {
-  TextField,
-  Button,
-  Loader,
-} from "../../../../../../components/elements";
+import { TextField, Button } from "../../../../../../components/elements";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Collapse } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -16,11 +12,7 @@ import {
   UpdatecorporateMapping,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useSelector } from "react-redux";
-import {
-  forNumbersOnly,
-  formatNumberForFourDecimal,
-  numberformatgerWithFourDecimalValues,
-} from "../../../../../../commen/functions/numberFormatter";
+import { formatNumberForFourDecimal } from "../../../../../../commen/functions/numberFormatter";
 import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
 import {
@@ -50,7 +42,6 @@ const CategoryManagement = () => {
     (state) => state.RealtimeActionReducer.counterpartyBranchChanged
   );
 
-  const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addCategoryModal
@@ -340,7 +331,7 @@ const CategoryManagement = () => {
               display: "flex",
               flexDirection: "column",
               gap: "8px",
-              minHeight: "50px",
+              minHeight: "100%",
             }}
           >
             {data.CounterParties.map((client, index) => (

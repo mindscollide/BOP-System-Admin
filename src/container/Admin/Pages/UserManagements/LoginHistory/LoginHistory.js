@@ -305,7 +305,7 @@ const LoginHistory = () => {
     },
 
     {
-      title: <label className="px-3">Total Span</label>,
+      title: <label className="px-3">Duration</label>,
       dataIndex: "totalSpan",
       key: "totalSpan",
       align: "left",
