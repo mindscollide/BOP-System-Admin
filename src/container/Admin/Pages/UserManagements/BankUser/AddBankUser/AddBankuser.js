@@ -676,7 +676,7 @@ const AddBankUser = () => {
                   <Col lg={7} md={7} sm={12}>
                     <div className="d-flex justify-content-start align-items-start w-100">
                       <span className={styles["labels-add-bank"]}>
-                        Treasury Person Name
+                        Person Name
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
                       <TextField

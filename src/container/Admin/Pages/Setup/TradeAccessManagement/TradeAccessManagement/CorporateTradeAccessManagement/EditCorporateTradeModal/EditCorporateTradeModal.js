@@ -265,7 +265,7 @@ const EditCorporateTradeModal = ({ info }) => {
       title: "",
       children: [
         {
-          title: "instrumentID",
+          title: "Instrument",
           dataIndex: "instrumentName",
           key: "instrumentName",
           align: "center",
