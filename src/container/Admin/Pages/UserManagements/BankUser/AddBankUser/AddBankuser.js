@@ -55,9 +55,6 @@ const AddBankUser = () => {
 
   const [modalState, setModalState] = useState(0);
 
-  //Dummy employee ID
-  const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
-
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
   console.log(branchOptions, "branchOptionsbranchOptions");
@@ -283,13 +280,6 @@ const AddBankUser = () => {
         // Check if the length is less than 4 digits
         if (valueCheck.length < 4) {
           errorMessage = "ID must be 4 digits";
-          errorStatus = true;
-        }
-        // Check if the ID already exists in dummyEmployeeIDs
-        else if (dummyEmployeeIDs.includes(valueCheck)) {
-          errorMessage = `Employee ID till ${
-            dummyEmployeeIDs[dummyEmployeeIDs.length - 1]
-          } is already used`;
           errorStatus = true;
         }
 

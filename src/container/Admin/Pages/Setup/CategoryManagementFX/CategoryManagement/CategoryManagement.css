@@ -1351,7 +1351,7 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* This creates the '...' */
-  max-width: 100%;
+  max-width: 95%;
 }
 .user-email {
   color: #0355c4 !important;
@@ -1456,4 +1456,8 @@ table.dataTable thead > tr > td.sorting_desc_disabled::before {
   border-radius: 20px;
   background: #ccc;
   margin-left: -15px;
+}
+.droppableStyle {
+  background: #000 !important;
+  background-color: #000 !important;
 }
