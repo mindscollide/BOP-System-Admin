@@ -111,62 +111,64 @@ export const buildForwardsTable = (
           dataIndex: "tenorName",
           align: "left",
         },
-        ...applicableInstruments.map((inst) => ({
-          title: inst.instrumentName,
-          key: `group_${inst.instrumentName}`,
-          align: "center",
-          width: 180,
-          children: [
-            {
-              title: "Bid Spread",
-              dataIndex: `bid_${inst.instrumentName}`,
-              key: `bid_${inst.instrumentName}`,
-              align: "center",
-              width: "100px",
-              render: (text, record) => (
-                <InputFIeld
-                  value={text}
-                  // className="text-center"
-                  className={"ValueDiscountingInput"}
-                  labelClass="d-none"
-                  record={record}
-                  onChange={(event) =>
-                    onInputChange(
-                      event.target.value,
-                      record,
-                      "bid",
-                      inst.instrumentName
-                    )
-                  }
-                />
-              ),
-            },
-            {
-              title: "Ask Spread",
-              dataIndex: `ask_${inst.instrumentName}`,
-              key: `ask_${inst.instrumentName}`,
-              align: "center",
-              width: "100px",
-              render: (text, record) => (
-                <InputFIeld
-                  value={text}
-                  // className="text-center"
-                  className={"ValueDiscountingInput"}
-                  labelClass="d-none"
-                  record={record}
-                  onChange={(event) =>
-                    onInputChange(
-                      event.target.value,
-                      record,
-                      "ask",
-                      inst.instrumentName
-                    )
-                  }
-                />
-              ),
-            },
-          ],
-        })),
+        ...applicableInstruments
+          .filter((filData, index) => Number(filData.instrumentID) !== 21)
+          .map((inst) => ({
+            title: inst.instrumentName,
+            key: `group_${inst.instrumentName}`,
+            align: "center",
+            width: 180,
+            children: [
+              {
+                title: "Bid Spread",
+                dataIndex: `bid_${inst.instrumentName}`,
+                key: `bid_${inst.instrumentName}`,
+                align: "center",
+                width: "100px",
+                render: (text, record) => (
+                  <InputFIeld
+                    value={text}
+                    // className="text-center"
+                    className={"ValueDiscountingInput"}
+                    labelClass='d-none'
+                    record={record}
+                    onChange={(event) =>
+                      onInputChange(
+                        event.target.value,
+                        record,
+                        "bid",
+                        inst.instrumentName
+                      )
+                    }
+                  />
+                ),
+              },
+              {
+                title: "Ask Spread",
+                dataIndex: `ask_${inst.instrumentName}`,
+                key: `ask_${inst.instrumentName}`,
+                align: "center",
+                width: "100px",
+                render: (text, record) => (
+                  <InputFIeld
+                    value={text}
+                    // className="text-center"
+                    className={"ValueDiscountingInput"}
+                    labelClass='d-none'
+                    record={record}
+                    onChange={(event) =>
+                      onInputChange(
+                        event.target.value,
+                        record,
+                        "ask",
+                        inst.instrumentName
+                      )
+                    }
+                  />
+                ),
+              },
+            ],
+          })),
       ];
     }
 
@@ -295,7 +297,7 @@ export const buildDiscountingTable = (
 
           width: 120,
         },
-        ...applicableInstruments.map((inst) => ({
+        ...applicableInstruments.filter((filData, index) => filData.instrumentID !== 21).map((inst) => ({
           title: inst.instrumentName,
           key: `rate_${inst.instrumentName}`,
           align: "center",

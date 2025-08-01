@@ -53,7 +53,7 @@ const ParityAndCross = ({ categoryID }) => {
     ) {
       try {
         const newDataMapping = GetAllInstruments.instruments
-          .filter((instrument) => instrument.instrumentName !== "USD")
+          .filter((instrument) => instrument.instrumentID !== 21)
           .map((instrument) => {
             const matchedInstrument =
               GetSpotSpreadsForCategory?.paritySpotSpreads?.find(
@@ -93,7 +93,7 @@ const ParityAndCross = ({ categoryID }) => {
           GetAllInstruments.instruments.length > 0
         ) {
           const newDataMapping = GetAllInstruments.instruments
-            .filter((instrument) => instrument.instrumentName !== "USD")
+            .filter((instrument) => instrument.instrumentID !== 21)
             .map((instrument) => {
               const matchedInstrument =
                 spotSpreadUpdated.categorySpreads.paritySpotSpreads?.find(
