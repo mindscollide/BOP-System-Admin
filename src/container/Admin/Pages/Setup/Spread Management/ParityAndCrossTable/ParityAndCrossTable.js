@@ -52,8 +52,9 @@ const ParityAndCross = ({ categoryID }) => {
       GetAllInstruments.instruments?.length > 0
     ) {
       try {
-        const newDataMapping = GetAllInstruments.instruments.map(
-          (instrument) => {
+        const newDataMapping = GetAllInstruments.instruments
+          .filter((instrument) => instrument.instrumentName !== "USD")
+          .map((instrument) => {
             const matchedInstrument =
               GetSpotSpreadsForCategory?.paritySpotSpreads?.find(
                 (item) => item.instrumentID === instrument.instrumentID
@@ -75,8 +76,7 @@ const ParityAndCross = ({ categoryID }) => {
                 askSpread: 0,
               };
             }
-          }
-        );
+          });
 
         setParitySpotData(newDataMapping);
       } catch (error) {
@@ -92,8 +92,9 @@ const ParityAndCross = ({ categoryID }) => {
           GetAllInstruments.instruments &&
           GetAllInstruments.instruments.length > 0
         ) {
-          const newDataMapping = GetAllInstruments.instruments.map(
-            (instrument) => {
+          const newDataMapping = GetAllInstruments.instruments
+            .filter((instrument) => instrument.instrumentName !== "USD")
+            .map((instrument) => {
               const matchedInstrument =
                 spotSpreadUpdated.categorySpreads.paritySpotSpreads?.find(
                   (item) => item.instrumentID === instrument.instrumentID
@@ -114,8 +115,7 @@ const ParityAndCross = ({ categoryID }) => {
                 bidSpread: 0,
                 askSpread: 0,
               };
-            }
-          );
+            });
           setParitySpotData(newDataMapping);
         }
         dispatch(setSpotSpreadUpdated(null));
@@ -131,8 +131,9 @@ const ParityAndCross = ({ categoryID }) => {
       GetAllInstruments.instruments?.length > 0
     ) {
       try {
-        const newDataMapping = GetAllInstruments.instruments.map(
-          (instrument) => {
+        const newDataMapping = GetAllInstruments.instruments
+          .filter((instrument) => instrument.instrumentName !== "USD")
+          .map((instrument) => {
             const matchedInstrument =
               GetCrossRateSpreadsForCategory?.crossRatesSpreads?.find(
                 (item) => item.instrumentID === instrument.instrumentID
@@ -154,8 +155,7 @@ const ParityAndCross = ({ categoryID }) => {
                 askSpread: 0,
               };
             }
-          }
-        );
+          });
 
         setCrossRateData(newDataMapping);
       } catch (error) {
@@ -172,8 +172,9 @@ const ParityAndCross = ({ categoryID }) => {
           GetAllInstruments.instruments &&
           GetAllInstruments.instruments.length > 0
         ) {
-          const newDataMapping = GetAllInstruments.instruments.map(
-            (instrument) => {
+          const newDataMapping = GetAllInstruments.instruments
+            .filter((instrument) => instrument.instrumentName !== "USD")
+            .map((instrument) => {
               const matchedInstrument =
                 spotCrossUpdated.categorySpreads.crossRatesSpreads?.find(
                   (item) => item.instrumentID === instrument.instrumentID
@@ -194,8 +195,7 @@ const ParityAndCross = ({ categoryID }) => {
                 bidSpread: 0,
                 askSpread: 0,
               };
-            }
-          );
+            });
 
           setCrossRateData(newDataMapping);
         }
@@ -298,22 +298,23 @@ const ParityAndCross = ({ categoryID }) => {
         </Col>
       </Row>
 
-      <Row className='mt-2 mb-5'>
+      <Row className="mt-2 mb-5">
         <Col
           lg={12}
           md={12}
           sm={12}
-          className='d-flex justify-content-center gap-2'>
+          className="d-flex justify-content-center gap-2"
+        >
           <Button
-            icon={<i className='icon-refresh'></i>}
+            icon={<i className="icon-refresh"></i>}
             className={style["Reset-btn-spreadManagement"]}
-            text='Reset'
+            text="Reset"
             onClick={handleResetParityAndCross}
           />
           <Button
-            icon={<i className='icon-save'></i>}
+            icon={<i className="icon-save"></i>}
             className={style["Search-btn-spreadManagement"]}
-            text='Save'
+            text="Save"
             onClick={handleSaveParityAndCross}
           />
         </Col>
