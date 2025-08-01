@@ -620,6 +620,7 @@ const AddCorporateUser = () => {
                               ...base,
                               width: "100%", // leave room for Edit + Plus buttons
                               right: 0,
+                              fontSize: "14px",
                             }),
                           }}
                         />
