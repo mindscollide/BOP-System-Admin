@@ -613,7 +613,15 @@ const AddCorporateUser = () => {
                           value={companyRoleID !== 0 ? companyRoleID : null}
                           onChange={CompanySelectHandler}
                           classNamePrefix={"selectCateogyCorporateList"}
-                          className={styles["InputFieldClass"]}
+                          className={styles["selectBranchDropdown"]}
+                          menuPortalTarget={document.body}
+                          styles={{
+                            menu: (base) => ({
+                              ...base,
+                              width: "100%", // leave room for Edit + Plus buttons
+                              right: 0,
+                            }),
+                          }}
                         />
                         <Button
                           className={styles["EditButton"]}

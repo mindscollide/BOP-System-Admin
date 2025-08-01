@@ -260,3 +260,9 @@
   width: 100% !important;
   flex: 1 !important;
 }
+
+.InputBranchDropdown {
+  width: 100% !important;
+  padding-right: 80px; /* Make space for Edit and Plus buttons */
+  box-sizing: border-box;
+}

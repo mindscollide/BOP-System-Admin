@@ -731,7 +731,7 @@ const AddBankUser = () => {
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
                               // classNamePrefix="selectCateogyCorporateList"
-                              className={styles["InputFieldClass"]}
+                              className={styles["InputBranchDropdown"]}
                               classNamePrefix={"selectCateogyCorporateList"}
                               menuPortalTarget={document.body}
                             />
