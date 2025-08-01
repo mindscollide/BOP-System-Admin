@@ -28,6 +28,7 @@ import {
 import {
   authenticationAPI,
   systemAdminAPI,
+  watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
 import { RefreshToken } from "./Auth-Actions";
@@ -2075,7 +2076,7 @@ const UpdateCategoryAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,

@@ -636,8 +636,16 @@ const CategoryManagement = () => {
     // Calling Update APi
     let newdata = {
       Category: categoryupdate.category.value,
-      BidSpread: Number(categoryupdate.bidSpread.value),
-      OfferSpread: Number(categoryupdate.offerSpread.value),
+      BidSpread: Number(
+        categoryupdate.bidSpread.value === ""
+          ? "0"
+          : categoryupdate.bidSpread.value
+      ),
+      OfferSpread: Number(
+        categoryupdate.offerSpread.value === ""
+          ? "0"
+          : categoryupdate.offerSpread.value
+      ),
       CategoryId: Number(data.CatID),
     };
     dispatch(UpdateCategoryAPI(navigate, newdata));

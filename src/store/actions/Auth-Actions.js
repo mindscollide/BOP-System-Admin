@@ -21,6 +21,7 @@ import {
 import {
   authenticationAPI,
   systemAdminAPI,
+  watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import { DeleteCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 // import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
@@ -241,7 +242,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     await axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -652,10 +653,7 @@ const GetAllCategoriesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllCategoriesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                GetAllCategoriesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -714,7 +712,7 @@ const getAllCorporatesCategory = (navigate) => {
     form.append("RequestMethod", GetAllCorporates.RequestMethod);
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -739,10 +737,7 @@ const getAllCorporatesCategory = (navigate) => {
                 )
             ) {
               dispatch(
-                getAllCorporatesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                getAllCorporatesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -826,10 +821,7 @@ const GetAllCorporatesDataAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllCorporatesDataSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                GetAllCorporatesDataSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -919,12 +911,7 @@ const GetAllNatureAPI = (navigate, data) => {
                   "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllNatureSuccess(
-                  response.data.responseResult,
-                  ""
-                )
-              );
+              dispatch(GetAllNatureSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_02".toLowerCase()
@@ -1091,9 +1078,7 @@ const RoleListAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_RoleList_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                RoleListSuccess(response.data.responseResult, "")
-              );
+              dispatch(RoleListSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_RoleList_02".toLowerCase()
@@ -1174,10 +1159,7 @@ const GetBankUserRolesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetBankUserRolesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                GetBankUserRolesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -1257,10 +1239,7 @@ const GetAllInstrumentTypesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllInstrumentTypesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
+                GetAllInstrumentTypesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -1341,12 +1320,7 @@ const GetAllBranchesAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllBranches_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllBranchesSuccess(
-                  response.data.responseResult,
-                  ""
-                )
-              );
+              dispatch(GetAllBranchesSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllBranches_02".toLowerCase()

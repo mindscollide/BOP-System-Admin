@@ -1,8 +1,8 @@
 import * as actions from "../action_types";
 import axios from "axios";
 import { Addcateogry } from "../../commen/apis/Api_config";
-import { RefreshToken, getAllCorporatesCategory } from "./Auth-Actions";
-import { systemAdminAPI } from "../../commen/apis/Api_ends_points";
+import { RefreshToken } from "./Auth-Actions";
+import { watchListAPI } from "../../commen/apis/Api_ends_points";
 import { AddCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 
 const addcategoryinit = () => {
@@ -36,7 +36,7 @@ const Addcategory = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "post",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
