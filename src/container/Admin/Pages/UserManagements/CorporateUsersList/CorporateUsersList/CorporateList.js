@@ -25,6 +25,7 @@ import pdfIcon from "../../../../../../assets/images/pdf.png";
 import excelIcon from "../../../../../../assets/images/excel.png";
 import { GetAllCategoriesAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
+  convertDateTimeIntoLocal,
   formatDateAndTimeFromString,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
@@ -587,8 +588,8 @@ const CorporateList = () => {
           <IndexCell
             value={
               val !== "-"
-                ? moment(formatDateAndTimeFromString(val)).format(
-                    "DD/MM/YYYY HH:mm:ss"
+                ? moment(convertDateTimeIntoLocal(val)).format(
+                    "DD/MM/YYYY hh:mm:ss A"
                   )
                 : "-"
             }
@@ -609,8 +610,8 @@ const CorporateList = () => {
           <IndexCell
             value={
               val !== "-"
-                ? moment(formatDateAndTimeFromString(val)).format(
-                    "DD/MM/YYYY HH:mm:ss"
+                ? moment(convertDateTimeIntoLocal(val)).format(
+                    "DD/MM/YYYY hh:mm:ss A"
                   )
                 : "-"
             }

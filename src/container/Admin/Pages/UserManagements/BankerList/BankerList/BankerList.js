@@ -25,6 +25,7 @@ import pdfIcon from "../../../../../../assets/images/pdf.png";
 
 import { GetBankUserRolesAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
+  convertDateTimeIntoLocal,
   formatDateAndTimeFromString,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
@@ -466,8 +467,8 @@ const BankerList = () => {
           <IndexCell
             value={
               val !== "-"
-                ? moment(formatDateAndTimeFromString(val)).format(
-                    "DD/MM/YYYY HH:mm:ss"
+                ? moment(convertDateTimeIntoLocal(val)).format(
+                    "DD/MM/YYYY hh:mm:ss A"
                   )
                 : "-"
             }
