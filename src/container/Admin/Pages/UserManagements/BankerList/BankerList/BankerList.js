@@ -26,7 +26,6 @@ import pdfIcon from "../../../../../../assets/images/pdf.png";
 import { GetBankUserRolesAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
   convertDateTimeIntoLocal,
-  formatDateAndTimeFromString,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
@@ -41,6 +40,7 @@ import {
   setBankUserUpdated,
   setBranchUpdated,
 } from "../../../../../../store/actions/RealtimeActions";
+import { debounce } from "lodash";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -790,8 +790,9 @@ const BankerList = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 280, x: "scroll" }}
+                  scroll={{ y: "45vh", x: "scroll" }}
                   className={"BankUserList-table"}
+                  // id="banker-list-table" // Add this line
                 />
               </Col>
             </Row>

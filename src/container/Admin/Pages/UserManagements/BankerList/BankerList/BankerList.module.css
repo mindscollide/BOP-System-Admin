@@ -176,3 +176,11 @@
   display: flex; /* Ensures the button stays inline */
   align-items: center; /* Align icon inside the button */
 }
+.BankUserList-table .ant-table-body {
+  overflow-y: auto !important;
+  scroll-behavior: smooth;
+}
+/* 
+#banker-list-table .ant-table-body {
+  scrollbar-width: thin;
+} */

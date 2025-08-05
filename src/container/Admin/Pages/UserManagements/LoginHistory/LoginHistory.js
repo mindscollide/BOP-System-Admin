@@ -675,7 +675,7 @@ const LoginHistory = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 230, x: "max-content" }}
+                  scroll={{ y: "40vh", x: "max-content" }}
                   className={"BankUserList-table"}
                 />
               </Col>
