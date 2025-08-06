@@ -471,6 +471,7 @@ const CategoryManagement = () => {
 
   // Check Edit Funtion to open Edit Modal
   const OpenEditCategory = (recorde, data) => {
+    console.log(data, "data of edit");
     setCategoryUpdate({
       offerSpread: {
         value: formatNumberForFourDecimal(data.offerSpread),
@@ -534,29 +535,6 @@ const CategoryManagement = () => {
       });
     }
 
-    // if (name === "Bidupdated" && value !== "") {
-    //   if (forNumbersOnly(value.trimStart()) !== "") {
-    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-    //       setCategoryUpdate({
-    //         ...categoryupdate,
-    //         bidSpread: {
-    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
-    //           errorMessage: "",
-    //           errorStatus: false,
-    //         },
-    //       });
-    //     }
-    //   }
-    // } else if (name === "Bidupdated" && value === "") {
-    //   setCategoryUpdate({
-    //     ...categoryupdate,
-    //     bidSpread: {
-    //       value: "",
-    //       errorMessage: "",
-    //       errorStatus: true,
-    //     },
-    //   });
-    // }
     if (name === "Bidupdated") {
       if (isValidNumberUnderMax(value, "", 1000)) {
         const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
@@ -605,29 +583,6 @@ const CategoryManagement = () => {
         });
       }
     }
-    // if (name === "Offerupdate" && value !== "") {
-    //   if (forNumbersOnly(value.trimStart()) !== "") {
-    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-    //       setCategoryUpdate({
-    //         ...categoryupdate,
-    //         offerSpread: {
-    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
-    //           errorMessage: "",
-    //           errorStatus: false,
-    //         },
-    //       });
-    //     }
-    //   }
-    // } else if (name === "Offerupdate" && value === "") {
-    //   setCategoryUpdate({
-    //     ...categoryupdate,
-    //     offerSpread: {
-    //       value: "",
-    //       errorMessage: "",
-    //       errorStatus: true,
-    //     },
-    //   });
-    // }
   };
 
   //Update Category API Function
