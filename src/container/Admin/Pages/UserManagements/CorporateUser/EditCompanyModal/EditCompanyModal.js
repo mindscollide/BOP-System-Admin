@@ -244,7 +244,7 @@ const EditCompanyModal = () => {
               </Row>
             </Col>
           </Row>
-          <Row className="mt-3">
+          {/* <Row className="mt-3">
             <Col lg={3} md={3} sm={12}>
               <span className={styles["labels-add-bank"]}>
                 Nature of Client
@@ -266,7 +266,7 @@ const EditCompanyModal = () => {
                 onChange={setNatureOptionsID}
               />
             </Col>
-          </Row>
+          </Row> */}
         </>
       }
       ModalFooter={
