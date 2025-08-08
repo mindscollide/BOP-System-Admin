@@ -80,6 +80,7 @@ const SpreadManagement = () => {
       } catch (error) {}
     }
   }, [getAllCategories]);
+
   useEffect(() => {
     if (categoryAdded !== null) {
       if (Array.isArray(categoryOptions)) {

@@ -130,7 +130,7 @@ export const buildForwardsTable = (
                     value={text}
                     // className="text-center"
                     className={"ValueDiscountingInput"}
-                    labelClass='d-none'
+                    labelClass="d-none"
                     record={record}
                     onChange={(event) =>
                       onInputChange(
@@ -154,7 +154,7 @@ export const buildForwardsTable = (
                     value={text}
                     // className="text-center"
                     className={"ValueDiscountingInput"}
-                    labelClass='d-none'
+                    labelClass="d-none"
                     record={record}
                     onChange={(event) =>
                       onInputChange(
@@ -220,16 +220,30 @@ export const buildDiscountingTable = (
     const { instruments } = getAllInstrument;
 
     // Step 1: Filter applicable instruments and tenors
+    // const applicableInstruments =
+    //   value === 1
+    //     ? instruments?.filter((inst) => inst.discountingApplicable) || []
+    //     : value === 2
+    //     ? instruments?.filter((inst) => inst.discountingApplicable)
+    //     : instruments;
+
     const applicableInstruments =
       value === 1
         ? instruments?.filter((inst) => inst.discountingApplicable) || []
         : value === 2
         ? instruments?.filter((inst) => inst.discountingApplicable)
+        : value === 3
+        ? instruments?.filter((inst) => inst.isNonFEDiscountingApplicable)
         : instruments;
+
+    console.log(
+      applicableInstruments,
+      "applicableInstrumentsapplicableInstruments"
+    );
     const applicableTenors =
       value === 1
         ? tenors?.filter((tenor) => tenor.isDiscountingApplicable) || []
-        : value === 2
+        : value === 2 || value === 3
         ? tenors?.filter((tenor) => tenor.isDiscountingApplicable)
         : tenors;
 
@@ -297,32 +311,37 @@ export const buildDiscountingTable = (
 
           width: 120,
         },
-        ...applicableInstruments.filter((filData, index) => filData.instrumentID !== 21).map((inst) => ({
-          title: inst.instrumentName,
-          key: `rate_${inst.instrumentName}`,
-          align: "center",
-          width: "100px",
-          children: [
-            {
-              width: "100px",
-              title: "Value",
-              dataIndex: `rate_${inst.instrumentName}`,
-              align: "center",
+        ...applicableInstruments
+          // .filter(
+          //   (filData, index) =>
+          //     (value === 4 && filData.instrumentID !== 21) || value !== 3
+          // )
+          .map((inst) => ({
+            title: inst.instrumentName,
+            key: `rate_${inst.instrumentName}`,
+            align: "center",
+            width: "100px",
+            children: [
+              {
+                width: "100px",
+                title: "Value",
+                dataIndex: `rate_${inst.instrumentName}`,
+                align: "center",
 
-              render: (text, record) => (
-                <InputFIeld
-                  className={"ValueDiscountingInput"}
-                  labelClass={"d-none"}
-                  value={text}
-                  record={record}
-                  onChange={(e) =>
-                    onInputChange(e.target.value, record, inst.instrumentName)
-                  }
-                />
-              ),
-            },
-          ],
-        })),
+                render: (text, record) => (
+                  <InputFIeld
+                    className={"ValueDiscountingInput"}
+                    labelClass={"d-none"}
+                    value={text}
+                    record={record}
+                    onChange={(e) =>
+                      onInputChange(e.target.value, record, inst.instrumentName)
+                    }
+                  />
+                ),
+              },
+            ],
+          })),
       ];
     }
 

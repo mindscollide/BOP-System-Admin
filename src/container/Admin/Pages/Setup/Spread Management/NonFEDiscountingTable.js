@@ -45,11 +45,15 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (GetTenorWiseNonFEDiscountingSpreadsForCategory !== null) {
+        console.log(
+          GetTenorWiseNonFEDiscountingSpreadsForCategory,
+          "GetTenorWiseNonFEDiscountingSpreadsForCategory"
+        );
         try {
           const { nonFEDiscountingSpreads } =
             GetTenorWiseNonFEDiscountingSpreadsForCategory;
           const { rowData, columnsData } = buildDiscountingTable(
-            2,
+            3,
             nonFEDiscountingSpreads,
             GetAllTenors,
             GetAllInstruments,
@@ -63,7 +67,7 @@ const NonFEDiscountingTable = ({ categoryID }) => {
       } else {
         try {
           const { rowData, columnsData } = buildDiscountingTable(
-            2,
+            3,
             [],
             GetAllTenors,
             GetAllInstruments,
@@ -90,7 +94,7 @@ const NonFEDiscountingTable = ({ categoryID }) => {
             categorySpreads: { discountingSpreads },
           } = NonFEDiscoutingSpreadUpdated;
           const { rowData, columnsData } = buildDiscountingTable(
-            2,
+            3,
             discountingSpreads,
             GetAllTenors,
             GetAllInstruments,
@@ -152,9 +156,15 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   };
   const handleConfirmationYes = () => {
     if (modalState === 1) {
+      const filteredInstruments = {
+        ...GetAllInstruments,
+        instruments: GetAllInstruments.instruments.filter(
+          (instrument) => instrument.instrumentID === 21
+        ),
+      };
       let updatedDiscounts = convertToDicountSpreads(
         NonFEDiscoutingData,
-        GetAllInstruments.instruments
+        filteredInstruments.instruments
       );
       let data = {
         CategoryID: categoryID,

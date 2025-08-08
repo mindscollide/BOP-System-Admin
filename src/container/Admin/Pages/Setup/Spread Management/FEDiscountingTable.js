@@ -83,13 +83,23 @@ const FEDiscountingTable = ({ categoryID }) => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (GetTenorWiseFEDiscountingSpreadsForCategory !== null) {
         try {
+          const filteredInstruments = {
+            ...GetAllInstruments,
+            instruments: GetAllInstruments.instruments.filter(
+              (instrument) => instrument.instrumentID !== 21
+            ),
+          };
+          console.log(
+            { filteredInstruments, GetAllInstruments },
+            "filteredInstrumentsfilteredInstruments"
+          );
           const { feDiscountingSpreads } =
             GetTenorWiseFEDiscountingSpreadsForCategory;
           const { rowData, columnsData } = buildDiscountingTable(
             2,
             feDiscountingSpreads,
             GetAllTenors,
-            GetAllInstruments,
+            filteredInstruments,
             TextField,
             handleChangeDiscounting
           );
@@ -98,11 +108,17 @@ const FEDiscountingTable = ({ categoryID }) => {
         } catch (error) {}
       } else {
         try {
+          const filteredInstruments = {
+            ...GetAllInstruments,
+            instruments: GetAllInstruments.instruments.filter(
+              (instrument) => instrument.instrumentID !== 21
+            ),
+          };
           const { rowData, columnsData } = buildDiscountingTable(
             2,
             [],
             GetAllTenors,
-            GetAllInstruments,
+            filteredInstruments,
             TextField,
             handleChangeDiscounting
           );
@@ -128,12 +144,17 @@ const FEDiscountingTable = ({ categoryID }) => {
             categorySpreads: { discountingSpreads },
           } = FEDiscoutingSpreadUpdated;
           console.log("FEDiscoutingSpreadUpdated", discountingSpreads);
-
+          const filteredInstruments = {
+            ...GetAllInstruments,
+            instruments: GetAllInstruments.instruments.filter(
+              (instrument) => instrument.instrumentID !== 21
+            ),
+          };
           const { rowData, columnsData } = buildDiscountingTable(
             2,
             discountingSpreads,
             GetAllTenors,
-            GetAllInstruments,
+            filteredInstruments,
             TextField,
             handleChangeDiscounting
           );
@@ -161,9 +182,15 @@ const FEDiscountingTable = ({ categoryID }) => {
 
   const handleConfirmationYes = () => {
     if (modalState === 1) {
+      const filteredInstruments = {
+        ...GetAllInstruments,
+        instruments: GetAllInstruments.instruments.filter(
+          (instrument) => instrument.instrumentID !== 21
+        ),
+      };
       let updatedDiscounts = convertToDicountSpreads(
         FEDiscoutingData,
-        GetAllInstruments.instruments
+        filteredInstruments.instruments
       );
       let data = {
         CategoryID: categoryID,
