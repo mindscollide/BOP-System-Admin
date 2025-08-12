@@ -104,17 +104,17 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
         setUpdateCorporate({
           ...updateCorporate,
           corporateName: {
-            value: corporateUpdated.corporate.corporateName,
-            categoryID: corporateUpdated.corporate.corporateCategory.categoryID,
+            value: corporateUpdated?.corporate.corporateName,
+            categoryID: corporateUpdated?.corporate.corporateCategory.categoryID,
           },
           RFQTimerCorporate: {
             value: Number(
-              corporateUpdated.corporate.rfqTimers.corporateRFQTimer
+              corporateUpdated?.corporate?.rfqTimers.corporateRFQTimer
             ),
           },
           RFQTimerTreasury: {
             value: Number(
-              corporateUpdated.corporate.rfqTimers.treasuryRFQTimer
+              corporateUpdated?.corporate?.rfqTimers?.treasuryRFQTimer
             ),
           },
           // isChatActive: {
