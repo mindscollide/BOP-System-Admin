@@ -672,7 +672,7 @@ const EditBranchTradeModal = ({ info }) => {
               <Row>
                 <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
-                    Total Limit (PKR)
+                    Total Limit (USD)
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <TextField

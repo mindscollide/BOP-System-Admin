@@ -1583,7 +1583,8 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      // url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -1686,7 +1687,8 @@ const AddUpdateVolmterAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      // url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
