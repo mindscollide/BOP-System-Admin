@@ -477,6 +477,16 @@ const loginSystemAdminAPI = (navigate, data) => {
             ) {
               console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("Something went wrong"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_14".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("Invalid Role"));
+            } else {
+              dispatch(loginSystemAdminFailed("Something went wrong"));
+
             }
           } else {
             console.log("loginSystemAdmin", response);
