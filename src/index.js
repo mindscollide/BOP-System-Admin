@@ -17,9 +17,9 @@ root.render(
     <Suspense>
       <BankUserProvider>
         <CorporateUserProvider>
-          <RouterProvider router={router}>
-            <App />
-          </RouterProvider>
+          {/* <RouterProvider router={router}> */}
+          <App />
+          {/* </RouterProvider> */}
         </CorporateUserProvider>
       </BankUserProvider>
     </Suspense>

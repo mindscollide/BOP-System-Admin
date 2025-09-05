@@ -18,7 +18,6 @@ import {
 import {
   authenticationAPI,
   systemAdminAPI,
-  uploadRateAPI,
   watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import { RefreshToken } from "./Auth-Actions";
