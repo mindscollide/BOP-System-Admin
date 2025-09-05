@@ -585,47 +585,61 @@ const downloadPDFCorporateUserReportApi = (navigate, Data) => {
       responseType: "arraybuffer",
     })
       .then(async (response) => {
-        const contentType = response.headers["content-type"];
-
-        // 🟡 If response is JSON (likely an error like token expired)
-        if (contentType && contentType.includes("application/json")) {
-          const decodedString = new TextDecoder().decode(
-            new Uint8Array(response.data)
-          );
-          const parsedData = JSON.parse(decodedString);
-
-          console.log(parsedData.responseCode, "parsed responseCode");
-
-          if (parsedData.responseCode === 417) {
-            await dispatch(RefreshToken(navigate));
-            dispatch(downloadPDFCorporateUserReportApi(navigate, Data));
-          } else {
-            dispatch(downloadPDFCorporateUserReport_fail(parsedData));
+        try {
+          if (
+            response.data?.responseCode &&
+            response.data?.responseCode === 400
+          ) {
+            dispatch(
+              downloadPDFCorporateUserReport_fail("Something went wrong")
+            );
           }
+          const contentType = response.headers["content-type"];
+
+          // 🟡 If response is JSON (likely an error like token expired)
+          if (contentType && contentType.includes("application/json")) {
+            const decodedString = new TextDecoder().decode(
+              new Uint8Array(response.data)
+            );
+            const parsedData = JSON.parse(decodedString);
+
+            console.log(parsedData.responseCode, "parsed responseCode");
+
+            if (parsedData.responseCode === 417) {
+              await dispatch(RefreshToken(navigate));
+              dispatch(downloadPDFCorporateUserReportApi(navigate, Data));
+            } else {
+              dispatch(downloadPDFCorporateUserReport_fail(parsedData));
+            }
+          }
+
+          // 🟢 If response is a valid PDF
+          else if (response.status === 200) {
+            const blob = new Blob([response.data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "CorporateUserReport.pdf");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            dispatch(
+              downloadPDFCorporateUserReport_success(
+                null,
+                "Download successfully"
+              )
+            );
+          }
+        } catch (error) {
+          console.log(error);
         }
-
-        // 🟢 If response is a valid PDF
-        else if (response.status === 200) {
-          const blob = new Blob([response.data], { type: "application/pdf" });
-          const url = window.URL.createObjectURL(blob);
-
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "CorporateUserReport.pdf");
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-
-          dispatch(
-            downloadPDFCorporateUserReport_success(
-              null,
-              "Download successfully"
-            )
-          );
-        }
+        // if (response.status === 400) {
+        // }
       })
       .catch((error) => {
-        dispatch(downloadPDFCorporateUserReport_fail(error.message));
+        dispatch(downloadPDFCorporateUserReport_fail("Something went wrong"));
       });
   };
 };

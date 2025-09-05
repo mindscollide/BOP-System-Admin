@@ -468,7 +468,7 @@ const EditBranchTradeModal = ({ info }) => {
       title: "",
       children: [
         {
-          title: "Active",
+          title: "View",
           dataIndex: "isActive",
           key: "isActive",
           align: "center",

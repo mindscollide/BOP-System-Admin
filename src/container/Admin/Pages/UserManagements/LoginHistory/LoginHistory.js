@@ -394,6 +394,7 @@ const LoginHistory = () => {
 
   //Handle Date Change method
   const handleDateChange = (fieldName, value) => {
+    console.log({ fieldName, value }, "checkdateselect");
     setLoginHistory((prev) => ({
       ...prev,
       [fieldName]: {

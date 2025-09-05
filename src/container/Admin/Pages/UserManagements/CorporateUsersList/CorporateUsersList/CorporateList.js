@@ -696,7 +696,7 @@ const CorporateList = () => {
   };
 
   const exportToPDF = () => {
-    console.log("Doc saved as Excel");
+    console.log("Doc saved as PDF");
     let data = {
       Name: corporateList.Name.value !== "" ? corporateList.Name.value : "",
       CorporateName:
