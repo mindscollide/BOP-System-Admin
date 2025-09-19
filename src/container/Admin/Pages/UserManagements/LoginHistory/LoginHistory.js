@@ -591,6 +591,7 @@ const LoginHistory = () => {
                   onChange={(date) => handleDateChange("dateFrom", date)}
                   minDate={null} // No restriction initially
                   maxDate={loginHistory.dateTo.value || null}
+                  editable={false}
                 />
 
                 <label className={styles["Tradecount-date-to"]}>to</label>
@@ -605,6 +606,7 @@ const LoginHistory = () => {
                   onChange={(date) => handleDateChange("dateTo", date)}
                   minDate={loginHistory.dateFrom.value || null} // Disable dates before selected startDate
                   maxDate={null} // No restriction initially
+                  editable={false}
                 />
               </Col>
             </Row>

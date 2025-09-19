@@ -840,6 +840,7 @@ const TradeCount = () => {
                   onChange={(date) => handleDateChange("dateFrom", date)}
                   maxDate={tradeCount.dateTo.value}
                   minDate={null}
+                  editable={false}
                 />
                 <label className={styles["Tradecount-date-to"]}>to</label>
 
@@ -852,6 +853,7 @@ const TradeCount = () => {
                   onChange={(date) => handleDateChange("dateTo", date)}
                   minDate={tradeCount.dateFrom.value}
                   maxDate={null}
+                  editable={false}
                 />
               </Col>
               <Col
