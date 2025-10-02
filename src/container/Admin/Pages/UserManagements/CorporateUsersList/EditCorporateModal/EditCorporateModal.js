@@ -105,7 +105,8 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
           ...updateCorporate,
           corporateName: {
             value: corporateUpdated?.corporate.corporateName,
-            categoryID: corporateUpdated?.corporate.corporateCategory.categoryID,
+            categoryID:
+              corporateUpdated?.corporate.corporateCategory.categoryID,
           },
           RFQTimerCorporate: {
             value: Number(
@@ -256,10 +257,10 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
     <Modal
       show={BOPSystemAdminModal.editCorporateModal}
       setShow={(value) => dispatch(EditCorporateModalSystemAdmin(value))}
-      className='UniversalBOPModalStyles'
+      className="UniversalBOPModalStyles"
       modalHeaderClassName={"d-none"}
-      modalFooterClassName='UniversalBOPModalStylesfooter'
-      size='md'
+      modalFooterClassName="UniversalBOPModalStylesfooter"
+      size="md"
       onHide={() => dispatch(EditCorporateModalSystemAdmin(false))}
       ModalBody={
         <>
@@ -268,29 +269,31 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               lg={6}
               md={6}
               sm={6}
-              className={styles["EditCorporate_modal-title"]}>
+              className={styles["EditCorporate_modal-title"]}
+            >
               Edit Corporate User
             </Col>
             <Col
               sm={6}
               md={6}
               lg={6}
-              className={styles["EditCorporate_modal-crossIcon"]}>
+              className={styles["EditCorporate_modal-crossIcon"]}
+            >
               <i
-                className='icon-close cursor-pointer'
+                className="icon-close cursor-pointer"
                 onClick={handleDiscardButton}
               />
             </Col>
           </Row>
 
-          <Row className='mt-3'>
-            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+          <Row className="mt-3">
+            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
               <span className={styles["labels-add-bank"]}>
                 Name
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
-                labelClass='d-none'
+                labelClass="d-none"
                 name={"firstName"}
                 value={updateCorporate.firstName.value}
                 onChange={handleValueChangeAndValidation}
@@ -298,16 +301,16 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               />
             </Col>
           </Row>
-          <Row className='mt-3'>
-            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+          <Row className="mt-3">
+            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
               <span className={styles["labels-add-bank"]}>
                 Email
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
                 className={styles["disableText"]}
-                labelClass='d-none'
-                name='email'
+                labelClass="d-none"
+                name="email"
                 value={updateCorporate.email.value}
                 onChange={handleValueChangeAndValidation}
                 disable
@@ -315,15 +318,15 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
             </Col>
           </Row>
 
-          <Row className='mt-3'>
-            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+          <Row className="mt-3">
+            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
               <span className={styles["labels-add-bank"]}>
                 Corporate Name
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <TextField
                 className={styles["disableText"]}
-                labelClass='d-none'
+                labelClass="d-none"
                 name={"corporateName"}
                 value={updateCorporate.corporateName.value}
                 onChange={handleValueChangeAndValidation}
@@ -351,11 +354,11 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               </div>
             </Col>
           </Row> */}
-          <Row className='mt-3 '>
+          <Row className="mt-3 ">
             <Col lg={12} md={12} sm={12}>
-              <div className='d-flex justify-content-start gap-4'>
+              <div className="d-flex justify-content-start gap-4">
                 <Checkbox
-                  label2='Chat'
+                  label2="Chat"
                   classNameDiv={styles["CheckboxActive"]}
                   onChange={changeActiveTick}
                   checked={updateCorporate.isChatActive.value ? true : false}
@@ -366,19 +369,19 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
             </Col>
           </Row>
 
-          <Row className='mt-3'>
+          <Row className="mt-3">
             <Col lg={12} md={12} sm={12}>
-              <div className='d-flex justify-content-start align-items-start w-100'>
+              <div className="d-flex justify-content-start align-items-start w-100">
                 {/* <span className={styles["labels-add-bank"]}>FE / Non-FE</span> */}
                 <Checkbox
-                  label2='FE'
+                  label2="FE"
                   classNameDiv={styles["CheckboxActive"]}
                   onChange={changeFETick}
                   checked={updateCorporate.isFEActive.value ? true : false}
                   labelClass2={styles["switchLabel"]}
                 />
                 <Checkbox
-                  label2='Non-FE'
+                  label2="Non-FE"
                   classNameDiv={styles["CheckboxActive"]}
                   onChange={changeNonFETick}
                   checked={updateCorporate.isNonFEActive.value ? true : false}
@@ -388,22 +391,22 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
             </Col>
           </Row>
 
-          <Row className='mt-3'>
-            <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
+          <Row className="mt-3">
+            <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
               <span className={styles["labels-add-bank"]}>
                 RFQ Timer
                 <span className={styles["aesterick-color"]}>*</span>
               </span>
               <Row>
-                <Col lg={6} md={6} sm={12} className='flex-column flex-wrap'>
+                <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
                   <span className={styles["labels-add-bank"]}>
-                    Treasury
+                    Treasury Sales
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
 
                   <TextField
                     className={styles["disableText"]}
-                    labelClass='d-none'
+                    labelClass="d-none"
                     value={`${updateCorporate.RFQTimerTreasury.value} Minutes`}
                     disable={true}
                   />
@@ -417,7 +420,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
 
                   <TextField
                     className={styles["disableText"]}
-                    labelClass='d-none'
+                    labelClass="d-none"
                     value={`${updateCorporate.RFQTimerCorporate.value} Minutes`}
                     disable={true}
                   />
@@ -425,7 +428,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               </Row>
             </Col>
           </Row>
-          <Row className='mt-3'>
+          <Row className="mt-3">
             <Col lg={12} md={12} sm={12}>
               <span className={styles["labels-add-bank"]}>Status</span>
               <span className={styles["aesterick-color"]}>*</span>
@@ -451,14 +454,15 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
       }
       ModalFooter={
         <>
-          <Row className='mt-3 mb-3'>
+          <Row className="mt-3 mb-3">
             <Col
               lg={12}
               md={12}
               sm={12}
-              className='d-flex justify-content-center gap-2'>
+              className="d-flex justify-content-center gap-2"
+            >
               <Button
-                icon={<i className='icon-refresh'></i>}
+                icon={<i className="icon-refresh"></i>}
                 text={"Update"}
                 className={styles["EditCorpUserBtn"]}
                 iconClass={styles["IconClass"]}
@@ -473,7 +477,7 @@ const EditCorporateModal = ({ corporateUserId, setCorproateUserId }) => {
               />
 
               <Button
-                icon={<i className='icon-close'></i>}
+                icon={<i className="icon-close"></i>}
                 text={"Discard"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}

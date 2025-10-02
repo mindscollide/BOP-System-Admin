@@ -710,7 +710,7 @@ const AddCorporateUser = () => {
 
                       <Col className="me-2">
                         <span className={styles["labels-add-bank"]}>
-                          Treasury
+                          Treasury Sales
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                         <TextField
