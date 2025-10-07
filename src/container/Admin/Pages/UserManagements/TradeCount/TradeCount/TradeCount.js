@@ -739,7 +739,7 @@ const TradeCount = () => {
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
         <Col lg={12} md={12} sm={12}>
-          <span className={styles["tradeCount-label"]}>Trade Count</span>
+          <span className={styles["tradeCount-label"]}>Daily Trade</span>
         </Col>
       </Row>
       <Row className="mt-2">

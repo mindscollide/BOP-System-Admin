@@ -8,6 +8,7 @@ const securityAdminAPI = `${baseURL}${process.env.REACT_APP_SECURITY_ADMIN_PORT}
 const downloadReportAPI = `${baseURL}${process.env.REACT_APP_DOWNLOAD_REPORT_PORT}`;
 const settingsAPI = `${baseURL}${process.env.REACT_APP_SETTINGS_PORT}`;
 const watchListAPI = `${baseURL}${process.env.REACT_APP_WATCHLIST_PORT}`;
+const blotterAPI = `${baseURL}${process.env.REACT_APP_BLOTTER_PORT}`;
 
 // Export all
 export {
@@ -17,4 +18,5 @@ export {
   securityAdminAPI,
   downloadReportAPI,
   settingsAPI,
+  blotterAPI,
 };

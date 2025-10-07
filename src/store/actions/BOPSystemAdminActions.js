@@ -27,6 +27,7 @@ import {
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
+  blotterAPI,
   systemAdminAPI,
   watchListAPI,
 } from "../../commen/apis/Api_ends_points";
@@ -2505,7 +2506,7 @@ const GetAllTradesAPI = (navigate, data) => {
 
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: blotterAPI,
       data: form,
       headers: {
         _token: token,
@@ -2525,7 +2526,7 @@ const GetAllTradesAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllTrades_01".toLowerCase()
+                  "Blotter_BlotterServiceManager_GetAllTrades_01".toLowerCase()
                 )
             ) {
               dispatch(GetAllTradesSuccess(response.data.responseResult, ""));
@@ -2533,7 +2534,23 @@ const GetAllTradesAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllTrades_02".toLowerCase()
+                  "Blotter_BlotterServiceManager_GetAllTrades_02".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllTradesFail(""));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "Blotter_BlotterServiceManager_GetAllTrades_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllTradesFail("Invalid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "Blotter_BlotterServiceManager_GetAllTrades_04".toLowerCase()
                 )
             ) {
               dispatch(GetAllTradesFail(""));
