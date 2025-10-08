@@ -13,6 +13,8 @@ import DatePicker from "react-multi-date-picker";
 import { tradeCountSchema } from "../../../../../../utils/schemas";
 import { transactionSide } from "../../../../../../helpers/Dropdown";
 import {
+  convertDateTimeIntoLocal,
+  convertUTCToLocalDateWithToday,
   formatDateAndTimeFromString,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
@@ -37,7 +39,6 @@ import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBo
 import moment from "moment";
 import { formatDateToUTC } from "../../../../../../commen/functions/utils";
 import {
-  downloadBankUserlistReportApi,
   downloadDailyTransactionSystemAdminReportApi,
   downloadPDFDailyTransactionSystemAdminApi,
 } from "../../../../../../store/actions/Download-Report";
@@ -310,7 +311,7 @@ const TradeCount = () => {
       render: (transactionDateTime) => {
         // Format the date and time
         return transactionDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(transactionDateTime)).format(
+          ? moment(convertDateTimeIntoLocal(transactionDateTime)).format(
               "DD-MM-YYYY"
             )
           : "-";
@@ -320,13 +321,13 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Time</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "75px",
+      width: "80px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
         // Format the date and time
         return transactionDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(transactionDateTime)).format(
+          ? moment(convertDateTimeIntoLocal(transactionDateTime)).format(
               "h:mm a"
             )
           : "-";
