@@ -700,14 +700,24 @@ const TradeCount = () => {
 
   useEffect(() => {
     if (BlotterTransactionAccepted !== null) {
-      console.log("BlotterTransactionAccepted: ", BlotterTransactionAccepted);
+      console.log("BlotterTransactionAccepted: ", {
+        BlotterTransactionAccepted,
+        tableData,
+      });
       const { transaction } = BlotterTransactionAccepted;
-      let record = {
-        ...transaction,
-        txnID: transaction.txnid,
-        transactionDateTime: transaction.settlementDateTime,
-      };
-      setTableData((prev) => [record, ...prev]);
+      let matchedId = tableData.find(
+        (record) => record.pK_TransactionID === transaction.pK_TransactionID
+      );
+      console.log(matchedId, "matchedIdmatchedId");
+
+      if (matchedId === undefined) {
+        let record = {
+          ...transaction,
+          txnID: transaction.txnid,
+          transactionDateTime: transaction.settlementDateTime,
+        };
+        setTableData((prev) => [record, ...prev]);
+      }
     }
   }, [BlotterTransactionAccepted]);
 
