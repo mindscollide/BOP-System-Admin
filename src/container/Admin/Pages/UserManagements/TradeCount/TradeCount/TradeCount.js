@@ -42,6 +42,7 @@ import {
   downloadDailyTransactionSystemAdminReportApi,
   downloadPDFDailyTransactionSystemAdminApi,
 } from "../../../../../../store/actions/Download-Report";
+import { NumericFormat } from "react-number-format";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
@@ -269,7 +270,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Amount</label>,
+      title: <label className="bottom-table-header">TXN Amount</label>,
       dataIndex: "quantity",
       key: "quantity",
       width: "100px",
@@ -294,7 +295,7 @@ const TradeCount = () => {
     },
 
     {
-      title: <label className="bottom-table-header">Amount</label>,
+      title: <label className="bottom-table-header">Total Amount</label>,
       dataIndex: "amount",
       key: "amount",
       width: "100px",
@@ -429,7 +430,7 @@ const TradeCount = () => {
         updateField("clientName", /[^a-zA-Z ]/g, value);
         break;
       case "Amount":
-        updateField("Amount", /[^\d]/g, value);
+        updateField("Amount", /[^\d.]/g, value);
         break;
       case "AccountNumber":
         updateField("AccountNumber", /[^a-zA-Z0-9]/g, value);
@@ -762,6 +763,7 @@ const TradeCount = () => {
                 <TextField
                   placeholder="Client Name"
                   name="ClientName"
+                  maxLength={20}
                   labelClass="d-none"
                   value={tradeCount.clientName.value}
                   onChange={tradeCountValidateHandler}
@@ -792,15 +794,17 @@ const TradeCount = () => {
               </Col>
 
               <Col lg={2} md={2} sm={12}>
-                <TextField
+                {/* <TextField */}
+                <NumericFormat
                   placeholder="Amount"
                   name="Amount"
+                  maxLength={20}
                   onChange={tradeCountValidateHandler}
                   value={
                     tradeCount.Amount.value === 0 ? "" : tradeCount.Amount.value
                   }
                   labelClass="d-none"
-                  className="tradeCount-textField-fontsize"
+                  className="tradeCount-textField-fontsize form-control"
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
@@ -811,6 +815,7 @@ const TradeCount = () => {
                   onChange={tradeCountValidateHandler}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
+                  maxLength={20}
                 />
               </Col>
             </Row>
@@ -824,6 +829,7 @@ const TradeCount = () => {
                   onChange={tradeCountValidateHandler}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
+                  maxLength={20}
                 />
               </Col>
               <Col
