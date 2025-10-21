@@ -235,6 +235,14 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
+      title: <label className="bottom-table-header">Branch Code</label>,
+      dataIndex: "branchCode",
+      key: "branchCode",
+      width: "100px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
       title: <label className="bottom-table-header">Client</label>,
       dataIndex: "corporateName",
       key: "corporateName",
@@ -322,7 +330,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Time</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "80px",
+      width: "75px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
@@ -335,7 +343,7 @@ const TradeCount = () => {
       },
     },
     {
-      title: <label className="bottom-table-header">LC#</label>,
+      title: <label className="bottom-table-header">LC #</label>,
       dataIndex: "lcNumber",
       key: "lcNumber",
       width: "100px",
@@ -343,7 +351,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Account#</label>,
+      title: <label className="bottom-table-header">Account #</label>,
       dataIndex: "accountNumber",
       key: "accountNumber",
       width: "100px",
@@ -392,6 +400,54 @@ const TradeCount = () => {
       render: (statusID) => {
         return "Accepted";
       },
+    },
+    {
+      title: <label className="bottom-table-header">Initiated By</label>,
+      dataIndex: "initiatedBy",
+      key: "initiatedBy",
+      width: "100px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
+      title: <label className="bottom-table-header">Acccepted By</label>,
+      dataIndex: "acceptedBy",
+      key: "acceptedBy",
+      width: "100px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
+      title: <label className="bottom-table-header">TXN Accepted Time</label>,
+      dataIndex: "txnAcceptedTime",
+      key: "txnAcceptedTime",
+      width: "150px",
+      align: "center",
+      ellipsis: true,
+      render: (txnAcceptedTime) => {
+        // Format the date and time
+        return txnAcceptedTime !== "-"
+          ? moment(convertDateTimeIntoLocal(txnAcceptedTime)).format("h:mm a")
+          : "-";
+      },
+    },
+    {
+      title: <label className="bottom-table-header">Cancelled By</label>,
+      // dataIndex: "statusID",
+      // key: "statusID",
+      width: "100px",
+      align: "center",
+      className: "color-green",
+      ellipsis: true,
+    },
+    {
+      title: <label className="bottom-table-header">Cancelled Time</label>,
+      // dataIndex: "statusID",
+      // key: "statusID",
+      width: "120px",
+      align: "center",
+      className: "color-green",
+      ellipsis: true,
     },
   ];
 
@@ -806,7 +862,7 @@ const TradeCount = () => {
               <Col lg={2} md={2} sm={12}>
                 {/* <TextField */}
                 <NumericFormat
-                  placeholder="Amount"
+                  placeholder="Total Amount"
                   name="Amount"
                   maxLength={20}
                   onChange={tradeCountValidateHandler}
@@ -831,7 +887,7 @@ const TradeCount = () => {
             </Row>
 
             <Row className="mt-3 g-2">
-              <Col lg={2} md={2} sm={12}>
+              <Col lg={2} md={12} sm={12}>
                 <TextField
                   placeholder="Account Number"
                   name="AccountNumber"
@@ -844,7 +900,7 @@ const TradeCount = () => {
               </Col>
               <Col
                 lg={4}
-                md={4}
+                md={12}
                 sm={12}
                 className="d-flex align-items-center pe-4"
               >
@@ -875,7 +931,7 @@ const TradeCount = () => {
               </Col>
               <Col
                 lg={6}
-                md={6}
+                md={12}
                 sm={12}
                 className="d-flex justify-content-center gap-1"
               >
