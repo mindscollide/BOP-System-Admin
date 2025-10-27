@@ -14,8 +14,6 @@ import { tradeCountSchema } from "../../../../../../utils/schemas";
 import { transactionSide } from "../../../../../../helpers/Dropdown";
 import {
   convertDateTimeIntoLocal,
-  convertUTCToLocalDateWithToday,
-  formatDateAndTimeFromString,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
 import { useDispatch } from "react-redux";
@@ -140,6 +138,21 @@ const TradeCount = () => {
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
+
+  // Date range options
+  const [dateRangeOptions] = useState([
+    { value: 1, label: "Today" },
+    { value: 2, label: "1 Month" },
+    { value: 3, label: "3 Months" },
+    { value: 4, label: "6 Months" },
+    { value: 5, label: "1 Year" },
+    { value: 6, label: "Custom Date" },
+  ]);
+  const [selectedDateRange, setSelectedDateRange] = useState({
+    value: 1,
+    label: "Today",
+  });
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
     setShowExportOptions(!showExportOptions);
@@ -433,8 +446,8 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Cancelled By</label>,
-      // dataIndex: "statusID",
-      // key: "statusID",
+      dataIndex: "cancelledBy",
+      key: "cancelledBy",
       width: "100px",
       align: "center",
       className: "color-green",
@@ -442,12 +455,28 @@ const TradeCount = () => {
     },
     {
       title: <label className="bottom-table-header">Cancelled Time</label>,
-      // dataIndex: "statusID",
-      // key: "statusID",
+      dataIndex: "cancelledTime",
+      key: "cancelledTime",
       width: "120px",
       align: "center",
       className: "color-green",
-      ellipsis: true,
+      render: (cancelledTime) => {
+        console.log(cancelledTime, "cancelledTimecancelledTime");
+
+        // Check properly for null/undefined/invalid values
+        if (
+          cancelledTime &&
+          cancelledTime !== "-" &&
+          cancelledTime !== null &&
+          cancelledTime !== undefined
+        ) {
+          return moment(convertDateTimeIntoLocal(cancelledTime)).format(
+            "h:mm a"
+          );
+        } else {
+          return;
+        }
+      },
     },
   ];
 
@@ -499,6 +528,72 @@ const TradeCount = () => {
     }
   };
 
+  // Function to handle date range selection
+  const handleDateRangeChange = (selectedOption) => {
+    setSelectedDateRange(selectedOption);
+
+    if (selectedOption.value === 6) {
+      setShowCustomDatePicker(true);
+      return;
+    }
+
+    setShowCustomDatePicker(false);
+
+    const today = new Date();
+    const fromDate = new Date();
+
+    switch (selectedOption.value) {
+      case 1:
+        // Set both from and to dates as today
+        fromDate.setDate(today.getDate());
+        break;
+      case 2:
+        fromDate.setMonth(today.getMonth() - 1);
+        break;
+      case 3:
+        fromDate.setMonth(today.getMonth() - 3);
+        break;
+      case 4:
+        fromDate.setMonth(today.getMonth() - 6);
+        break;
+      case 5:
+        fromDate.setMonth(today.getMonth() - 12);
+        break;
+      default:
+        fromDate.setMonth(today.getMonth() - 1);
+    }
+
+    // Format dates for display
+    const fromDateStr = moment(fromDate).format("DD-MM-YYYY");
+    const toDateStr = moment(today).format("DD-MM-YYYY");
+    // const displayLabel = `${selectedOption.label} (${fromDateStr} to ${toDateStr})`;
+
+    let displayLabel;
+    if (selectedOption.value === 1) {
+      displayLabel = `Today`;
+    } else {
+      displayLabel = `${fromDateStr} to ${toDateStr}`;
+    }
+
+    // Update the tradeCount state with new dates
+    setTradeCount((prev) => ({
+      ...prev,
+      dateFrom: {
+        ...prev.dateFrom,
+        value: fromDate,
+      },
+      dateTo: {
+        ...prev.dateTo,
+        value: today,
+      },
+    }));
+
+    // Update selected option with date range in label
+    setSelectedDateRange({
+      ...selectedOption,
+      label: displayLabel,
+    });
+  };
   //Handle Date Change method
   const handleDateChange = (fieldName, value) => {
     console.log({ fieldName: fieldName, value: Date(value) });
@@ -579,6 +674,12 @@ const TradeCount = () => {
   };
 
   const handleResetYes = () => {
+    // Set today as default
+    setSelectedDateRange({
+      value: 1,
+      label: "Today",
+    });
+    setShowCustomDatePicker(false);
     setHasReachedBottom(false);
     setRecordLength(0);
     setSRow(0);
@@ -898,39 +999,62 @@ const TradeCount = () => {
                   maxLength={20}
                 />
               </Col>
+              <Col lg={2} md={12} sm={12}>
+                <Select
+                  styles={{
+                    placeholder: (base) => ({
+                      ...base,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                  }}
+                  placeholder="Select Date Range"
+                  classNamePrefix="selectCateogyCorporateList"
+                  options={dateRangeOptions}
+                  value={selectedDateRange}
+                  isSearchable={true}
+                  onChange={handleDateRangeChange}
+                  menuPortalTarget={document.body}
+                ></Select>
+              </Col>
+              {showCustomDatePicker && (
+                <Col
+                  lg={4}
+                  md={12}
+                  sm={12}
+                  className="d-flex align-items-center pe-4"
+                >
+                  <DatePicker
+                    name="dateFrom"
+                    value={tradeCount.dateFrom.value}
+                    placeholder="Start date"
+                    showOtherDays="true"
+                    inputClass={styles["Tradecount-Datepicker-left"]}
+                    onChange={(date) => handleDateChange("dateFrom", date)}
+                    maxDate={tradeCount.dateTo.value}
+                    minDate={null}
+                    editable={false}
+                  />
+                  <label className={styles["Tradecount-date-to"]}>to</label>
+
+                  <DatePicker
+                    name="dateTo"
+                    value={tradeCount.dateTo.value}
+                    placeholder="End Date"
+                    showOtherDays="true"
+                    inputClass={styles["Tradecount-Datepicker-right"]}
+                    onChange={(date) => handleDateChange("dateTo", date)}
+                    minDate={tradeCount.dateFrom.value}
+                    maxDate={null}
+                    editable={false}
+                  />
+                </Col>
+              )}
+
+              {!showCustomDatePicker && <Col lg={4} md={12} sm={12} />}
               <Col
                 lg={4}
-                md={12}
-                sm={12}
-                className="d-flex align-items-center pe-4"
-              >
-                <DatePicker
-                  name="dateFrom"
-                  value={tradeCount.dateFrom.value}
-                  placeholder="Start date"
-                  showOtherDays="true"
-                  inputClass={styles["Tradecount-Datepicker-left"]}
-                  onChange={(date) => handleDateChange("dateFrom", date)}
-                  maxDate={tradeCount.dateTo.value}
-                  minDate={null}
-                  editable={false}
-                />
-                <label className={styles["Tradecount-date-to"]}>to</label>
-
-                <DatePicker
-                  name="dateTo"
-                  value={tradeCount.dateTo.value}
-                  placeholder="End Date"
-                  showOtherDays="true"
-                  inputClass={styles["Tradecount-Datepicker-right"]}
-                  onChange={(date) => handleDateChange("dateTo", date)}
-                  minDate={tradeCount.dateFrom.value}
-                  maxDate={null}
-                  editable={false}
-                />
-              </Col>
-              <Col
-                lg={6}
                 md={12}
                 sm={12}
                 className="d-flex justify-content-center gap-1"
