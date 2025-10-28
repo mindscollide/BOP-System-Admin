@@ -415,7 +415,18 @@ const TradeCount = () => {
       className: "color-green",
       ellipsis: true,
       render: (text) => (
-        <span style={{ color: text === "Accepted" ? "green" : "red" }}>
+        <span
+          style={{
+            color:
+              text === "Accepted"
+                ? "green"
+                : text === "Cancelled"
+                ? "#f26522"
+                : text === "Expired" || text === "Rejected"
+                ? "#f21616"
+                : "",
+          }}
+        >
           {text}
         </span>
       ),
