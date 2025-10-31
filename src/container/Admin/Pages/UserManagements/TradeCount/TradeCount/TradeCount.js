@@ -61,7 +61,9 @@ const TradeCount = () => {
   const GetAllTrades = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllTrades
   );
-
+  const GetAllTradesLoader = useSelector(
+    (state) => state.BOPSystemAdminReducer.Loading
+  );
   //Trade Count States
   const [tradeCount, setTradeCount] = useState({
     TxnID: {
@@ -325,7 +327,7 @@ const TradeCount = () => {
       width: "150px",
       align: "center",
       ellipsis: true,
-      render: (amount) => formatPkAmount(amount, { decimals: 0 }),
+      render: (amount) => formatPkAmount(amount, { decimals: 2 }),
     },
     {
       title: <label className="bottom-table-header">Date</label>,
@@ -412,7 +414,6 @@ const TradeCount = () => {
       key: "status",
       width: "100px",
       align: "center",
-      className: "color-green",
       ellipsis: true,
       render: (text) => (
         <span
@@ -478,12 +479,6 @@ const TradeCount = () => {
       width: "120px",
       align: "center",
       render: (cancelledTime) => {
-        console.log(cancelledTime, "cancelledTimecancelledTime");
-        // let dateStr =
-        //   cancelledTime !== ""
-        //     ? moment(convertDateTimeIntoLocal(cancelledTime)).format("h:mm a")
-        //     : null;
-        // Check properly for null/undefined/invalid values
         if (
           cancelledTime &&
           (cancelledTime !== "" ||
@@ -1147,6 +1142,7 @@ const TradeCount = () => {
                   rows={tableData}
                   scroll={{ x: "scroll", y: 230 }}
                   className={"BankUserList-table"}
+                  loading={GetAllTradesLoader}
                 />
               </Col>
             </Row>
