@@ -63,6 +63,7 @@ const AddBankUser = () => {
   //Role List
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
 
+  console.log(RoleList, "RoleListRoleListRoleList");
   //state for error Message
   // const [errorShow, setErrorShow] = useState(false);
   const [rolesOptions, setRolesOptions] = useState([]);
@@ -706,6 +707,7 @@ const AddBankUser = () => {
                         isSearchable={true}
                         className={styles["InputFieldClass"]}
                         classNamePrefix={"selectCateogyCorporateList"}
+                        isDisabled={RoleList === null ? true : false}
                       />
                     </div>
                   </Col>

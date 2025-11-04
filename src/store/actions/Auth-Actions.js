@@ -486,7 +486,6 @@ const loginSystemAdminAPI = (navigate, data) => {
               dispatch(loginSystemAdminFailed("Invalid Role"));
             } else {
               dispatch(loginSystemAdminFailed("Something went wrong"));
-
             }
           } else {
             console.log("loginSystemAdmin", response);
@@ -1175,7 +1174,8 @@ const GetBankUserRolesAPI = (navigate) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetBankUserRoles_02".toLowerCase()
             ) {
-              dispatch(GetBankUserRolesFail("Data UnAvailable"));
+              dispatch(GetBankUserRolesFail(""));
+              throw new Error("Something went wrong");
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1183,7 +1183,8 @@ const GetBankUserRolesAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetBankUserRoles_03".toLowerCase()
                 )
             ) {
-              dispatch(GetBankUserRolesFail("Exception"));
+              dispatch(GetBankUserRolesFail("Something went wrong"));
+              throw new Error("Something went wrong");
             }
           } else {
             dispatch(GetBankUserRolesFail("Something went wrong"));
@@ -1193,7 +1194,7 @@ const GetBankUserRolesAPI = (navigate) => {
         }
       })
       .catch((response) => {
-        dispatch(GetBankUserRolesFail("something went wrong"));
+        dispatch(GetBankUserRolesFail("Something went wrong"));
       });
   };
 };

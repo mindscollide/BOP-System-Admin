@@ -428,7 +428,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
-        GetBankUserRoles: [],
+        GetBankUserRoles: null,
         ResponseMessage: action.message,
       };
 

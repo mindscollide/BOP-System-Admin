@@ -237,10 +237,10 @@ const AdminDashboard = () => {
     },
   });
   console.log(isConnected, "isConnectedisConnectedisConnected");
-  const subscribeID = "BOP_SYSTEMADMIN";
-  let userID = localStorage.getItem("userID");
 
   useEffect(() => {
+    const subscribeID = "BOP_SYSTEMADMIN";
+    let userID = localStorage.getItem("userID");
     connectToMqtt({ subscribeID, userID });
   }, []);
   return (
