@@ -703,13 +703,13 @@ const EditCorporateTradeModal = ({ info }) => {
               <Row>
                 <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
-                    Total Limit (USD)
+                    Daily Limit (USD)
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <TextField
                     name={"totalLimit"}
                     labelClass="d-none"
-                    placeholder={"Total Limit"}
+                    placeholder={"Daily Limit"}
                     value={
                       tradeRightsData.totalLimit
                         ? tradeRightsData.totalLimit.value

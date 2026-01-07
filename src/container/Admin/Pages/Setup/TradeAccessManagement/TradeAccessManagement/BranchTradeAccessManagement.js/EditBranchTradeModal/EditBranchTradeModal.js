@@ -549,10 +549,10 @@ const EditBranchTradeModal = ({ info }) => {
         maxErrors.push("Max limit cannot be less than Min limit");
       }
       if (totalLimitMinError) {
-        minErrors.push("Min limit cannot be greater than Total Limit");
+        minErrors.push("Min limit cannot be greater than Daily Limit");
       }
       if (totalLimitMaxError) {
-        maxErrors.push("Max limit cannot be greater than Total Limit");
+        maxErrors.push("Max limit cannot be greater than Daily Limit");
       }
 
       return {
@@ -672,13 +672,13 @@ const EditBranchTradeModal = ({ info }) => {
               <Row>
                 <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
-                    Total Limit (USD)
+                    Daily Limit (USD)
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <TextField
                     name={"totalLimit"}
                     labelClass="d-none"
-                    placeholder={"Total Limit"}
+                    placeholder={"Daily Limit"}
                     value={
                       tradeRightsData.totalLimit
                         ? tradeRightsData.totalLimit.value
