@@ -312,6 +312,15 @@ const TradeCount = () => {
       render: (rate) => formatPkAmount(rate, { decimals: 2 }),
     },
     {
+      title: <label className="bottom-table-header">Squaring Rate</label>,
+      dataIndex: "squaringRate",
+      key: "squaringRate",
+      width: "120px",
+      align: "center",
+      ellipsis: true,
+      render: (rate) => formatPkAmount(rate, { decimals: 2 }),
+    },
+    {
       title: <label className="bottom-table-header">CCY2</label>,
       dataIndex: "ccY2",
       key: "ccY2",
