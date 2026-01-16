@@ -1,6 +1,7 @@
 // import logo from "./logo.svg";
 import "./App.css";
 import "./assets/custom-icons/custom-icon.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "@fontsource/montserrat"; // Defaults to weight 400
 import "@fontsource/montserrat/100.css";
 import "@fontsource/montserrat/200.css";
@@ -31,7 +32,7 @@ function App() {
 
         const data = await response.json();
 
-        console.log(data,currentVersion.current, "version");
+        console.log(data, currentVersion.current, "version");
 
         if (currentVersion.current && currentVersion.current !== data.version) {
           // 🔹 Clear browser caches (for service workers / cache API)

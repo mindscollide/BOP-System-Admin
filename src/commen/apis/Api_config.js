@@ -353,6 +353,25 @@ const SaveInstrumentApplicability = {
   RequestMethod: "ServiceManager.SaveInstrumentApplicability",
 };
 
+const GetAllInstrumentsForHolidayRM = {
+  RequestMethod: "ServiceManager.GetAllInstrumentsForHoliday",
+};
+const AddHolidaysRM = {
+  RequestMethod: "ServiceManager.AddHoliday",
+};
+
+const GetAllHolidaysRM = {
+  RequestMethod: "ServiceManager.GetAllHolidays",
+};
+const GetHolidayRM = {
+  RequestMethod: "ServiceManager.GetHoliday",
+};
+const UpdateHolidayRM = {
+  RequestMethod: "ServiceManager.UpdateHoliday",
+};
+const DeleteHolidayRM = {
+  RequestMethod: "ServiceManager.DeleteHoliday",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -439,4 +458,10 @@ export {
   DailyTransactionPDFReport,
   GetInstrumentApplicability,
   SaveInstrumentApplicability,
+  GetAllInstrumentsForHolidayRM,
+  AddHolidaysRM,
+  GetAllHolidaysRM,
+  GetHolidayRM,
+  UpdateHolidayRM,
+  DeleteHolidayRM,
 };

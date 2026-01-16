@@ -39,7 +39,12 @@ import {
   setSpotSpreadUpdated,
 } from "../../../store/actions/RealtimeActions";
 import { Loader } from "../../../components/elements";
-import { logOutApi } from "../../../store/actions/Auth-Actions";
+import {
+  logOutApi,
+  setHolidayAdded,
+  setHolidayDeleted,
+  setHolidayUpdated,
+} from "../../../store/actions/Auth-Actions";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -205,7 +210,15 @@ const AdminDashboard = () => {
         case "BLOTTER_TRANSACTION_CANCELLED":
           dispatch(setBlotterTransactionCancelled(data.payload));
           break;
-
+        case "HOLIDAY_CREATED":
+          dispatch(setHolidayAdded(data.payload));
+          break;
+        case "HOLIDAY_UPDATED":
+          dispatch(setHolidayUpdated(data.payload));
+          break;
+        case "HOLIDAY_DELETED":
+          dispatch(setHolidayDeleted(data.payload));
+          break;
         case "LOGIN":
           console.log("LOGIN event received", data.payload);
           // Handle login event if necessary
@@ -251,7 +264,7 @@ const AdminDashboard = () => {
           <Sider
             style={{ background: "none" }}
             // prefixCls="sideBarNew"
-            width={260}
+            width={284}
           >
             <Sidebar2 />
           </Sider>

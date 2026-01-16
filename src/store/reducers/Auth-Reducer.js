@@ -36,6 +36,15 @@ const initialState = {
   updatedBranchCategoryData: null,
   GetAllCorporates: null,
   GetAllNatureOfTransactions: null,
+  getListAllInstruments: null,
+  addHoliday: null,
+  getHolidayByHolidayId: null,
+  updateHolidayByHolidayId: null,
+  getAllHolidays: null,
+  deleteHolidayByHolidayId: null,
+  holidayAdded: null,
+  holidayUpdated: null,
+  holidayDeleted: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -554,6 +563,159 @@ const authReducer = (state = initialState, action) => {
         ...state,
         ResponseMessage: "",
       };
+    case actions.GET_LIST_ALL_INSTRUMENTS_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.GET_LIST_ALL_INSTRUMENTS_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        getListAllInstruments: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.GET_LIST_ALL_INSTRUMENTS_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        getListAllInstruments: null,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.ADD_HOLIDAY_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.ADD_HOLIDAY_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        addHoliday: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.ADD_HOLIDAY_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        addHoliday: null,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.GET_HOLIDAY_LIST_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.GET_HOLIDAY_LIST_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        getAllHolidays: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.GET_HOLIDAY_LIST_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        getAllHolidays: null,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.DELETE_HOLIDAY_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.DELETE_HOLIDAY_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        deleteHolidayByHolidayId: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.DELETE_HOLIDAY_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        deleteHolidayByHolidayId: null,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.GET_HOLIDAY_BY_HOLIDAYID_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.GET_HOLIDAY_BY_HOLIDAYID_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        getHolidayByHolidayId: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.GET_HOLIDAY_BY_HOLIDAYID_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        getHolidayByHolidayId: null,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.UPDATE_HOLIDAY_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+    case actions.UPDATE_HOLIDAY_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        updateHolidayByHolidayId: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.UPDATE_HOLIDAY_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        updateHolidayByHolidayId: null,
+        ResponseMessage: action.message,
+      };
+    }
+    case actions.HOLIDAY_ADDED: {
+      return {
+        ...state,
+        Loading: false,
+        holidayAdded: action.payload,
+      };
+    }
+    case actions.HOLIDAY_UPDATED: {
+      return {
+        ...state,
+        Loading: false,
+        holidayUpdated: action.payload,
+      };
+    }
+    case actions.HOLIDAY_DELETED: {
+      return {
+        ...state,
+        Loading: false,
+        holidayDeleted: action.payload,
+      };
+    }
     default:
       return { ...state };
   }

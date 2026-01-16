@@ -193,6 +193,17 @@ const Sidebar2 = () => {
               >
                 Currency Management
               </Link>
+              <Link
+                to="/BOP/HolidaysManagement"
+                className={
+                  location.pathname.includes("HolidaysManagement")
+                    ? "sidebar-menu-item_Active"
+                    : "sidebar-menu-item"
+                }
+                onClick={() => handleItemClick("HolidaysManagement")}
+              >
+                Holidays
+              </Link>
             </div>
           )}
         </Nav.Item>

@@ -3,7 +3,7 @@
   padding: 0;
   background-color: #4d4946;
   min-height: 100vh;
-  width: 250px;
+  width: 284px;
   /* position: fixed; */
   overflow-y: auto;
 }
@@ -22,7 +22,7 @@
 }
 
 .sidebar-offcanvas {
-  width: 250px;
+  width: 284px;
   background-color: #4d4946;
 }
 
