@@ -86,6 +86,7 @@ const ViewHolidays = ({ viewHolidayModal, setViewHolidayModal }) => {
                   rows={viewHolidays.currency}
                   className={"HolidaysManagement-table"}
                   pagination={false}
+                  scroll={{y: 250}}
                 />
               </div>
             </Col>

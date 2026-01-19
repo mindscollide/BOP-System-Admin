@@ -27,6 +27,11 @@
   outline: none !important;
   z-index: 1;
   padding-left: 10px;
+  font-size: 14px;
+
+}
+.DatePicker::placeholder {
+  font-size: 14px;
 }
 .DatePicker_disabled {
   cursor: not-allowed !important;
@@ -76,4 +81,31 @@
 }
 .DatePicker_disabled {
   background: #e9ecef !important;
+}
+.SelectAllBtn {
+  position: relative !important;
+  background: #ebe8e6 !important;
+  color: #7c8288 !important;
+  border-color: transparent;
+  outline: 0 !important;
+  text-transform: uppercase;
+  padding: 8px 7px;
+  border: 1px solid #ebe8e6 !important;
+  outline: none !important;
+  width: 100% !important;
+}
+.UnSelectAllBtn {
+  position: relative !important;
+  background: #ebe8e6 !important;
+  color: #7c8288 !important;
+  border-color: transparent;
+  outline: 0 !important;
+  text-transform: uppercase;
+  padding: 8px 7px;
+  border: 1px solid #ebe8e6 !important;
+  outline: none !important;
+  width: 100% !important;
+}
+.SelectAllWrapper {
+  padding: 5px ;
 }

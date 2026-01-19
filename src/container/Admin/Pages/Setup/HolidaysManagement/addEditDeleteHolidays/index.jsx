@@ -3,7 +3,7 @@ import CustomModal from "../../../../../../components/elements/modal/Modal";
 import styles from "./addHolidays.module.css";
 import { Col, Row } from "react-bootstrap";
 import TextField from "../../../../../../components/elements/Inputfield/InputField";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import DatePicker from "react-multi-date-picker";
 import moment from "moment";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,40 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CustomButton from "../../../../../../components/elements/button/Button";
+
+const CustomMenuList = (props) => {
+  const { options, selectProps } = props;
+
+  return (
+    <>
+      <div className={styles.SelectAllWrapper}>
+        <Row>
+          <Col sm={6}>
+            <CustomButton
+              text='Select All'
+              className={styles.SelectAllBtn}
+              onClick={() => {
+                selectProps.onChange(options);
+              }}
+            />
+          </Col>
+
+          <Col sm={6}>
+            <CustomButton
+              text='Unselect All'
+              className={styles.UnSelectAllBtn}
+              onClick={() => {
+                selectProps.onChange([]);
+              }}
+            />
+          </Col>
+        </Row>
+      </div>
+
+      <components.MenuList {...props} />
+    </>
+  );
+};
 
 const AddHolidays = ({
   addEditDeleteHolidayModal,
@@ -45,11 +79,38 @@ const AddHolidays = ({
     dispatch(getListAllInstrumentsApi(navigate));
   }, []);
 
+  const handleClickSelect = (isSelect) => {
+    console.log(isSelect, "isSelectisSelectisSelect");
+  };
+
   useEffect(() => {
     if (listOfAllInstruments) {
       try {
         const { instruments } = listOfAllInstruments;
         if (instruments.length > 0) {
+          let SelectAllLabel = {
+            value: 0,
+            label: (
+              <>
+                <Row>
+                  <Col sm={6} md={6} lg={6}>
+                    <CustomButton
+                      onClick={() => handleClickSelect(true)}
+                      className={styles["SelectAllBtn"]}
+                      text={"Select All"}
+                    />
+                  </Col>
+                  <Col sm={6} md={6} lg={6}>
+                    <CustomButton
+                      onClick={() => handleClickSelect(false)}
+                      className={styles["UnSelectAllBtn"]}
+                      text={"UnSelect All"}
+                    />
+                  </Col>
+                </Row>
+              </>
+            ),
+          };
           let updateData = instruments.map((data, index) => {
             return {
               ...data,
@@ -109,10 +170,13 @@ const AddHolidays = ({
         }));
         break;
       case 3:
-        setAddHoliday((prevState) => ({
-          ...prevState,
-          currency: event,
-        }));
+        if (event.value !== 0) {
+          setAddHoliday((prevState) => ({
+            ...prevState,
+            currency: event,
+          }));
+        }
+
         break;
       default:
         break;
@@ -212,22 +276,22 @@ const AddHolidays = ({
       }}
       ModalBody={
         <>
-          <Row className="mb-2">
+          <Row className='mb-2'>
             <Col
               sm={12}
               md={3}
               lg={3}
               xl={3}
-              className="d-flex align-items-center"
-            >
+              className='d-flex align-items-center'>
               Holiday Date
             </Col>
             <Col sm={12} md={9} lg={9} xl={9}>
               <div className={styles.DatePickerWrapper}>
                 <DatePicker
                   value={addHoliday.holidayDate}
-                  placeholder="Start date"
-                  showOtherDays="true"
+                  placeholder='Start date'
+                  showOtherDays='true'
+                  format='DD/MM/YYYY'
                   portalTarget={document.body}
                   disabled={addEditViewState === 3}
                   inputClass={styles.DatePicker}
@@ -240,7 +304,7 @@ const AddHolidays = ({
                         <input
                           value={value}
                           onClick={openCalendar}
-                          placeholder="Start date"
+                          placeholder='Start date'
                           className={
                             addEditViewState === 3
                               ? styles.DatePicker_disabled
@@ -250,8 +314,7 @@ const AddHolidays = ({
                         />
                         <i
                           className={`icon-calendar ${styles.CalendarIcon}`}
-                          onClick={openCalendar}
-                        ></i>
+                          onClick={openCalendar}></i>
                       </div>
                     );
                   }}
@@ -259,14 +322,13 @@ const AddHolidays = ({
               </div>
             </Col>
           </Row>
-          <Row className="mb-2">
+          <Row className='mb-2'>
             <Col
               sm={12}
               md={3}
               lg={3}
               xl={3}
-              className="d-flex align-items-center"
-            >
+              className='d-flex align-items-center'>
               Description*
             </Col>
             <Col sm={12} md={9} lg={9} xl={9}>
@@ -285,8 +347,7 @@ const AddHolidays = ({
               md={3}
               lg={3}
               xl={3}
-              className="d-flex align-items-center"
-            >
+              className='d-flex align-items-center'>
               Select Currency*
             </Col>
             <Col sm={12} md={9} lg={9} xl={9}>
@@ -295,7 +356,10 @@ const AddHolidays = ({
                 value={addHoliday.currency}
                 isDisabled={addEditViewState === 3}
                 options={listOfInstruemtns}
+                placeholder={"Select Currency"}
+                classNamePrefix='SelectCurrencyDropdown'
                 onChange={(option) => handleChange(option, 3)}
+                components={{ MenuList: CustomMenuList }}
               />
             </Col>
           </Row>
@@ -304,7 +368,7 @@ const AddHolidays = ({
       ModalFooter={
         <>
           <Row>
-            <Col sm={12} md={6} lg={6} className="d-flex justify-content-end">
+            <Col sm={12} md={6} lg={6} className='d-flex justify-content-end'>
               <CustomButton
                 text={
                   addEditViewState === 1
@@ -324,7 +388,7 @@ const AddHolidays = ({
                 onClick={handleCreateHoliday}
               />
             </Col>
-            <Col sm={12} md={6} lg={6} className="d-flex justify-content-start">
+            <Col sm={12} md={6} lg={6} className='d-flex justify-content-start'>
               <CustomButton
                 className={styles.AddHoliday_btn}
                 text={"Back to list"}

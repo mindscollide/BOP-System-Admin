@@ -657,3 +657,7 @@ input.form-control {
 .font-bold {
   font-weight: 700;
 }
+
+.SelectCurrencyDropdown__placeholder {
+  font-size: 14px !important;
+}
