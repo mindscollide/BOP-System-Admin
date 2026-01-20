@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import {
   Button,
   Modal,
-  Notification,
   TextField,
 } from "../../../../../../components/elements";
 import { Col, Row } from "react-bootstrap";
@@ -67,11 +66,7 @@ const EditBankerModal = () => {
     label: "",
   });
 
-  //Notification state
-  const [open, setOpen] = useState({
-    open: false,
-    message: "",
-  });
+
 
   //State for add company
   const [updateBankUser, setUpdateBankUser] = useState({
@@ -462,12 +457,14 @@ const EditBankerModal = () => {
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <Select
+                  className={styles["disableText"]}
                   classNamePrefix={"selectCateogyCorporateList"}
                   options={roleOptions}
                   value={roleID}
                   isSearchable="true"
                   menuPortalTarget={document.body}
                   onChange={handleSelectRole}
+                  isDisabled
                 />
               </Col>
             </Row>
@@ -485,10 +482,12 @@ const EditBankerModal = () => {
                       <span className={styles["aesterick-color"]}>*</span>
                     </span>
                     <Select
+                    
                       options={branchOptions}
                       placeholder="Select Branch"
                       value={branchRole.value !== 0 ? branchRole : null}
                       onChange={branchSelectRoleHandler}
+                      isDisabled={true}
                       isSearchable={true}
                       classNamePrefix="selectCateogyCorporateList"
                       menuPortalTarget={document.body}
@@ -579,7 +578,6 @@ const EditBankerModal = () => {
           </Row>
         }
       />
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </>
   );
 };

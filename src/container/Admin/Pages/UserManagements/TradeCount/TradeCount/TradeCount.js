@@ -13,7 +13,8 @@ import DatePicker from "react-multi-date-picker";
 import { tradeCountSchema } from "../../../../../../utils/schemas";
 import { transactionSide } from "../../../../../../helpers/Dropdown";
 import {
-  formatDateAndTimeFromString,
+  convertDateTimeIntoLocal,
+  formatPkAmount,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
 import { useDispatch } from "react-redux";
@@ -36,6 +37,11 @@ import { GetAllTradesAPI } from "../../../../../../store/actions/BOPSystemAdminA
 import { useTableScrollBottom } from "../../../../../../helpers/useTableScrollBottom";
 import moment from "moment";
 import { formatDateToUTC } from "../../../../../../commen/functions/utils";
+import {
+  downloadDailyTransactionSystemAdminReportApi,
+  downloadPDFDailyTransactionSystemAdminApi,
+} from "../../../../../../store/actions/Download-Report";
+import { NumericFormat } from "react-number-format";
 
 const TradeCount = () => {
   const dispatch = useDispatch();
@@ -55,7 +61,9 @@ const TradeCount = () => {
   const GetAllTrades = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllTrades
   );
-
+  const GetAllTradesLoader = useSelector(
+    (state) => state.BOPSystemAdminReducer.Loading
+  );
   //Trade Count States
   const [tradeCount, setTradeCount] = useState({
     TxnID: {
@@ -133,6 +141,21 @@ const TradeCount = () => {
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
+
+  // Date range options
+  const [dateRangeOptions] = useState([
+    { value: 1, label: "Today" },
+    { value: 2, label: "1 Month" },
+    { value: 3, label: "3 Months" },
+    { value: 4, label: "6 Months" },
+    { value: 5, label: "1 Year" },
+    { value: 6, label: "Custom Date" },
+  ]);
+  const [selectedDateRange, setSelectedDateRange] = useState({
+    value: 1,
+    label: "Today",
+  });
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
   // Function to toggle the export options (PDF & Excel buttons)
   const toggleExportOptions = () => {
     setShowExportOptions(!showExportOptions);
@@ -228,10 +251,18 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
+      title: <label className="bottom-table-header">Branch Code</label>,
+      dataIndex: "branchCode",
+      key: "branchCode",
+      width: "80px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
       title: <label className="bottom-table-header">Client</label>,
       dataIndex: "corporateName",
       key: "corporateName",
-      width: "200px",
+      width: "150px",
       align: "center",
       ellipsis: true,
     },
@@ -247,7 +278,7 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Nature</label>,
       dataIndex: "nature",
       key: "nature",
-      width: "200px",
+      width: "180px",
       align: "center",
       ellipsis: true,
       render: (val, record) => {
@@ -263,20 +294,31 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Amount</label>,
+      title: <label className="bottom-table-header">TXN Amount</label>,
       dataIndex: "quantity",
       key: "quantity",
-      width: "100px",
+      width: "120px",
       align: "center",
       ellipsis: true,
+      render: (quantity) => formatPkAmount(quantity, { decimals: 2 }),
     },
     {
       title: <label className="bottom-table-header">Rate</label>,
       dataIndex: "rate",
       key: "rate",
-      width: "100px",
+      width: "120px",
       align: "center",
       ellipsis: true,
+      render: (rate) => formatPkAmount(rate, { decimals: 2 }),
+    },
+    {
+      title: <label className="bottom-table-header">Squaring Rate</label>,
+      dataIndex: "squaringRate",
+      key: "squaringRate",
+      width: "120px",
+      align: "center",
+      ellipsis: true,
+      render: (rate) => formatPkAmount(rate, { decimals: 2 }),
     },
     {
       title: <label className="bottom-table-header">CCY2</label>,
@@ -288,12 +330,13 @@ const TradeCount = () => {
     },
 
     {
-      title: <label className="bottom-table-header">Amount</label>,
+      title: <label className="bottom-table-header">Total Amount</label>,
       dataIndex: "amount",
       key: "amount",
-      width: "100px",
+      width: "150px",
       align: "center",
       ellipsis: true,
+      render: (amount) => formatPkAmount(amount, { decimals: 2 }),
     },
     {
       title: <label className="bottom-table-header">Date</label>,
@@ -305,7 +348,7 @@ const TradeCount = () => {
       render: (transactionDateTime) => {
         // Format the date and time
         return transactionDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(transactionDateTime)).format(
+          ? moment(convertDateTimeIntoLocal(transactionDateTime)).format(
               "DD-MM-YYYY"
             )
           : "-";
@@ -315,20 +358,20 @@ const TradeCount = () => {
       title: <label className="bottom-table-header">Time</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
-      width: "75px",
+      width: "80px",
       align: "center",
       ellipsis: true,
       render: (transactionDateTime) => {
         // Format the date and time
         return transactionDateTime !== "-"
-          ? moment(formatDateAndTimeFromString(transactionDateTime)).format(
+          ? moment(convertDateTimeIntoLocal(transactionDateTime)).format(
               "h:mm a"
             )
           : "-";
       },
     },
     {
-      title: <label className="bottom-table-header">LC#</label>,
+      title: <label className="bottom-table-header">LC #</label>,
       dataIndex: "lcNumber",
       key: "lcNumber",
       width: "100px",
@@ -336,10 +379,10 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Account#</label>,
+      title: <label className="bottom-table-header">Account #</label>,
       dataIndex: "accountNumber",
       key: "accountNumber",
-      width: "100px",
+      width: "120px",
       align: "center",
       ellipsis: true,
     },
@@ -376,14 +419,87 @@ const TradeCount = () => {
     // },
     {
       title: <label className="bottom-table-header">Status</label>,
-      dataIndex: "statusID",
-      key: "statusID",
+      dataIndex: "status",
+      key: "status",
       width: "100px",
       align: "center",
-      className: "color-green",
       ellipsis: true,
-      render: (statusID) => {
-        return "Accepted";
+      render: (text) => (
+        <span
+          style={{
+            color:
+              text === "Accepted"
+                ? "green"
+                : text === "Cancelled"
+                ? "#f26522"
+                : text === "Expired" || text === "Rejected"
+                ? "#f21616"
+                : "",
+          }}
+        >
+          {text}
+        </span>
+      ),
+    },
+    {
+      title: <label className="bottom-table-header">Initiated By</label>,
+      dataIndex: "initiatedBy",
+      key: "initiatedBy",
+      width: "100px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
+      title: <label className="bottom-table-header">Acccepted By</label>,
+      dataIndex: "acceptedBy",
+      key: "acceptedBy",
+      width: "150px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
+      title: <label className="bottom-table-header">TXN Accepted Time</label>,
+      dataIndex: "txnAcceptedTime",
+      key: "txnAcceptedTime",
+      width: "150px",
+      align: "center",
+      ellipsis: true,
+      render: (txnAcceptedTime) => {
+        // Format the date and time
+        return txnAcceptedTime !== "-"
+          ? moment(convertDateTimeIntoLocal(txnAcceptedTime)).format(
+              "h:mm:ss A"
+            )
+          : "-";
+      },
+    },
+    {
+      title: <label className="bottom-table-header">Cancelled By</label>,
+      dataIndex: "cancelledBy",
+      key: "cancelledBy",
+      width: "100px",
+      align: "center",
+      ellipsis: true,
+    },
+    {
+      title: <label className="bottom-table-header">Cancelled Time</label>,
+      dataIndex: "cancelledTime",
+      key: "cancelledTime",
+      width: "120px",
+      align: "center",
+      render: (cancelledTime) => {
+        if (
+          cancelledTime &&
+          (cancelledTime !== "" ||
+            cancelledTime !== null ||
+            cancelledTime !== undefined)
+        ) {
+          return moment(convertDateTimeIntoLocal(cancelledTime)).format(
+            "h:mm:ss A"
+          );
+        } else {
+          return;
+        }
       },
     },
   ];
@@ -423,7 +539,7 @@ const TradeCount = () => {
         updateField("clientName", /[^a-zA-Z ]/g, value);
         break;
       case "Amount":
-        updateField("Amount", /[^\d]/g, value);
+        updateField("Amount", /[^\d.]/g, value);
         break;
       case "AccountNumber":
         updateField("AccountNumber", /[^a-zA-Z0-9]/g, value);
@@ -436,6 +552,72 @@ const TradeCount = () => {
     }
   };
 
+  // Function to handle date range selection
+  const handleDateRangeChange = (selectedOption) => {
+    setSelectedDateRange(selectedOption);
+
+    if (selectedOption.value === 6) {
+      setShowCustomDatePicker(true);
+      return;
+    }
+
+    setShowCustomDatePicker(false);
+
+    const today = new Date();
+    const fromDate = new Date();
+
+    switch (selectedOption.value) {
+      case 1:
+        // Set both from and to dates as today
+        fromDate.setDate(today.getDate());
+        break;
+      case 2:
+        fromDate.setMonth(today.getMonth() - 1);
+        break;
+      case 3:
+        fromDate.setMonth(today.getMonth() - 3);
+        break;
+      case 4:
+        fromDate.setMonth(today.getMonth() - 6);
+        break;
+      case 5:
+        fromDate.setMonth(today.getMonth() - 12);
+        break;
+      default:
+        fromDate.setMonth(today.getMonth() - 1);
+    }
+
+    // Format dates for display
+    const fromDateStr = moment(fromDate).format("DD-MM-YYYY");
+    const toDateStr = moment(today).format("DD-MM-YYYY");
+    // const displayLabel = `${selectedOption.label} (${fromDateStr} to ${toDateStr})`;
+
+    let displayLabel;
+    if (selectedOption.value === 1) {
+      displayLabel = `Today`;
+    } else {
+      displayLabel = `${fromDateStr} to ${toDateStr}`;
+    }
+
+    // Update the tradeCount state with new dates
+    setTradeCount((prev) => ({
+      ...prev,
+      dateFrom: {
+        ...prev.dateFrom,
+        value: fromDate,
+      },
+      dateTo: {
+        ...prev.dateTo,
+        value: today,
+      },
+    }));
+
+    // Update selected option with date range in label
+    setSelectedDateRange({
+      ...selectedOption,
+      label: displayLabel,
+    });
+  };
   //Handle Date Change method
   const handleDateChange = (fieldName, value) => {
     console.log({ fieldName: fieldName, value: Date(value) });
@@ -516,6 +698,12 @@ const TradeCount = () => {
   };
 
   const handleResetYes = () => {
+    // Set today as default
+    setSelectedDateRange({
+      value: 1,
+      label: "Today",
+    });
+    setShowCustomDatePicker(false);
     setHasReachedBottom(false);
     setRecordLength(0);
     setSRow(0);
@@ -576,21 +764,46 @@ const TradeCount = () => {
   };
 
   const exportToExcel = () => {
-    // const worksheet = XLSX.utils.json_to_sheet(data);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, "Corporate List");
-    // XLSX.writeFile(workbook, "CorporateList.xlsx");
     console.log("Doc saved as Excel");
+    const FromDate = new Date(tradeCount.dateFrom.value);
+    FromDate.setHours(0, 0, 0);
+    const ToDate = new Date(tradeCount.dateTo.value);
+    ToDate.setHours(23, 59, 59);
+    let Data = {
+      TxnID: tradeCount.TxnID.value,
+      CorporateName: tradeCount.clientName.value,
+      AccountNumber: tradeCount.AccountNumber.value,
+      FromDate: formatDateToUTC(FromDate),
+      ToDate: formatDateToUTC(ToDate),
+      LCNumber: tradeCount.LC.value,
+      Side: side.value,
+      NatureOfTransactionID: tradeCount.natureOfClient.value,
+      Amount: Number(tradeCount.Amount.value),
+    };
+
+    dispatch(downloadDailyTransactionSystemAdminReportApi(navigate, Data));
   };
 
   const exportToPDF = () => {
-    // const doc = new jsPDF();
-    // doc.autoTable({
-    //   head: [columns.map((col) => col.title)],
-    //   body: data.map((row) => columns.map((col) => row[col.dataIndex])),
-    // });
-    // doc.save("CorporateList.pdf");
     console.log("doc saved as pdf");
+    console.log("Doc saved as Excel");
+    const FromDate = new Date(tradeCount.dateFrom.value);
+    FromDate.setHours(0, 0, 0);
+    const ToDate = new Date(tradeCount.dateTo.value);
+    ToDate.setHours(23, 59, 59);
+    let Data = {
+      TxnID: tradeCount.TxnID.value,
+      CorporateName: tradeCount.clientName.value,
+      AccountNumber: tradeCount.AccountNumber.value,
+      FromDate: formatDateToUTC(FromDate),
+      ToDate: formatDateToUTC(ToDate),
+      LCNumber: tradeCount.LC.value,
+      Side: side.value,
+      NatureOfTransactionID: tradeCount.natureOfClient.value,
+      Amount: Number(tradeCount.Amount.value),
+    };
+
+    dispatch(downloadPDFDailyTransactionSystemAdminApi(navigate, Data));
   };
 
   //handle select categoryID
@@ -668,14 +881,24 @@ const TradeCount = () => {
 
   useEffect(() => {
     if (BlotterTransactionAccepted !== null) {
-      console.log("BlotterTransactionAccepted: ", BlotterTransactionAccepted);
+      console.log("BlotterTransactionAccepted: ", {
+        BlotterTransactionAccepted,
+        tableData,
+      });
       const { transaction } = BlotterTransactionAccepted;
-      let record = {
-        ...transaction,
-        txnID: transaction.txnid,
-        transactionDateTime: transaction.settlementDateTime,
-      };
-      setTableData((prev) => [record, ...prev]);
+      let matchedId = tableData.find(
+        (record) => record.pK_TransactionID === transaction.pK_TransactionID
+      );
+      console.log(matchedId, "matchedIdmatchedId");
+
+      if (matchedId === undefined) {
+        let record = {
+          ...transaction,
+          txnID: transaction.txnid,
+          transactionDateTime: transaction.settlementDateTime,
+        };
+        setTableData((prev) => [record, ...prev]);
+      }
     }
   }, [BlotterTransactionAccepted]);
 
@@ -709,7 +932,7 @@ const TradeCount = () => {
     <section className={styles["SectionContainer"]}>
       <Row className="mt-4">
         <Col lg={12} md={12} sm={12}>
-          <span className={styles["tradeCount-label"]}>Trade Count</span>
+          <span className={styles["tradeCount-label"]}>Daily Trade</span>
         </Col>
       </Row>
       <Row className="mt-2">
@@ -731,6 +954,7 @@ const TradeCount = () => {
                 <TextField
                   placeholder="Client Name"
                   name="ClientName"
+                  maxLength={20}
                   labelClass="d-none"
                   value={tradeCount.clientName.value}
                   onChange={tradeCountValidateHandler}
@@ -761,15 +985,17 @@ const TradeCount = () => {
               </Col>
 
               <Col lg={2} md={2} sm={12}>
-                <TextField
-                  placeholder="Amount"
+                {/* <TextField */}
+                <NumericFormat
+                  placeholder="Total Amount"
                   name="Amount"
+                  maxLength={20}
                   onChange={tradeCountValidateHandler}
                   value={
                     tradeCount.Amount.value === 0 ? "" : tradeCount.Amount.value
                   }
                   labelClass="d-none"
-                  className="tradeCount-textField-fontsize"
+                  className="tradeCount-textField-fontsize form-control"
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
@@ -780,12 +1006,13 @@ const TradeCount = () => {
                   onChange={tradeCountValidateHandler}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
+                  maxLength={20}
                 />
               </Col>
             </Row>
 
             <Row className="mt-3 g-2">
-              <Col lg={2} md={2} sm={12}>
+              <Col lg={2} md={12} sm={12}>
                 <TextField
                   placeholder="Account Number"
                   name="AccountNumber"
@@ -793,40 +1020,66 @@ const TradeCount = () => {
                   onChange={tradeCountValidateHandler}
                   labelClass="d-none"
                   className="tradeCount-textField-fontsize"
+                  maxLength={20}
                 />
               </Col>
+              <Col lg={2} md={12} sm={12}>
+                <Select
+                  styles={{
+                    placeholder: (base) => ({
+                      ...base,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                  }}
+                  placeholder="Select Date Range"
+                  classNamePrefix="selectCateogyCorporateList"
+                  options={dateRangeOptions}
+                  value={selectedDateRange}
+                  isSearchable={true}
+                  onChange={handleDateRangeChange}
+                  menuPortalTarget={document.body}
+                ></Select>
+              </Col>
+              {showCustomDatePicker && (
+                <Col
+                  lg={4}
+                  md={12}
+                  sm={12}
+                  className="d-flex align-items-center pe-4"
+                >
+                  <DatePicker
+                    name="dateFrom"
+                    value={tradeCount.dateFrom.value}
+                    placeholder="Start date"
+                    showOtherDays="true"
+                    inputClass={styles["Tradecount-Datepicker-left"]}
+                    onChange={(date) => handleDateChange("dateFrom", date)}
+                    maxDate={tradeCount.dateTo.value}
+                    minDate={null}
+                    editable={false}
+                  />
+                  <label className={styles["Tradecount-date-to"]}>to</label>
+
+                  <DatePicker
+                    name="dateTo"
+                    value={tradeCount.dateTo.value}
+                    placeholder="End Date"
+                    showOtherDays="true"
+                    inputClass={styles["Tradecount-Datepicker-right"]}
+                    onChange={(date) => handleDateChange("dateTo", date)}
+                    minDate={tradeCount.dateFrom.value}
+                    maxDate={null}
+                    editable={false}
+                  />
+                </Col>
+              )}
+
+              {!showCustomDatePicker && <Col lg={4} md={12} sm={12} />}
               <Col
                 lg={4}
-                md={4}
-                sm={12}
-                className="d-flex align-items-center pe-4"
-              >
-                <DatePicker
-                  name="dateFrom"
-                  value={tradeCount.dateFrom.value}
-                  placeholder="Start date"
-                  showOtherDays="true"
-                  inputClass={styles["Tradecount-Datepicker-left"]}
-                  onChange={(date) => handleDateChange("dateFrom", date)}
-                  maxDate={tradeCount.dateTo.value}
-                  minDate={null}
-                />
-                <label className={styles["Tradecount-date-to"]}>to</label>
-
-                <DatePicker
-                  name="dateTo"
-                  value={tradeCount.dateTo.value}
-                  placeholder="End Date"
-                  showOtherDays="true"
-                  inputClass={styles["Tradecount-Datepicker-right"]}
-                  onChange={(date) => handleDateChange("dateTo", date)}
-                  minDate={tradeCount.dateFrom.value}
-                  maxDate={null}
-                />
-              </Col>
-              <Col
-                lg={6}
-                md={6}
+                md={12}
                 sm={12}
                 className="d-flex justify-content-center gap-1"
               >
@@ -898,6 +1151,7 @@ const TradeCount = () => {
                   rows={tableData}
                   scroll={{ x: "scroll", y: 230 }}
                   className={"BankUserList-table"}
+                  loading={GetAllTradesLoader}
                 />
               </Col>
             </Row>

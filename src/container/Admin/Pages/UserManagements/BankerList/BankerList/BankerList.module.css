@@ -88,6 +88,9 @@
 .SectionContainer {
   width: 99% !important;
   margin: 0 auto !important;
+  height: 100% !important;
+  min-height: 70vh;
+  max-height: 70vh;
 }
 
 .table-columns-Banklist {
@@ -143,10 +146,22 @@
   margin: 0 !important;
 }
 .ActiveStatus {
-  color: #00ee28 !important;
+  color: #12a812 !important;
 }
 .InactiveStatus {
-  color: #cf5b5b !important;
+  color: #808285 !important;
+}
+
+.LockedStatus {
+  color: #f8a041;
+}
+
+.ClosedStatus {
+  color: #cf5b5b;
+}
+
+.DormantStatus {
+  color: #808285;
 }
 .export-options {
   display: flex; /* Ensures items stay in a row */
@@ -161,3 +176,11 @@
   display: flex; /* Ensures the button stays inline */
   align-items: center; /* Align icon inside the button */
 }
+.BankUserList-table .ant-table-body {
+  overflow-y: auto !important;
+  scroll-behavior: smooth;
+}
+/* 
+#banker-list-table .ant-table-body {
+  scrollbar-width: thin;
+} */

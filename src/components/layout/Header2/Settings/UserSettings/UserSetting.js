@@ -23,7 +23,7 @@ const UserSetting = ({ settingsRecord, onChangeCheckbox }) => {
             checked={settingsRecord.BD_SoundOnEveryMessage}
             onChange={onChangeCheckbox}
           >
-            Sound on every personal message
+            Sound on every message
           </Checkbox>
         </Col>
       </Row>

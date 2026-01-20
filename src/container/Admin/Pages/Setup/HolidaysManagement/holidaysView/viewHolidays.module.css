@@ -1,0 +1,62 @@
+.AddHolidaysHeading {
+  color: var(--color-primary);
+  font-size: 1.25rem;
+}
+
+.DatePickerWrapper {
+  position: relative;
+  width: 100%;
+  display: grid;
+}
+
+.DatePickerContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.DatePicker {
+  display: inline-block !important;
+  height: 39px !important;
+  min-width: 100% !important;
+  border-radius: 4px !important;
+  border: 1px solid #e1e1e1 !important;
+  padding-right: 35px !important;
+  cursor: pointer;
+  outline: none !important;
+  z-index: 1;
+  padding-left: 10px;
+}
+
+.CalendarIcon {
+  position: absolute;
+  right: 0;
+  font-size: 1.1rem;
+  color: #6c757d;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2;
+  background-color: #e9ecef;
+  width: 43px;
+  height: 38px;
+  border: 1px solid #e1e1e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.AddHoliday_btn {
+  background: #0b5ed7 !important;
+  border-color: #0b5ed7 !important;
+  border-radius: 4px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3px;
+}
+.AddHoliday_btn:hover {
+  background: linear-gradient(to bottom, #feac78 0%, #e97225 100%) !important;
+  border-color: #feac78 !important;
+}

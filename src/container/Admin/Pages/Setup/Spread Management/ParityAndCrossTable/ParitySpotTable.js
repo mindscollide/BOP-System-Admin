@@ -15,9 +15,9 @@ const ParitySpotTable = ({ paritySpotData, setParitySpotData }) => {
           ? "0"
           : regular_ex.test(value)
           ? value.slice(1)
-          : value === "0.0"
-          ? "0.1"
-          : // Remove leading "0" (e.g., "09" → "9")
+          : // : value === "0.00"
+            // ? "0.01"
+            // Remove leading "0" (e.g., "09" → "9")
             value;
       // Create a deep copy of the array and the specific item being modified
       const updatedData = paritySpotData.map((item, i) => {

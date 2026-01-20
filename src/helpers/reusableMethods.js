@@ -14,6 +14,24 @@ export const ConvertDateTimrStringIntoGTM = (date, pattern) => {
   console.log(ConvertIntoISO, "ConvertIntoISOConvertIntoISO");
   return new Date(ConvertIntoISO);
 };
+export const convertUTCToLocalDateWithToday = (timeStr) => {
+  // Extract hours and minutes from the input string
+  const [utcHours, utcMinutes] = timeStr.split(":").map(Number);
+
+  // Get today's date parts in the local timezone
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const day = today.getDate();
+
+  // Create a Date object in UTC using the provided time and today's date
+  const utcDate = new Date(Date.UTC(year, month, day, utcHours, utcMinutes));
+
+  // Convert it to a local time Date object
+  const localDate = new Date(utcDate.toLocaleString());
+
+  return localDate;
+};
 
 export const extractTimeOnly = (dateString) => {
   const dateObj = new Date(dateString);
@@ -125,7 +143,6 @@ export const isValidAmount = (value, maxDecimalPlaces = 2) => {
   return true;
 };
 
-
 export const convertDateTimeIntoLocal = (utcDateString) => {
   const year = parseInt(utcDateString.slice(0, 4));
   const month = parseInt(utcDateString.slice(4, 6)) - 1; // JS months are 0-based
@@ -136,11 +153,46 @@ export const convertDateTimeIntoLocal = (utcDateString) => {
 
   // Create date in UTC
   const utcDate = new Date(Date.UTC(year, month, day, hour, minute, second));
-  console.log(utcDate, "utcDateutcDate")
+  console.log(utcDate, "utcDateutcDate");
   // Convert to local time string
   const localDateString = utcDate.toString(); // Uses system/browser local time
 
   console.log("Local Time:", localDateString);
 
   return utcDate;
+};
+export const formatPkAmount = (rawValue, options = {}) => {
+  const { decimals = 2, allowNegative = true, emptySymbol = "" } = options;
+
+  // Handle empty/null/undefined cases
+  if (rawValue === null || rawValue === undefined || rawValue === "") {
+    return emptySymbol;
+  }
+
+  // Convert to number
+  let numericValue;
+  if (typeof rawValue === "string") {
+    // Remove any existing formatting
+    const cleanString = rawValue.replace(/[^\d.-]/g, "");
+    numericValue = parseFloat(cleanString);
+  } else {
+    numericValue = Number(rawValue);
+  }
+
+  // Validate the number
+  if (isNaN(numericValue)) {
+    return emptySymbol;
+  }
+
+  // Handle negative values
+  if (!allowNegative && numericValue < 0) {
+    numericValue = 0;
+  }
+
+  // Format with Pakistan locale
+  return numericValue.toLocaleString("en-PK", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+    useGrouping: true,
+  });
 };

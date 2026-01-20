@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CategoryManagement.css";
 import { Col, Row } from "react-bootstrap";
-import {
-  TextField,
-  Button,
-  Loader,
-} from "../../../../../../components/elements";
+import { TextField, Button } from "../../../../../../components/elements";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Collapse } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -16,11 +12,7 @@ import {
   UpdatecorporateMapping,
 } from "../../../../../../store/actions/Auth-Actions";
 import { useSelector } from "react-redux";
-import {
-  forNumbersOnly,
-  formatNumberForFourDecimal,
-  numberformatgerWithFourDecimalValues,
-} from "../../../../../../commen/functions/numberFormatter";
+import { formatNumberForFourDecimal } from "../../../../../../commen/functions/numberFormatter";
 import DeleteModal from "../DeleteRejectModal/DeleRejectModal";
 import AddCategoryModal from "../AddCategoryModal/AddCategoryModal";
 import {
@@ -50,7 +42,6 @@ const CategoryManagement = () => {
     (state) => state.RealtimeActionReducer.counterpartyBranchChanged
   );
 
-  const { auth, BOPSystemAdminReducer } = useSelector((state) => state);
   //Global State for Add Category Modal
   const AddCategoryGobalState = useSelector(
     (state) => state.BOPSystemAdminModal.addCategoryModal
@@ -340,7 +331,7 @@ const CategoryManagement = () => {
               display: "flex",
               flexDirection: "column",
               gap: "8px",
-              minHeight: "50px",
+              minHeight: "100%",
             }}
           >
             {data.CounterParties.map((client, index) => (
@@ -480,6 +471,7 @@ const CategoryManagement = () => {
 
   // Check Edit Funtion to open Edit Modal
   const OpenEditCategory = (recorde, data) => {
+    console.log(data, "data of edit");
     setCategoryUpdate({
       offerSpread: {
         value: formatNumberForFourDecimal(data.offerSpread),
@@ -543,29 +535,6 @@ const CategoryManagement = () => {
       });
     }
 
-    // if (name === "Bidupdated" && value !== "") {
-    //   if (forNumbersOnly(value.trimStart()) !== "") {
-    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-    //       setCategoryUpdate({
-    //         ...categoryupdate,
-    //         bidSpread: {
-    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
-    //           errorMessage: "",
-    //           errorStatus: false,
-    //         },
-    //       });
-    //     }
-    //   }
-    // } else if (name === "Bidupdated" && value === "") {
-    //   setCategoryUpdate({
-    //     ...categoryupdate,
-    //     bidSpread: {
-    //       value: "",
-    //       errorMessage: "",
-    //       errorStatus: true,
-    //     },
-    //   });
-    // }
     if (name === "Bidupdated") {
       if (isValidNumberUnderMax(value, "", 1000)) {
         const regular_ex = /^(0\d)$/; // Matches "00", "01", ..., "09"
@@ -614,29 +583,6 @@ const CategoryManagement = () => {
         });
       }
     }
-    // if (name === "Offerupdate" && value !== "") {
-    //   if (forNumbersOnly(value.trimStart()) !== "") {
-    //     if (numberformatgerWithFourDecimalValues(value.trimStart())) {
-    //       setCategoryUpdate({
-    //         ...categoryupdate,
-    //         offerSpread: {
-    //           value: numberformatgerWithFourDecimalValues(value.trimStart()),
-    //           errorMessage: "",
-    //           errorStatus: false,
-    //         },
-    //       });
-    //     }
-    //   }
-    // } else if (name === "Offerupdate" && value === "") {
-    //   setCategoryUpdate({
-    //     ...categoryupdate,
-    //     offerSpread: {
-    //       value: "",
-    //       errorMessage: "",
-    //       errorStatus: true,
-    //     },
-    //   });
-    // }
   };
 
   //Update Category API Function
@@ -645,8 +591,16 @@ const CategoryManagement = () => {
     // Calling Update APi
     let newdata = {
       Category: categoryupdate.category.value,
-      BidSpread: Number(categoryupdate.bidSpread.value),
-      OfferSpread: Number(categoryupdate.offerSpread.value),
+      BidSpread: Number(
+        categoryupdate.bidSpread.value === ""
+          ? "0"
+          : categoryupdate.bidSpread.value
+      ),
+      OfferSpread: Number(
+        categoryupdate.offerSpread.value === ""
+          ? "0"
+          : categoryupdate.offerSpread.value
+      ),
       CategoryId: Number(data.CatID),
     };
     dispatch(UpdateCategoryAPI(navigate, newdata));
@@ -959,7 +913,7 @@ const CategoryManagement = () => {
                                                 className="text-center"
                                               >
                                                 <div className="title_bid">
-                                                  offer
+                                                  Offer
                                                 </div>
                                                 <div className="rate val-highlight2">
                                                   {data.offerSpread !== 0

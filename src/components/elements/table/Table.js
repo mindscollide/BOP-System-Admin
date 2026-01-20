@@ -8,7 +8,7 @@ const CustomTable = ({
   pagination,
   loading,
   id,
-  labelTitle,
+  labelTitle = false,
   expandable,
   onChange,
   locale,
@@ -17,10 +17,9 @@ const CustomTable = ({
   style,
   bordered,
 }) => {
-
   return (
     <>
-      <h4 className="labelTitle">{labelTitle}</h4>
+      {labelTitle && <h4 className="labelTitle">{labelTitle}</h4>}
       <Table
         bordered={bordered}
         rowClassName={id}

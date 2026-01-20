@@ -20,7 +20,12 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [modalState, setModalState] = useState(0);
   const [NonFEDiscoutingData, setNonFEDiscoutingData] = useState([]);
+  console.log(
+    NonFEDiscoutingData,
+    "NonFEDiscoutingDataNonFEDiscoutingDataNonFEDiscoutingData"
+  );
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
+
   const GetTenorWiseNonFEDiscountingSpreadsForCategory = useSelector(
     (state) =>
       state.SpreadManagementReducer
@@ -34,17 +39,21 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   );
 
   const NonFEDiscoutingSpreadUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.NonFEDiscoutingSpreadUpdated
+    (state) => state.RealtimeActionReducer.NonFEDiscountingSpreadUpdated
   );
 
   useEffect(() => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (GetTenorWiseNonFEDiscountingSpreadsForCategory !== null) {
+        console.log(
+          GetTenorWiseNonFEDiscountingSpreadsForCategory,
+          "GetTenorWiseNonFEDiscountingSpreadsForCategory"
+        );
         try {
           const { nonFEDiscountingSpreads } =
             GetTenorWiseNonFEDiscountingSpreadsForCategory;
           const { rowData, columnsData } = buildDiscountingTable(
-            2,
+            3,
             nonFEDiscountingSpreads,
             GetAllTenors,
             GetAllInstruments,
@@ -58,7 +67,7 @@ const NonFEDiscountingTable = ({ categoryID }) => {
       } else {
         try {
           const { rowData, columnsData } = buildDiscountingTable(
-            2,
+            3,
             [],
             GetAllTenors,
             GetAllInstruments,
@@ -85,7 +94,7 @@ const NonFEDiscountingTable = ({ categoryID }) => {
             categorySpreads: { discountingSpreads },
           } = NonFEDiscoutingSpreadUpdated;
           const { rowData, columnsData } = buildDiscountingTable(
-            2,
+            3,
             discountingSpreads,
             GetAllTenors,
             GetAllInstruments,
@@ -116,7 +125,6 @@ const NonFEDiscountingTable = ({ categoryID }) => {
       setNonFEDiscoutingData((prevState) =>
         prevState.map((stateData) => {
           // Match by tenorID
-          console.log(stateData, "stateData.tenorID");
           if (stateData.TenorID !== record.TenorID) return stateData;
           // Loop through instrument name keys in the object
           const instrumentMatched = Object.keys(stateData).find((key) => {
@@ -148,14 +156,21 @@ const NonFEDiscountingTable = ({ categoryID }) => {
   };
   const handleConfirmationYes = () => {
     if (modalState === 1) {
+      const filteredInstruments = {
+        ...GetAllInstruments,
+        instruments: GetAllInstruments.instruments.filter(
+          (instrument) => instrument.instrumentID === 21
+        ),
+      };
       let updatedDiscounts = convertToDicountSpreads(
         NonFEDiscoutingData,
-        GetAllInstruments.instruments
+        filteredInstruments.instruments
       );
       let data = {
         CategoryID: categoryID,
         DiscountingSpreads: updatedDiscounts,
       };
+      console.log(data, "TEstdat");
       dispatch(SaveCategoryNonFEDiscountsAPI(navigate, data));
       setConfirmationModal(false);
       setModalState(0);

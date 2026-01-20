@@ -265,7 +265,7 @@ const EditCorporateTradeModal = ({ info }) => {
       title: "",
       children: [
         {
-          title: "instrumentID",
+          title: "Instrument",
           dataIndex: "instrumentName",
           key: "instrumentName",
           align: "center",
@@ -288,7 +288,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isCrossRateBuy}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -307,7 +307,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isCrossRateSell}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -332,7 +332,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isParityBuy}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -351,7 +351,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isParitySell}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -376,7 +376,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isForwardBuy}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -395,7 +395,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isForwardSell}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -442,7 +442,7 @@ const EditCorporateTradeModal = ({ info }) => {
           render: (_, record) => (
             <Checkbox
               checked={record.isDiscounting}
-              disabled={record.isViewOnly ? true : false}
+              disabled={record.isActive ? false : true}
               onChange={(event) =>
                 handleCheckboxChange(
                   record,
@@ -462,7 +462,7 @@ const EditCorporateTradeModal = ({ info }) => {
       title: "",
       children: [
         {
-          title: "Active",
+          title: "Viewable",
           dataIndex: "isActive",
           key: "isActive",
           align: "center",
@@ -480,45 +480,39 @@ const EditCorporateTradeModal = ({ info }) => {
       dataIndex: "",
       align: "center",
     },
-    {
-      title: "",
-      children: [
-        {
-          title: "Hide",
-          dataIndex: "isViewOnly",
-          key: "isViewOnly",
-          align: "center",
-          render: (_, record) => (
-            <CustomSwitch
-              checked={record.isViewOnly}
-              onChange={(event) =>
-                handleCheckboxChange(record, "isViewOnly", event)
-              }
-            />
-          ),
-        },
-      ],
-      key: "",
-      dataIndex: "",
-      align: "center",
-    },
+    // {
+    //   title: "",
+    //   children: [
+    //     {
+    //       title: "Hide",
+    //       dataIndex: "isViewOnly",
+    //       key: "isViewOnly",
+    //       align: "center",
+    //       render: (_, record) => (
+    //         <CustomSwitch
+    //           checked={record.isViewOnly}
+    //           onChange={(event) =>
+    //             handleCheckboxChange(record, "isViewOnly", event)
+    //           }
+    //         />
+    //       ),
+    //     },
+    //   ],
+    //   key: "",
+    //   dataIndex: "",
+    //   align: "center",
+    // },
   ];
 
   const handleValueChange = (e) => {
     const { name, value } = e.target;
 
-    // Step 1: Remove all non-digit characters
-    let rawValue = value.replace(/[^0-9]/g, "");
+    let rawValue = value.replace(/[^0-9]/g, ""); // Remove non-digits
+    rawValue = rawValue.replace(/^0+(?=\d)/, ""); // Remove leading zeros
 
-    // Step 2: Remove leading zeros unless the entire value is "0"
-    rawValue = rawValue.replace(/^0+(?=\d)/, "");
-
-    // Step 3: Convert to PKR format (e.g., 1000 -> 1,000)
     const formattedValue = rawValue
       ? Number(rawValue).toLocaleString("en-PK")
       : "";
-
-    // Step 4: Basic required validation
     const hasError = rawValue.trim() === "";
 
     setTradeRightsData((prevState) => {
@@ -526,32 +520,46 @@ const EditCorporateTradeModal = ({ info }) => {
         ...prevState,
         [name]: {
           value: formattedValue,
-          rawValue: rawValue, // Keep raw for numeric logic
+          rawValue,
           errorMessage: hasError ? "This field is required" : "",
           errorStatus: hasError,
         },
       };
 
+      const totalLimit = Number(updatedState.totalLimit?.rawValue || 0);
       const minLimit = Number(updatedState.minTransactionLimit?.rawValue || 0);
       const maxLimit = Number(updatedState.maxTransactionLimit?.rawValue || 0);
 
+      // Validation logic
       const limitError = minLimit > maxLimit;
+      const totalLimitMaxError = totalLimit < maxLimit;
+      const totalLimitMinError = totalLimit < minLimit;
+
+      const minErrors = [];
+      const maxErrors = [];
+
+      if (limitError) {
+        minErrors.push("Min limit cannot be greater than Max limit");
+        maxErrors.push("Max limit cannot be less than Min limit");
+      }
+      if (totalLimitMinError) {
+        minErrors.push("Min limit cannot be greater than Total Limit");
+      }
+      if (totalLimitMaxError) {
+        maxErrors.push("Max limit cannot be greater than Total Limit");
+      }
 
       return {
         ...updatedState,
         minTransactionLimit: {
           ...updatedState.minTransactionLimit,
-          errorMessage: limitError
-            ? "Min limit cannot be greater than max limit"
-            : "",
-          errorStatus: limitError,
+          errorMessage: minErrors.join(" | "),
+          errorStatus: minErrors.length > 0,
         },
         maxTransactionLimit: {
           ...updatedState.maxTransactionLimit,
-          errorMessage: limitError
-            ? "Max limit cannot be less than min limit"
-            : "",
-          errorStatus: limitError,
+          errorMessage: maxErrors.join(" | "),
+          errorStatus: maxErrors.length > 0,
         },
       };
     });
@@ -586,7 +594,7 @@ const EditCorporateTradeModal = ({ info }) => {
           IsParityBuy: item.isParityBuy,
           IsParitySell: item.isParitySell,
           IsActive: item.isActive,
-          IsViewOnly: item.isViewOnly,
+          IsViewOnly: false,
         })),
       };
 
@@ -695,13 +703,13 @@ const EditCorporateTradeModal = ({ info }) => {
               <Row>
                 <Col lg={6} md={6} sm={12}>
                   <span className={styles["labels-add-bank"]}>
-                    Total Limit (PKR)
+                    Daily Limit (USD)
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <TextField
                     name={"totalLimit"}
                     labelClass="d-none"
-                    placeholder={"Total Limit"}
+                    placeholder={"Daily Limit"}
                     value={
                       tradeRightsData.totalLimit
                         ? tradeRightsData.totalLimit.value
@@ -804,10 +812,11 @@ const EditCorporateTradeModal = ({ info }) => {
                 iconClass={styles["IconClass"]}
                 onClick={handleSaveChangesButton}
                 disableBtn={
-                  Number(tradeRightsData.minTransactionLimit.rawValue) <=
-                  Number(tradeRightsData.maxTransactionLimit.rawValue)
-                    ? false
-                    : true
+                  tradeRightsData.maxTransactionLimit.errorStatus ||
+                  tradeRightsData.minTransactionLimit.errorStatus ||
+                  tradeRightsData.totalLimit.errorStatus
+                    ? true
+                    : false
                 }
               />
               <Button

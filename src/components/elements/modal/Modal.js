@@ -28,6 +28,7 @@ const CustomModal = ({
           size={size}
           centered={true}
           className={className}
+          
         >
           <Modal.Header className={modalHeaderClassName} closeButton>
             <Modal.Title>{ModalTitle}</Modal.Title>

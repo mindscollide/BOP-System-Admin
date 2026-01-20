@@ -387,7 +387,7 @@ const CorporatePlusIconModal = () => {
               <Row>
                 <Col lg={6} md={6} sm={12} className="flex-column flex-wrap">
                   <span className={styles["labels-add-bank"]}>
-                    Treasury
+                    Treasury Sales
                     <span className={styles["aesterick-color"]}>*</span>
                   </span>
                   <Select

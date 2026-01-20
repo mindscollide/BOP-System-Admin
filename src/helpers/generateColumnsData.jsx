@@ -21,11 +21,15 @@ export const buildForwardsTable = (
     const applicableInstruments =
       value === 1
         ? instruments?.filter((inst) => inst.discountingApplicable) || []
+        : value === 2
+        ? instruments?.filter((inst) => inst.forwardsApplicable) || []
         : instruments;
 
     const applicableTenors =
       value === 1
         ? tenors?.filter((tenor) => tenor.isDiscountingApplicable) || []
+        : value === 2
+        ? tenors?.filter((tenor) => tenor.isForwardingApplicable) || []
         : tenors;
 
     // Step 1: Create rateMap with bid/ask
@@ -107,62 +111,64 @@ export const buildForwardsTable = (
           dataIndex: "tenorName",
           align: "left",
         },
-        ...applicableInstruments.map((inst) => ({
-          title: inst.instrumentName,
-          key: `group_${inst.instrumentName}`,
-          align: "center",
-          width: 180,
-          children: [
-            {
-              title: "Bid Spread",
-              dataIndex: `bid_${inst.instrumentName}`,
-              key: `bid_${inst.instrumentName}`,
-              align: "center",
-              width: "100px",
-              render: (text, record) => (
-                <InputFIeld
-                  value={text}
-                  // className="text-center"
-                  className={"ValueDiscountingInput"}
-                  labelClass="d-none"
-                  record={record}
-                  onChange={(event) =>
-                    onInputChange(
-                      event.target.value,
-                      record,
-                      "bid",
-                      inst.instrumentName
-                    )
-                  }
-                />
-              ),
-            },
-            {
-              title: "Ask Spread",
-              dataIndex: `ask_${inst.instrumentName}`,
-              key: `ask_${inst.instrumentName}`,
-              align: "center",
-              width: "100px",
-              render: (text, record) => (
-                <InputFIeld
-                  value={text}
-                  // className="text-center"
-                  className={"ValueDiscountingInput"}
-                  labelClass="d-none"
-                  record={record}
-                  onChange={(event) =>
-                    onInputChange(
-                      event.target.value,
-                      record,
-                      "ask",
-                      inst.instrumentName
-                    )
-                  }
-                />
-              ),
-            },
-          ],
-        })),
+        ...applicableInstruments
+          .filter((filData, index) => Number(filData.instrumentID) !== 21)
+          .map((inst) => ({
+            title: inst.instrumentName,
+            key: `group_${inst.instrumentName}`,
+            align: "center",
+            width: 180,
+            children: [
+              {
+                title: "Bid Spread",
+                dataIndex: `bid_${inst.instrumentName}`,
+                key: `bid_${inst.instrumentName}`,
+                align: "center",
+                width: "100px",
+                render: (text, record) => (
+                  <InputFIeld
+                    value={text}
+                    // className="text-center"
+                    className={"ValueDiscountingInput"}
+                    labelClass="d-none"
+                    record={record}
+                    onChange={(event) =>
+                      onInputChange(
+                        event.target.value,
+                        record,
+                        "bid",
+                        inst.instrumentName
+                      )
+                    }
+                  />
+                ),
+              },
+              {
+                title: "Ask Spread",
+                dataIndex: `ask_${inst.instrumentName}`,
+                key: `ask_${inst.instrumentName}`,
+                align: "center",
+                width: "100px",
+                render: (text, record) => (
+                  <InputFIeld
+                    value={text}
+                    // className="text-center"
+                    className={"ValueDiscountingInput"}
+                    labelClass="d-none"
+                    record={record}
+                    onChange={(event) =>
+                      onInputChange(
+                        event.target.value,
+                        record,
+                        "ask",
+                        inst.instrumentName
+                      )
+                    }
+                  />
+                ),
+              },
+            ],
+          })),
       ];
     }
 
@@ -214,13 +220,31 @@ export const buildDiscountingTable = (
     const { instruments } = getAllInstrument;
 
     // Step 1: Filter applicable instruments and tenors
+    // const applicableInstruments =
+    //   value === 1
+    //     ? instruments?.filter((inst) => inst.discountingApplicable) || []
+    //     : value === 2
+    //     ? instruments?.filter((inst) => inst.discountingApplicable)
+    //     : instruments;
+
     const applicableInstruments =
       value === 1
         ? instruments?.filter((inst) => inst.discountingApplicable) || []
+        : value === 2
+        ? instruments?.filter((inst) => inst.discountingApplicable)
+        : value === 3
+        ? instruments?.filter((inst) => inst.isNonFEDiscountingApplicable)
         : instruments;
+
+    console.log(
+      applicableInstruments,
+      "applicableInstrumentsapplicableInstruments"
+    );
     const applicableTenors =
       value === 1
         ? tenors?.filter((tenor) => tenor.isDiscountingApplicable) || []
+        : value === 2 || value === 3
+        ? tenors?.filter((tenor) => tenor.isDiscountingApplicable)
         : tenors;
 
     // Step 2: Create a map using composite key (instrumentID-tenorID)
@@ -287,32 +311,37 @@ export const buildDiscountingTable = (
 
           width: 120,
         },
-        ...applicableInstruments.map((inst) => ({
-          title: inst.instrumentName,
-          key: `rate_${inst.instrumentName}`,
-          align: "center",
-          width: "100px",
-          children: [
-            {
-              width: "100px",
-              title: "Value",
-              dataIndex: `rate_${inst.instrumentName}`,
-              align: "center",
+        ...applicableInstruments
+          // .filter(
+          //   (filData, index) =>
+          //     (value === 4 && filData.instrumentID !== 21) || value !== 3
+          // )
+          .map((inst) => ({
+            title: inst.instrumentName,
+            key: `rate_${inst.instrumentName}`,
+            align: "center",
+            width: "100px",
+            children: [
+              {
+                width: "100px",
+                title: "Value",
+                dataIndex: `rate_${inst.instrumentName}`,
+                align: "center",
 
-              render: (text, record) => (
-                <InputFIeld
-                  className={"ValueDiscountingInput"}
-                  labelClass={"d-none"}
-                  value={text}
-                  record={record}
-                  onChange={(e) =>
-                    onInputChange(e.target.value, record, inst.instrumentName)
-                  }
-                />
-              ),
-            },
-          ],
-        })),
+                render: (text, record) => (
+                  <InputFIeld
+                    className={"ValueDiscountingInput"}
+                    labelClass={"d-none"}
+                    value={text}
+                    record={record}
+                    onChange={(e) =>
+                      onInputChange(e.target.value, record, inst.instrumentName)
+                    }
+                  />
+                ),
+              },
+            ],
+          })),
       ];
     }
 
@@ -328,11 +357,13 @@ export const buildDiscountingTable = (
 export const convertToDicountSpreads = (originalData, instruments) => {
   const DiscountRates = originalData.flatMap(
     (item) =>
-      instruments.map((instrument) => ({
-        InstrumentID: item[`InstrumentID_${instrument.instrumentName}`],
-        TenorID: item.TenorID,
-        Spread: Number(item[`rate_${instrument.instrumentName}`]) || 0,
-      }))
+      instruments
+        .filter((data, index) => data.discountingApplicable === true)
+        .map((instrument) => ({
+          InstrumentID: item[`InstrumentID_${instrument.instrumentName}`],
+          TenorID: item.TenorID,
+          Spread: Number(item[`rate_${instrument.instrumentName}`]) || 0,
+        }))
     // .filter((entry) => entry.Spread !== 0) // Exclude zero spreads
   );
   return DiscountRates;

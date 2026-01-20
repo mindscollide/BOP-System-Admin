@@ -22,6 +22,7 @@ const ParityAndCross = ({ categoryID }) => {
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [modalState, setModalState] = useState(0);
   const [paritySpotData, setParitySpotData] = useState([]);
+  console.log(paritySpotData, "paritySpotDataparitySpotData");
   const GetSpotSpreadsForCategory = useSelector(
     (state) => state.SpreadManagementReducer.GetSpotSpreadsForCategory
   );
@@ -29,7 +30,7 @@ const ParityAndCross = ({ categoryID }) => {
   const GetCrossRateSpreadsForCategory = useSelector(
     (state) => state.SpreadManagementReducer.GetCrossRateSpreadsForCategory
   );
-  console.log(categoryID, "categoryIDcategoryIDcategoryID");
+  console.log(GetCrossRateSpreadsForCategory, "categoryIDcategoryIDcategoryID");
 
   const GetAllInstruments = useSelector(
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
@@ -40,45 +41,49 @@ const ParityAndCross = ({ categoryID }) => {
   const spotCrossUpdated = useSelector(
     (state) => state.RealtimeActionReducer.spotCrossUpdated
   );
-
+  console.log(
+    GetSpotSpreadsForCategory,
+    GetAllInstruments,
+    "spotSpreadUpdated"
+  );
   useEffect(() => {
-    if (GetSpotSpreadsForCategory !== null && GetAllInstruments !== null) {
+    if (
+      GetAllInstruments !== null &&
+      GetAllInstruments.instruments?.length > 0
+    ) {
       try {
-        if (
-          GetAllInstruments.instruments &&
-          GetAllInstruments.instruments.length > 0
-        ) {
-          const newDataMapping = GetAllInstruments.instruments.map(
-            (instrument) => {
-              const matchedInstrument =
-                GetSpotSpreadsForCategory.paritySpotSpreads?.find(
-                  (item) => item.instrumentID === instrument.instrumentID
-                );
-
-              // If match found, merge the data and set instrumentName
-              if (matchedInstrument) {
-                return {
-                  ...matchedInstrument,
-                  instrumentName: instrument.instrumentName,
-                };
-              }
-
-              // If no match, return default values
+        const newDataMapping = GetAllInstruments.instruments
+          .filter((instrument) => instrument.instrumentID !== 21)
+          .map((instrument) => {
+            const matchedInstrument =
+              GetSpotSpreadsForCategory?.paritySpotSpreads?.find(
+                (item) => item.instrumentID === instrument.instrumentID
+              );
+            console.log(matchedInstrument, "matchedInstrument");
+            if (matchedInstrument) {
               return {
-                instrumentID: instrument.instrumentID,
+                ...matchedInstrument,
                 instrumentName: instrument.instrumentName,
+                instrumentID: matchedInstrument.instrumentID,
+                bidSpread: matchedInstrument.bidSpread,
+                askSpread: matchedInstrument.askSpread,
+              };
+            } else {
+              return {
+                instrumentName: instrument.instrumentName,
+                instrumentID: instrument.instrumentID,
                 bidSpread: 0,
                 askSpread: 0,
               };
             }
-          );
-          setParitySpotData(newDataMapping);
-        }
+          });
+
+        setParitySpotData(newDataMapping);
       } catch (error) {
         console.error("Error in mapping instrument data:", error);
       }
     }
-  }, [GetSpotSpreadsForCategory, GetAllInstruments]);
+  }, [GetAllInstruments, GetSpotSpreadsForCategory]);
 
   useEffect(() => {
     if (spotSpreadUpdated !== null && GetAllInstruments !== null) {
@@ -87,8 +92,9 @@ const ParityAndCross = ({ categoryID }) => {
           GetAllInstruments.instruments &&
           GetAllInstruments.instruments.length > 0
         ) {
-          const newDataMapping = GetAllInstruments.instruments.map(
-            (instrument) => {
+          const newDataMapping = GetAllInstruments.instruments
+            .filter((instrument) => instrument.instrumentID !== 21)
+            .map((instrument) => {
               const matchedInstrument =
                 spotSpreadUpdated.categorySpreads.paritySpotSpreads?.find(
                   (item) => item.instrumentID === instrument.instrumentID
@@ -109,8 +115,7 @@ const ParityAndCross = ({ categoryID }) => {
                 bidSpread: 0,
                 askSpread: 0,
               };
-            }
-          );
+            });
           setParitySpotData(newDataMapping);
         }
         dispatch(setSpotSpreadUpdated(null));
@@ -121,28 +126,28 @@ const ParityAndCross = ({ categoryID }) => {
   }, [spotSpreadUpdated, GetAllInstruments]);
 
   useEffect(() => {
-    if (GetCrossRateSpreadsForCategory !== null && GetAllInstruments !== null) {
+    if (
+      GetAllInstruments !== null &&
+      GetAllInstruments.instruments?.length > 0
+    ) {
       try {
-        if (
-          GetAllInstruments.instruments &&
-          GetAllInstruments.instruments.length > 0
-        ) {
-          const newDataMapping = GetAllInstruments.instruments.map(
-            (instrument) => {
-              const matchedInstrument =
-                GetCrossRateSpreadsForCategory.crossRatesSpreads?.find(
-                  (item) => item.instrumentID === instrument.instrumentID
-                );
-
-              // If match found, merge the data and set instrumentName
-              if (matchedInstrument) {
-                return {
-                  ...matchedInstrument,
-                  instrumentName: instrument.instrumentName,
-                };
-              }
-
-              // If no match, return default values
+        const newDataMapping = GetAllInstruments.instruments
+          .filter((instrument) => instrument.instrumentName !== "USD")
+          .map((instrument) => {
+            const matchedInstrument =
+              GetCrossRateSpreadsForCategory?.crossRatesSpreads?.find(
+                (item) => item.instrumentID === instrument.instrumentID
+              );
+            console.log(
+              matchedInstrument,
+              "matchedInstrumentmatchedInstrument"
+            );
+            if (matchedInstrument) {
+              return {
+                ...matchedInstrument,
+                instrumentName: instrument.instrumentName,
+              };
+            } else {
               return {
                 instrumentID: instrument.instrumentID,
                 instrumentName: instrument.instrumentName,
@@ -150,15 +155,14 @@ const ParityAndCross = ({ categoryID }) => {
                 askSpread: 0,
               };
             }
-          );
+          });
 
-          setCrossRateData(newDataMapping);
-        }
+        setCrossRateData(newDataMapping);
       } catch (error) {
         console.error("Error setting cross rate data:", error);
       }
     }
-  }, [GetCrossRateSpreadsForCategory, GetAllInstruments]);
+  }, [GetAllInstruments, GetCrossRateSpreadsForCategory]);
 
   //mqtt for cross spread
   useEffect(() => {
@@ -168,8 +172,9 @@ const ParityAndCross = ({ categoryID }) => {
           GetAllInstruments.instruments &&
           GetAllInstruments.instruments.length > 0
         ) {
-          const newDataMapping = GetAllInstruments.instruments.map(
-            (instrument) => {
+          const newDataMapping = GetAllInstruments.instruments
+            .filter((instrument) => instrument.instrumentName !== "USD")
+            .map((instrument) => {
               const matchedInstrument =
                 spotCrossUpdated.categorySpreads.crossRatesSpreads?.find(
                   (item) => item.instrumentID === instrument.instrumentID
@@ -190,8 +195,7 @@ const ParityAndCross = ({ categoryID }) => {
                 bidSpread: 0,
                 askSpread: 0,
               };
-            }
-          );
+            });
 
           setCrossRateData(newDataMapping);
         }

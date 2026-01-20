@@ -21,6 +21,7 @@ const FEDiscountingTable = ({ categoryID }) => {
   const [modalState, setModalState] = useState(0);
   const [FEDiscoutingData, setFEDiscoutingData] = useState([]);
   const [FEDiscoutingColumns, setFEDiscoutingColumns] = useState([]);
+
   const GetTenorWiseFEDiscountingSpreadsForCategory = useSelector(
     (state) =>
       state.SpreadManagementReducer.GetTenorWiseFEDiscountingSpreadsForCategory
@@ -30,13 +31,16 @@ const FEDiscountingTable = ({ categoryID }) => {
     (state) => state.BOPSystemAdminReducer.GetAllInstruments
   );
 
+  console.log(GetAllInstruments, "GetAllInstrumentsGetAllInstruments");
+
   const GetAllTenors = useSelector(
     (state) => state.SetupTradeAccessManagementReducer.GetAllTenors
   );
 
   const FEDiscoutingSpreadUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.FEDiscoutingSpreadUpdated
+    (state) => state.RealtimeActionReducer.FEDiscountingSpreadUpdated
   );
+  // console.log("FEDiscoutingSpreadUpdated", FEDiscoutingSpreadUpdated);
 
   const handleChangeDiscounting = (value, record, instrumentName) => {
     if (isValidNumberUnderMax(value, "", 100)) {
@@ -79,13 +83,23 @@ const FEDiscountingTable = ({ categoryID }) => {
     if (GetAllInstruments !== null && GetAllTenors !== null) {
       if (GetTenorWiseFEDiscountingSpreadsForCategory !== null) {
         try {
+          const filteredInstruments = {
+            ...GetAllInstruments,
+            instruments: GetAllInstruments.instruments.filter(
+              (instrument) => instrument.instrumentID !== 21
+            ),
+          };
+          console.log(
+            { filteredInstruments, GetAllInstruments },
+            "filteredInstrumentsfilteredInstruments"
+          );
           const { feDiscountingSpreads } =
             GetTenorWiseFEDiscountingSpreadsForCategory;
           const { rowData, columnsData } = buildDiscountingTable(
             2,
             feDiscountingSpreads,
             GetAllTenors,
-            GetAllInstruments,
+            filteredInstruments,
             TextField,
             handleChangeDiscounting
           );
@@ -94,11 +108,17 @@ const FEDiscountingTable = ({ categoryID }) => {
         } catch (error) {}
       } else {
         try {
+          const filteredInstruments = {
+            ...GetAllInstruments,
+            instruments: GetAllInstruments.instruments.filter(
+              (instrument) => instrument.instrumentID !== 21
+            ),
+          };
           const { rowData, columnsData } = buildDiscountingTable(
             2,
             [],
             GetAllTenors,
-            GetAllInstruments,
+            filteredInstruments,
             TextField,
             handleChangeDiscounting
           );
@@ -124,12 +144,17 @@ const FEDiscountingTable = ({ categoryID }) => {
             categorySpreads: { discountingSpreads },
           } = FEDiscoutingSpreadUpdated;
           console.log("FEDiscoutingSpreadUpdated", discountingSpreads);
-
+          const filteredInstruments = {
+            ...GetAllInstruments,
+            instruments: GetAllInstruments.instruments.filter(
+              (instrument) => instrument.instrumentID !== 21
+            ),
+          };
           const { rowData, columnsData } = buildDiscountingTable(
             2,
             discountingSpreads,
             GetAllTenors,
-            GetAllInstruments,
+            filteredInstruments,
             TextField,
             handleChangeDiscounting
           );
@@ -157,15 +182,23 @@ const FEDiscountingTable = ({ categoryID }) => {
 
   const handleConfirmationYes = () => {
     if (modalState === 1) {
+      const filteredInstruments = {
+        ...GetAllInstruments,
+        instruments: GetAllInstruments.instruments.filter(
+          (instrument) => instrument.instrumentID !== 21
+        ),
+      };
       let updatedDiscounts = convertToDicountSpreads(
         FEDiscoutingData,
-        GetAllInstruments.instruments
+        filteredInstruments.instruments
       );
       let data = {
         CategoryID: categoryID,
         DiscountingSpreads: updatedDiscounts,
       };
       dispatch(SaveCategoryFEDiscountsAPI(navigate, data));
+
+      console.log(data, "SaveCategoryFEDiscountsAPISaveCategoryFEDiscountsAPI");
       setConfirmationModal(false);
       setModalState(0);
     } else if (modalState === 2) {

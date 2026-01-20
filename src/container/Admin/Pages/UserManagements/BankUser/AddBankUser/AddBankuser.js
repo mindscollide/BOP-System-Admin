@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   CustomUpload,
-  Loader,
 } from "../../../../../../components/elements";
 import Select from "react-select";
 import { useSelector } from "react-redux";
@@ -56,18 +55,15 @@ const AddBankUser = () => {
 
   const [modalState, setModalState] = useState(0);
 
-  //Dummy employee ID
-  const dummyEmployeeIDs = ["0001", "0002", "0003", "0004"];
-
   //State for branch options
   const [branchOptions, setBranchOptions] = useState([]);
   console.log(branchOptions, "branchOptionsbranchOptions");
   //Global Staate
-  const { BOPSystemAdminReducer } = useSelector((state) => state);
 
   //Role List
   const RoleList = useSelector((state) => state.auth.GetBankUserRoles);
 
+  console.log(RoleList, "RoleListRoleListRoleList");
   //state for error Message
   // const [errorShow, setErrorShow] = useState(false);
   const [rolesOptions, setRolesOptions] = useState([]);
@@ -285,13 +281,6 @@ const AddBankUser = () => {
         // Check if the length is less than 4 digits
         if (valueCheck.length < 4) {
           errorMessage = "ID must be 4 digits";
-          errorStatus = true;
-        }
-        // Check if the ID already exists in dummyEmployeeIDs
-        else if (dummyEmployeeIDs.includes(valueCheck)) {
-          errorMessage = `Employee ID till ${
-            dummyEmployeeIDs[dummyEmployeeIDs.length - 1]
-          } is already used`;
           errorStatus = true;
         }
 
@@ -540,7 +529,7 @@ const AddBankUser = () => {
           ...prevState,
           email: {
             ...prevState.email,
-            errorMessage: "Email Domain should be @bop.com or @bop.com.pk",
+            errorMessage: "Email Domain should be @bop.com.pk",
             errorStatus: true,
           },
         };
@@ -622,7 +611,6 @@ const AddBankUser = () => {
         dispatch(
           BankUsersBulkListAPI(navigate, fileData, setBulkUploadClicked)
         );
-        // dispatch(FileBulkUpload(navigate, uploadedFile, setUploadModal));
       } else {
         alert("Invalid type");
       }
@@ -640,7 +628,7 @@ const AddBankUser = () => {
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-start m-0 p-0"
+              className="d-flex justify-content-start "
             >
               <span className={styles["bank-user-label"]}>Add a Bank user</span>
             </Col>
@@ -675,7 +663,6 @@ const AddBankUser = () => {
 
                   <Col lg={4} md={4} sm={12}>
                     <CustomUpload change={HandleFileUpload} />
-                    {/* <CustomUpload onClick={handleCustomUploadClick} /> */}
                   </Col>
                   {addBankUser.EmployeeID.errorStatus && (
                     <Row>
@@ -690,7 +677,7 @@ const AddBankUser = () => {
                   <Col lg={7} md={7} sm={12}>
                     <div className="d-flex justify-content-start align-items-start w-100">
                       <span className={styles["labels-add-bank"]}>
-                        Treasury Person Name
+                        Person Name
                         <span className={styles["aesterick-color"]}>*</span>
                       </span>
                       <TextField
@@ -720,6 +707,7 @@ const AddBankUser = () => {
                         isSearchable={true}
                         className={styles["InputFieldClass"]}
                         classNamePrefix={"selectCateogyCorporateList"}
+                        isDisabled={RoleList === null ? true : false}
                       />
                     </div>
                   </Col>
@@ -739,18 +727,28 @@ const AddBankUser = () => {
                             <Select
                               options={branchOptions}
                               placeholder="Select Branch"
-                              value={branchRole?.value !== 0 ? branchRole : null}
+                              value={
+                                branchRole?.value !== 0 ? branchRole : null
+                              }
                               onChange={branchSelectRoleHandler}
                               isSearchable={true}
                               // classNamePrefix="selectCateogyCorporateList"
-                              className={styles["InputFieldClass"]}
+                              className={styles["InputBranchDropdown"]}
                               classNamePrefix={"selectCateogyCorporateList"}
                               menuPortalTarget={document.body}
+                              styles={{
+                                menu: (base) => ({
+                                  ...base,
+                                  width: "100%", // leave room for Edit + Plus buttons
+                                  right: 0,
+                                  fontSize: "14px",
+                                }),
+                              }}
                             />
 
                             <Button
                               className={styles["EditButton"]}
-                              icon={<i className={"icon-edit "}></i>}
+                              icon={<i className={"icon-edit"}></i>}
                               onClick={() =>
                                 handleOpenEditBankUserModal(branchRole)
                               }
@@ -852,7 +850,8 @@ const AddBankUser = () => {
                         addBankUser.EmployeeID.value !== "" &&
                         addBankUser.firstName.value !== "" &&
                         addBankUser.email.value !== "" &&
-                        addBankUser.Contact.value !== ""
+                        addBankUser.Contact.value !== "" &&
+                        addBankUser.EmployeeID.value.length === 4
                           ? false
                           : true
                       }

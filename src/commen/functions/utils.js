@@ -16,6 +16,12 @@ export const formatDateToUTC = (date) => {
   );
 };
 
+export const formatTimeToUTC = (date) => {
+  return `${String(date.getUTCHours()).padStart(2, "0")}:${String(
+    date.getUTCMinutes()
+  ).padStart(2, "0")}`;
+};
+
 export const dateFromAndTo = (value) => {
   const now = new Date();
   if (value === 1) {

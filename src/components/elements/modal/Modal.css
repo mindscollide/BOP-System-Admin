@@ -52,14 +52,8 @@
   background: #f3f2f1 !important;
   border: 1px solid #dbd7d5 !important;
   max-width: 500px !important;
-  min-height: 325px;
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  overflow: hidden !important;
-  padding-left: 3px !important;
-  padding-right: 3px;
+  min-height: auto;
+
   font-size: 13px;
 }
 

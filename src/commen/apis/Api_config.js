@@ -334,6 +334,44 @@ const DownloadPDFLoginHistorySystemAdminReport = {
 const GetAllNatureOfTransactions = {
   RequestMethod: "ServiceManager.GetAllNatureOfTransactions",
 };
+
+const DailyTransactionReport = {
+  RequestMethod:
+    "ServiceManager.DownloadDailyTransactionsForSystemAdminExcelReport",
+};
+
+const DailyTransactionPDFReport = {
+  RequestMethod:
+    "ServiceManager.DownloadDailyTransactionsForSystemAdminPDFReport",
+};
+
+const GetInstrumentApplicability = {
+  RequestMethod: "ServiceManager.GetInstrumentApplicability",
+};
+
+const SaveInstrumentApplicability = {
+  RequestMethod: "ServiceManager.SaveInstrumentApplicability",
+};
+
+const GetAllInstrumentsForHolidayRM = {
+  RequestMethod: "ServiceManager.GetAllInstrumentsForHoliday",
+};
+const AddHolidaysRM = {
+  RequestMethod: "ServiceManager.AddHoliday",
+};
+
+const GetAllHolidaysRM = {
+  RequestMethod: "ServiceManager.GetAllHolidays",
+};
+const GetHolidayRM = {
+  RequestMethod: "ServiceManager.GetHoliday",
+};
+const UpdateHolidayRM = {
+  RequestMethod: "ServiceManager.UpdateHoliday",
+};
+const DeleteHolidayRM = {
+  RequestMethod: "ServiceManager.DeleteHoliday",
+};
 export {
   LogoutRM,
   authenticationRefreshToken,
@@ -416,4 +454,14 @@ export {
   DownloadPDFCorporateUserListSystemAdminReport,
   DownloadPDFLoginHistorySystemAdminReport,
   GetAllNatureOfTransactions,
+  DailyTransactionReport,
+  DailyTransactionPDFReport,
+  GetInstrumentApplicability,
+  SaveInstrumentApplicability,
+  GetAllInstrumentsForHolidayRM,
+  AddHolidaysRM,
+  GetAllHolidaysRM,
+  GetHolidayRM,
+  UpdateHolidayRM,
+  DeleteHolidayRM,
 };

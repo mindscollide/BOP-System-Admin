@@ -29,7 +29,12 @@ const ActivateConfirmationModal = ({
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col lg={12} md={12} sm={12} className="d-flex align-items-center">
+            <Col
+              lg={12}
+              md={12}
+              sm={12}
+              className="d-flex justify-content-center align-items-center"
+            >
               <span className={styles["labels-add-bank"]}>
                 Are you sure you want to do this action?
               </span>

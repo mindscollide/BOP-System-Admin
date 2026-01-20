@@ -1,6 +1,5 @@
 import { Route, Routes, useMatch } from "react-router-dom";
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 const CustomRoutes = ({ RoutingData }) => {
   const route = useMatch();
   const path = route.path;

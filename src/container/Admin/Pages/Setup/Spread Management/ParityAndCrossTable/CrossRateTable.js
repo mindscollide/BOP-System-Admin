@@ -12,9 +12,9 @@ const CrossRateTable = ({ crossRateData, setCrossRateData }) => {
           ? "0"
           : regular_ex.test(value)
           ? value.slice(1)
-          : value === "0.0"
-          ? "0.1"
-          : value;
+          : // : value === "0.0"
+            // ? "0.1"
+            value;
       const updatedData = crossRateData.map((item) => ({ ...item }));
       updatedData[index] = {
         ...updatedData[index],

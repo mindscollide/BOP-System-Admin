@@ -17,10 +17,17 @@ import {
   UpdateBranchCategoryMappingapi,
   GetAllCorporatesData,
   GetAllNatureOfTransactions,
+  GetAllInstrumentsForHolidayRM,
+  AddHolidaysRM,
+  GetAllHolidaysRM,
+  GetHolidayRM,
+  UpdateHolidayRM,
+  DeleteHolidayRM,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
   systemAdminAPI,
+  watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import { DeleteCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 // import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
@@ -241,7 +248,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     await axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -275,6 +282,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_DeleteCategory_02".toLowerCase()
                 )
             ) {
+              dispatch(DeleteCategoryModalSystemAdmin(false));
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
@@ -475,6 +483,15 @@ const loginSystemAdminAPI = (navigate, data) => {
             ) {
               console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("Something went wrong"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes("ERM_AuthService_AuthManager_Login_14".toLowerCase())
+            ) {
+              console.log("loginSystemAdmin", response);
+              dispatch(loginSystemAdminFailed("Invalid Role"));
+            } else {
+              dispatch(loginSystemAdminFailed("Something went wrong"));
             }
           } else {
             console.log("loginSystemAdmin", response);
@@ -651,16 +668,13 @@ const GetAllCategoriesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllCategoriesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetAllCategoriesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllCategories_02".toLowerCase()
             ) {
-              dispatch(GetAllCategoriesFail("No Data Available"));
+              dispatch(GetAllCategoriesFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -713,7 +727,7 @@ const getAllCorporatesCategory = (navigate) => {
     form.append("RequestMethod", GetAllCorporates.RequestMethod);
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -738,16 +752,13 @@ const getAllCorporatesCategory = (navigate) => {
                 )
             ) {
               dispatch(
-                getAllCorporatesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                getAllCorporatesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_02".toLowerCase()
             ) {
-              dispatch(getAllCorporatesFail("No Data Available"));
+              dispatch(getAllCorporatesFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -825,16 +836,13 @@ const GetAllCorporatesDataAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllCorporatesDataSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetAllCorporatesDataSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
             ) {
-              dispatch(GetAllCorporatesDataFail("No Data Available"));
+              dispatch(GetAllCorporatesDataFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -842,7 +850,7 @@ const GetAllCorporatesDataAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
                 )
             ) {
-              dispatch(GetAllCorporatesDataFail("No Data Available"));
+              dispatch(GetAllCorporatesDataFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -918,17 +926,12 @@ const GetAllNatureAPI = (navigate, data) => {
                   "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllNatureSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
-              );
+              dispatch(GetAllNatureSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_02".toLowerCase()
             ) {
-              dispatch(GetAllNatureFail("No Data Available"));
+              dispatch(GetAllNatureFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1008,7 +1011,7 @@ const GetAllNatureOfTransactionsAPI = (navigate, data) => {
               dispatch(
                 GetAllNatureOfTransactionsSuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -1090,14 +1093,12 @@ const RoleListAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_RoleList_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                RoleListSuccess(response.data.responseResult, "Data Available")
-              );
+              dispatch(RoleListSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_RoleList_02".toLowerCase()
             ) {
-              dispatch(RoleListFail("No Data Available"));
+              dispatch(RoleListFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1173,16 +1174,14 @@ const GetBankUserRolesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetBankUserRolesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetBankUserRolesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetBankUserRoles_02".toLowerCase()
             ) {
-              dispatch(GetBankUserRolesFail("Data UnAvailable"));
+              dispatch(GetBankUserRolesFail(""));
+              throw new Error("Something went wrong");
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1190,7 +1189,8 @@ const GetBankUserRolesAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetBankUserRoles_03".toLowerCase()
                 )
             ) {
-              dispatch(GetBankUserRolesFail("Exception"));
+              dispatch(GetBankUserRolesFail("Something went wrong"));
+              throw new Error("Something went wrong");
             }
           } else {
             dispatch(GetBankUserRolesFail("Something went wrong"));
@@ -1200,7 +1200,7 @@ const GetBankUserRolesAPI = (navigate) => {
         }
       })
       .catch((response) => {
-        dispatch(GetBankUserRolesFail("something went wrong"));
+        dispatch(GetBankUserRolesFail("Something went wrong"));
       });
   };
 };
@@ -1256,16 +1256,13 @@ const GetAllInstrumentTypesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetAllInstrumentTypesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetAllInstrumentTypesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllInstrumentTypes_02".toLowerCase()
             ) {
-              dispatch(GetAllInstrumentTypesFail("No Data Available"));
+              dispatch(GetAllInstrumentTypesFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1340,12 +1337,7 @@ const GetAllBranchesAPI = (navigate) => {
                   "ERM_AuthService_CommonManager_GetAllBranches_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllBranchesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
-              );
+              dispatch(GetAllBranchesSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_CommonManager_GetAllBranches_02".toLowerCase()
@@ -1535,7 +1527,709 @@ const clearResponseMessageAuth = () => {
     type: actions.CLEAR_RESPONSEMESSAGE_AUTH,
   };
 };
+
+const getListAllInstrumentsAPI = () => {
+  return {
+    type: actions.GET_LIST_ALL_INSTRUMENTS_INIT,
+  };
+};
+
+const getListAllInstrumentsAPISuccess = (response, message) => {
+  return {
+    type: actions.GET_LIST_ALL_INSTRUMENTS_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+const getListAllInstrumentsAPIFailed = (message) => {
+  return {
+    type: actions.GET_LIST_ALL_INSTRUMENTS_FAIL,
+    message: message,
+  };
+};
+
+const getListAllInstrumentsApi = (navigate) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(getListAllInstrumentsAPI());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllInstrumentsForHolidayRM.RequestMethod);
+    axios({
+      method: "POST",
+      url: watchListAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(getListAllInstrumentsApi(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "WatchList_WatchListServiceManager_GetAllInstruments_01".toLowerCase()
+            ) {
+              dispatch(
+                getListAllInstrumentsAPISuccess(
+                  response.data.responseResult,
+                  ""
+                )
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_GetAllInstruments_02".toLowerCase()
+                )
+            ) {
+              dispatch(getListAllInstrumentsAPIFailed("No Record Updated"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "SystemAdmin_SystemAdminManager_GetListAllInstruments_04".toLowerCase()
+                )
+            ) {
+              dispatch(getListAllInstrumentsAPIFailed("Exception."));
+            }
+          } else {
+            dispatch(getListAllInstrumentsAPIFailed("Something went wrong"));
+          }
+        } else {
+          dispatch(getListAllInstrumentsAPIFailed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(getListAllInstrumentsAPIFailed("something went wrong"));
+      });
+  };
+};
+
+/**
+ * Initializes the add holiday action
+ * @returns {Object} Action object with type ADD_HOLIDAY_INIT
+ */
+const AddHolidays_init = () => {
+  return {
+    type: actions.ADD_HOLIDAY_INIT,
+  };
+};
+
+/**
+ * Handles successful holiday addition
+ * @param {Object} response - The response data from the API containing holiday details
+ * @param {string} message - Success message to display
+ * @returns {Object} Action object with type ADD_HOLIDAY_SUCCESS, response, and message
+ */
+const AddHolidays_success = (response, message) => {
+  return {
+    type: actions.ADD_HOLIDAY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+/**
+ * Handles failed holiday addition
+ * @param {string} message - Error message to display
+ * @returns {Object} Action object with type ADD_HOLIDAY_FAIL and message
+ */
+const AddHolidays_failed = (message) => {
+  return {
+    type: actions.ADD_HOLIDAY_FAIL,
+    message: message,
+  };
+};
+
+/**
+ * API call to add a new holiday to the system
+ * @param {Function} navigate - Navigation function for routing
+ * @param {Object} data - Holiday data containing HolidayDate, Description, and CurrencyIds
+ * @returns {Function} Thunk function that dispatches actions based on API response
+ * @description Makes a POST request to add a holiday. Handles token refresh on 417 response.
+ * Response codes:
+ * - WatchList_WatchListServiceManager_AddHoliday_01: Holiday added successfully
+ * - WatchList_WatchListServiceManager_AddHoliday_02: No record updated
+ * - WatchList_WatchListServiceManager_AddHoliday_03: Exception occurred
+ */
+const AddHolidays_API = (
+  navigate,
+  data,
+  setAddEditDeleteHolidayModal,
+  setAddEditViewState
+) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(AddHolidays_init());
+    let form = new FormData();
+    form.append("RequestMethod", AddHolidaysRM.RequestMethod);
+    form.append("RequestData", JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: watchListAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            AddHolidays_API(
+              navigate,
+              data,
+              setAddEditDeleteHolidayModal,
+              setAddEditViewState
+            )
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "WatchList_WatchListServiceManager_AddHoliday_01".toLowerCase()
+            ) {
+              dispatch(AddHolidays_success(response.data.responseResult, ""));
+              setAddEditDeleteHolidayModal(false);
+              setAddEditViewState(1);
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_AddHoliday_02".toLowerCase()
+                )
+            ) {
+              dispatch(AddHolidays_failed("Date is already exist"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_AddHoliday_03".toLowerCase()
+                )
+            ) {
+              dispatch(AddHolidays_failed("Exception."));
+            }
+          } else {
+            dispatch(AddHolidays_failed("Something went wrong"));
+          }
+        } else {
+          dispatch(AddHolidays_failed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(AddHolidays_failed("something went wrong"));
+      });
+  };
+};
+
+/**
+ * Initializes the get holiday list action
+ * @returns {Object} Action object with type GET_HOLIDAY_LIST_INIT
+ */
+const getHolidayList_init = () => {
+  return {
+    type: actions.GET_HOLIDAY_LIST_INIT,
+  };
+};
+
+/**
+ * Handles successful retrieval of holiday list
+ * @param {Object} response - The response data containing array of all holidays
+ * @param {string} message - Success message to display
+ * @returns {Object} Action object with type GET_HOLIDAY_LIST_SUCCESS, response, and message
+ */
+const getHolidayList_success = (response, message) => {
+  return {
+    type: actions.GET_HOLIDAY_LIST_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+/**
+ * Handles failed retrieval of holiday list
+ * @param {string} message - Error message to display
+ * @returns {Object} Action object with type GET_HOLIDAY_LIST_FAIL and message
+ */
+const getHolidayList_failed = (message) => {
+  return {
+    type: actions.GET_HOLIDAY_LIST_FAIL,
+    message: message,
+  };
+};
+
+/**
+ * API call to retrieve all holidays from the system
+ * @param {Function} navigate - Navigation function for routing
+ * @returns {Function} Thunk function that dispatches actions based on API response
+ * @description Makes a POST request to fetch all holidays. Handles token refresh on 417 response.
+ * Response codes:
+ * - WatchList_WatchListServiceManager_GetAllHolidays_01: Holidays retrieved successfully
+ * - WatchList_WatchListServiceManager_GelAllHoliday_03: No records found or exception occurred
+ */
+const getHolidayList_API = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(getHolidayList_init());
+    let form = new FormData();
+    form.append("RequestMethod", GetAllHolidaysRM.RequestMethod);
+    form.append("RequestData", JSON.stringify(Data));
+    axios({
+      method: "POST",
+      url: watchListAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(getHolidayList_API(navigate));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "WatchList_WatchListServiceManager_GetAllHolidays_01".toLowerCase()
+            ) {
+              dispatch(
+                getHolidayList_success(response.data.responseResult, "")
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_GelAllHoliday_03".toLowerCase()
+                )
+            ) {
+              dispatch(getHolidayList_failed("No Record Updated"));
+            } else {
+              dispatch(getHolidayList_failed("Something went wrong"));
+            }
+          } else {
+            dispatch(getHolidayList_failed("Something went wrong"));
+          }
+        } else {
+          dispatch(getHolidayList_failed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(getHolidayList_failed("something went wrong"));
+      });
+  };
+};
+
+/**
+ * Initializes the get holiday by ID action
+ * @returns {Object} Action object with type GET_HOLIDAY_BY_HOLIDAYID_INIT
+ */
+const getHolidayByHolidayId_init = () => {
+  return {
+    type: actions.GET_HOLIDAY_BY_HOLIDAYID_INIT,
+  };
+};
+
+/**
+ * Handles successful retrieval of a specific holiday by ID
+ * @param {Object} response - The response data containing the holiday details
+ * @param {string} message - Success message to display
+ * @returns {Object} Action object with type GET_HOLIDAY_BY_HOLIDAYID_SUCCESS, response, and message
+ */
+const getHolidayByHolidayId_success = (response, message) => {
+  return {
+    type: actions.GET_HOLIDAY_BY_HOLIDAYID_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+/**
+ * Handles failed retrieval of a specific holiday by ID
+ * @param {string} message - Error message to display
+ * @returns {Object} Action object with type GET_HOLIDAY_BY_HOLIDAYID_FAIL and message
+ */
+const getHolidayByHolidayId_failed = (message) => {
+  return {
+    type: actions.GET_HOLIDAY_BY_HOLIDAYID_FAIL,
+    message: message,
+  };
+};
+/**
+ * API call to retrieve a specific holiday by its ID
+ * @param {Function} navigate - Navigation function for routing
+ * @returns {Function} Thunk function that dispatches actions based on API response
+ * @description Makes a POST request to fetch a specific holiday by ID. Handles token refresh on 417 response.
+ * Response codes:
+ * - WatchList_WatchListServiceManager_GetHoliday_01: Holiday retrieved successfully
+ * - WatchList_WatchListServiceManager_GelHoliday_03: No record found or exception occurred
+ */
+const getHolidayByHolidayId_API = (
+  navigate,
+  requestData,
+  setAddEditViewState,
+  viewState,
+  setAddEditDeleteHolidayModal
+) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(getHolidayByHolidayId_init());
+    let form = new FormData();
+    form.append("RequestMethod", GetHolidayRM.RequestMethod);
+    form.append("RequestData", JSON.stringify(requestData));
+    axios({
+      method: "POST",
+      url: watchListAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            getHolidayByHolidayId_API(
+              navigate,
+              requestData,
+              setAddEditViewState,
+              viewState,
+              setAddEditDeleteHolidayModal
+            )
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "WatchList_WatchListServiceManager_GetHoliday_01".toLowerCase()
+            ) {
+              dispatch(
+                getHolidayByHolidayId_success(response.data.responseResult, "")
+              );
+              setAddEditViewState(viewState);
+              setAddEditDeleteHolidayModal(true);
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_GelHoliday_03".toLowerCase()
+                )
+            ) {
+              dispatch(getHolidayByHolidayId_failed("No Record Updated"));
+            } else {
+              dispatch(getHolidayByHolidayId_failed("Something went wrong"));
+            }
+          } else {
+            dispatch(getHolidayByHolidayId_failed("Something went wrong"));
+          }
+        } else {
+          dispatch(getHolidayByHolidayId_failed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(getHolidayByHolidayId_failed("something went wrong"));
+      });
+  };
+};
+
+/**
+ * Initializes the update holiday action
+ * @returns {Object} Action object with type UPDATE_HOLIDAY_INIT
+ */
+const updateHolidayByHolidayId_init = () => {
+  return {
+    type: actions.UPDATE_HOLIDAY_INIT,
+  };
+};
+
+/**
+ * Handles successful holiday update
+ * @param {Object} response - The response data containing updated holiday details
+ * @param {string} message - Success message to display
+ * @returns {Object} Action object with type UPDATE_HOLIDAY_SUCCESS, response, and message
+ */
+const updateHolidayByHolidayId_success = (response, message) => {
+  return {
+    type: actions.UPDATE_HOLIDAY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+/**
+ * Handles failed holiday update
+ * @param {string} message - Error message to display
+ * @returns {Object} Action object with type UPDATE_HOLIDAY_FAIL and message
+ */
+const updateHolidayByHolidayId_failed = (message) => {
+  return {
+    type: actions.UPDATE_HOLIDAY_FAIL,
+    message: message,
+  };
+};
+
+/**
+ * API call to update an existing holiday by its ID
+ * @param {Function} navigate - Navigation function for routing
+ * @returns {Function} Thunk function that dispatches actions based on API response
+ * @description Makes a POST request to update a holiday. Handles token refresh on 417 response.
+ * Response codes:
+ * - WatchList_WatchListServiceManager_UpdateHoliday_01: Holiday updated successfully
+ * - WatchList_WatchListServiceManager_UpdateHoliday_02: No record updated
+ * - WatchList_WatchListServiceManager_UpdateHoliday_03: Exception occurred
+ */
+const updateHolidayByHolidayId_API = (
+  navigate,
+  Data,
+  setAddEditDeleteHolidayModal,
+  setAddEditViewState
+) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(updateHolidayByHolidayId_init());
+    let form = new FormData();
+    form.append("RequestMethod", UpdateHolidayRM.RequestMethod);
+    form.append("RequestData", JSON.stringify(Data));
+    axios({
+      method: "POST",
+      url: watchListAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            updateHolidayByHolidayId_API(
+              navigate,
+              Data,
+              setAddEditDeleteHolidayModal,
+              setAddEditViewState
+            )
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "WatchList_WatchListServiceManager_UpdateHoliday_01".toLowerCase()
+            ) {
+              dispatch(
+                updateHolidayByHolidayId_success(
+                  response.data.responseResult,
+                  ""
+                )
+              );
+              setAddEditDeleteHolidayModal(false);
+              setAddEditViewState(1);
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_UpdateHoliday_02".toLowerCase()
+                )
+            ) {
+              dispatch(updateHolidayByHolidayId_failed("No Record Updated"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_UpdateHoliday_03".toLowerCase()
+                )
+            ) {
+              dispatch(updateHolidayByHolidayId_failed("Something went wrong"));
+            } else {
+              dispatch(updateHolidayByHolidayId_failed("Something went wrong"));
+            }
+          } else {
+            dispatch(updateHolidayByHolidayId_failed("Something went wrong"));
+          }
+        } else {
+          dispatch(updateHolidayByHolidayId_failed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(updateHolidayByHolidayId_failed("something went wrong"));
+      });
+  };
+};
+
+/**
+ * Initializes the delete holiday action
+ * @returns {Object} Action object with type DELETE_HOLIDAY_INIT
+ */
+const deleteHolidayByHolidayId_init = () => {
+  return {
+    type: actions.DELETE_HOLIDAY_INIT,
+  };
+};
+
+/**
+ * Handles successful holiday deletion
+ * @param {Object} response - The response data from the API
+ * @param {string} message - Success message to display
+ * @returns {Object} Action object with type DELETE_HOLIDAY_SUCCESS, response, and message
+ */
+const deleteHolidayByHolidayId_success = (response, message) => {
+  return {
+    type: actions.DELETE_HOLIDAY_SUCCESS,
+    response: response,
+    message: message,
+  };
+};
+
+/**
+ * Handles failed holiday deletion
+ * @param {string} message - Error message to display
+ * @returns {Object} Action object with type DELETE_HOLIDAY_FAIL and message
+ */
+const deleteHolidayByHolidayId_failed = (message) => {
+  return {
+    type: actions.DELETE_HOLIDAY_FAIL,
+    message: message,
+  };
+};
+
+/**
+ * API call to delete a holiday by its ID
+ * @param {Function} navigate - Navigation function for routing
+ * @returns {Function} Thunk function that dispatches actions based on API response
+ * @description Makes a POST request to delete a holiday. Handles token refresh on 417 response.
+ * Response codes:
+ * - WatchList_WatchListServiceManager_DeleteHoliday_01: Holiday deleted successfully
+ * - WatchList_WatchListServiceManager_DeleteHoliday_02: No record deleted
+ * - WatchList_WatchListServiceManager_DeleteHoliday_03: Exception occurred
+ */
+const deleteHolidayByHolidayId_API = (
+  navigate,
+  requestData,
+  setAddEditDeleteHolidayModal,
+  setAddEditViewState
+) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(deleteHolidayByHolidayId_init());
+    let form = new FormData();
+    form.append("RequestMethod", DeleteHolidayRM.RequestMethod);
+    form.append("RequestData", JSON.stringify(requestData));
+    axios({
+      method: "POST",
+      url: watchListAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(
+            deleteHolidayByHolidayId_API(
+              navigate,
+              requestData,
+              setAddEditDeleteHolidayModal,
+              setAddEditViewState
+            )
+          );
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "WatchList_WatchListServiceManager_DeleteHoliday_01".toLowerCase()
+            ) {
+              dispatch(
+                deleteHolidayByHolidayId_success(
+                  response.data.responseResult,
+                  ""
+                )
+              );
+              setAddEditDeleteHolidayModal(false);
+              setAddEditViewState(1);
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_DeleteHoliday_02".toLowerCase()
+                )
+            ) {
+              dispatch(deleteHolidayByHolidayId_failed("No Record Deleted"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "WatchList_WatchListServiceManager_DeleteHoliday_03".toLowerCase()
+                )
+            ) {
+              dispatch(deleteHolidayByHolidayId_failed("Something went wrong"));
+            } else {
+              dispatch(deleteHolidayByHolidayId_failed("Something went wrong"));
+            }
+          } else {
+            dispatch(deleteHolidayByHolidayId_failed("Something went wrong"));
+          }
+        } else {
+          dispatch(deleteHolidayByHolidayId_failed("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(deleteHolidayByHolidayId_failed("something went wrong"));
+      });
+  };
+};
+
+const setHolidayAdded = (payload) => {
+  return {
+    type: actions.HOLIDAY_ADDED,
+    payload: payload,
+  };
+};
+
+const setHolidayUpdated = (payload) => {
+  return {
+    type: actions.HOLIDAY_UPDATED,
+    payload: payload,
+  };
+};
+
+const setHolidayDeleted = (payload) => {
+  return {
+    type: actions.HOLIDAY_DELETED,
+    payload: payload,
+  };
+};
+
 export {
+  setHolidayAdded,
+  setHolidayUpdated,
+  setHolidayDeleted,
   logOutApi,
   signOut,
   RefreshToken,
@@ -1555,4 +2249,11 @@ export {
   GetAllCorporatesDataAPI,
   clearResponseMessageAuth,
   GetAllNatureOfTransactionsAPI,
+  getListAllInstrumentsApi,
+  AddHolidays_API,
+  getHolidayList_API,
+  getHolidayByHolidayId_API,
+  updateHolidayByHolidayId_API,
+  deleteHolidayByHolidayId_API,
+  getHolidayByHolidayId_failed,
 };

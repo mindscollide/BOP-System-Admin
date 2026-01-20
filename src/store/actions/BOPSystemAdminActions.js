@@ -27,7 +27,9 @@ import {
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
+  blotterAPI,
   systemAdminAPI,
+  watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import * as actions from "../action_types";
 import { RefreshToken } from "./Auth-Actions";
@@ -94,7 +96,7 @@ const CreateNewCorporateAPI = (navigate, data, setAddCompnany) => {
               dispatch(
                 CreateNewCorporateSuccess(
                   response.data.responseResult,
-                  "Corporate successfully created"
+                  "Company successfully created"
                 )
               );
               // dispatch(getAllCorporatesCategory(navigate));
@@ -1344,10 +1346,7 @@ const SearchBankUsersAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_SearchBankUsers_01".toLowerCase()
             ) {
               dispatch(
-                SearchBankUsersSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                SearchBankUsersSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -1356,7 +1355,7 @@ const SearchBankUsersAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchBankUsers_02".toLowerCase()
                 )
             ) {
-              dispatch(SearchBankUsersFail("No Data Available"));
+              dispatch(SearchBankUsersFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -1431,10 +1430,7 @@ const GetBankUserByUserIDAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_GetBankUserbyUserID_01".toLowerCase()
             ) {
               dispatch(
-                GetBankUserByUserIDSuccess(
-                  response.data.responseResult,
-                  "User Status Updated"
-                )
+                GetBankUserByUserIDSuccess(response.data.responseResult, "")
               );
               dispatch(editBankUserModalSystemAdmin(true));
             } else if (
@@ -1588,7 +1584,8 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      // url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -1609,10 +1606,7 @@ const GetVolmeterByBankIDAPI = (navigate, data) => {
               "SystemAdmin_SystemAdminManager_GetVolMetersByBankID_01".toLowerCase()
             ) {
               dispatch(
-                GetVolmeterByBankIDsuccess(
-                  response.data.responseResult,
-                  "Volmeter values by bank"
-                )
+                GetVolmeterByBankIDsuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -1694,7 +1688,8 @@ const AddUpdateVolmterAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      // url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -2084,7 +2079,7 @@ const UpdateCategoryAPI = (navigate, data) => {
     form.append("RequestData", JSON.stringify(data));
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: watchListAPI,
       data: form,
       headers: {
         _token: token,
@@ -2107,7 +2102,7 @@ const UpdateCategoryAPI = (navigate, data) => {
               dispatch(
                 UpdateCategorySuccess(
                   response.data.responseResult,
-                  "category Updated"
+                  "Category Updated"
                 )
               );
             } else if (
@@ -2125,7 +2120,7 @@ const UpdateCategoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_UpdateCategory_03".toLowerCase()
                 )
             ) {
-              dispatch(UpdateCategoryFail("category not Updated"));
+              dispatch(UpdateCategoryFail("Category Not Updated"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2151,7 +2146,7 @@ const UpdateCategoryAPI = (navigate, data) => {
         }
       })
       .catch((response) => {
-        dispatch(UpdateCategoryFail("something went wrong"));
+        dispatch(UpdateCategoryFail("Something went wrong"));
       });
   };
 };
@@ -2211,10 +2206,7 @@ const GetCounterPartyNamesAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetCounterPartyNamesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetCounterPartyNamesSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -2374,7 +2366,7 @@ const SearchAllUserLoginHistoryAPI = (navigate, data) => {
               dispatch(
                 SearchAllUserLoginHistorySuccess(
                   response.data.responseResult,
-                  "Data Available"
+                  ""
                 )
               );
             } else if (
@@ -2384,7 +2376,7 @@ const SearchAllUserLoginHistoryAPI = (navigate, data) => {
                   "SystemAdmin_SystemAdminManager_SearchAllUserLoginHistory_02".toLowerCase()
                 )
             ) {
-              dispatch(SearchAllUserLoginHistoryFail("No Data Available"));
+              dispatch(SearchAllUserLoginHistoryFail(""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2460,10 +2452,7 @@ const GetCounterPartyListAPI = (navigate) => {
                 )
             ) {
               dispatch(
-                GetCounterPartyListSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
+                GetCounterPartyListSuccess(response.data.responseResult, "")
               );
             } else if (
               response.data.responseResult.responseMessage
@@ -2517,7 +2506,7 @@ const GetAllTradesAPI = (navigate, data) => {
 
     axios({
       method: "POST",
-      url: systemAdminAPI,
+      url: blotterAPI,
       data: form,
       headers: {
         _token: token,
@@ -2537,23 +2526,34 @@ const GetAllTradesAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllTrades_01".toLowerCase()
+                  "Blotter_BlotterServiceManager_GetAllTrades_01".toLowerCase()
                 )
             ) {
-              dispatch(
-                GetAllTradesSuccess(
-                  response.data.responseResult,
-                  "Data Available"
-                )
-              );
+              dispatch(GetAllTradesSuccess(response.data.responseResult, ""));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllTrades_02".toLowerCase()
+                  "Blotter_BlotterServiceManager_GetAllTrades_02".toLowerCase()
                 )
             ) {
-              dispatch(GetAllTradesFail("No Data Available"));
+              dispatch(GetAllTradesFail(""));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "Blotter_BlotterServiceManager_GetAllTrades_03".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllTradesFail("Invalid Role"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "Blotter_BlotterServiceManager_GetAllTrades_04".toLowerCase()
+                )
+            ) {
+              dispatch(GetAllTradesFail(""));
             } else {
               dispatch(GetAllTradesFail("Something went wrong"));
             }

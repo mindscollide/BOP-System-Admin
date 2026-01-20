@@ -25,6 +25,9 @@
 .Container_bank_user {
   width: 97% !important;
   margin: 0 auto !important;
+  height: 100% !important;
+  min-height: 70vh;
+  max-height: 70vh;
 }
 
 .AddBankLabel {
@@ -150,8 +153,11 @@
 }
 
 .PlusButton {
-  width: 40px;
   position: absolute !important;
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
+  width: 40px;
   top: 0px;
   right: 0px !important;
   height: 100% !important;
@@ -161,15 +167,17 @@
   border-bottom-left-radius: 0;
   border-top-right-radius: 4px !important;
   border-bottom-right-radius: 4px !important ;
-  align-items: center;
 }
 
 .PlusButton:is(:hover, :focus, :focus-visible, :active) {
-  width: 40px;
   position: absolute !important;
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
+  width: 40px;
   right: 0px !important;
   height: 100% !important;
-  /* align-items: center !important; */
+  top: 0px;
   background-color: #e9ecef;
   border: 1px solid #ced4da;
   border-top-left-radius: 0;
@@ -181,11 +189,9 @@
 .PlusIcon {
   color: #000 !important;
   font-size: 30px !important;
-  margin-top: -12px !important;
   display: flex;
   justify-content: center;
   align-items: center !important;
-  padding-top: 2px !important;
 }
 
 .EditButton {
@@ -194,21 +200,32 @@
   top: 0px;
   right: 40px !important;
   height: 100% !important;
-  align-items: center !important;
   background-color: #e9ecef;
   border: 1px solid #ced4da;
-  border-radius: 0px !important;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important ;
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
 }
 
 .EditButton:is(:hover, :focus, :focus-visible, :active) {
   width: 40px;
   position: absolute !important;
+  top: 0px;
   right: 40px !important;
   height: 100% !important;
-  align-items: center !important;
   background-color: #e9ecef;
   border: 1px solid #ced4da;
-  border-radius: 0px !important;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important ;
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
 }
 .EditButton i {
   color: var(--color-secondary);
@@ -242,4 +259,10 @@
 .InputFieldClass {
   width: 100% !important;
   flex: 1 !important;
+}
+
+.InputBranchDropdown {
+  width: 100% !important;
+  padding-right: 80px; /* Make space for Edit and Plus buttons */
+  box-sizing: border-box;
 }

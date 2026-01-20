@@ -39,7 +39,12 @@ import {
   setSpotSpreadUpdated,
 } from "../../../store/actions/RealtimeActions";
 import { Loader } from "../../../components/elements";
-import { logOutApi } from "../../../store/actions/Auth-Actions";
+import {
+  logOutApi,
+  setHolidayAdded,
+  setHolidayDeleted,
+  setHolidayUpdated,
+} from "../../../store/actions/Auth-Actions";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -205,16 +210,50 @@ const AdminDashboard = () => {
         case "BLOTTER_TRANSACTION_CANCELLED":
           dispatch(setBlotterTransactionCancelled(data.payload));
           break;
+        case "HOLIDAY_CREATED":
+          dispatch(setHolidayAdded(data.payload));
+          break;
+        case "HOLIDAY_UPDATED":
+          dispatch(setHolidayUpdated(data.payload));
+          break;
+        case "HOLIDAY_DELETED":
+          dispatch(setHolidayDeleted(data.payload));
+          break;
+        case "LOGIN":
+          console.log("LOGIN event received", data.payload);
+          // Handle login event if necessary
+          let token = localStorage.getItem("token");
+          let userId = localStorage.getItem("userID");
+          console.log(
+            "LOGIN event received",
+            token,
+            userId,
+            data.payload.loginDetials.token,
+            data.payload.loginDetials.userID,
+            token !== data.payload.loginDetials.token &&
+              Number(userId) === Number(data.payload.loginDetials.userID)
+          );
+
+          if (
+            token !== data.payload.loginDetials.token &&
+            Number(userId) === Number(data.payload.loginDetials.userID)
+          ) {
+            console.log("LOGIN event received", data.payload);
+
+            // localStorage.clear();
+            dispatch(logOutApi(navigate));
+          }
+          break;
         default:
           break;
       }
     },
   });
   console.log(isConnected, "isConnectedisConnectedisConnected");
-  const subscribeID = "BOP_SYSTEMADMIN";
-  let userID = localStorage.getItem("userID");
 
   useEffect(() => {
+    const subscribeID = "BOP_SYSTEMADMIN";
+    let userID = localStorage.getItem("userID");
     connectToMqtt({ subscribeID, userID });
   }, []);
   return (
@@ -225,11 +264,11 @@ const AdminDashboard = () => {
           <Sider
             style={{ background: "none" }}
             // prefixCls="sideBarNew"
-            width={260}
+            width={284}
           >
             <Sidebar2 />
           </Sider>
-          <Content className="w-100 overflow-auto">
+          <Content className="w-100 mainContent">
             <Outlet />
           </Content>
         </Layout>

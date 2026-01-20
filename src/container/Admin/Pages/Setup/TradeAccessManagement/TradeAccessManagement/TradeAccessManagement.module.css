@@ -9,6 +9,9 @@
 .TradeAccessmangementStyles {
   width: 99% !important;
   margin: 0 auto !important;
+  height: 100% !important;
+  min-height: 70vh;
+  max-height: 70vh;
 }
 
 .custom-radio-group span {

@@ -11,6 +11,12 @@ body {
 :where(.css-dev-only-do-not-override-k7429z)[class*=" ant-layout"] {
   font-family: "Roboto", sans-serif !important;
 }
+.mainContent {
+  min-height: 90vh !important;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+}
 
 .Scroller-x-resolution {
   width: 100% !important;
@@ -108,7 +114,7 @@ span.CompanyNameBankUser__indicator-separator.css-1u9des2-indicatorSeparator {
 
 /* Trade Access Management Table One Commmon Class (Universal Used CSS Over All used in the Project For table) */
 .TradeAccessManagement {
-  max-height: 70vh !important;
+  /* max-height: 70vh !important; */
 
   /* max-width: 100%; */
   width: 100%;
@@ -650,4 +656,8 @@ input.form-control {
 
 .font-bold {
   font-weight: 700;
+}
+
+.SelectCurrencyDropdown__placeholder {
+  font-size: 14px !important;
 }

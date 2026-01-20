@@ -234,7 +234,7 @@ const LoginHistory = () => {
       dataIndex: "userName",
       key: "userName",
       width: "200px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
 
@@ -243,7 +243,7 @@ const LoginHistory = () => {
       dataIndex: "counterPartyName",
       key: "counterPartyName",
       width: "150px",
-      align: "center",
+      align: "left",
       ellipsis: true,
     },
 
@@ -253,7 +253,7 @@ const LoginHistory = () => {
       key: "roleID",
       width: "100px",
       ellipsis: true,
-      align: "center",
+      align: "left",
       render: (roleID) => {
         // Find the role name from the roles array based on userRoleID
         const role =
@@ -305,7 +305,7 @@ const LoginHistory = () => {
     },
 
     {
-      title: <label className="px-3">Total Span</label>,
+      title: <label className="px-3">Duration</label>,
       dataIndex: "totalSpan",
       key: "totalSpan",
       align: "left",
@@ -394,6 +394,7 @@ const LoginHistory = () => {
 
   //Handle Date Change method
   const handleDateChange = (fieldName, value) => {
+    console.log({ fieldName, value }, "checkdateselect");
     setLoginHistory((prev) => ({
       ...prev,
       [fieldName]: {
@@ -590,6 +591,7 @@ const LoginHistory = () => {
                   onChange={(date) => handleDateChange("dateFrom", date)}
                   minDate={null} // No restriction initially
                   maxDate={loginHistory.dateTo.value || null}
+                  editable={false}
                 />
 
                 <label className={styles["Tradecount-date-to"]}>to</label>
@@ -604,6 +606,7 @@ const LoginHistory = () => {
                   onChange={(date) => handleDateChange("dateTo", date)}
                   minDate={loginHistory.dateFrom.value || null} // Disable dates before selected startDate
                   maxDate={null} // No restriction initially
+                  editable={false}
                 />
               </Col>
             </Row>
@@ -675,7 +678,7 @@ const LoginHistory = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 250, x: "max-content" }}
+                  scroll={{ y: "40vh", x: "max-content" }}
                   className={"BankUserList-table"}
                 />
               </Col>

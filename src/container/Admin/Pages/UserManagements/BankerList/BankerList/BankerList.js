@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Table,
-  Notification,
 } from "../../../../../../components/elements";
 
 import { useNavigate } from "react-router-dom";
@@ -26,7 +25,7 @@ import pdfIcon from "../../../../../../assets/images/pdf.png";
 
 import { GetBankUserRolesAPI } from "../../../../../../store/actions/Auth-Actions";
 import {
-  formatDateAndTimeFromString,
+  convertDateTimeIntoLocal,
   IndexCell,
 } from "../../../../../../helpers/reusableMethods";
 import moment from "moment";
@@ -41,6 +40,7 @@ import {
   setBankUserUpdated,
   setBranchUpdated,
 } from "../../../../../../store/actions/RealtimeActions";
+import { debounce } from "lodash";
 const BankerList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,6 +56,11 @@ const BankerList = () => {
   const bankUserUpdated = useSelector(
     (state) => state.RealtimeActionReducer.bankUserUpdated
   );
+  const saveInstrumentModal = useSelector(
+    (state) => state.BOPSystemAdminModal.saveInstrumentModal
+  );
+
+  console.log("saveInstrumentModal", saveInstrumentModal);
 
   // State to control visibility of export buttons
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -345,7 +350,7 @@ const BankerList = () => {
   //Table columns for customer List
   const columns = [
     {
-      title: <label className="px-3">EmployeeID</label>,
+      title: <label className="px-3">Employee ID</label>,
       dataIndex: "employeeID",
       key: "employeeID",
       width: "100px",
@@ -424,21 +429,32 @@ const BankerList = () => {
       title: <label>Status</label>,
       dataIndex: "userStatusID",
       key: "userStatusID",
-      width: "70px",
+      width: "100px",
       align: "center",
       ellipsis: true,
       render: (val, record) => {
+        const statusMap = {
+          //label 1 as an active, 2 asn Inactive, 3 as an Locked, 4 as an Closed and 9 as an Dormant
+          1: { label: "Active", className: styles.ActiveStatus },
+          2: { label: "Inactive", className: styles.InactiveStatus },
+          3: { label: "Locked", className: styles.LockedStatus },
+          4: { label: "Closed", className: styles.ClosedStatus },
+          9: { label: "Dormant", className: styles.DormantStatus },
+        };
+
+        const { label, className } = statusMap[val] || {
+          label: "Unknown",
+          className: styles.DefaultStatus,
+        };
+
+        console.log(label, className, "checherchekr");
+
         return (
-          <IndexCell
-            value={val === 1 ? "Active" : "Inactive"}
-            CellClassName={
-              val === 1 ? styles.ActiveStatus : styles.InactiveStatus
-            }
-            record={record}
-          />
+          <IndexCell value={label} CellClassName={className} record={record} />
         );
       },
     },
+
     {
       title: <label className="px-3">Creation Date Time</label>,
       dataIndex: "creationDateTime",
@@ -451,8 +467,8 @@ const BankerList = () => {
           <IndexCell
             value={
               val !== "-"
-                ? moment(formatDateAndTimeFromString(val)).format(
-                    "DD/MM/YYYY HH:mm:ss"
+                ? moment(convertDateTimeIntoLocal(val)).format(
+                    "DD/MM/YYYY hh:mm:ss A"
                   )
                 : "-"
             }
@@ -774,8 +790,9 @@ const BankerList = () => {
                   column={columns}
                   pagination={false}
                   rows={tableData}
-                  scroll={{ y: 300, x: "scroll" }}
+                  scroll={{ y: "45vh", x: "scroll" }}
                   className={"BankUserList-table"}
+                  // id="banker-list-table" // Add this line
                 />
               </Col>
             </Row>
@@ -785,7 +802,6 @@ const BankerList = () => {
       {EditBankerModalGobalState && <EditBankerModal />}
 
       {/* {BOPSystemAdminReducer.Loading && <Loader />} */}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
       {showActivationModal === true && (
         <ActivateConfirmationModal
           handleYesButton={handleResetYes}

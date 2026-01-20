@@ -41,7 +41,7 @@ const TextField = ({
         <Form.Control
           onBlur={onBlur}
           autoComplete={autoComplete}
-          className={className}
+          className={className || styles.formcontrol2}
           ref={ref}
           id={id}
           onFocus={focus}

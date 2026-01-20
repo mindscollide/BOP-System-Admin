@@ -21,8 +21,6 @@ import {
   Button,
   Checkbox,
   CustomUpload,
-  Loader,
-  Notification,
   Paper,
   TextField,
 } from "../../../../../../components/elements";
@@ -70,7 +68,7 @@ const AddCorporateUser = () => {
 
   console.log(companyNameOptions, "companyNameOptionscompanyNameOptions");
   //Checking snakbar state
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   //state for cancel button
   //state for save and cancel button
@@ -112,15 +110,14 @@ const AddCorporateUser = () => {
     updateField(name, value);
   };
 
-  // show error message When user hit activate btn
   const handleActivateButton = () => {
+    // First convert email to lowercase for consistent comparison
+    const email = corporateUser.email.value.toLowerCase();
+
     if (
       validateEmail(corporateUser.email.value) &&
-      !corporateUser.email.value.includes("@bop.com.pk") &&
-      !corporateUser.email.value.includes("@bop.com")
-      // corporateUser.firstName.value !== "" &&
-      // corporateUser.email.value !== "" &&
-      // corporateUser.companyName !== ""
+      !email.includes("@bop.com.pk") && // Now checking the lowercase version
+      !email.includes("@bop.com") // Now checking the lowercase version
     ) {
       dispatch(ConfirmationModalSystemAdmin(true));
       setModalState(1);
@@ -135,8 +132,6 @@ const AddCorporateUser = () => {
           },
         };
       });
-      // setErrorShow(true);
-      // alert("Not Validated");
     }
   };
   //handle Active Button
@@ -249,10 +244,10 @@ const AddCorporateUser = () => {
         value: false,
       },
       isFEActive: {
-        value: false,
+        value: true,
       },
       isNonFEActive: {
-        value: false,
+        value: true,
       },
     }));
   };
@@ -545,7 +540,7 @@ const AddCorporateUser = () => {
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-start m-0 p-0"
+              className="d-flex justify-content-start"
             >
               <span className={styles["bank-user-label"]}>
                 Add a Corporate user
@@ -618,17 +613,26 @@ const AddCorporateUser = () => {
                           value={companyRoleID !== 0 ? companyRoleID : null}
                           onChange={CompanySelectHandler}
                           classNamePrefix={"selectCateogyCorporateList"}
-                          className={styles["InputFieldClass"]}
+                          className={styles["selectBranchDropdown"]}
+                          menuPortalTarget={document.body}
+                          styles={{
+                            menu: (base) => ({
+                              ...base,
+                              width: "100%", // leave room for Edit + Plus buttons
+                              right: 0,
+                              fontSize: "14px",
+                            }),
+                          }}
+                        />
+                        <Button
+                          className={styles["EditButton"]}
+                          icon={<i className={"icon-edit"}></i>}
+                          onClick={() => handleEditButton(companyRoleID)}
                         />
                         <Button
                           className={styles["PlusButton"]}
                           icon={<span className={styles["PlusIcon"]}>+</span>}
                           onClick={handlePlusButton}
-                        />
-                        <Button
-                          className={styles["EditButton"]}
-                          icon={<i className={"icon-edit color-blue"}></i>}
-                          onClick={() => handleEditButton(companyRoleID)}
                         />
                       </Col>
                     </div>
@@ -706,7 +710,7 @@ const AddCorporateUser = () => {
 
                       <Col className="me-2">
                         <span className={styles["labels-add-bank"]}>
-                          Treasury
+                          Treasury Sales
                           <span className={styles["aesterick-color"]}>*</span>
                         </span>
                         <TextField
@@ -791,7 +795,6 @@ const AddCorporateUser = () => {
         />
       )}
       {/* {BOPSystemAdminReducer.Loading || auth.Loading ? <Loader /> : null} */}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
     </section>
   );
 };

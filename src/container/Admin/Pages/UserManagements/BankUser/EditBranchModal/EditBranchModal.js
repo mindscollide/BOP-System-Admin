@@ -9,7 +9,6 @@ import { UpdateBranchAPI } from "../../../../../../store/actions/BOPSystemAdminA
 import {
   Button,
   Modal,
-  Notification,
   TextField,
 } from "../../../../../../components/elements";
 const EditBranchModal = ({ editBranchData }) => {
@@ -32,7 +31,6 @@ const EditBranchModal = ({ editBranchData }) => {
   console.log(updateBranch, "updateBranchupdateBranch");
   //State to activate the edit button
   //States
-  const [open, setOpen] = useState(false);
 
   //handle Cancel Button
   const handleCancelButton = () => {
@@ -251,7 +249,6 @@ const EditBranchModal = ({ editBranchData }) => {
         </Row>
       }
     />
-    // <Notification setOpen={setOpen} open={open.open} message={open.message} />
   );
 };
 
