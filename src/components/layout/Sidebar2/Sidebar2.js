@@ -5,16 +5,15 @@ import "./Sidebar2.css";
 
 const Sidebar2 = () => {
   const [expandedKey, setExpandedKey] = useState(
-    sessionStorage.getItem("defaultOpenKey") || null
+    localStorage.getItem("defaultOpenKey") || localStorage.setItem("defaultOpenKey", "sub1")
   );
   const location = useLocation();
 
-  const selectedKey = sessionStorage.getItem("defaultSelectedKey");
 
   const handleToggle = (eventKey) => {
     if (eventKey === "sub1" || eventKey === "sub2") {
       setExpandedKey(expandedKey === eventKey ? null : eventKey);
-      sessionStorage.setItem(
+      localStorage.setItem(
         "defaultOpenKey",
         expandedKey === eventKey ? null : eventKey
       );
@@ -22,7 +21,7 @@ const Sidebar2 = () => {
   };
 
   const handleItemClick = (selectedKey) => {
-    sessionStorage.setItem("defaultSelectedKey", selectedKey);
+    localStorage.setItem("defaultSelectedKey", selectedKey);
   };
 
   return (
