@@ -118,6 +118,8 @@ const TradeCount = () => {
     (state) => state.BOPSystemAdminModal.confirmationModal
   );
   const [tableData, setTableData] = useState([]);
+
+  console.log(tableData, "tableDatatableDatatableData");
   const [modalState, setModalState] = useState(0);
   //Sate For Side
   const [side, setSide] = useState({ value: 0, label: "" });
@@ -243,7 +245,7 @@ const TradeCount = () => {
   // column for LoginHistory
   const tradeColumns = [
     {
-      title: <label className="bottom-table-header">TXN ID</label>,
+      title: <label className='bottom-table-header'>TXN ID</label>,
       dataIndex: "txnID",
       key: "txnID",
       width: "100px",
@@ -251,7 +253,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Branch Code</label>,
+      title: <label className='bottom-table-header'>Branch Code</label>,
       dataIndex: "branchCode",
       key: "branchCode",
       width: "80px",
@@ -259,7 +261,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Client</label>,
+      title: <label className='bottom-table-header'>Client</label>,
       dataIndex: "corporateName",
       key: "corporateName",
       width: "150px",
@@ -267,7 +269,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Side</label>,
+      title: <label className='bottom-table-header'>Side</label>,
       dataIndex: "side",
       key: "side",
       width: "50px",
@@ -275,7 +277,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Nature</label>,
+      title: <label className='bottom-table-header'>Nature</label>,
       dataIndex: "nature",
       key: "nature",
       width: "180px",
@@ -286,7 +288,7 @@ const TradeCount = () => {
       },
     },
     {
-      title: <label className="bottom-table-header">CCY1</label>,
+      title: <label className='bottom-table-header'>CCY1</label>,
       dataIndex: "ccY1",
       key: "ccY1",
       width: "50px",
@@ -294,7 +296,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">TXN Amount</label>,
+      title: <label className='bottom-table-header'>TXN Amount</label>,
       dataIndex: "quantity",
       key: "quantity",
       width: "120px",
@@ -303,7 +305,7 @@ const TradeCount = () => {
       render: (quantity) => formatPkAmount(quantity, { decimals: 2 }),
     },
     {
-      title: <label className="bottom-table-header">Rate</label>,
+      title: <label className='bottom-table-header'>Rate</label>,
       dataIndex: "rate",
       key: "rate",
       width: "120px",
@@ -312,7 +314,7 @@ const TradeCount = () => {
       render: (rate) => formatPkAmount(rate, { decimals: 2 }),
     },
     {
-      title: <label className="bottom-table-header">Squaring Rate</label>,
+      title: <label className='bottom-table-header'>Squaring Rate</label>,
       dataIndex: "squaringRate",
       key: "squaringRate",
       width: "120px",
@@ -321,7 +323,7 @@ const TradeCount = () => {
       render: (rate) => formatPkAmount(rate, { decimals: 2 }),
     },
     {
-      title: <label className="bottom-table-header">CCY2</label>,
+      title: <label className='bottom-table-header'>CCY2</label>,
       dataIndex: "ccY2",
       key: "ccY2",
       width: "50px",
@@ -330,7 +332,7 @@ const TradeCount = () => {
     },
 
     {
-      title: <label className="bottom-table-header">Total Amount</label>,
+      title: <label className='bottom-table-header'>Total Amount</label>,
       dataIndex: "amount",
       key: "amount",
       width: "150px",
@@ -339,7 +341,7 @@ const TradeCount = () => {
       render: (amount) => formatPkAmount(amount, { decimals: 2 }),
     },
     {
-      title: <label className="bottom-table-header">Date</label>,
+      title: <label className='bottom-table-header'>Date</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
       width: "100px",
@@ -355,7 +357,7 @@ const TradeCount = () => {
       },
     },
     {
-      title: <label className="bottom-table-header">Time</label>,
+      title: <label className='bottom-table-header'>Time</label>,
       dataIndex: "transactionDateTime",
       key: "transactionDateTime",
       width: "80px",
@@ -371,7 +373,7 @@ const TradeCount = () => {
       },
     },
     {
-      title: <label className="bottom-table-header">LC #</label>,
+      title: <label className='bottom-table-header'>LC #</label>,
       dataIndex: "lcNumber",
       key: "lcNumber",
       width: "100px",
@@ -379,7 +381,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Account #</label>,
+      title: <label className='bottom-table-header'>Account #</label>,
       dataIndex: "accountNumber",
       key: "accountNumber",
       width: "120px",
@@ -418,7 +420,7 @@ const TradeCount = () => {
     //   },
     // },
     {
-      title: <label className="bottom-table-header">Status</label>,
+      title: <label className='bottom-table-header'>Status</label>,
       dataIndex: "status",
       key: "status",
       width: "100px",
@@ -435,14 +437,13 @@ const TradeCount = () => {
                 : text === "Expired" || text === "Rejected"
                 ? "#f21616"
                 : "",
-          }}
-        >
+          }}>
           {text}
         </span>
       ),
     },
     {
-      title: <label className="bottom-table-header">Initiated By</label>,
+      title: <label className='bottom-table-header'>Initiated By</label>,
       dataIndex: "initiatedBy",
       key: "initiatedBy",
       width: "100px",
@@ -450,7 +451,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Acccepted By</label>,
+      title: <label className='bottom-table-header'>Acccepted By</label>,
       dataIndex: "acceptedBy",
       key: "acceptedBy",
       width: "150px",
@@ -458,15 +459,16 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">TXN Accepted Time</label>,
+      title: <label className='bottom-table-header'>TXN Accepted Time</label>,
       dataIndex: "txnAcceptedTime",
       key: "txnAcceptedTime",
       width: "150px",
       align: "center",
       ellipsis: true,
       render: (txnAcceptedTime) => {
+        console.log(txnAcceptedTime, "txnAcceptedTimetxnAcceptedTime");
         // Format the date and time
-        return txnAcceptedTime !== "-"
+        return txnAcceptedTime && txnAcceptedTime !== "-"
           ? moment(convertDateTimeIntoLocal(txnAcceptedTime)).format(
               "h:mm:ss A"
             )
@@ -474,7 +476,7 @@ const TradeCount = () => {
       },
     },
     {
-      title: <label className="bottom-table-header">Cancelled By</label>,
+      title: <label className='bottom-table-header'>Cancelled By</label>,
       dataIndex: "cancelledBy",
       key: "cancelledBy",
       width: "100px",
@@ -482,7 +484,7 @@ const TradeCount = () => {
       ellipsis: true,
     },
     {
-      title: <label className="bottom-table-header">Cancelled Time</label>,
+      title: <label className='bottom-table-header'>Cancelled Time</label>,
       dataIndex: "cancelledTime",
       key: "cancelledTime",
       width: "120px",
@@ -889,13 +891,13 @@ const TradeCount = () => {
       let matchedId = tableData.find(
         (record) => record.pK_TransactionID === transaction.pK_TransactionID
       );
-      console.log(matchedId, "matchedIdmatchedId");
 
       if (matchedId === undefined) {
         let record = {
           ...transaction,
           txnID: transaction.txnid,
           transactionDateTime: transaction.settlementDateTime,
+          txnAcceptedTime:transaction.settlementDateTime
         };
         setTableData((prev) => [record, ...prev]);
       }
@@ -930,53 +932,52 @@ const TradeCount = () => {
 
   return (
     <section className={styles["SectionContainer"]}>
-      <Row className="mt-4">
+      <Row className='mt-4'>
         <Col lg={12} md={12} sm={12}>
           <span className={styles["tradeCount-label"]}>Daily Trade</span>
         </Col>
       </Row>
-      <Row className="mt-2">
+      <Row className='mt-2'>
         <Col lg={12} md={12} sm={12}>
           <CustomPaper className={styles["customer-List-paper"]}>
-            <Row className="mt-2 g-2">
+            <Row className='mt-2 g-2'>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder="TXN ID"
-                  name="transactionID"
-                  labelClass="d-none"
+                  placeholder='TXN ID'
+                  name='transactionID'
+                  labelClass='d-none'
                   value={tradeCount.TxnID.value}
                   onChange={tradeCountValidateHandler}
-                  className="tradeCount-textField-fontsize"
+                  className='tradeCount-textField-fontsize'
                   maxLength={20}
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder="Client Name"
-                  name="ClientName"
+                  placeholder='Client Name'
+                  name='ClientName'
                   maxLength={20}
-                  labelClass="d-none"
+                  labelClass='d-none'
                   value={tradeCount.clientName.value}
                   onChange={tradeCountValidateHandler}
-                  className="tradeCount-textField-fontsize"
+                  className='tradeCount-textField-fontsize'
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <Select
-                  name="side"
-                  placeholder="Select Side"
+                  name='side'
+                  placeholder='Select Side'
                   options={transactionSide}
                   value={side.value !== 0 ? side : null}
                   isSearchable
-                  onChange={handleSelectSide}
-                ></Select>
+                  onChange={handleSelectSide}></Select>
               </Col>
 
               <Col lg={2} md={2} sm={12}>
                 <Select
-                  placeholder="Select Nature"
+                  placeholder='Select Nature'
                   // classNamePrefix={"TradeCountSelect"}
-                  classNamePrefix="selectCateogyCorporateList"
+                  classNamePrefix='selectCateogyCorporateList'
                   options={natureOptions}
                   value={natureID.value !== 0 ? natureID : null}
                   isSearchable
@@ -987,39 +988,39 @@ const TradeCount = () => {
               <Col lg={2} md={2} sm={12}>
                 {/* <TextField */}
                 <NumericFormat
-                  placeholder="Total Amount"
-                  name="Amount"
+                  placeholder='Total Amount'
+                  name='Amount'
                   maxLength={20}
                   onChange={tradeCountValidateHandler}
                   value={
                     tradeCount.Amount.value === 0 ? "" : tradeCount.Amount.value
                   }
-                  labelClass="d-none"
-                  className="tradeCount-textField-fontsize form-control"
+                  labelClass='d-none'
+                  className='tradeCount-textField-fontsize form-control'
                 />
               </Col>
               <Col lg={2} md={2} sm={12}>
                 <TextField
-                  placeholder="LC #"
-                  name="LC"
+                  placeholder='LC #'
+                  name='LC'
                   value={tradeCount.LC.value}
                   onChange={tradeCountValidateHandler}
-                  labelClass="d-none"
-                  className="tradeCount-textField-fontsize"
+                  labelClass='d-none'
+                  className='tradeCount-textField-fontsize'
                   maxLength={20}
                 />
               </Col>
             </Row>
 
-            <Row className="mt-3 g-2">
+            <Row className='mt-3 g-2'>
               <Col lg={2} md={12} sm={12}>
                 <TextField
-                  placeholder="Account Number"
-                  name="AccountNumber"
+                  placeholder='Account Number'
+                  name='AccountNumber'
                   value={tradeCount.AccountNumber.value}
                   onChange={tradeCountValidateHandler}
-                  labelClass="d-none"
-                  className="tradeCount-textField-fontsize"
+                  labelClass='d-none'
+                  className='tradeCount-textField-fontsize'
                   maxLength={20}
                 />
               </Col>
@@ -1033,27 +1034,25 @@ const TradeCount = () => {
                       textOverflow: "ellipsis",
                     }),
                   }}
-                  placeholder="Select Date Range"
-                  classNamePrefix="selectCateogyCorporateList"
+                  placeholder='Select Date Range'
+                  classNamePrefix='selectCateogyCorporateList'
                   options={dateRangeOptions}
                   value={selectedDateRange}
                   isSearchable={true}
                   onChange={handleDateRangeChange}
-                  menuPortalTarget={document.body}
-                ></Select>
+                  menuPortalTarget={document.body}></Select>
               </Col>
               {showCustomDatePicker && (
                 <Col
                   lg={4}
                   md={12}
                   sm={12}
-                  className="d-flex align-items-center pe-4"
-                >
+                  className='d-flex align-items-center pe-4'>
                   <DatePicker
-                    name="dateFrom"
+                    name='dateFrom'
                     value={tradeCount.dateFrom.value}
-                    placeholder="Start date"
-                    showOtherDays="true"
+                    placeholder='Start date'
+                    showOtherDays='true'
                     inputClass={styles["Tradecount-Datepicker-left"]}
                     onChange={(date) => handleDateChange("dateFrom", date)}
                     maxDate={tradeCount.dateTo.value}
@@ -1063,10 +1062,10 @@ const TradeCount = () => {
                   <label className={styles["Tradecount-date-to"]}>to</label>
 
                   <DatePicker
-                    name="dateTo"
+                    name='dateTo'
                     value={tradeCount.dateTo.value}
-                    placeholder="End Date"
-                    showOtherDays="true"
+                    placeholder='End Date'
+                    showOtherDays='true'
                     inputClass={styles["Tradecount-Datepicker-right"]}
                     onChange={(date) => handleDateChange("dateTo", date)}
                     minDate={tradeCount.dateFrom.value}
@@ -1081,11 +1080,10 @@ const TradeCount = () => {
                 lg={4}
                 md={12}
                 sm={12}
-                className="d-flex justify-content-center gap-1"
-              >
+                className='d-flex justify-content-center gap-1'>
                 <Button
-                  text="Search"
-                  icon={<i className="icon-search"></i>}
+                  text='Search'
+                  icon={<i className='icon-search'></i>}
                   className={styles["Search-tradeCount-btn"]}
                   onClick={handleSearchEventButton}
                 />
@@ -1096,37 +1094,36 @@ const TradeCount = () => {
                 /> */}
 
                 <Button
-                  icon={<i className="icon-refresh icon-check-space"></i>}
+                  icon={<i className='icon-refresh icon-check-space'></i>}
                   className={styles["Banklist-Reset-btn"]}
-                  text="Reset"
+                  text='Reset'
                   onClick={handleResetEventButton}
                 />
                 <Popover
                   content={
                     <div className={styles["export-options"]}>
                       <Button
-                        icon={<img src={excelIcon} alt="Excel Icon" />}
+                        icon={<img src={excelIcon} alt='Excel Icon' />}
                         onClick={() => handleExport("excel")}
                         className={styles["export-button"]}
                       />
                       <Button
-                        icon={<img src={pdfIcon} alt="PDF Icon" />}
+                        icon={<img src={pdfIcon} alt='PDF Icon' />}
                         onClick={() => handleExport("pdf")}
                         className={styles["export-button"]}
                       />
                     </div>
                   }
                   // title="Title"
-                  trigger="click"
+                  trigger='click'
                   open={open}
                   onOpenChange={handleOpenChange}
-                  placement="bottomRight"
-                  arrow={false}
-                >
+                  placement='bottomRight'
+                  arrow={false}>
                   <Button
-                    icon={<i className="icon-download"></i>}
+                    icon={<i className='icon-download'></i>}
                     className={styles["Export_Button"]}
-                    text="Export"
+                    text='Export'
                     iconClass={styles["resetIconClass"]}
                     onClick={toggleExportOptions}
                   />
@@ -1134,7 +1131,7 @@ const TradeCount = () => {
               </Col>
             </Row>
 
-            <Row className="mt-1">
+            <Row className='mt-1'>
               <Col lg={12} md={12} sm={12}>
                 <ExportShowComponent
                   value={dropdownvalue}
@@ -1143,7 +1140,7 @@ const TradeCount = () => {
               </Col>
             </Row>
 
-            <Row className="mt-1">
+            <Row className='mt-1'>
               <Col lg={12} md={12} sm={12}>
                 <Table
                   column={tradeColumns}
