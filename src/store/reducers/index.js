@@ -10,3 +10,4 @@ export { default as SettingsReducer } from "./SettingsReducer";
 export { default as SetupTradeAccessManagementReducer } from "./SetupTradeAccessManagementReducer";
 export { default as SpreadManagementReducer } from "./SpreadManagementReducer";
 export { default as RealtimeActionReducer } from "./RealtimeReducer";
+export { default as UiReducer } from "./Ui-Reducer";

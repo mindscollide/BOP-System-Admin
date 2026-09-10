@@ -3,6 +3,7 @@ import * as actions from "../action_types";
 const initialState = {
   Loading: false,
   ResponseMessage: "",
+  errorSeverity: "",
   GetAllCorporateUsers: null,
   GetCorporateUserByUserID: null,
   SearchCorporateUsersData: null,
@@ -16,12 +17,14 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_CORPORATE_USER_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllCorporateUsers: action.response,
         ResponseMessage: action.message,
       };
@@ -30,6 +33,7 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllCorporateUsers: [],
         ResponseMessage: action.message,
       };
@@ -39,12 +43,14 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_CORPORATE_USER_BY_USERID_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetCorporateUserByUserID: action.response,
         ResponseMessage: action.message,
       };
@@ -53,6 +59,7 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetCorporateUserByUserID: "",
         ResponseMessage: action.message,
       };
@@ -61,11 +68,13 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     case actions.SEARCH_CORPORATE_USERS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         SearchCorporateUsersData: action.response,
         ResponseMessage: action.message,
       };
@@ -73,6 +82,7 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         SearchCorporateUsersData: null,
         ResponseMessage: action.message,
       };
@@ -81,11 +91,13 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     case actions.UPDATE_CORPORATE_USERS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UpdateCorporateUsersData: action.response,
         ResponseMessage: action.message,
       };
@@ -93,6 +105,7 @@ const corporateUsersReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         UpdateCorporateUsersData: null,
         ResponseMessage: action.message,
       };
@@ -100,6 +113,7 @@ const corporateUsersReducer = (state = initialState, action) => {
     case actions.CLEAR_RESPONSEMESSAGE_CORPORATEUSERREDUCER:
       return {
         ...state,
+        errorSeverity: "",
         ResponseMessage: "",
       };
 

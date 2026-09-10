@@ -263,7 +263,6 @@ const AdminDashboard = () => {
         <Layout>
           <Sider
             style={{ background: "none" }}
-            // prefixCls="sideBarNew"
             width={284}
           >
             <Sidebar2 />
@@ -272,8 +271,6 @@ const AdminDashboard = () => {
             <Outlet />
           </Content>
         </Layout>
-        <ResponseMessage />
-        <Loader />
       </Layout>
     </>
   );

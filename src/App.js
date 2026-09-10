@@ -21,6 +21,7 @@ import "@fontsource/poppins/400-italic.css";
 import { router } from "./routes/Routes";
 import { RouterProvider } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { Loader, GlobalSnackbar } from "./components/elements";
 
 function App() {
   const currentVersion = useRef(null);
@@ -56,7 +57,13 @@ function App() {
     const interval = setInterval(checkVersion, 30000); // check every 30 sec
     return () => clearInterval(interval);
   }, []);
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Loader />
+      <GlobalSnackbar />
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

@@ -222,12 +222,13 @@ const ResetPassword = () => {
 
                       <Form.Control
                         name='password'
-                        autoComplete='new-password'
-                        className='form-comtrol-ResetPassword-textfield'
+                        id='password'
+                        autoComplete='off'
+                        className='form-comtrol-ResetPassword-textfield pwd-mask'
                         placeholder='Password'
                         aria-label='Password'
                         aria-describedby='basic-addon1'
-                        type='password'
+                        type='text'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
@@ -245,12 +246,13 @@ const ResetPassword = () => {
 
                       <Form.Control
                         name='confirmPassword'
-                        autoComplete='new-password'
-                        className='form-comtrol-ResetPassword-textfield-password'
+                        id='confirmPassword'
+                        autoComplete='off'
+                        className='form-comtrol-ResetPassword-textfield-password pwd-mask'
                         placeholder='New Confirm Password'
                         aria-label='Confirm Password'
                         aria-describedby='basic-addon2'
-                        type='password'
+                        type='text'
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                       />

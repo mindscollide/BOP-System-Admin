@@ -88,6 +88,13 @@
   border: 1px solid #ced4da !important;
 }
 
+/* Masks a text input to look like a password field without type="password",
+   so browsers don't offer to save it. */
+.pwd-mask {
+  -webkit-text-security: disc;
+  text-security: disc;
+}
+
 .form-comtrol-textfield-password {
   height: 37px !important;
   font-family: "Montserrat", sans-serif !important;

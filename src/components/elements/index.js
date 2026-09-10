@@ -12,6 +12,7 @@ import Loader from "./loader/Loader";
 import Paper from "./paper/Paper";
 import CustomUpload from "./upload/Upload";
 import { Notification, Message } from "./snack_bar";
+import GlobalSnackbar from "./snack_bar/GlobalSnackbar";
 import CorporateCustomUpload from "./CorporateCustomUpload/CorporateCustomUpload";
 import CustomSwitch from "./SwitchButton/SwitchButton";
 import VerificationInputField from "./verification_input/Verification_Input";
@@ -29,6 +30,7 @@ export {
   CustomRadio,
   Notification,
   Message,
+  GlobalSnackbar,
   Table,
   CustomUpload,
   Paper,

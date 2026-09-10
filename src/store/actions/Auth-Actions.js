@@ -2274,6 +2274,7 @@ const resetPassword_success = (response, message) => {
 const resetPassword_fail = (message) => {
   return {
     type: actions.RESET_PASSWORD_FAIL,
+    message,
   };
 };
 
@@ -2306,9 +2307,10 @@ const resetPasswordApi = (navigate, Data) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_AuthManager_ResetPassword_01".toLowerCase()
             ) {
-                localStorage.setItem("defaultOpenKey", "sub1");
+              localStorage.setItem("defaultOpenKey", "sub1");
               localStorage.setItem("defaultSelectedKey", "1");
               localStorage.setItem("token", response.data.responseResult.token);
+              localStorage.setItem("roleID", response.data.responseResult.user.userRoleID)
               localStorage.setItem(
                 "refreshToken",
                 response.data.responseResult.refreshToken,
@@ -2387,6 +2389,7 @@ const forgotPassword_success = (response, message) => {
 const forgotPassword_fail = (message) => {
   return {
     type: actions.FORGOT_PASSWORD_FAIL,
+    message,
   };
 };
 

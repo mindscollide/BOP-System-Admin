@@ -3,6 +3,7 @@ import * as actions from "../action_types";
 const initialState = {
   Loading: false,
   ResponseMessage: "",
+  errorSeverity: "",
   addBankUserModal: false,
   editCorporateModal: false,
   deleteCorporateModal: false,
@@ -140,6 +141,7 @@ const BOPSystemAdminModal = (state = initialState, action) => {
     case actions.CLEAR_RESPONSEMESSAGE_BOPSYSTEMADMINREDUCERMODAL: {
       return {
         ...state,
+        errorSeverity: "",
         ResponseMessage: "",
       };
     }

@@ -4,6 +4,7 @@ const initialState = {
   Loading: false,
   Spinner: false,
   ResponseMessage: "",
+  errorSeverity: "",
   addCategory: [],
 };
 
@@ -13,6 +14,7 @@ const AddCategory = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
         Spinner: true,
       };
 
@@ -20,6 +22,7 @@ const AddCategory = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         Spinner: false,
         addCategory: action.response,
         ResponseMessage: action.message,
@@ -29,6 +32,7 @@ const AddCategory = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         Spinner: false,
         ResponseMessage: action.message,
       };
@@ -36,6 +40,7 @@ const AddCategory = (state = initialState, action) => {
     case actions.CLEAR_RESPONSEMESSAGE_ADD_CATEGORY:
       return {
         ...state,
+        errorSeverity: "",
         ResponseMessage: "",
       };
 

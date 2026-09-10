@@ -6,6 +6,7 @@ const initialState = {
   Loading: false,
   Spinner: false,
   ResponseMessage: "",
+  errorSeverity: "",
   isSignUp: false,
   SessionExpeireResponseMessage: "",
   UserRoleslist: [],
@@ -54,7 +55,7 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.LOG_IN_INIT:
-      return { ...state, Loading: true };
+      return { ...state, Loading: true, errorSeverity: "" };
 
     case actions.LOG_IN_SUCCESS:
       return {
@@ -62,6 +63,7 @@ const authReducer = (state = initialState, action) => {
         UserDetails: action.response,
         ResponseMessage: action.message,
         Loading: false,
+        errorSeverity: "success",
         Token: action.response.token,
         Refresh: action.response.refreshToken,
       };
@@ -72,6 +74,7 @@ const authReducer = (state = initialState, action) => {
         UserDetails: action.response,
         ResponseMessage: action.message,
         Loading: false,
+        errorSeverity: "error",
         Token: "",
         Refresh: "",
       };
@@ -79,12 +82,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.USER_LOGOUT_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         userLogout: action.response,
         ResponseMessage: action.message,
       };
@@ -93,18 +98,20 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         userLogout: null,
         ResponseMessage: action.message,
       };
     }
 
     case actions.SIGN_UP_INIT:
-      return { ...state, Loading: true };
+      return { ...state, Loading: true, errorSeverity: "" };
 
     case actions.SIGN_UP_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         isLoggedIn: true,
         ResponseMessage: action.message,
       };
@@ -114,6 +121,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isLoggedIn: false,
         Loading: false,
+        errorSeverity: "error",
         ResponseMessage: action.message,
       };
 
@@ -133,12 +141,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.USER_ROLES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UserRoleslist: action.response,
         ResponseMessage: action.message,
       };
@@ -147,6 +157,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         UserRoleslist: [],
         ResponseMessage: action.message,
       };
@@ -155,12 +166,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_CORPORATE_CATEGORIES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         getAllCorporate: action.response,
         ResponseMessage: action.message,
       };
@@ -169,6 +182,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         getAllCorporate: [],
         ResponseMessage: action.message,
       };
@@ -177,6 +191,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
         Spinner: true,
       };
 
@@ -184,6 +199,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         Spinner: false,
         bankUserLoginHistory: action.response,
         ResponseMessage: action.message,
@@ -193,6 +209,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         Spinner: false,
         getAllCorporate: [],
         ResponseMessage: action.message,
@@ -203,12 +220,14 @@ const authReducer = (state = initialState, action) => {
         ...state,
         Spinner: true,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.SEARCH_BANK_USER_LOGIN_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         Spinner: false,
         searchBankLogin: action.response,
         ResponseMessage: action.message,
@@ -218,6 +237,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         Spinner: false,
         searchBankLogin: action.response,
         ResponseMessage: action.message,
@@ -227,12 +247,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_USER_STATUS_API_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         allUserStatus: action.response,
         ResponseMessage: action.message,
       };
@@ -241,6 +263,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         allUserStatus: [],
         ResponseMessage: action.message,
       };
@@ -249,12 +272,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_CORPORATES_COMPANY_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         allCorporateCompany: action.response,
         ResponseMessage: action.message,
       };
@@ -263,6 +288,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         allCorporateCompany: [],
         ResponseMessage: action.message,
       };
@@ -271,12 +297,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_NATURE_OF_BUSINESS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         getAllNatureOfBuisness: action.response,
         ResponseMessage: action.message,
       };
@@ -285,6 +313,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         getAllNatureOfBuisness: [],
         ResponseMessage: action.message,
       };
@@ -293,12 +322,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_CORPORATES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllCorporatesData: action.response,
         ResponseMessage: action.message,
       };
@@ -307,6 +338,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllCorporatesData: null,
         ResponseMessage: action.message,
       };
@@ -315,12 +347,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.UPDATE_CORPORATE_MAPPING_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UpdatedCorporates: action.response,
         ResponseMessage: action.message,
       };
@@ -329,6 +363,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         ResponseMessage: action.message,
       };
 
@@ -336,12 +371,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.DELETE_CATEGORY_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         DeleteCategory: action.response,
         ResponseMessage: action.message,
       };
@@ -350,6 +387,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         ResponseMessage: action.message,
       };
 
@@ -358,12 +396,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.SEND_EMAIL_RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         sendEmailResetPassword: action.response,
         ResponseMessage: action.message,
       };
@@ -372,6 +412,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         sendEmailResetPassword: null,
         ResponseMessage: action.message,
       };
@@ -381,12 +422,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_CATEGORIES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         getAllCategories: action.response,
         ResponseMessage: action.message,
       };
@@ -395,6 +438,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         getAllCategories: [],
         ResponseMessage: action.message,
       };
@@ -404,12 +448,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.ROLE_LIST_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         RoleList: action.response,
         ResponseMessage: action.message,
       };
@@ -418,6 +464,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         RoleList: [],
         ResponseMessage: action.message,
       };
@@ -427,12 +474,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_BANK_USER_ROLES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetBankUserRoles: action.response,
         ResponseMessage: action.message,
       };
@@ -441,6 +490,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetBankUserRoles: null,
         ResponseMessage: action.message,
       };
@@ -448,6 +498,7 @@ const authReducer = (state = initialState, action) => {
     case actions.CLEARE_MESSAGE:
       return {
         ...state,
+        errorSeverity: "",
         ResponseMessage: "",
       };
 
@@ -456,12 +507,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_INSTRUMENT_TYPES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllInstrumentTypes: action.response,
         ResponseMessage: action.message,
       };
@@ -470,6 +523,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllInstrumentTypes: [],
         ResponseMessage: action.message,
       };
@@ -479,12 +533,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_BRANCHES_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllBranchesData: action.response,
         ResponseMessage: action.message,
       };
@@ -493,6 +549,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllBranchesData: null,
         ResponseMessage: action.message,
       };
@@ -501,12 +558,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.UPDATE_BRANCH_CATEGORY_MAPPING_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         updatedBranchCategoryData: action.response,
         ResponseMessage: action.message,
       };
@@ -515,6 +574,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         updatedBranchCategoryData: null,
         ResponseMessage: action.message,
       };
@@ -523,12 +583,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_CORPORATES_DATA_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllCorporates: action.response,
         ResponseMessage: action.message,
       };
@@ -537,6 +599,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllCorporates: null,
         ResponseMessage: action.message,
       };
@@ -544,12 +607,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_NATURE_OF_TRANSACTIONS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllNatureOfTransactions: action.response,
         ResponseMessage: action.message,
       };
@@ -558,6 +623,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllNatureOfTransactions: [],
         ResponseMessage: action.message,
       };
@@ -565,18 +631,21 @@ const authReducer = (state = initialState, action) => {
     case actions.CLEAR_RESPONSEMESSAGE_AUTH:
       return {
         ...state,
+        errorSeverity: "",
         ResponseMessage: "",
       };
     case actions.GET_LIST_ALL_INSTRUMENTS_INIT: {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.GET_LIST_ALL_INSTRUMENTS_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         getListAllInstruments: action.response,
         ResponseMessage: action.message,
       };
@@ -585,6 +654,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         getListAllInstruments: null,
         ResponseMessage: action.message,
       };
@@ -593,12 +663,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.ADD_HOLIDAY_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         addHoliday: action.response,
         ResponseMessage: action.message,
       };
@@ -607,6 +679,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         addHoliday: null,
         ResponseMessage: action.message,
       };
@@ -615,12 +688,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.GET_HOLIDAY_LIST_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         getAllHolidays: action.response,
         ResponseMessage: action.message,
       };
@@ -629,6 +704,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         getAllHolidays: null,
         ResponseMessage: action.message,
       };
@@ -637,12 +713,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.DELETE_HOLIDAY_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         deleteHolidayByHolidayId: action.response,
         ResponseMessage: action.message,
       };
@@ -651,6 +729,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         deleteHolidayByHolidayId: null,
         ResponseMessage: action.message,
       };
@@ -659,12 +738,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.GET_HOLIDAY_BY_HOLIDAYID_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         getHolidayByHolidayId: action.response,
         ResponseMessage: action.message,
       };
@@ -673,6 +754,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         getHolidayByHolidayId: null,
         ResponseMessage: action.message,
       };
@@ -681,12 +763,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
     case actions.UPDATE_HOLIDAY_SUCCESS: {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         updateHolidayByHolidayId: action.response,
         ResponseMessage: action.message,
       };
@@ -695,6 +779,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         updateHolidayByHolidayId: null,
         ResponseMessage: action.message,
       };
@@ -724,6 +809,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
 
@@ -731,6 +817,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         resetPassword: action.response,
         ResponseMessage: action.message,
       };
@@ -740,6 +827,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         resetPassword: null,
         ResponseMessage: action.message,
       };
@@ -749,6 +837,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
 
@@ -756,6 +845,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         forgotPassword: action.response,
         ResponseMessage: action.message,
       };
@@ -765,6 +855,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         forgotPassword: null,
         ResponseMessage: action.message,
       };
@@ -774,6 +865,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
     }
 
@@ -781,6 +873,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         resetPasswordEmailVerification: action.response,
         ResponseMessage: action.message,
       };
@@ -790,6 +883,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         resetPasswordEmailVerification: null,
         ResponseMessage: action.message,
       };

@@ -1,19 +1,17 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 
 import { Container, Col, Row, InputGroup, Form } from "react-bootstrap";
 
-import { Button, Loader, Notification } from "../../../../components/elements";
+import { Button } from "../../../../components/elements";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
 
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
 
-import {
-  cleareMessage,
-  loginSystemAdminAPI,
-} from "../../../../store/actions/Auth-Actions";
+import { loginSystemAdminAPI } from "../../../../store/actions/Auth-Actions";
+import { showSnackbar } from "../../../../store/actions/Ui-Actions";
 
 import "./SystemLogin.css";
 
@@ -27,24 +25,10 @@ const SystemLogin = () => {
 
   const navigate = useNavigate();
 
-  const ResponseMessageAuthReducerState = useSelector(
-    (state) => state.auth.ResponseMessage,
-  );
-
-  const LoadingAuthReducerState = useSelector(
-    (state) => state.auth.Loading,
-  );
-
-  const [open, setOpen] = useState({
-    open: false,
-    message: "",
-  });
-
   const Email = useRef(null);
 
   const Password = useRef(null);
 
-  const [showPassword, setShowPassword] = useState(true);
 
   const [securityCredentials, setSecurityCredentials] = useState({
     Email: "",
@@ -90,7 +74,7 @@ const SystemLogin = () => {
 
     setSecurityCredentials((previousState) => ({
       ...previousState,
-      [name]: value,
+      Email: value,
     }));
   };
 
@@ -123,41 +107,9 @@ const SystemLogin = () => {
     } catch (error) {
       console.error("Login encryption error:", error);
 
-      setOpen({
-        open: true,
-        message: "Something went wrong",
-      });
+      dispatch(showSnackbar("Something went wrong", "error"));
     }
   };
-
-  // Optional: if you still use show/hide functionality elsewhere
-  const toggleEyeIcon = () => {
-    setShowPassword((previousValue) => !previousValue);
-  };
-
-  useEffect(() => {
-    if (ResponseMessageAuthReducerState) {
-      setOpen({
-        open: true,
-        message: ResponseMessageAuthReducerState,
-      });
-
-      const timer = setTimeout(() => {
-        setOpen({
-          open: false,
-          message: "",
-        });
-      }, 4000);
-
-      dispatch(cleareMessage());
-
-      return () => clearTimeout(timer);
-    }
-
-    if (ResponseMessageAuthReducerState !== undefined) {
-      dispatch(cleareMessage());
-    }
-  }, [ResponseMessageAuthReducerState, dispatch]);
 
   return (
     <Fragment>
@@ -198,14 +150,14 @@ const SystemLogin = () => {
                             onKeyDown={(event) =>
                               enterKeyHandler(event, Password)
                             }
-                            name="Email"
-                            type="email"
-                            autoComplete="email"
+                            name="new_Email"
+                            type="text"
+                            autoComplete="off"
                             value={securityCredentials.Email}
                             onChange={setCredentialHandler}
                             className="form-comtrol-textfield"
                             placeholder="Email ID"
-                            aria-label="Email"
+                            aria-label="email"
                             aria-describedby="basic-addon1"
                           />
                         </InputGroup>
@@ -230,15 +182,14 @@ const SystemLogin = () => {
 
                           <Form.Control
                             name="Password"
+                            id="password"
                             ref={Password}
-                            autoComplete="current-password"
-                            className="form-comtrol-textfield-password"
+                            autoComplete="off"
+                            className="form-comtrol-textfield-password pwd-mask"
                             placeholder="Password"
                             aria-label="Password"
                             aria-describedby="basic-addon2"
-                            type={
-                              showPassword ? "password" : "text"
-                            }
+                            type="text"
                             value={securityCredentials.Password}
                             onChange={setCredentialHandler}
                           />
@@ -281,14 +232,6 @@ const SystemLogin = () => {
           </Row>
         </Container>
       </Col>
-
-      {LoadingAuthReducerState && <Loader />}
-
-      <Notification
-        setOpen={setOpen}
-        open={open.open}
-        message={open.message}
-      />
     </Fragment>
   );
 };

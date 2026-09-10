@@ -3,6 +3,7 @@ import * as actions from "../action_types";
 const initialState = {
   Loading: false,
   ResponseMessage: "",
+  errorSeverity: "",
   GetCorporatesWithStatus: null,
   GetBranchesWithStatus: null,
   UpdateCorporateStatus: null,
@@ -23,12 +24,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_ALL_TENORS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetAllTenors: action.response,
         ResponseMessage: action.message,
       };
@@ -37,6 +40,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetAllTenors: null,
         ResponseMessage: action.message,
       };
@@ -45,12 +49,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_CORPORATES_WITH_STATUS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetCorporatesWithStatus: action.response,
         ResponseMessage: action.message,
       };
@@ -59,6 +65,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetCorporatesWithStatus: null,
         ResponseMessage: action.message,
       };
@@ -68,12 +75,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.UPDATE_CORPORATE_STATUS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UpdateCorporateStatus: action.response,
         ResponseMessage: action.message,
       };
@@ -82,6 +91,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         UpdateCorporateStatus: null,
         ResponseMessage: action.message,
       };
@@ -91,12 +101,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_BRANCHES_WITH_STATUS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetBranchesWithStatus: action.response,
         ResponseMessage: action.message,
       };
@@ -105,6 +117,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetBranchesWithStatus: null,
         ResponseMessage: action.message,
       };
@@ -114,12 +127,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.UPDATE_BRANCH_STATUS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UpdateBranchStatus: action.response,
         ResponseMessage: action.message,
       };
@@ -128,6 +143,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         UpdateBranchStatus: null,
         ResponseMessage: action.message,
       };
@@ -137,12 +153,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_CORPORATE_TRADE_RIGHTS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetCorporateTradeRights: action.response,
         ResponseMessage: action.message,
       };
@@ -151,6 +169,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetCorporateTradeRights: null,
         ResponseMessage: action.message,
       };
@@ -160,12 +179,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.GET_BRANCH_TRADE_RIGHTS_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         GetBranchTradeRights: action.response,
         ResponseMessage: action.message,
       };
@@ -174,6 +195,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         GetBranchTradeRights: null,
         ResponseMessage: action.message,
       };
@@ -183,12 +205,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.UPDATE_BRANCH_TRADE_RIGHT_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UpdateBranchTradeRights: action.response,
         ResponseMessage: action.message,
       };
@@ -197,6 +221,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         UpdateBranchTradeRights: null,
         ResponseMessage: action.message,
       };
@@ -206,12 +231,14 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: true,
+        errorSeverity: "",
       };
 
     case actions.UPDATE_CORPORATE_TRADE_RIGHT_SUCCESS:
       return {
         ...state,
         Loading: false,
+        errorSeverity: "success",
         UpdateCorporateTradeRights: action.response,
         ResponseMessage: action.message,
       };
@@ -220,6 +247,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
       return {
         ...state,
         Loading: false,
+        errorSeverity: "error",
         UpdateCorporateTradeRights: null,
         ResponseMessage: action.message,
       };
@@ -227,6 +255,7 @@ const SetupTradeAccessManagementReducer = (state = initialState, action) => {
     case actions.CLEAR_RESPONSEMESSAGE_SETUPTRADEACCESSMANAGEMENTREDUCER:
       return {
         ...state,
+        errorSeverity: "",
         ResponseMessage: "",
       };
     default:
