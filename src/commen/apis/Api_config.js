@@ -372,7 +372,22 @@ const UpdateHolidayRM = {
 const DeleteHolidayRM = {
   RequestMethod: "ServiceManager.DeleteHoliday",
 };
+const BankResetPassword = {
+  RequestMethod: "ServiceManager.ResetPassword",
+};
+
+const EmailTokenVerify = {
+  RequestMethod: "ServiceManager.EmailTokenVerify",
+};
+
+const ForgetPassword = {
+  RequestMethod: "ServiceManager.ForgetPassword",
+};
+
 export {
+  ForgetPassword,
+  EmailTokenVerify,
+  BankResetPassword,
   LogoutRM,
   authenticationRefreshToken,
   UpdateCorporateMapping,

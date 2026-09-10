@@ -1,116 +1,163 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
+
 import { Container, Col, Row, InputGroup, Form } from "react-bootstrap";
+
 import { Button, Loader, Notification } from "../../../../components/elements";
+
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
+
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
+
 import {
   cleareMessage,
   loginSystemAdminAPI,
 } from "../../../../store/actions/Auth-Actions";
+
 import "./SystemLogin.css";
+
+import {
+  encryptField,
+  bopEmailValidation,
+} from "../../../../commen/functions/utils";
+
 const SystemLogin = () => {
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const ResponseMessageAuthReducerState = useSelector(
-    (state) => state.auth.ResponseMessage
+    (state) => state.auth.ResponseMessage,
   );
 
-  const LoadingAuthReducerState = useSelector((state) => state.auth.Loading);
+  const LoadingAuthReducerState = useSelector(
+    (state) => state.auth.Loading,
+  );
 
-  //Auth States
   const [open, setOpen] = useState({
     open: false,
     message: "",
   });
-  const UserName = useRef(null);
+
+  const Email = useRef(null);
+
   const Password = useRef(null);
 
-  // const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+
   const [securityCredentials, setSecurityCredentials] = useState({
-    UserName: "",
+    Email: "",
     Password: "",
     fakePassword: "",
   });
 
+  const isEmailValid = bopEmailValidation(
+    securityCredentials.Email.trim(),
+  );
+
+  const isLoginValid =
+    isEmailValid &&
+    securityCredentials.Password.trim() !== "";
+
   // Enter key handler
   const enterKeyHandler = (event, nextInput) => {
     if (event.key === "Enter") {
-      nextInput.current.focus();
+      event.preventDefault();
+      nextInput.current?.focus();
     }
   };
 
-  // credentials for email and password
+  // Email and Password handler
   const setCredentialHandler = (e) => {
     const { name, value } = e.target;
 
     if (name === "Password") {
       let maskedPassword = "";
+
       for (let i = 0; i < value.length; i++) {
         maskedPassword += "•";
       }
 
-      setSecurityCredentials({
-        ...securityCredentials,
-        [name]: value, // Real password value
-        fakePassword: maskedPassword, // Masked password display
-      });
-    } else {
-      setSecurityCredentials({
-        ...securityCredentials,
-        [name]: value, // For UserName
-      });
+      setSecurityCredentials((previousState) => ({
+        ...previousState,
+        Password: value,
+        fakePassword: maskedPassword,
+      }));
+
+      return;
     }
+
+    setSecurityCredentials((previousState) => ({
+      ...previousState,
+      [name]: value,
+    }));
   };
 
-  // handler for submit login
-  const loginValidateHandler = (e) => {
+  // Login submit handler
+  const loginValidateHandler = async (e) => {
     e.preventDefault();
-    if (
-      securityCredentials.UserName !== "" &&
-      securityCredentials.Password !== ""
-    ) {
-      let data = {
-        UserName: securityCredentials.UserName,
-        Password: securityCredentials.Password,
+
+    if (!isLoginValid) {
+      return;
+    }
+
+    try {
+      const encryptedEmail = await encryptField(
+        securityCredentials.Email.trim(),
+      );
+
+      const encryptedPassword = await encryptField(
+        securityCredentials.Password,
+      );
+
+      const data = {
+        Email: encryptedEmail,
+        Password: encryptedPassword,
         DeviceID: "1",
         Device: "Browser",
-        RoleID: 4
+        RoleID: 4,
       };
+
       dispatch(loginSystemAdminAPI(navigate, data));
-    } else {
+    } catch (error) {
+      console.error("Login encryption error:", error);
+
       setOpen({
-        ...open,
         open: true,
-        message: "Please Enter All Credentials",
+        message: "Something went wrong",
       });
     }
   };
 
-  // eye on Click on Eye Icon on Password
+  // Optional: if you still use show/hide functionality elsewhere
   const toggleEyeIcon = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((previousValue) => !previousValue);
   };
 
   useEffect(() => {
-    console.log("loginSystemAdmin", ResponseMessageAuthReducerState);
     if (ResponseMessageAuthReducerState) {
       setOpen({
         open: true,
         message: ResponseMessageAuthReducerState,
       });
-      setTimeout(() => {
+
+      const timer = setTimeout(() => {
         setOpen({
           open: false,
           message: "",
         });
       }, 4000);
+
       dispatch(cleareMessage());
-    } else if (ResponseMessageAuthReducerState !== undefined) {
+
+      return () => clearTimeout(timer);
+    }
+
+    if (ResponseMessageAuthReducerState !== undefined) {
       dispatch(cleareMessage());
     }
-  }, [ResponseMessageAuthReducerState]);
+  }, [ResponseMessageAuthReducerState, dispatch]);
 
   return (
     <Fragment>
@@ -123,79 +170,108 @@ const SystemLogin = () => {
                   <img src={BOPlogo} width="300px" alt="" />
                 </Col>
               </Row>
+
               <Row>
                 <Col className="center-div flex-column">
+                  <Row>
+                    <Col
+                      sm={12}
+                      md={12}
+                      lg={12}
+                      className="login-heading"
+                    >
+                      Login
+                    </Col>
+                  </Row>
+
                   <Form onSubmit={loginValidateHandler}>
                     <Row>
+                      {/* Email */}
                       <Col sm={12} md={12} lg={12} className="mt-3">
-                        <InputGroup className="mb-3">
-                          <InputGroup.Text
-                            id="basic-addon1"
-                            className="Icon-Field-class"
-                          >
+                        <InputGroup className="mb-1">
+                          <InputGroup.Text>
                             <i className="icon-user"></i>
                           </InputGroup.Text>
+
                           <Form.Control
-                            ref={UserName}
+                            ref={Email}
                             onKeyDown={(event) =>
                               enterKeyHandler(event, Password)
                             }
-                            name="UserName"
-                            autoComplete="off"
-                            value={securityCredentials.UserName}
+                            name="Email"
+                            type="email"
+                            autoComplete="email"
+                            value={securityCredentials.Email}
                             onChange={setCredentialHandler}
                             className="form-comtrol-textfield"
                             placeholder="Email ID"
-                            aria-label="Username"
+                            aria-label="Email"
                             aria-describedby="basic-addon1"
                           />
                         </InputGroup>
+
+                        {securityCredentials.Email.trim() !== "" &&
+                          !isEmailValid && (
+                            <div className="text-danger mt-1">
+                              Email should be correct
+                            </div>
+                          )}
                       </Col>
-                      <Col sm={12} md={12} lg={12} className="mb-3">
+
+                      {/* Password */}
+                      <Col sm={12} md={12} lg={12} className="mt-3 mb-1">
                         <InputGroup>
                           <InputGroup.Text
-                            id="basic-addon1"
+                            id="basic-addon2"
                             className="Icon-Field-class"
                           >
                             <i className="icon-lock"></i>
                           </InputGroup.Text>
+
                           <Form.Control
                             name="Password"
                             ref={Password}
-                            autoComplete="off"
+                            autoComplete="current-password"
                             className="form-comtrol-textfield-password"
                             placeholder="Password"
-                            aria-label="passwordText"
+                            aria-label="Password"
                             aria-describedby="basic-addon2"
-                            type={showPassword ? "password" : "text"}
-                            value={
-                              securityCredentials.Password
-                              // showPassword
-                              //   ? securityCredentials.Password
-                              //   : securityCredentials.fakePassword
+                            type={
+                              showPassword ? "password" : "text"
                             }
+                            value={securityCredentials.Password}
                             onChange={setCredentialHandler}
                           />
-                          <InputGroup.Text
-                            id="basic-addon2"
-                            className="eyeIcon-Field-class-BOP-login"
-                            onClick={toggleEyeIcon}
-                          >
-                            {showPassword ? (
-                              <i className="icon-eye-slash"></i>
-                            ) : (
-                              <i className="icon-eye"></i>
-                            )}
-                          </InputGroup.Text>
                         </InputGroup>
                       </Col>
+
+                      {/* Forgot Password */}
+                      <Col
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        className="mb-2 d-flex justify-content-end"
+                      >
+                        <Link
+                          className="forgotPassword-text"
+                          to="/forgotpassword"
+                        >
+                          Forgot Password?
+                        </Link>
+                      </Col>
+
+                      {/* Login Button */}
                       <Col
                         sm={12}
                         md={12}
                         lg={12}
                         className="signIn-Signup-btn-col"
                       >
-                        <Button text="Login" className="login-btn" />
+                        <Button
+                          text="Login"
+                          className="login-btn"
+                          disableBtn={!isLoginValid}
+                        />
                       </Col>
                     </Row>
                   </Form>
@@ -205,8 +281,14 @@ const SystemLogin = () => {
           </Row>
         </Container>
       </Col>
+
       {LoadingAuthReducerState && <Loader />}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
+
+      <Notification
+        setOpen={setOpen}
+        open={open.open}
+        message={open.message}
+      />
     </Fragment>
   );
 };

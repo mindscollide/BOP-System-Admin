@@ -22,33 +22,44 @@ import TradeAccessManagement from "../container/Admin/Pages/Setup/TradeAccessMan
 import SpreadManagement from "../container/Admin/Pages/Setup/Spread Management/SpreadManagement";
 import CurrencyManagement from "../container/Admin/Pages/Setup/CurrencyManagement/CurrencyManagement";
 import HolidaysManagement from "../container/Admin/Pages/Setup/HolidaysManagement";
+import ForgotPassword from "../container/AdminLogin/System Login/ForgotPassword/ForgotPassword";
+import ResetPasswordLinkExpired from "../container/AdminLogin/System Login/ResetPasswordLinkExpired/ResetPasswordLinkExpired";
+import EmailSentTo from "../container/AdminLogin/System Login/EmailSentTo/EmailSentTo";
+import Redirected from "../helpers/Redirected/Redirected";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<SystemLogin />} />
-      <Route path="CreatePassword" element={<CreatePassword />} />
-      <Route path="ChangePassword" element={<ChangePassword />} />
-      <Route path="ResetPassword" element={<ResetPassword />} />
-      <Route path="2FAVerfication" element={<TwoFaVerification />} />
-      <Route path="/BOP/" element={<AdminDashboard />}>
+      <Route path='/' element={<SystemLogin />} />
+      <Route path='CreatePassword' element={<CreatePassword />} />
+      <Route path='ChangePassword' element={<ChangePassword />} />
+      <Route path='ResetPassword' element={<ResetPassword />} />
+      <Route path='forgotpassword' element={<ForgotPassword />} />
+      <Route
+        path='resetPasswordLinkExpired'
+        element={<ResetPasswordLinkExpired />}
+      />
+      <Route path='redirected' element={<Redirected />} />
+      <Route path='emailSentTo' element={<EmailSentTo />} />
+      <Route path='2FAVerfication' element={<TwoFaVerification />} />
+      <Route path='/BOP/' element={<AdminDashboard />}>
         <Route index element={<BankUser />} />
-        <Route path="AddBankUser" element={<BankUser />} />
-        <Route path="tradeCount" element={<TradeCount />} />
-        <Route path="volMeter" element={<VolMeter />} />
-        <Route path="categorymanagement" element={<CategoryManagement />} />
-        <Route path="CorporateUser" element={<CorporateUser />} />
-        <Route path="CorporateList" element={<CorporateList />} />
-        <Route path="BankerList" element={<BankerList />} />
-        <Route path="LoginHistory" element={<LoginHistory />} />
+        <Route path='AddBankUser' element={<BankUser />} />
+        <Route path='tradeCount' element={<TradeCount />} />
+        <Route path='volMeter' element={<VolMeter />} />
+        <Route path='categorymanagement' element={<CategoryManagement />} />
+        <Route path='CorporateUser' element={<CorporateUser />} />
+        <Route path='CorporateList' element={<CorporateList />} />
+        <Route path='BankerList' element={<BankerList />} />
+        <Route path='LoginHistory' element={<LoginHistory />} />
         <Route
-          path="TradeAccessManagement"
+          path='TradeAccessManagement'
           element={<TradeAccessManagement />}
         />
-        <Route path="HolidaysManagement" element={<HolidaysManagement />} />
-        <Route path="CurrencyManagement" element={<CurrencyManagement />} />
-        <Route path="SpreadManagement" element={<SpreadManagement />} />
+        <Route path='HolidaysManagement' element={<HolidaysManagement />} />
+        <Route path='CurrencyManagement' element={<CurrencyManagement />} />
+        <Route path='SpreadManagement' element={<SpreadManagement />} />
       </Route>
-    </>
-  )
+    </>,
+  ),
 );

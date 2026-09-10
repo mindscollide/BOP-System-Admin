@@ -16,6 +16,14 @@
   gap: 16px !important;
 }
 
+.login-heading {
+  display: flex;
+  justify-content: center;
+  color: #eb5300;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 .center-div {
   display: flex;
   justify-content: center !important;
@@ -115,5 +123,15 @@
   color: #002650 !important;
   box-shadow: none !important;
   border: 1px solid #ced4da !important;
+  cursor: pointer;
+}
+
+.forgotPassword-text {
+  color: #000 !important;
+  text-decoration: underline;
+  margin-top: 0.5rem !important;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }

@@ -1,0 +1,32 @@
+.wrapper_emailSendTo {
+  height: 100vh !important;
+  overflow: hidden !important;
+  background: url(../../../../assets/images/login-bg.png) no-repeat !important;
+  background-size: cover !important;
+  background-position: fixed !important;
+  padding: 15px 0px !important;
+}
+
+.forgetPasswordEMailSentPage {
+  display: flex;
+  justify-content: center !important;
+  flex-direction: column;
+  margin: 0 auto !important;
+  max-width: 350px;
+  background: rgba(255, 255, 255, 0.5);
+  height: auto !important;
+  max-height: auto !important;
+  padding: 25px 20px 20px 20px !important;
+  align-items: center !important;
+  border-radius: 12px;
+  margin-top: 2.5rem !important;
+}
+
+.Heading-passwordResetEMailSentTo {
+  display: flex;
+  justify-content: center;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}

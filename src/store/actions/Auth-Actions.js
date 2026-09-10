@@ -23,6 +23,9 @@ import {
   GetHolidayRM,
   UpdateHolidayRM,
   DeleteHolidayRM,
+  BankResetPassword,
+  ForgetPassword,
+  EmailTokenVerify,
 } from "../../commen/apis/Api_config";
 import {
   authenticationAPI,
@@ -30,6 +33,7 @@ import {
   watchListAPI,
 } from "../../commen/apis/Api_ends_points";
 import { DeleteCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
+import { encryptField } from "../../commen/functions/utils";
 // import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
 
 const cleareMessage = (response) => {
@@ -96,7 +100,7 @@ const RefreshToken = (navigate) => {
               localStorage.setItem("token", response.data.responseResult.token);
               localStorage.setItem(
                 "refreshToken",
-                response.data.responseResult.refreshToken
+                response.data.responseResult.refreshToken,
               );
               // await
               dispatch(refreshtokenSuccess(response.data.responseResult, ""));
@@ -118,7 +122,7 @@ const RefreshToken = (navigate) => {
       })
       .catch((response) => {
         dispatch(
-          refreshtokenFail("Your Session has expired. Please login again.")
+          refreshtokenFail("Your Session has expired. Please login again."),
         );
       });
   };
@@ -177,14 +181,14 @@ const UpdatecorporateMapping = (navigate, data) => {
               dispatch(
                 updatecorporatesuccess(
                   response.data.responseResult.corporateCategory,
-                  "Record Updated"
-                )
+                  "Record Updated",
+                ),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_02".toLowerCase(),
                 )
             ) {
               dispatch(updatecorporatefailed("No Record Updated"));
@@ -192,7 +196,7 @@ const UpdatecorporateMapping = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_03".toLowerCase(),
                 )
             ) {
               dispatch(updatecorporatefailed("Invalid Role"));
@@ -200,7 +204,7 @@ const UpdatecorporateMapping = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateCorporateCategoryMapping_04".toLowerCase(),
                 )
             ) {
               dispatch(updatecorporatefailed("Exception Something went wrong"));
@@ -271,29 +275,29 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
-                  "Category Deleted"
-                )
+                  "Category Deleted",
+                ),
               );
               dispatch(DeleteCategoryModalSystemAdmin(false));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCategory_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_02".toLowerCase(),
                 )
             ) {
               dispatch(DeleteCategoryModalSystemAdmin(false));
               dispatch(
                 deletecorporatecategorysuccess(
                   response.data.responseResult.corporateCategory,
-                  "Category Cannot be delete It is mapped with a corporate"
-                )
+                  "Category Cannot be delete It is mapped with a corporate",
+                ),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCategory_03".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_03".toLowerCase(),
                 )
             ) {
               dispatch(deletecorporatecategoryfailed("Category not Deleted"));
@@ -301,7 +305,7 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCategory_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_04".toLowerCase(),
                 )
             ) {
               dispatch(deletecorporatecategoryfailed("Invalid Role"));
@@ -309,11 +313,13 @@ const DeleteCorporateCategoryAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_DeleteCategory_05".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_DeleteCategory_05".toLowerCase(),
                 )
             ) {
               dispatch(
-                deletecorporatecategoryfailed("Exception Something went wrong ")
+                deletecorporatecategoryfailed(
+                  "Exception Something went wrong ",
+                ),
               );
             }
           } else {
@@ -366,6 +372,24 @@ const loginSystemAdminAPI = (navigate, data) => {
       data: form,
     })
       .then(async (response) => {
+        const {
+          isExecuted,
+          responseMessage,
+          token,
+          refreshToken,
+          isPasswordReset,
+          user: {
+            branch,
+            employeeID,
+            ldapAccount,
+            userID,
+            firstName,
+            email,
+            contactNumber,
+            userRoleID,
+            userStatusID,
+          },
+        } = response.data.responseResult;
         if (response.data?.responseCode === 401) {
           navigate("/");
           localStorage.clear();
@@ -376,18 +400,13 @@ const loginSystemAdminAPI = (navigate, data) => {
         } else if (response.data.responseCode === 200) {
           console.log("loginSystemAdmin", response);
 
-          if (response.data.responseResult.isExecuted === true) {
+          if (isExecuted === true) {
             if (
-              response.data.responseResult.responseMessage.toLowerCase() ===
+              responseMessage.toLowerCase() ===
               "ERM_AuthService_AuthManager_Login_01".toLowerCase()
             ) {
               console.log("loginSystemAdmin", response);
-              dispatch(
-                loginSystemAdminFailed(
-                  response.data.responseResult,
-                  "Device is Empty"
-                )
-              );
+              dispatch(loginSystemAdminFailed("Device is Empty"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -402,22 +421,36 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
               console.log("loginSystemAdminSuccess", response);
+              dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
+
+              if (!isPasswordReset) {
+                const encryptedName = await encryptField(firstName);
+                const encryptedUserID = await encryptField(String(userID));
+                navigate("/ResetPassword", {
+                  state: {
+                    isResetPassword: false,
+                    firstName: encryptedName,
+                    email: email,
+                    userID: encryptedUserID,
+                  },
+                });
+                return;
+              }
               localStorage.setItem("defaultOpenKey", "sub1");
               localStorage.setItem("defaultSelectedKey", "1");
-              dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
               localStorage.setItem("token", response.data.responseResult.token);
               localStorage.setItem(
                 "refreshToken",
-                response.data.responseResult.refreshToken
+                response.data.responseResult.refreshToken,
               );
 
               localStorage.setItem(
                 "userID",
-                response.data.responseResult.user.userID
+                response.data.responseResult.user.userID,
               );
               localStorage.setItem(
                 "userName",
-                response.data.responseResult.user.firstName
+                response.data.responseResult.user.firstName,
               );
               navigate("/BOP/AddBankUser");
             } else if (
@@ -563,24 +596,24 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
               dispatch(
                 SendEmailResetPasswordSuccess(
                   response.data.responseResult,
-                  "Email for Reset Password Sent Successfully"
-                )
+                  "Email for Reset Password Sent Successfully",
+                ),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_AuthManager_SendEmailForResetPasword_02".toLowerCase()
+                  "ERM_AuthService_AuthManager_SendEmailForResetPasword_02".toLowerCase(),
                 )
             ) {
               dispatch(
-                SendEmailResetPasswordFail("No Email sent for Reset Password")
+                SendEmailResetPasswordFail("No Email sent for Reset Password"),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_AuthManager_SendEmailForResetPasword_03".toLowerCase()
+                  "ERM_AuthService_AuthManager_SendEmailForResetPasword_03".toLowerCase(),
                 )
             ) {
               dispatch(SendEmailResetPasswordFail("Invalid Corporate UserF"));
@@ -589,7 +622,7 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
             response.data.responseResult.responseMessage
               .toLowerCase()
               .includes(
-                "ERM_AuthService_AuthManager_SendEmailForResetPasword_04".toLowerCase()
+                "ERM_AuthService_AuthManager_SendEmailForResetPasword_04".toLowerCase(),
               )
           ) {
             dispatch(SendEmailResetPasswordFail("Please Enter A valid Email"));
@@ -597,7 +630,7 @@ const SendEmailResetPasswordAPI = (navigate, data) => {
             response.data.responseResult.responseMessage
               .toLowerCase()
               .includes(
-                "ERM_AuthService_AuthManager_SendEmailForResetPasword_05".toLowerCase()
+                "ERM_AuthService_AuthManager_SendEmailForResetPasword_05".toLowerCase(),
               )
           ) {
             dispatch(SendEmailResetPasswordFail("Something went wrong"));
@@ -664,11 +697,11 @@ const GetAllCategoriesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCategories_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCategories_01".toLowerCase(),
                 )
             ) {
               dispatch(
-                GetAllCategoriesSuccess(response.data.responseResult, "")
+                GetAllCategoriesSuccess(response.data.responseResult, ""),
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -679,7 +712,7 @@ const GetAllCategoriesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCategories_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCategories_03".toLowerCase(),
                 )
             ) {
               dispatch(GetAllCategoriesFail("Exception"));
@@ -748,11 +781,11 @@ const getAllCorporatesCategory = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_01".toLowerCase(),
                 )
             ) {
               dispatch(
-                getAllCorporatesSuccess(response.data.responseResult, "")
+                getAllCorporatesSuccess(response.data.responseResult, ""),
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -763,7 +796,7 @@ const getAllCorporatesCategory = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetAllCategoryDetailsWithCounterParties_04".toLowerCase(),
                 )
             ) {
               dispatch(getAllCorporatesFail("Exception"));
@@ -832,11 +865,11 @@ const GetAllCorporatesDataAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCorporates_01".toLowerCase(),
                 )
             ) {
               dispatch(
-                GetAllCorporatesDataSuccess(response.data.responseResult, "")
+                GetAllCorporatesDataSuccess(response.data.responseResult, ""),
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -847,7 +880,7 @@ const GetAllCorporatesDataAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCorporates_02".toLowerCase(),
                 )
             ) {
               dispatch(GetAllCorporatesDataFail(""));
@@ -855,7 +888,7 @@ const GetAllCorporatesDataAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllCorporates_03".toLowerCase(),
                 )
             ) {
               dispatch(GetAllCorporatesDataFail("Exception"));
@@ -923,7 +956,7 @@ const GetAllNatureAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_01".toLowerCase(),
                 )
             ) {
               dispatch(GetAllNatureSuccess(response.data.responseResult, ""));
@@ -936,7 +969,7 @@ const GetAllNatureAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllNatureOfBussiness_03".toLowerCase(),
                 )
             ) {
               dispatch(GetAllNatureFail("Exception"));
@@ -1005,14 +1038,14 @@ const GetAllNatureOfTransactionsAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_01".toLowerCase(),
                 )
             ) {
               dispatch(
                 GetAllNatureOfTransactionsSuccess(
                   response.data.responseResult,
-                  ""
-                )
+                  "",
+                ),
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -1023,7 +1056,7 @@ const GetAllNatureOfTransactionsAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllNatureOfTransactions_03".toLowerCase(),
                 )
             ) {
               dispatch(GetAllNatureOfTransactionsFail("Exception"));
@@ -1090,7 +1123,7 @@ const RoleListAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_RoleList_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_RoleList_01".toLowerCase(),
                 )
             ) {
               dispatch(RoleListSuccess(response.data.responseResult, ""));
@@ -1103,7 +1136,7 @@ const RoleListAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_RoleList_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_RoleList_03".toLowerCase(),
                 )
             ) {
               dispatch(RoleListFail("Exception"));
@@ -1170,11 +1203,11 @@ const GetBankUserRolesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetBankUserRoles_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetBankUserRoles_01".toLowerCase(),
                 )
             ) {
               dispatch(
-                GetBankUserRolesSuccess(response.data.responseResult, "")
+                GetBankUserRolesSuccess(response.data.responseResult, ""),
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -1186,7 +1219,7 @@ const GetBankUserRolesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetBankUserRoles_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetBankUserRoles_03".toLowerCase(),
                 )
             ) {
               dispatch(GetBankUserRolesFail("Something went wrong"));
@@ -1252,11 +1285,11 @@ const GetAllInstrumentTypesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllInstrumentTypes_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllInstrumentTypes_01".toLowerCase(),
                 )
             ) {
               dispatch(
-                GetAllInstrumentTypesSuccess(response.data.responseResult, "")
+                GetAllInstrumentTypesSuccess(response.data.responseResult, ""),
               );
             } else if (
               response.data.responseResult.responseMessage.toLowerCase() ===
@@ -1267,7 +1300,7 @@ const GetAllInstrumentTypesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllInstrumentTypes_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllInstrumentTypes_03".toLowerCase(),
                 )
             ) {
               dispatch(GetAllInstrumentTypesFail("Exception"));
@@ -1334,7 +1367,7 @@ const GetAllBranchesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllBranches_01".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllBranches_01".toLowerCase(),
                 )
             ) {
               dispatch(GetAllBranchesSuccess(response.data.responseResult, ""));
@@ -1347,7 +1380,7 @@ const GetAllBranchesAPI = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "ERM_AuthService_CommonManager_GetAllBranches_03".toLowerCase()
+                  "ERM_AuthService_CommonManager_GetAllBranches_03".toLowerCase(),
                 )
             ) {
               dispatch(GetAllBranchesFail("Exception"));
@@ -1490,14 +1523,14 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
               dispatch(
                 updateBranchCataegorySuccess(
                   response.data.responseResult,
-                  "Record Updated"
-                )
+                  "Record Updated",
+                ),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_02".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_02".toLowerCase(),
                 )
             ) {
               dispatch(updateBranchCataegoryFailed("No Record Updated"));
@@ -1505,7 +1538,7 @@ const UpdateBranchCataegoryMappingAPI = (navigate, data) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_UpdateBranchCategoryMapping_04".toLowerCase(),
                 )
             ) {
               dispatch(updateBranchCataegoryFailed("Exception."));
@@ -1580,14 +1613,14 @@ const getListAllInstrumentsApi = (navigate) => {
               dispatch(
                 getListAllInstrumentsAPISuccess(
                   response.data.responseResult,
-                  ""
-                )
+                  "",
+                ),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_GetAllInstruments_02".toLowerCase()
+                  "WatchList_WatchListServiceManager_GetAllInstruments_02".toLowerCase(),
                 )
             ) {
               dispatch(getListAllInstrumentsAPIFailed("No Record Updated"));
@@ -1595,7 +1628,7 @@ const getListAllInstrumentsApi = (navigate) => {
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "SystemAdmin_SystemAdminManager_GetListAllInstruments_04".toLowerCase()
+                  "SystemAdmin_SystemAdminManager_GetListAllInstruments_04".toLowerCase(),
                 )
             ) {
               dispatch(getListAllInstrumentsAPIFailed("Exception."));
@@ -1664,7 +1697,7 @@ const AddHolidays_API = (
   navigate,
   data,
   setAddEditDeleteHolidayModal,
-  setAddEditViewState
+  setAddEditViewState,
 ) => {
   let token = localStorage.getItem("token");
   return (dispatch) => {
@@ -1692,8 +1725,8 @@ const AddHolidays_API = (
               navigate,
               data,
               setAddEditDeleteHolidayModal,
-              setAddEditViewState
-            )
+              setAddEditViewState,
+            ),
           );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
@@ -1708,7 +1741,7 @@ const AddHolidays_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_AddHoliday_02".toLowerCase()
+                  "WatchList_WatchListServiceManager_AddHoliday_02".toLowerCase(),
                 )
             ) {
               dispatch(AddHolidays_failed("Date is already exist"));
@@ -1716,7 +1749,7 @@ const AddHolidays_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_AddHoliday_03".toLowerCase()
+                  "WatchList_WatchListServiceManager_AddHoliday_03".toLowerCase(),
                 )
             ) {
               dispatch(AddHolidays_failed("Exception."));
@@ -1809,13 +1842,13 @@ const getHolidayList_API = (navigate, Data) => {
               "WatchList_WatchListServiceManager_GetAllHolidays_01".toLowerCase()
             ) {
               dispatch(
-                getHolidayList_success(response.data.responseResult, "")
+                getHolidayList_success(response.data.responseResult, ""),
               );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_GelAllHoliday_03".toLowerCase()
+                  "WatchList_WatchListServiceManager_GelAllHoliday_03".toLowerCase(),
                 )
             ) {
               dispatch(getHolidayList_failed("No Record Updated"));
@@ -1884,7 +1917,7 @@ const getHolidayByHolidayId_API = (
   requestData,
   setAddEditViewState,
   viewState,
-  setAddEditDeleteHolidayModal
+  setAddEditDeleteHolidayModal,
 ) => {
   let token = localStorage.getItem("token");
   return (dispatch) => {
@@ -1913,8 +1946,8 @@ const getHolidayByHolidayId_API = (
               requestData,
               setAddEditViewState,
               viewState,
-              setAddEditDeleteHolidayModal
-            )
+              setAddEditDeleteHolidayModal,
+            ),
           );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
@@ -1923,7 +1956,7 @@ const getHolidayByHolidayId_API = (
               "WatchList_WatchListServiceManager_GetHoliday_01".toLowerCase()
             ) {
               dispatch(
-                getHolidayByHolidayId_success(response.data.responseResult, "")
+                getHolidayByHolidayId_success(response.data.responseResult, ""),
               );
               setAddEditViewState(viewState);
               setAddEditDeleteHolidayModal(true);
@@ -1931,7 +1964,7 @@ const getHolidayByHolidayId_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_GelHoliday_03".toLowerCase()
+                  "WatchList_WatchListServiceManager_GelHoliday_03".toLowerCase(),
                 )
             ) {
               dispatch(getHolidayByHolidayId_failed("No Record Updated"));
@@ -2001,7 +2034,7 @@ const updateHolidayByHolidayId_API = (
   navigate,
   Data,
   setAddEditDeleteHolidayModal,
-  setAddEditViewState
+  setAddEditViewState,
 ) => {
   let token = localStorage.getItem("token");
   return (dispatch) => {
@@ -2029,8 +2062,8 @@ const updateHolidayByHolidayId_API = (
               navigate,
               Data,
               setAddEditDeleteHolidayModal,
-              setAddEditViewState
-            )
+              setAddEditViewState,
+            ),
           );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
@@ -2041,8 +2074,8 @@ const updateHolidayByHolidayId_API = (
               dispatch(
                 updateHolidayByHolidayId_success(
                   response.data.responseResult,
-                  ""
-                )
+                  "",
+                ),
               );
               setAddEditDeleteHolidayModal(false);
               setAddEditViewState(1);
@@ -2050,7 +2083,7 @@ const updateHolidayByHolidayId_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_UpdateHoliday_02".toLowerCase()
+                  "WatchList_WatchListServiceManager_UpdateHoliday_02".toLowerCase(),
                 )
             ) {
               dispatch(updateHolidayByHolidayId_failed("No Record Updated"));
@@ -2058,7 +2091,7 @@ const updateHolidayByHolidayId_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_UpdateHoliday_03".toLowerCase()
+                  "WatchList_WatchListServiceManager_UpdateHoliday_03".toLowerCase(),
                 )
             ) {
               dispatch(updateHolidayByHolidayId_failed("Something went wrong"));
@@ -2128,7 +2161,7 @@ const deleteHolidayByHolidayId_API = (
   navigate,
   requestData,
   setAddEditDeleteHolidayModal,
-  setAddEditViewState
+  setAddEditViewState,
 ) => {
   let token = localStorage.getItem("token");
   return (dispatch) => {
@@ -2156,8 +2189,8 @@ const deleteHolidayByHolidayId_API = (
               navigate,
               requestData,
               setAddEditDeleteHolidayModal,
-              setAddEditViewState
-            )
+              setAddEditViewState,
+            ),
           );
         } else if (response.data.responseCode === 200) {
           if (response.data.responseResult.isExecuted === true) {
@@ -2168,8 +2201,8 @@ const deleteHolidayByHolidayId_API = (
               dispatch(
                 deleteHolidayByHolidayId_success(
                   response.data.responseResult,
-                  ""
-                )
+                  "",
+                ),
               );
               setAddEditDeleteHolidayModal(false);
               setAddEditViewState(1);
@@ -2177,7 +2210,7 @@ const deleteHolidayByHolidayId_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_DeleteHoliday_02".toLowerCase()
+                  "WatchList_WatchListServiceManager_DeleteHoliday_02".toLowerCase(),
                 )
             ) {
               dispatch(deleteHolidayByHolidayId_failed("No Record Deleted"));
@@ -2185,7 +2218,7 @@ const deleteHolidayByHolidayId_API = (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes(
-                  "WatchList_WatchListServiceManager_DeleteHoliday_03".toLowerCase()
+                  "WatchList_WatchListServiceManager_DeleteHoliday_03".toLowerCase(),
                 )
             ) {
               dispatch(deleteHolidayByHolidayId_failed("Something went wrong"));
@@ -2226,7 +2259,317 @@ const setHolidayDeleted = (payload) => {
   };
 };
 
+const resetPassword_init = () => {
+  return {
+    type: actions.RESET_PASSWORD_INIT,
+  };
+};
+const resetPassword_success = (response, message) => {
+  return {
+    type: actions.RESET_PASSWORD_SUCCESS,
+    response,
+    message,
+  };
+};
+const resetPassword_fail = (message) => {
+  return {
+    type: actions.RESET_PASSWORD_FAIL,
+  };
+};
+
+const resetPasswordApi = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(resetPassword_init());
+    let form = new FormData();
+    form.append("RequestMethod", BankResetPassword.RequestMethod);
+    form.append("RequestData", JSON.stringify(Data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(resetPasswordApi(navigate, Data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_ResetPassword_01".toLowerCase()
+            ) {
+                localStorage.setItem("defaultOpenKey", "sub1");
+              localStorage.setItem("defaultSelectedKey", "1");
+              localStorage.setItem("token", response.data.responseResult.token);
+              localStorage.setItem(
+                "refreshToken",
+                response.data.responseResult.refreshToken,
+              );
+
+              localStorage.setItem(
+                "userID",
+                response.data.responseResult.user.userID,
+              );
+              localStorage.setItem(
+                "userName",
+                response.data.responseResult.user.firstName,
+              );
+              navigate("/BOP/AddBankUser");
+              dispatch(resetPassword_success(response.data.responseResult, ""));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_ResetPassword_02".toLowerCase(),
+                )
+            ) {
+              dispatch(resetPassword_fail("No Record Updated"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_ResetPassword_03".toLowerCase(),
+                )
+            ) {
+              dispatch(resetPassword_fail("Something went wrong"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_ResetPassword_04".toLowerCase(),
+                )
+            ) {
+              dispatch(resetPassword_fail("Something went wrong"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_ResetPassword_05".toLowerCase(),
+                )
+            ) {
+              dispatch(resetPassword_fail("Something went wrong"));
+            } else {
+              dispatch(resetPassword_fail("Something went wrong"));
+            }
+          } else {
+            dispatch(resetPassword_fail("Something went wrong"));
+          }
+        } else {
+          dispatch(resetPassword_fail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(resetPassword_fail("something went wrong"));
+      });
+  };
+};
+
+const forgotPassword_init = () => {
+  return {
+    type: actions.FORGOT_PASSWORD_INIT,
+  };
+};
+const forgotPassword_success = (response, message) => {
+  return {
+    type: actions.FORGOT_PASSWORD_SUCCESS,
+    response,
+    message,
+  };
+};
+const forgotPassword_fail = (message) => {
+  return {
+    type: actions.FORGOT_PASSWORD_FAIL,
+  };
+};
+
+const forgotPasswordApi = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(forgotPassword_init());
+    let form = new FormData();
+    form.append("RequestMethod", ForgetPassword.RequestMethod);
+    form.append("RequestData", JSON.stringify(Data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(forgotPasswordApi(navigate, Data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_SendEmailForForgetPasword_01".toLowerCase()
+            ) {
+              navigate("/emailSentTo", { replace: true });
+
+              dispatch(
+                forgotPassword_success(response.data.responseResult, ""),
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_SendEmailForForgetPasword_02".toLowerCase(),
+                )
+            ) {
+              dispatch(forgotPassword_fail("Invalid Email"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_SendEmailForForgetPasword_03".toLowerCase(),
+                )
+            ) {
+              dispatch(forgotPassword_fail("User Inactive"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_SendEmailForForgetPasword_04".toLowerCase(),
+                )
+            ) {
+              dispatch(forgotPassword_fail("Something went wrong"));
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_SendEmailForForgetPasword_05".toLowerCase(),
+                )
+            ) {
+              dispatch(forgotPassword_fail("Something went wrong"));
+            } else {
+              dispatch(forgotPassword_fail("Something went wrong"));
+            }
+          } else {
+            dispatch(forgotPassword_fail("Something went wrong"));
+          }
+        } else {
+          dispatch(forgotPassword_fail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(forgotPassword_fail("something went wrong"));
+      });
+  };
+};
+
+const resetPasswordEmailVerification_init = () => {
+  return {
+    type: actions.RESETPASSWORDEMAILVERIFICATION_INIT,
+  };
+};
+const resetPasswordEmailVerification_success = (response, message) => {
+  return {
+    type: actions.RESETPASSWORDEMAILVERIFICATION_SUCCESS,
+    response,
+    message,
+  };
+};
+const resetPasswordEmailVerification_fail = (message) => {
+  return {
+    type: actions.RESETPASSWORDEMAILVERIFICATION_FAIL,
+    message,
+  };
+};
+
+const resetPasswordEmailVerificationApi = (navigate, Data) => {
+  let token = localStorage.getItem("token");
+  return (dispatch) => {
+    dispatch(resetPasswordEmailVerification_init());
+    let form = new FormData();
+    form.append("RequestMethod", EmailTokenVerify.RequestMethod);
+    form.append("RequestData", JSON.stringify(Data));
+    axios({
+      method: "POST",
+      url: authenticationAPI,
+      data: form,
+      headers: {
+        _token: token,
+      },
+    })
+      .then(async (response) => {
+        if (response.data?.responseCode === 401) {
+          navigate("/");
+          localStorage.clear();
+        }
+        if (response.data.responseCode === 417) {
+          await dispatch(RefreshToken(navigate));
+          dispatch(resetPasswordEmailVerificationApi(navigate, Data));
+        } else if (response.data.responseCode === 200) {
+          if (response.data.responseResult.isExecuted === true) {
+            if (
+              response.data.responseResult.responseMessage.toLowerCase() ===
+              "ERM_AuthService_AuthManager_EmailToken_01".toLowerCase()
+            ) {
+              navigate("/resetPassword", {
+                replace: true,
+                state: {
+                  email: response.data.responseResult.email,
+                  requestToken: Data.EncryptedString,
+                },
+              });
+
+              dispatch(
+                resetPasswordEmailVerification_success(
+                  response.data.responseResult,
+                  "",
+                ),
+              );
+            } else if (
+              response.data.responseResult.responseMessage
+                .toLowerCase()
+                .includes(
+                  "ERM_AuthService_AuthManager_EmailToken_02".toLowerCase(),
+                )
+            ) {
+              navigate("/resetPasswordLinkExpired", {
+                replace: true,
+                state: { email: response.data.responseResult?.email },
+              });
+              dispatch(resetPasswordEmailVerification_fail("Invalid Email"));
+            } else {
+              dispatch(
+                resetPasswordEmailVerification_fail("Something went wrong"),
+              );
+            }
+          } else {
+            dispatch(
+              resetPasswordEmailVerification_fail("Something went wrong"),
+            );
+          }
+        } else {
+          dispatch(resetPasswordEmailVerification_fail("Something went wrong"));
+        }
+      })
+      .catch((response) => {
+        dispatch(resetPasswordEmailVerification_fail("something went wrong"));
+      });
+  };
+};
+
 export {
+  resetPasswordApi,
+  resetPasswordEmailVerificationApi,
+  forgotPasswordApi,
   setHolidayAdded,
   setHolidayUpdated,
   setHolidayDeleted,

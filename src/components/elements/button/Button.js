@@ -32,13 +32,12 @@ const CustomButton = ({
         onClick={onClick}
         onChange={onChange}
         align={align}
-        style={style}
-      >
+        style={style}>
         {i_conClass && <i className={i_conClass} />}
         <span className={iconClass}>{icon}</span>
         {text}
         {icon2}
-        <img className={pdfIconClass} src={pdfIcon} />
+        <img className={pdfIconClass} src={pdfIcon} alt='' />
       </Button>
     </>
   );

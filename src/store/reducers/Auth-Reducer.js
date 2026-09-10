@@ -45,6 +45,10 @@ const initialState = {
   holidayAdded: null,
   holidayUpdated: null,
   holidayDeleted: null,
+
+  resetPassword: null,
+  forgotPassword: null,
+  resetPasswordEmailVerification: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -714,6 +718,80 @@ const authReducer = (state = initialState, action) => {
         ...state,
         Loading: false,
         holidayDeleted: action.payload,
+      };
+    }
+    case actions.RESET_PASSWORD_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+
+    case actions.RESET_PASSWORD_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        resetPassword: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+
+    case actions.RESET_PASSWORD_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        resetPassword: null,
+        ResponseMessage: action.message,
+      };
+    }
+
+    case actions.FORGOT_PASSWORD_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+
+    case actions.FORGOT_PASSWORD_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        forgotPassword: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+
+    case actions.FORGOT_PASSWORD_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        forgotPassword: null,
+        ResponseMessage: action.message,
+      };
+    }
+
+    case actions.RESETPASSWORDEMAILVERIFICATION_INIT: {
+      return {
+        ...state,
+        Loading: true,
+      };
+    }
+
+    case actions.RESETPASSWORDEMAILVERIFICATION_SUCCESS: {
+      return {
+        ...state,
+        Loading: false,
+        resetPasswordEmailVerification: action.response,
+        ResponseMessage: action.message,
+      };
+    }
+
+    case actions.RESETPASSWORDEMAILVERIFICATION_FAIL: {
+      return {
+        ...state,
+        Loading: false,
+        resetPasswordEmailVerification: null,
+        ResponseMessage: action.message,
       };
     }
     default:
