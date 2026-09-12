@@ -378,18 +378,20 @@ const loginSystemAdminAPI = (navigate, data) => {
           token,
           refreshToken,
           isPasswordReset,
-          user: {
-            branch,
-            employeeID,
-            ldapAccount,
-            userID,
-            firstName,
-            email,
-            contactNumber,
-            userRoleID,
-            userStatusID,
-          },
+          user = {},
         } = response.data.responseResult;
+
+        const {
+          branch,
+          employeeID,
+          ldapAccount,
+          userID,
+          firstName,
+          email,
+          contactNumber,
+          userRoleID,
+          userStatusID,
+        } = user || {};
         if (response.data?.responseCode === 401) {
           navigate("/");
           localStorage.clear();
@@ -420,7 +422,6 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_03".toLowerCase())
             ) {
-              console.log("loginSystemAdminSuccess", response);
               dispatch(loginSystemAdminSuccess("LDAP auth Successful"));
 
               if (!isPasswordReset) {
@@ -458,63 +459,54 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_04".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("LDAP Auth Failed"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_05".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("User is Locked"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_06".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("User is Disabled"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_07".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("User is Closed"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_08".toLowerCase())
             ) {
-              console.log("loginSystemAdminFa", response);
               dispatch(loginSystemAdminFailed("User is Dormant"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_09".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("Login Failed"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_12".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("Not A valid role to login"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_10".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
-              dispatch(loginSystemAdminFailed("Login Failed"));
+              dispatch(loginSystemAdminFailed("Not a valid user. Please login with valid ID"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_11".toLowerCase())
             ) {
-              console.log("loginSystemAdmin", response);
               dispatch(loginSystemAdminFailed("Something went wrong"));
             } else if (
               response.data.responseResult.responseMessage

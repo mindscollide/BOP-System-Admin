@@ -31,9 +31,9 @@ const ForgotPassword = () => {
     try {
       const Data = {
         Email: await encryptField(email.trim()),
+        RoleID: 4
       };
 
-      console.log("Forgot Password Data:", Data);
 
       dispatch(forgotPasswordApi(navigate, Data));
     } catch (error) {

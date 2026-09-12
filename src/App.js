@@ -23,38 +23,52 @@ import { RouterProvider } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { Loader, GlobalSnackbar } from "./components/elements";
 
+// Matches the build tool's injected entry script tag, e.g.
+// <script defer="defer" src="/static/js/main.1a29597c.js"></script>
+// (CRA emits exactly one such tag in index.html; lazily-loaded chunks are
+// fetched at runtime by JS and never appear as their own <script> tag here.)
+const ENTRY_SCRIPT_SRC_RE = /<script[^>]+src="([^"]+\.js)"[^>]*>/i;
+
 function App() {
-  const currentVersion = useRef(null);
-  // 🔹 Auto-update page when version.json changes
+  const bundlePathRef = useRef(null);
+
+  // 🔹 Detect a new deployment by watching index.html's entry-script hash
+  // change, and auto-reload when it does — no dedicated version.json needed,
+  // since index.html is already unavoidably public and the build tool
+  // stamps a fresh content-hash into it on every build.
   useEffect(() => {
-    const checkVersion = async () => {
+    const checkForNewDeployment = async () => {
       try {
-        const response = await fetch("/version.json", { cache: "no-cache" }); // ✅ root path
+        const response = await fetch("/index.html", { cache: "no-cache" });
+        const html = await response.text();
+        const match = html.match(ENTRY_SCRIPT_SRC_RE);
 
-        const data = await response.json();
-
-        console.log(data, currentVersion.current, "version");
-
-        if (currentVersion.current && currentVersion.current !== data.version) {
-          // 🔹 Clear browser caches (for service workers / cache API)
-          if ("caches" in window) {
-            caches.keys().then((names) => {
-              for (let name of names) {
-                caches.delete(name);
-              }
-            });
-          }
-          window.location.reload(true); // force reload
+        if (!match) {
+          return;
         }
 
-        currentVersion.current = data.version;
+        const bundlePath = match[1];
+
+        if (
+          bundlePathRef.current &&
+          bundlePathRef.current !== bundlePath
+        ) {
+          if ("caches" in window) {
+            const names = await caches.keys();
+            await Promise.all(names.map((name) => caches.delete(name)));
+          }
+          window.location.reload();
+          return;
+        }
+
+        bundlePathRef.current = bundlePath;
       } catch (err) {
-        console.error("Error checking version.json:", err);
+        console.error("Deployment check failed:", err);
       }
     };
 
-    checkVersion();
-    const interval = setInterval(checkVersion, 30000); // check every 30 sec
+    checkForNewDeployment();
+    const interval = setInterval(checkForNewDeployment, 30000); // every 30s
     return () => clearInterval(interval);
   }, []);
   return (

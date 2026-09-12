@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import "./ResetPasswordLinkExpired.css";
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
-import { encryptField } from "../../../../commen/functions/utils";
 import { forgotPasswordApi } from "../../../../store/actions/Auth-Actions";
 
 const ResetPasswordLinkExpired = () => {
@@ -20,7 +19,7 @@ const ResetPasswordLinkExpired = () => {
       return;
     }
 
-    const Data = { Email: await encryptField(email) };
+    const Data = { Email: email, RoleID: 4 };
     dispatch(forgotPasswordApi(navigate, Data));
   };
   return (
@@ -53,8 +52,7 @@ const ResetPasswordLinkExpired = () => {
               width='100'
               height='auto'
               viewBox='0 0 847 757'
-              enable-background='new 0 0 847 757'
-             >
+              enable-background='new 0 0 847 757'>
               <g>
                 <path
                   fill-rule='evenodd'
