@@ -21,7 +21,8 @@ import "@fontsource/poppins/400-italic.css";
 import { router } from "./routes/Routes";
 import { RouterProvider } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { Loader, GlobalSnackbar } from "./components/elements";
+import { Loader } from "./components/elements";
+import { NotificationProvider } from "./context/NotificationContext";
 
 // Matches the build tool's injected entry script tag, e.g.
 // <script defer="defer" src="/static/js/main.1a29597c.js"></script>
@@ -72,11 +73,10 @@ function App() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <>
+    <NotificationProvider>
       <Loader />
-      <GlobalSnackbar />
       <RouterProvider router={router} />
-    </>
+    </NotificationProvider>
   );
 }
 

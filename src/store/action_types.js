@@ -14,11 +14,6 @@ export const USER_ROLES_FAIL = "USER_ROLES_FAIL";
 
 export const SIGN_OUT = "SIGN_OUT";
 
-// Global UI (loader + snackbar) — dispatchable from any action/reducer in the app
-export const SHOW_SNACKBAR = "SHOW_SNACKBAR";
-export const HIDE_SNACKBAR = "HIDE_SNACKBAR";
-export const SET_GLOBAL_LOADING = "SET_GLOBAL_LOADING";
-
 // Refresh Token
 export const REFRESH_TOKEN_SUCCESS = "REFRESH_TOKEN_SUCCESS";
 export const REFRESH_TOKEN_FAIL = "REFRESH_TOKEN_FAIL";

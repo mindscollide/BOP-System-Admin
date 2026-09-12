@@ -33,7 +33,6 @@ const Loader = () => {
   const uploadReducerloader = useSelector(
     (state) => state.uploadReducer.Loading
   );
-  const globalLoader = useSelector((state) => state.ui.loading);
 
   const isLoading = [
     AddCategoryLoader,
@@ -46,7 +45,6 @@ const Loader = () => {
     downloadReducerloader,
     settingsReducerloader,
     uploadReducerloader,
-    globalLoader,
   ].some((loading) => loading);
 
   useEffect(() => {

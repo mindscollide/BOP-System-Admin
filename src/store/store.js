@@ -17,7 +17,6 @@ import {
   SetupTradeAccessManagementReducer,
   SpreadManagementReducer,
   RealtimeActionReducer,
-  UiReducer,
 } from "./reducers";
 
 const AppReducer = combineReducers({
@@ -32,7 +31,6 @@ const AppReducer = combineReducers({
   SetupTradeAccessManagementReducer: SetupTradeAccessManagementReducer,
   SpreadManagementReducer: SpreadManagementReducer,
   RealtimeActionReducer: RealtimeActionReducer,
-  ui: UiReducer,
 });
 
 const rootReducer = (state, action) => {

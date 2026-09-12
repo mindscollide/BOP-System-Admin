@@ -1,0 +1,31 @@
+.ant-notification {
+  z-index: 10000 !important;
+}
+
+.custom-notification-snackbar {
+  padding: 12px !important;
+  background-color: #fff;
+  border-radius: 4px;
+  z-index: 10000 !important;
+}
+.custom-notification-snackbar .ant-notification-notice-message {
+  color: #fff !important;
+  margin: 0 !important;
+  font-weight: 600;
+  font-size: 15px !important;
+}
+.custom-notification-snackbar .ant-notification-notice-close {
+  text-decoration: none !important;
+  color: #fff !important;
+  top: 13px !important;
+}
+.custom-notification-snackbar {
+  max-width: 350px !important;
+  color: #fff !important;
+}
+.custom-notification-snackbar-success {
+  background: #32a852 !important;
+}
+.custom-notification-snackbar-error {
+  background: #ce0000 !important;
+}

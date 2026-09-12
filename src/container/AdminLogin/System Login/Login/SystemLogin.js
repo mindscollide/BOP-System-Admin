@@ -11,7 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
 
 import { loginSystemAdminAPI } from "../../../../store/actions/Auth-Actions";
-import { showSnackbar } from "../../../../store/actions/Ui-Actions";
+import { useNotification } from "../../../../context/NotificationContext";
 
 import "./SystemLogin.css";
 
@@ -24,6 +24,8 @@ const SystemLogin = () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  const { showMessage } = useNotification();
 
   const Email = useRef(null);
 
@@ -107,7 +109,7 @@ const SystemLogin = () => {
     } catch (error) {
       console.error("Login encryption error:", error);
 
-      dispatch(showSnackbar("Something went wrong", "error"));
+      showMessage("Something went wrong", "error");
     }
   };
 
