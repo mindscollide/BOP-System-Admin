@@ -459,7 +459,7 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_04".toLowerCase())
             ) {
-              dispatch(loginSystemAdminFailed("LDAP Auth Failed"));
+              dispatch(loginSystemAdminFailed("Wrong Password"));
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
