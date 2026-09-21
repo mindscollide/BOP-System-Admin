@@ -34,6 +34,7 @@ import {
 } from "../../commen/apis/Api_ends_points";
 import { DeleteCategoryModalSystemAdmin } from "./BOPSystemAdminModalsActions";
 import { encryptField } from "../../commen/functions/utils";
+import { message } from "antd";
 // import { getAllCorporatesCategory } from "./BOPSystemAdminActions";
 
 const cleareMessage = (response) => {
@@ -501,7 +502,11 @@ const loginSystemAdminAPI = (navigate, data) => {
                 .toLowerCase()
                 .includes("ERM_AuthService_AuthManager_Login_10".toLowerCase())
             ) {
-              dispatch(loginSystemAdminFailed("Not a valid user. Please login with valid ID"));
+              dispatch(
+                loginSystemAdminFailed(
+                  "Not a valid user. Please login with valid ID",
+                ),
+              );
             } else if (
               response.data.responseResult.responseMessage
                 .toLowerCase()
@@ -2302,7 +2307,10 @@ const resetPasswordApi = (navigate, Data) => {
               localStorage.setItem("defaultOpenKey", "sub1");
               localStorage.setItem("defaultSelectedKey", "1");
               localStorage.setItem("token", response.data.responseResult.token);
-              localStorage.setItem("roleID", response.data.responseResult.user.userRoleID)
+              localStorage.setItem(
+                "roleID",
+                response.data.responseResult.user.userRoleID,
+              );
               localStorage.setItem(
                 "refreshToken",
                 response.data.responseResult.refreshToken,
@@ -2414,7 +2422,10 @@ const forgotPasswordApi = (navigate, Data) => {
               response.data.responseResult.responseMessage.toLowerCase() ===
               "ERM_AuthService_AuthManager_SendEmailForForgetPasword_01".toLowerCase()
             ) {
-              navigate("/emailSentTo", { replace: true });
+              navigate("/emailSentTo", {
+                replace: true,
+                state: { message: "EmailSentSuccessfully" },
+              });
 
               dispatch(
                 forgotPassword_success(response.data.responseResult, ""),

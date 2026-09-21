@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Col, Row, InputGroup, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { Button } from "../../../../components/elements";
@@ -20,10 +20,13 @@ const ForgotPassword = () => {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
+  const [touched, setTouched] = useState(false);
 
   const isEmailValid = email.trim() !== "" && bopEmailValidation(email.trim());
 
   const handleForgotPassword = async () => {
+    setTouched(true);
+
     if (!isEmailValid) {
       return;
     }
@@ -31,9 +34,8 @@ const ForgotPassword = () => {
     try {
       const Data = {
         Email: await encryptField(email.trim()),
-        RoleID: 4
+        RoleID: 4,
       };
-
 
       dispatch(forgotPasswordApi(navigate, Data));
     } catch (error) {
@@ -61,7 +63,7 @@ const ForgotPassword = () => {
                 <Row>
                   <Col sm={12} md={12} lg={12}>
                     <span className='Heading-ResetPaswword-BOP-container'>
-                      Forgot Password
+                      Recover Password
                     </span>
                   </Col>
 
@@ -70,12 +72,12 @@ const ForgotPassword = () => {
                     <InputGroup className='mb-1'>
                       <InputGroup.Text
                         id='basic-addon1'
-                        className='Icon-Field-class-BOP-resetPass'>
-                        <i className='icon-email'></i>
+                        className='Icon-Field-class'>
+                        <i className='icon-user'></i>
                       </InputGroup.Text>
 
                       <Form.Control
-                        name='email'
+                        name='new_email'
                         type='email'
                         autoComplete='email'
                         className='form-comtrol-ResetPassword-textfield'
@@ -87,9 +89,9 @@ const ForgotPassword = () => {
                       />
                     </InputGroup>
 
-                    {email.trim() !== "" && !isEmailValid && (
-                      <div className='text-danger mt-1'>
-                        Email should be correct
+                    {(touched || email.trim() !== "") && !isEmailValid && (
+                      <div className='emailErrorText'>
+                        Enter a valid email address
                       </div>
                     )}
                   </Col>
@@ -101,11 +103,21 @@ const ForgotPassword = () => {
                     lg={12}
                     className='d-flex justify-content-center mt-2'>
                     <Button
-                      text='Forgot Password'
+                      text='Send Change Password Link'
                       className='ResetPassword-btn'
-                      disableBtn={!isEmailValid}
                       onClick={handleForgotPassword}
                     />
+                  </Col>
+                  <Col
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    className='d-flex justify-content-center mt-2'>
+                    <span className='text-center'>
+                      <Link className={"forgotPasswordLink"} to={"/"}>
+                        Back to Login
+                      </Link>
+                    </span>
                   </Col>
                 </Row>
               </Col>

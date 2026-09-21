@@ -8,10 +8,7 @@ import VolMeter from "../container/Admin/Pages/Setup/VolMeter/VolMeter";
 import CategoryManagement from "../container/Admin/Pages/Setup/CategoryManagementFX/CategoryManagement/CategoryManagement";
 import BankerList from "../container/Admin/Pages/UserManagements/BankerList/BankerList/BankerList";
 import SystemLogin from "../container/AdminLogin/System Login/Login/SystemLogin";
-import CreatePassword from "../container/AdminLogin/System Login/CreatePassword/CreatePassword";
-import ChangePassword from "../container/AdminLogin/System Login/ChangePassword/ChangePassword";
 import ResetPassword from "../container/AdminLogin/System Login/ResetPassword/ResetPassword";
-import TwoFaVerification from "../container/AdminLogin/System Login/2faVerificationScreen/TwoFaVerification";
 import AdminDashboard from "../container/Admin/AdminDashboard/AdminDashboard";
 import BankUser from "../container/Admin/Pages/UserManagements/BankUser/BankUser";
 import CorporateUser from "../container/Admin/Pages/UserManagements/CorporateUser/CorporateUser";
@@ -31,8 +28,8 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path='/' element={<SystemLogin />} />
-      <Route path='CreatePassword' element={<CreatePassword />} />
-      <Route path='ChangePassword' element={<ChangePassword />} />
+      {/* <Route path='CreatePassword' element={<CreatePassword />} /> */}
+      {/* <Route path='ChangePassword' element={<ChangePassword />} /> */}
       <Route path='ResetPassword' element={<ResetPassword />} />
       <Route path='forgotpassword' element={<ForgotPassword />} />
       <Route
@@ -41,7 +38,7 @@ export const router = createBrowserRouter(
       />
       <Route path='redirected' element={<Redirected />} />
       <Route path='emailSentTo' element={<EmailSentTo />} />
-      <Route path='2FAVerfication' element={<TwoFaVerification />} />
+      {/* <Route path='2FAVerfication' element={<TwoFaVerification />} /> */}
       <Route path='/BOP/' element={<AdminDashboard />}>
         <Route index element={<BankUser />} />
         <Route path='AddBankUser' element={<BankUser />} />

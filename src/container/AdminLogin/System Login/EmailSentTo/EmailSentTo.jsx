@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import BOPlogo from "../../../../assets/images/BOP-logo.png";
 import "./EmailSentTo.css"
+import { useLocation, useNavigate } from "react-router-dom";
 const EmailSentTo = () => {
+  const { state } = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (state === null) {
+      navigate("/")
+    }
+  }, [state])
+  
   return (
     <section className={"wrapper_emailSendTo"}>
       <Row>
