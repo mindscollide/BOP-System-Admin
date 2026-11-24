@@ -114,8 +114,7 @@ export const useMqttClient = ({
         password: process.env.REACT_APP_MQTT_PASSWORD,
         cleanSession: true,
         useSSL:
-          process.env.REACT_APP_MQTT_PORT === "8883" &&
-          process.env.REACT_APP_MQTT_HOST === "boptrade.tresmark.com"
+          process.env.REACT_APP_MQTT_PORT === "8883" 
             ? true
             : false,
       });

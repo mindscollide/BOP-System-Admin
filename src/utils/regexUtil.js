@@ -8,7 +8,7 @@ export const validateEmail = (email) => {
 };
 
 export function validateBopEmail(email) {
-  const pattern = /^[^\s@]+@bop\.com(\.pk)?$/i;
-  // return pattern.test(email);
-  return true
+  let bopEmailRegex = /^[a-zA-Z0-9._%+-]+@bop\.com\.pk$/i;
+  return bopEmailRegex.test(email);
+  // return true
 }

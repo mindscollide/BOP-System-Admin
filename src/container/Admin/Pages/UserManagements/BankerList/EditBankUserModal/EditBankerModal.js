@@ -28,21 +28,21 @@ const EditBankerModal = () => {
   const navigate = useNavigate();
   const { BOPSystemAdminModal } = useSelector((state) => state);
   const branchCreated = useSelector(
-    (state) => state.RealtimeActionReducer.branchCreated
+    (state) => state.RealtimeActionReducer.branchCreated,
   );
   const bankUserRoleStatusChange = useSelector(
-    (state) => state.RealtimeActionReducer.bankUserRoleStatusChange
+    (state) => state.RealtimeActionReducer.bankUserRoleStatusChange,
   );
   const branchUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.branchUpdated
+    (state) => state.RealtimeActionReducer.branchUpdated,
   );
   const bankUserUpdated = useSelector(
-    (state) => state.RealtimeActionReducer.bankUserUpdated
+    (state) => state.RealtimeActionReducer.bankUserUpdated,
   );
 
   // GetBankUserbyUserID
   const GetBankUserbyUserID = useSelector(
-    (state) => state.BOPSystemAdminReducer.GetBankUserbyUserIDData
+    (state) => state.BOPSystemAdminReducer.GetBankUserbyUserIDData,
   );
 
   //Role List
@@ -65,8 +65,6 @@ const EditBankerModal = () => {
     value: 0,
     label: "",
   });
-
-
 
   //State for add company
   const [updateBankUser, setUpdateBankUser] = useState({
@@ -208,7 +206,7 @@ const EditBankerModal = () => {
         }
         if (roleOptions.length > 0) {
           let fingRoleName = roleOptions.find(
-            (roleIDData, index) => roleIDData.value === bankUser.userRoleID
+            (roleIDData, index) => roleIDData.value === bankUser.userRoleID,
           );
           if (fingRoleName !== undefined) {
             setRoleID(fingRoleName);
@@ -254,7 +252,7 @@ const EditBankerModal = () => {
       if (Array.isArray(branchOptions)) {
         let findBranchObj = branchOptions.find(
           (branchData, index) =>
-            branchData.branchID === branchCreated.branch.branchID
+            branchData.branchID === branchCreated.branch.branchID,
         );
         if (findBranchObj === undefined) {
           let newBranchData = {
@@ -274,7 +272,7 @@ const EditBankerModal = () => {
       if (Array.isArray(branchOptions)) {
         let findBranchObj = branchOptions.find(
           (branchData, index) =>
-            branchData.branchID === branchUpdated.branch.branchID
+            branchData.branchID === branchUpdated.branch.branchID,
         );
         if (findBranchObj !== undefined) {
           setBranchOptions((prevBranchData) => {
@@ -328,7 +326,7 @@ const EditBankerModal = () => {
         if (roleOptions.length > 0) {
           let fingRoleName = roleOptions.find(
             (roleIDData, index) =>
-              roleIDData.value === bankUserUpdated.user.userRoleID
+              roleIDData.value === bankUserUpdated.user.userRoleID,
           );
           if (fingRoleName !== undefined) {
             setRoleID(fingRoleName);
@@ -338,7 +336,7 @@ const EditBankerModal = () => {
           if (bankUserUpdated.user.branch?.branchID !== undefined) {
             let findBranchName = branchOptions.find(
               (branchID, index) =>
-                branchID.value === bankUserUpdated.user?.branch?.branchID
+                branchID.value === bankUserUpdated.user?.branch?.branchID,
             );
             if (findBranchName !== undefined) {
               setBranchRole(findBranchName);
@@ -372,7 +370,7 @@ const EditBankerModal = () => {
           let fingRoleName = roleOptions.find(
             (roleIDData, index) =>
               roleIDData.value ===
-              bankUserRoleStatusChange.updatedUser.userRoleID
+              bankUserRoleStatusChange.updatedUser.userRoleID,
           );
           if (fingRoleName !== undefined) {
             setRoleID(fingRoleName);
@@ -395,10 +393,10 @@ const EditBankerModal = () => {
       <Modal
         show={BOPSystemAdminModal.editBankUserModal}
         setShow={(value) => dispatch(editBankUserModalSystemAdmin(value))}
-        className="UniversalBOPModalStyles"
+        className='UniversalBOPModalStyles'
         modalHeaderClassName={"d-none"}
-        modalFooterClassName="UniversalBOPModalStylesfooter"
-        size="md"
+        modalFooterClassName='UniversalBOPModalStylesfooter'
+        size='md'
         onHide={() => dispatch(editBankUserModalSystemAdmin(false))}
         ModalBody={
           <>
@@ -407,30 +405,28 @@ const EditBankerModal = () => {
                 lg={6}
                 md={6}
                 sm={6}
-                className={styles["EditBank_modal-title"]}
-              >
+                className={styles["EditBank_modal-title"]}>
                 Edit Banker
               </Col>
               <Col
                 sm={6}
                 md={6}
                 lg={6}
-                className={styles["EditBank_modal-crossIcon"]}
-              >
+                className={styles["EditBank_modal-crossIcon"]}>
                 <i
-                  className="icon-close cursor-pointer"
+                  className='icon-close cursor-pointer'
                   onClick={handleDiscardButton}
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
-              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+            <Row className='mt-3'>
+              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
                 <span className={styles["labels-add-bank"]}>
                   Name
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <TextField
-                  labelClass="d-none"
+                  labelClass='d-none'
                   name={"firstName"}
                   value={updateBankUser.firstName.value}
                   onChange={handleValueChangeAndValidation}
@@ -438,20 +434,20 @@ const EditBankerModal = () => {
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
-              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+            <Row className='mt-3'>
+              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
                 <span className={styles["labels-add-bank"]}>Email</span>
                 <TextField
                   className={styles["disableText"]}
                   disable={true}
-                  labelClass="d-none"
-                  name="email"
+                  labelClass='d-none'
+                  name='email'
                   value={updateBankUser.email.value}
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
-              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+            <Row className='mt-3'>
+              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
                 <span className={styles["labels-add-bank"]}>
                   Select Role
                   <span className={styles["aesterick-color"]}>*</span>
@@ -461,7 +457,7 @@ const EditBankerModal = () => {
                   classNamePrefix={"selectCateogyCorporateList"}
                   options={roleOptions}
                   value={roleID}
-                  isSearchable="true"
+                  isSearchable='true'
                   menuPortalTarget={document.body}
                   onChange={handleSelectRole}
                   isDisabled
@@ -470,26 +466,24 @@ const EditBankerModal = () => {
             </Row>
             {roleID?.value === 9 && (
               <>
-                <Row className="mt-3">
+                <Row className='mt-3'>
                   <Col
                     lg={12}
                     md={12}
                     sm={12}
-                    className="flex-column flex-wrap"
-                  >
+                    className='flex-column flex-wrap'>
                     <span className={styles["labels-add-bank"]}>
                       Select Branch
                       <span className={styles["aesterick-color"]}>*</span>
                     </span>
                     <Select
-                    
                       options={branchOptions}
-                      placeholder="Select Branch"
+                      placeholder='Select Branch'
                       value={branchRole.value !== 0 ? branchRole : null}
                       onChange={branchSelectRoleHandler}
                       isDisabled={true}
                       isSearchable={true}
-                      classNamePrefix="selectCateogyCorporateList"
+                      classNamePrefix='selectCateogyCorporateList'
                       menuPortalTarget={document.body}
                     />
                   </Col>
@@ -498,20 +492,19 @@ const EditBankerModal = () => {
                     lg={5}
                     md={5}
                     sm={12}
-                    className="position-relative"
-                  ></Col>
+                    className='position-relative'></Col>
                 </Row>
               </>
             )}
 
-            <Row className="mt-3">
-              <Col lg={12} md={12} sm={12} className="flex-column flex-wrap">
+            <Row className='mt-3'>
+              <Col lg={12} md={12} sm={12} className='flex-column flex-wrap'>
                 <span className={styles["labels-add-bank"]}>
                   Contact
                   <span className={styles["aesterick-color"]}>*</span>
                 </span>
                 <TextField
-                  labelClass="d-none"
+                  labelClass='d-none'
                   name={"ContactNumber"}
                   value={updateBankUser.ContactNumber.value}
                   onChange={handleValueChangeAndValidation}
@@ -519,7 +512,7 @@ const EditBankerModal = () => {
                 />
               </Col>
             </Row>
-            <Row className="mt-3">
+            <Row className='mt-3'>
               <Col lg={12} md={12} sm={12}>
                 <span className={styles["labels-add-bank"]}>Status</span>
                 <span className={styles["aesterick-color"]}>*</span>
@@ -540,15 +533,14 @@ const EditBankerModal = () => {
           </>
         }
         ModalFooter={
-          <Row className="mt-3 mb-3">
+          <Row className='mt-3 mb-3'>
             <Col
               lg={12}
               md={12}
               sm={12}
-              className="d-flex justify-content-center gap-2"
-            >
+              className='d-flex justify-content-center gap-2'>
               <Button
-                icon={<i className="icon-refresh"></i>}
+                icon={<i className='icon-refresh'></i>}
                 text={"Update"}
                 className={styles["AddBranchClass"]}
                 iconClass={styles["IconClass"]}
@@ -559,16 +551,16 @@ const EditBankerModal = () => {
                   roleID.value !== 9
                     ? false
                     : updateBankUser.firstName.value !== "" &&
-                      updateBankUser.ContactNumber.value !== "" &&
-                      roleID.value === 9 &&
-                      branchRole.value !== 0
-                    ? false
-                    : true
+                        updateBankUser.ContactNumber.value !== "" &&
+                        roleID.value === 9 &&
+                        branchRole.value !== 0
+                      ? false
+                      : true
                 }
               />
 
               <Button
-                icon={<i className="icon-close"></i>}
+                icon={<i className='icon-close'></i>}
                 text={"Discard"}
                 className={styles["CancelButton"]}
                 iconClass={styles["IconClass"]}
